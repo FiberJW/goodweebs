@@ -1,0 +1,8 @@
+import { darkGray, black, white } from "./colors";
+
+export const dark = {
+  background: darkGray,
+  navBackground: black,
+  text: white,
+  iconFill: white,
+};
