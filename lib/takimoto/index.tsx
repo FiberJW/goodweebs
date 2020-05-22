@@ -4,6 +4,9 @@ import {
   Dimensions,
   ViewProps,
   View,
+  TextStyle,
+  TextProps,
+  Text,
 } from "react-native";
 import React, {
   useState,
@@ -50,116 +53,132 @@ type DimensionsChangeData = {
   screen: ScaledSize;
 };
 
+function useTakimoto<StyleT>(style: DynamicTakimotoKeys<StyleT>) {
+  const [windowSize, setWindowSize] = useState<ScaledSize>(
+    Dimensions.get("window")
+  );
+
+  const onDimensionsChange = useCallback(
+    ({ window }: DimensionsChangeData) => setWindowSize(window),
+    []
+  );
+
+  useEffect(function manageDimensionsEventListeners() {
+    Dimensions.addEventListener("change", onDimensionsChange);
+
+    return () => Dimensions.removeEventListener("change", onDimensionsChange);
+  }, []);
+
+  const styles = useMemo(() => {
+    const styleCopy = { ...style };
+    const styleWithoutExtras = (() => {
+      let s = { ...styleCopy };
+      delete s.whenHeight;
+      delete s.whenWidth;
+      return s as ViewStyle;
+    })();
+
+    let stylesArray = [styleWithoutExtras];
+
+    for (const operator in styleCopy.whenHeight) {
+      if (styleCopy.whenHeight.hasOwnProperty(operator)) {
+        const castedOperator = operator as keyof DeclarativeWindowSizeStyles<
+          ViewStyle
+        >;
+        const breakpointBasedStyles = styleCopy.whenHeight[castedOperator];
+
+        if (breakpointBasedStyles) {
+          for (const breakpoint in breakpointBasedStyles) {
+            const castedBreakpoint = (breakpoint as unknown) as keyof typeof breakpointBasedStyles;
+            switch (castedOperator) {
+              case "<":
+                if (windowSize.height < castedBreakpoint)
+                  stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
+                break;
+              case "<=":
+                if (windowSize.height <= castedBreakpoint)
+                  stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
+                break;
+              case "=":
+                if (windowSize.height === castedBreakpoint)
+                  stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
+                break;
+              case ">":
+                if (windowSize.height > castedBreakpoint)
+                  stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
+                break;
+              case ">=":
+                if (windowSize.height >= castedBreakpoint)
+                  stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
+                break;
+            }
+          }
+        }
+      }
+    }
+
+    for (const operator in styleCopy.whenWidth) {
+      if (styleCopy.whenWidth.hasOwnProperty(operator)) {
+        const castedOperator = operator as keyof DeclarativeWindowSizeStyles<
+          ViewStyle
+        >;
+        const breakpointBasedStyles = styleCopy.whenWidth[castedOperator];
+
+        if (breakpointBasedStyles) {
+          for (const breakpoint in breakpointBasedStyles) {
+            const castedBreakpoint = (breakpoint as unknown) as keyof typeof breakpointBasedStyles;
+            switch (castedOperator) {
+              case "<":
+                if (windowSize.width < castedBreakpoint)
+                  stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
+                break;
+              case "<=":
+                if (windowSize.width <= castedBreakpoint)
+                  stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
+                break;
+              case "=":
+                if (windowSize.width === castedBreakpoint)
+                  stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
+                break;
+              case ">":
+                if (windowSize.width > castedBreakpoint)
+                  stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
+                break;
+              case ">=":
+                if (windowSize.width >= castedBreakpoint)
+                  stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
+                break;
+            }
+          }
+        }
+      }
+    }
+
+    return stylesArray;
+  }, [windowSize]);
+
+  return styles;
+}
+
 export const takimoto = {
   View(style: DynamicTakimotoKeys<ViewStyle>): FC<ViewProps> {
     return forwardRef(function WrappedView(
       { style: styleProp, ...rest }: ViewProps,
       ref: Ref<View>
     ) {
-      const [windowSize, setWindowSize] = useState<ScaledSize>(
-        Dimensions.get("window")
-      );
+      const styles = useTakimoto(style);
 
-      const onDimensionsChange = useCallback(
-        ({ window }: DimensionsChangeData) => setWindowSize(window),
-        []
-      );
-
-      useEffect(function manageDimensionsEventListeners() {
-        Dimensions.addEventListener("change", onDimensionsChange);
-
-        return () =>
-          Dimensions.removeEventListener("change", onDimensionsChange);
-      }, []);
-
-      const styles = useMemo(() => {
-        const styleCopy = { ...style };
-        const styleWithoutExtras = (() => {
-          let s = { ...styleCopy };
-          delete s.whenHeight;
-          delete s.whenWidth;
-          return s as ViewStyle;
-        })();
-
-        let stylesArray = [styleWithoutExtras];
-
-        for (const operator in styleCopy.whenHeight) {
-          if (styleCopy.whenHeight.hasOwnProperty(operator)) {
-            const castedOperator = operator as keyof DeclarativeWindowSizeStyles<
-              ViewStyle
-            >;
-            const breakpointBasedStyles = styleCopy.whenHeight[castedOperator];
-
-            if (breakpointBasedStyles) {
-              for (const breakpoint in breakpointBasedStyles) {
-                const castedBreakpoint = (breakpoint as unknown) as keyof typeof breakpointBasedStyles;
-                switch (castedOperator) {
-                  case "<":
-                    if (windowSize.height < castedBreakpoint)
-                      stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
-                    break;
-                  case "<=":
-                    if (windowSize.height <= castedBreakpoint)
-                      stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
-                    break;
-                  case "=":
-                    if (windowSize.height === castedBreakpoint)
-                      stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
-                    break;
-                  case ">":
-                    if (windowSize.height > castedBreakpoint)
-                      stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
-                    break;
-                  case ">=":
-                    if (windowSize.height >= castedBreakpoint)
-                      stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
-                    break;
-                }
-              }
-            }
-          }
-        }
-
-        for (const operator in styleCopy.whenWidth) {
-          if (styleCopy.whenWidth.hasOwnProperty(operator)) {
-            const castedOperator = operator as keyof DeclarativeWindowSizeStyles<
-              ViewStyle
-            >;
-            const breakpointBasedStyles = styleCopy.whenWidth[castedOperator];
-
-            if (breakpointBasedStyles) {
-              for (const breakpoint in breakpointBasedStyles) {
-                const castedBreakpoint = (breakpoint as unknown) as keyof typeof breakpointBasedStyles;
-                switch (castedOperator) {
-                  case "<":
-                    if (windowSize.width < castedBreakpoint)
-                      stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
-                    break;
-                  case "<=":
-                    if (windowSize.width <= castedBreakpoint)
-                      stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
-                    break;
-                  case "=":
-                    if (windowSize.width === castedBreakpoint)
-                      stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
-                    break;
-                  case ">":
-                    if (windowSize.width > castedBreakpoint)
-                      stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
-                    break;
-                  case ">=":
-                    if (windowSize.width >= castedBreakpoint)
-                      stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
-                    break;
-                }
-              }
-            }
-          }
-        }
-
-        return stylesArray;
-      }, [windowSize]);
       return <View {...rest} style={[styles, styleProp]} ref={ref} />;
+    });
+  },
+  Text(style: DynamicTakimotoKeys<TextStyle>): FC<TextProps> {
+    return forwardRef(function WrappedText(
+      { style: styleProp, ...rest }: TextProps,
+      ref: Ref<Text>
+    ) {
+      const styles = useTakimoto(style);
+
+      return <Text {...rest} style={[styles, styleProp]} ref={ref} />;
     });
   },
 };

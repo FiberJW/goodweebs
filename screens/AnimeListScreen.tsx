@@ -1,23 +1,20 @@
 import React from "react";
-import { Text } from "react-native";
 import { dark } from "yep/themes";
 import { takimoto } from "yep/lib/takimoto";
 
 export function AnimeListScreen() {
   return (
     <Container>
-      <Text
-        style={{
-          color: dark.text,
-          fontFamily: "Manrope-ExtraBold",
-          fontSize: 25,
-        }}
-      >
-        Anime!
-      </Text>
+      <HeaderLabel>Anime!</HeaderLabel>
     </Container>
   );
 }
+
+const HeaderLabel = takimoto.Text({
+  color: dark.text,
+  fontFamily: "Manrope-ExtraBold",
+  fontSize: 25,
+});
 
 const Container = takimoto.View({
   flex: 1,
