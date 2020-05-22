@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Goodweebs logo" src="./assets/branding/logo-wrapped.svg">
+  <img alt="Goodweebs logo" yep="./assets/branding/logo-wrapped.svg">
 </p>
 
 <h3 align="center" style="font-weight:600">

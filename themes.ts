@@ -1,4 +1,4 @@
-import { darkGray, black, white } from "./colors";
+import { darkGray, black, white } from "yep/colors";
 
 export const dark = {
   background: darkGray,
