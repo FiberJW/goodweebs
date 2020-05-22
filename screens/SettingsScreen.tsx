@@ -1,19 +1,16 @@
 import React from "react";
-import { Text, View } from "react-native";
-import { dark } from "yep/themes";
+import { takimoto } from "yep/lib/takimoto";
+import { Header } from "yep/components/Header";
 
 export function SettingsScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text
-        style={{
-          color: dark.text,
-          fontFamily: "Manrope-ExtraBold",
-          fontSize: 25,
-        }}
-      >
-        Settings!
-      </Text>
-    </View>
+    <Container>
+      <Header label="Settings" />
+    </Container>
   );
 }
+
+const Container = takimoto.View({
+  flex: 1,
+  alignItems: "center",
+});

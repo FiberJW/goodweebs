@@ -36,7 +36,7 @@ type DeclarativeWindowSizeStyles<StyleT> = {
   };
 };
 
-type DynamicTakimotoKeys<StyleT> = StyleT & {
+type DynamicKeys<StyleT> = StyleT & {
   //   hover?: StyleT; // TODO
   //   active?: StyleT; // TODO
   //   focused?: StyleT; // TODO
@@ -53,7 +53,7 @@ type DimensionsChangeData = {
   screen: ScaledSize;
 };
 
-function useTakimoto<StyleT>(style: DynamicTakimotoKeys<StyleT>) {
+function useTakimoto<StyleT>(style: DynamicKeys<StyleT>) {
   const [windowSize, setWindowSize] = useState<ScaledSize>(
     Dimensions.get("window")
   );
@@ -161,7 +161,7 @@ function useTakimoto<StyleT>(style: DynamicTakimotoKeys<StyleT>) {
 }
 
 export const takimoto = {
-  View(style: DynamicTakimotoKeys<ViewStyle>): FC<ViewProps> {
+  View(style: DynamicKeys<ViewStyle>): FC<ViewProps> {
     return forwardRef(function WrappedView(
       { style: styleProp, ...rest }: ViewProps,
       ref: Ref<View>
@@ -171,7 +171,7 @@ export const takimoto = {
       return <View {...rest} style={[styles, styleProp]} ref={ref} />;
     });
   },
-  Text(style: DynamicTakimotoKeys<TextStyle>): FC<TextProps> {
+  Text(style: DynamicKeys<TextStyle>): FC<TextProps> {
     return forwardRef(function WrappedText(
       { style: styleProp, ...rest }: TextProps,
       ref: Ref<Text>
