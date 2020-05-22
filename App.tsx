@@ -8,11 +8,12 @@ import { loadAsync, FontSource } from "expo-font";
 import { AppLoading } from "expo";
 import { createStackNavigator } from "@react-navigation/stack";
 import { AnimeListScreen } from "yep/screens/AnimeListScreen";
-import { MangaListScreen } from "yep/screens/MangaListScreen";
 import { DiscoverScreen } from "yep/screens/DiscoverScreen";
 import { ProfileScreen } from "yep/screens/ProfileScreen";
-import { SettingsScreen } from "yep/screens/SettingsScreen";
-import { DetailsScreen } from "yep/screens/DetailScreen";
+import { DetailsScreen } from "yep/screens/DetailsScreen";
+import { AuthScreen } from "yep/screens/AuthScreen";
+// import { MangaListScreen } from "yep/screens/MangaListScreen";
+// import { SettingsScreen } from "yep/screens/SettingsScreen";
 
 Sentry.init({
   dsn:
@@ -49,8 +50,10 @@ function Tabs() {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Manga"
+        // TODO: I've got too much anime on my "planned" list,
+        // so I'll finish that before I start on manga
         component={MangaListScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
@@ -64,7 +67,7 @@ function Tabs() {
             />
           ),
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Discover"
         component={DiscoverScreen}
@@ -97,8 +100,11 @@ function Tabs() {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Settings"
+        // TODO: there is currently only one "setting",
+        // and that is being logged in or not,
+        // so I'll put that on the profile and save this for later
         component={SettingsScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
@@ -112,7 +118,7 @@ function Tabs() {
             />
           ),
         }}
-      />
+      /> */}
     </Tab.Navigator>
   );
 }
@@ -162,7 +168,7 @@ export default function App() {
     <NavigationContainer theme={theme}>
       <StatusBar barStyle="light-content" />
       <Stack.Navigator
-        initialRouteName="Tabs"
+        initialRouteName={false ? "Tabs" : "Auth"}
         screenOptions={{
           title: "",
           headerTitleStyle: {
@@ -176,6 +182,11 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen name="Details" component={DetailsScreen} />
+        <Stack.Screen
+          name="Auth"
+          component={AuthScreen}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   ) : (

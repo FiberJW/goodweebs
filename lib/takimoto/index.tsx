@@ -7,6 +7,13 @@ import {
   TextStyle,
   TextProps,
   Text,
+  TouchableOpacityProps,
+  TouchableOpacity,
+  ImageStyle,
+  ImageProps,
+  Image,
+  TextInput,
+  TextInputProps,
 } from "react-native";
 import React, {
   useState,
@@ -75,7 +82,7 @@ function useTakimoto<StyleT>(style: DynamicKeys<StyleT>) {
       let s = { ...styleCopy };
       delete s.whenHeight;
       delete s.whenWidth;
-      return s as ViewStyle;
+      return s as StyleT;
     })();
 
     let stylesArray = [styleWithoutExtras];
@@ -83,7 +90,7 @@ function useTakimoto<StyleT>(style: DynamicKeys<StyleT>) {
     for (const operator in styleCopy.whenHeight) {
       if (styleCopy.whenHeight.hasOwnProperty(operator)) {
         const castedOperator = operator as keyof DeclarativeWindowSizeStyles<
-          ViewStyle
+          StyleT
         >;
         const breakpointBasedStyles = styleCopy.whenHeight[castedOperator];
 
@@ -120,7 +127,7 @@ function useTakimoto<StyleT>(style: DynamicKeys<StyleT>) {
     for (const operator in styleCopy.whenWidth) {
       if (styleCopy.whenWidth.hasOwnProperty(operator)) {
         const castedOperator = operator as keyof DeclarativeWindowSizeStyles<
-          ViewStyle
+          StyleT
         >;
         const breakpointBasedStyles = styleCopy.whenWidth[castedOperator];
 
@@ -179,6 +186,38 @@ export const takimoto = {
       const styles = useTakimoto(style);
 
       return <Text {...rest} style={[styles, styleProp]} ref={ref} />;
+    });
+  },
+  Image(style: DynamicKeys<ImageStyle>): FC<ImageProps> {
+    return forwardRef(function WrappedImage(
+      { style: styleProp, ...rest }: ImageProps,
+      ref: Ref<Image>
+    ) {
+      const styles = useTakimoto(style);
+
+      return <Image {...rest} style={[styles, styleProp]} ref={ref} />;
+    });
+  },
+  TouchableOpacity(style: DynamicKeys<ViewStyle>): FC<TouchableOpacityProps> {
+    return forwardRef(function WrappedTouchableOpacity(
+      { style: styleProp, ...rest }: TouchableOpacityProps,
+      ref: Ref<TouchableOpacity>
+    ) {
+      const styles = useTakimoto(style);
+
+      return (
+        <TouchableOpacity {...rest} style={[styles, styleProp]} ref={ref} />
+      );
+    });
+  },
+  TextInput(style: DynamicKeys<TextStyle>): FC<TextInputProps> {
+    return forwardRef(function WrappedTextInput(
+      { style: styleProp, ...rest }: TextInputProps,
+      ref: Ref<TextInput>
+    ) {
+      const styles = useTakimoto(style);
+
+      return <TextInput {...rest} style={[styles, styleProp]} ref={ref} />;
     });
   },
 };
