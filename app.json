@@ -8,7 +8,7 @@
     "icon": "./assets/launch/icon.png",
     "splash": {
       "image": "./assets/launch/splash.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "updates": {

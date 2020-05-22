@@ -1,10 +1,11 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { Text } from "react-native";
 import { dark } from "yep/themes";
+import { takimoto } from "yep/lib/takimoto";
 
 export function AnimeListScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <Container>
       <Text
         style={{
           color: dark.text,
@@ -14,6 +15,26 @@ export function AnimeListScreen() {
       >
         Anime!
       </Text>
-    </View>
+    </Container>
   );
 }
+
+const Container = takimoto.View({
+  flex: 1,
+  justifyContent: "center",
+  alignItems: "center",
+  whenWidth: {
+    "<": {
+      500: {
+        backgroundColor: "red",
+      },
+    },
+  },
+  whenHeight: {
+    ">": {
+      320: {
+        backgroundColor: "blue",
+      },
+    },
+  },
+});
