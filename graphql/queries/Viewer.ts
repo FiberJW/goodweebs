@@ -12,9 +12,3 @@ export const GetViewer = gql`
     }
   }
 `;
-
-export const GetGenres = gql`
-  query GetGenres {
-    GenreCollection
-  }
-`;
