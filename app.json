@@ -7,6 +7,7 @@
     "orientation": "portrait",
     "icon": "./assets/launch/icon.png",
     "scheme": "goodweebs",
+    "privacy": "unlisted",
     "splash": {
       "image": "./assets/launch/splash.png",
       "resizeMode": "cover",

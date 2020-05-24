@@ -13,6 +13,7 @@
     "@apollo/react-components": "^3.1.5",
     "@apollo/react-hoc": "^3.1.5",
     "@apollo/react-hooks": "^3.1.5",
+    "@expo/react-native-action-sheet": "^3.8.0",
     "@react-native-community/masked-view": "0.1.6",
     "@react-navigation/bottom-tabs": "^5.4.7",
     "@react-navigation/native": "^5.4.2",
@@ -67,10 +68,7 @@
     "extends": [
       "universe/native",
       "plugin:react-native/all"
-    ],
-    "rules": {
-      "import/no-default-export": "error"
-    }
+    ]
   },
   "private": true
 }

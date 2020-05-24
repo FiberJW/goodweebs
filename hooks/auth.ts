@@ -13,17 +13,17 @@ const redirectUri = makeRedirectUri({
   useProxy: Constants.isDevice,
 });
 
-export function useAniListAuthRequest({
-  clientID,
-}: {
-  clientID: AniListClientID;
-}): [
+export function useAniListAuthRequest(): [
   AuthRequest | null,
   AuthSessionResult | null,
   (options?: AuthRequestPromptOptions) => Promise<AuthSessionResult>
 ] {
   const [request, setRequest] = useState<AuthRequest | null>(null);
   const [result, setResult] = useState<AuthSessionResult | null>(null);
+
+  const clientID = Constants.isDevice
+    ? AniListClientID.CLIENT
+    : AniListClientID.SIMULATOR;
 
   const AniListURL = `https://anilist.co/api/v2/oauth/authorize?client_id=${clientID}&response_type=token`;
 

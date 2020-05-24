@@ -4,3 +4,4 @@ export const white10 = "rgba(255,255,255,0.10)";
 export const white80 = "rgba(255,255,255,0.80)";
 export const darkGray = "#242424";
 export const white = "#ffffff";
+export const expoBlurple = "#4630EB";

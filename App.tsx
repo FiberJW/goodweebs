@@ -1,4 +1,5 @@
 import { ApolloProvider } from "@apollo/react-hooks";
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { AppLoading } from "expo";
 import React, { useState, useEffect } from "react";
 import { AsyncStorage } from "react-native";
@@ -42,7 +43,9 @@ export default function App() {
 
   return fontsLoaded && checkedForToken ? (
     <ApolloProvider client={client}>
-      <Navigation accessToken={accessToken} />
+      <ActionSheetProvider>
+        <Navigation accessToken={accessToken} />
+      </ActionSheetProvider>
     </ApolloProvider>
   ) : (
     <AppLoading />

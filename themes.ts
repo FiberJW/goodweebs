@@ -1,4 +1,4 @@
-import { darkGray, black, white, white80 } from "yep/colors";
+import { darkGray, black, white, white80, expoBlurple } from "yep/colors";
 
 export const darkTheme = {
   background: darkGray,
@@ -10,4 +10,6 @@ export const darkTheme = {
   footnote: white80,
   chipBorder: white,
   selectedChipFill: white,
+  listCount: white80,
+  accent: expoBlurple,
 };

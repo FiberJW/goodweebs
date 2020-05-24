@@ -26,9 +26,7 @@ type Props = {
 };
 
 export function AuthScreen({ navigation }: Props) {
-  const [, , promptAsync] = useAniListAuthRequest({
-    clientID: AniListClientID.SIMULATOR,
-  });
+  const [, , promptAsync] = useAniListAuthRequest();
 
   useEffect(function navigateIfAccessTokenExists() {
     (async () => {
@@ -53,6 +51,7 @@ export function AuthScreen({ navigation }: Props) {
           label={getString("logIn")}
           onPress={async () => {
             const result = await promptAsync();
+            console.log({ result });
             if (result.type === "error" || result.type === "success") {
               if (result.params.access_token) {
                 await AsyncStorage.setItem(
