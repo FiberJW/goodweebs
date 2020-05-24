@@ -12,6 +12,14 @@ import { DiscoverScreen } from "yep/screens/DiscoverScreen";
 import { ProfileScreen } from "yep/screens/ProfileScreen";
 import { DetailsScreen } from "yep/screens/DetailsScreen";
 import {
+  ApolloClient,
+  HttpLink,
+  InMemoryCache,
+  ApolloProvider,
+} from "@apollo/client";
+import { setContext } from "@apollo/link-context";
+
+import {
   AuthScreen,
   ANILIST_ACCESS_TOKEN_STORAGE,
 } from "yep/screens/AuthScreen";
@@ -162,6 +170,27 @@ interface FontMap {
   [name: string]: FontSource;
 }
 
+const authLink = setContext(async (_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = await AsyncStorage.getItem(ANILIST_ACCESS_TOKEN_STORAGE);
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+});
+
+const httpLink = new HttpLink({
+  uri: "https://graphql.anilist.co",
+});
+
+const client = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: authLink.concat(httpLink),
+});
+
 export default function App() {
   const [checkedForToken, setCheckedForToken] = useState(false);
   const [accessToken, setAccessToken] = useState<string | null>(null);
@@ -189,31 +218,33 @@ export default function App() {
     })();
   });
 
-  return fontsLoaded || checkedForToken ? (
-    <NavigationContainer theme={theme}>
-      <StatusBar barStyle="light-content" />
-      <Stack.Navigator
-        initialRouteName={accessToken ? "Tabs" : "Auth"}
-        screenOptions={{
-          title: "",
-          headerTitleStyle: {
-            fontFamily: "Manrope-SemiBold",
-          },
-        }}
-      >
-        <Stack.Screen
-          name="Tabs"
-          component={Tabs}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="Details" component={DetailsScreen} />
-        <Stack.Screen
-          name="Auth"
-          component={AuthScreen}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+  return fontsLoaded && checkedForToken ? (
+    <ApolloProvider client={client}>
+      <NavigationContainer theme={theme}>
+        <StatusBar barStyle="light-content" />
+        <Stack.Navigator
+          initialRouteName={accessToken ? "Tabs" : "Auth"}
+          screenOptions={{
+            title: "",
+            headerTitleStyle: {
+              fontFamily: "Manrope-SemiBold",
+            },
+          }}
+        >
+          <Stack.Screen
+            name="Tabs"
+            component={Tabs}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="Details" component={DetailsScreen} />
+          <Stack.Screen
+            name="Auth"
+            component={AuthScreen}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ApolloProvider>
   ) : (
     <AppLoading />
   );

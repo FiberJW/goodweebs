@@ -12,14 +12,13 @@ import {
 import { AsyncStorage } from "react-native";
 import { RootStackParamList } from "yep/App";
 import { StackNavigationProp } from "@react-navigation/stack";
+import Constants from "expo-constants";
 
 export const ANILIST_ACCESS_TOKEN_STORAGE = `com.goodweebs.app.access_token`;
 
-const useProxy = true;
-
 const redirectUri = makeRedirectUri({
   native: "goodweebs://redirect",
-  // useProxy,
+  useProxy: Constants.isDevice,
 });
 
 console.log({ redirectUri });
