@@ -1,11 +1,31 @@
-import React from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { dark } from "yep/themes";
 import { takimoto } from "yep/lib/takimoto";
+import {
+  makeRedirectUri,
+  ResponseType,
+  AuthRequest,
+  AuthRequestPromptOptions,
+  AuthSessionResult,
+  AuthRequestConfig,
+} from "expo-auth-session";
+import { AsyncStorage } from "react-native";
+import { RootStackParamList } from "yep/App";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-const Container = takimoto.View({
+export const ANILIST_ACCESS_TOKEN_STORAGE = `com.goodweebs.app.access_token`;
+
+const useProxy = true;
+
+const redirectUri = makeRedirectUri({
+  native: "goodweebs://redirect",
+  // useProxy,
+});
+
+console.log({ redirectUri });
+
+const Container = takimoto.ScrollView({
   flex: 1,
-  justifyContent: "space-between",
-  alignItems: "center",
   padding: 16,
   paddingTop: 88,
 });
@@ -68,16 +88,103 @@ function Button({ onPress, label }: ButtonProps) {
   );
 }
 
-export function AuthScreen() {
+export function useAuthRequest(
+  config: AuthRequestConfig,
+  AniListURL: string
+): [
+  AuthRequest | null,
+  AuthSessionResult | null,
+  (options?: AuthRequestPromptOptions) => Promise<AuthSessionResult>
+] {
+  const [request, setRequest] = useState<AuthRequest | null>(null);
+  const [result, setResult] = useState<AuthSessionResult | null>(null);
+
+  const promptAsync = useCallback(
+    async (options: AuthRequestPromptOptions = {}) => {
+      if (!AniListURL || !request) {
+        throw new Error(
+          "Cannot prompt to authenticate until the request has finished loading."
+        );
+      }
+      const result = await request?.promptAsync(
+        { authorizationEndpoint: AniListURL },
+        options
+      );
+      setResult(result);
+      return result;
+    },
+    [request?.url, AniListURL]
+  );
+
+  useEffect(() => {
+    if (config && AniListURL) {
+      const request = new AuthRequest(config);
+      request.url = AniListURL;
+      setRequest(request);
+    }
+  }, [AniListURL]);
+
+  return [request, result, promptAsync];
+}
+
+type Props = {
+  navigation: StackNavigationProp<RootStackParamList>;
+};
+
+export function AuthScreen({ navigation }: Props) {
+  const clientID = 3549;
+  const [request, response, promptAsync] = useAuthRequest(
+    // @ts-ignore anilist stores redirecturl
+    {
+      usePKCE: false,
+      redirectUri,
+      scopes: [],
+    },
+    // @ts-ignore cmonBruh
+    `https://anilist.co/api/v2/oauth/authorize?client_id=${clientID}&response_type=token`
+  );
+
+  useEffect(function navigateIfAccessTokenExists() {
+    (async () => {
+      try {
+        const token = await AsyncStorage.getItem(ANILIST_ACCESS_TOKEN_STORAGE);
+        if (token) {
+          navigation.replace("Tabs");
+        }
+      } catch (_) {}
+    })();
+  });
+
   return (
-    <Container>
+    <Container
+      contentContainerStyle={{
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
       <BrandingGroup>
         <Logo source={require("yep/assets/launch/logo-wrapped-dark.png")} />
         <BrandingSpacer />
         <Tagline>An anime tracking app powered by AniList and Expo.</Tagline>
       </BrandingGroup>
+      <Tagline>request {JSON.stringify(request)}</Tagline>
+      <Tagline>response {JSON.stringify(response)}</Tagline>
       <ButtonGroup>
-        <Button label="Log in" onPress={() => {}} />
+        <Button
+          label="Log in"
+          onPress={async () => {
+            const result = await promptAsync();
+            if (result.type === "error" || result.type === "success") {
+              if (result.params.access_token) {
+                await AsyncStorage.setItem(
+                  ANILIST_ACCESS_TOKEN_STORAGE,
+                  result.params.access_token
+                );
+                navigation.replace("Tabs");
+              }
+            }
+          }}
+        />
         <ButtonSpacer />
         <Button label="Sign up" onPress={() => {}} />
         <AniListFootnote>via AniList</AniListFootnote>

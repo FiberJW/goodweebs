@@ -14,6 +14,8 @@ import {
   Image,
   TextInput,
   TextInputProps,
+  ScrollView,
+  ScrollViewProps,
 } from "react-native";
 import React, {
   useState,
@@ -208,6 +210,16 @@ export const takimoto = {
       return (
         <TouchableOpacity {...rest} style={[styles, styleProp]} ref={ref} />
       );
+    });
+  },
+  ScrollView(style: DynamicKeys<ViewStyle>): FC<ScrollViewProps> {
+    return forwardRef(function WrappedScrollView(
+      { style: styleProp, ...rest }: ScrollViewProps,
+      ref: Ref<ScrollView>
+    ) {
+      const styles = useTakimoto(style);
+
+      return <ScrollView {...rest} style={[styles, styleProp]} ref={ref} />;
     });
   },
   TextInput(style: DynamicKeys<TextStyle>): FC<TextInputProps> {

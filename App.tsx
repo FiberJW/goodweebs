@@ -1,5 +1,5 @@
-import React from "react";
-import { Image, StatusBar } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Image, StatusBar, AsyncStorage } from "react-native";
 import * as Sentry from "sentry-expo";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -11,7 +11,10 @@ import { AnimeListScreen } from "yep/screens/AnimeListScreen";
 import { DiscoverScreen } from "yep/screens/DiscoverScreen";
 import { ProfileScreen } from "yep/screens/ProfileScreen";
 import { DetailsScreen } from "yep/screens/DetailsScreen";
-import { AuthScreen } from "yep/screens/AuthScreen";
+import {
+  AuthScreen,
+  ANILIST_ACCESS_TOKEN_STORAGE,
+} from "yep/screens/AuthScreen";
 // import { MangaListScreen } from "yep/screens/MangaListScreen";
 // import { SettingsScreen } from "yep/screens/SettingsScreen";
 
@@ -20,8 +23,14 @@ Sentry.init({
     "https://b2756b0df548451d98707d024aff00d1@o58038.ingest.sentry.io/5248224",
 });
 
+export type RootStackParamList = {
+  Tabs: undefined;
+  Auth: undefined;
+  Details: { id: string };
+};
+
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
 function Tabs() {
   return (
@@ -154,6 +163,8 @@ interface FontMap {
 }
 
 export default function App() {
+  const [checkedForToken, setCheckedForToken] = useState(false);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
   const fontsLoaded = useFonts({
     "Manrope-Bold": require("yep/assets/fonts/manrope/Manrope-Bold.otf"),
     "Manrope-ExtraBold": require("yep/assets/fonts/manrope/Manrope-ExtraBold.otf"),
@@ -164,11 +175,25 @@ export default function App() {
     "Manrope-SemiBold": require("yep/assets/fonts/manrope/Manrope-SemiBold.otf"),
   });
 
-  return fontsLoaded ? (
+  useEffect(function navigateIfAccessTokenExists() {
+    (async () => {
+      try {
+        const token = await AsyncStorage.getItem(ANILIST_ACCESS_TOKEN_STORAGE);
+        if (token) {
+          setAccessToken(token);
+        }
+      } catch (_) {
+      } finally {
+        setCheckedForToken(true);
+      }
+    })();
+  });
+
+  return fontsLoaded || checkedForToken ? (
     <NavigationContainer theme={theme}>
       <StatusBar barStyle="light-content" />
       <Stack.Navigator
-        initialRouteName={false ? "Tabs" : "Auth"}
+        initialRouteName={accessToken ? "Tabs" : "Auth"}
         screenOptions={{
           title: "",
           headerTitleStyle: {
