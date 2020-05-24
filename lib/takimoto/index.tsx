@@ -25,6 +25,8 @@ import {
   TextInputProps,
   ScrollView,
   ScrollViewProps,
+  FlatList,
+  FlatListProps,
 } from "react-native";
 
 type DeclarativeWindowSizeStyles<StyleT> = {
@@ -229,6 +231,34 @@ export const takimoto = {
 
       return (
         <ScrollView
+          {...rest}
+          style={[styles, styleProp]}
+          contentContainerStyle={[
+            contentContainerStyles,
+            contentContainerStyleProp,
+          ]}
+          ref={ref}
+        />
+      );
+    });
+  },
+  FlatList<ItemT>(
+    style: DynamicKeys<ViewStyle>,
+    contentContainerStyle: DynamicKeys<ViewStyle> = {}
+  ): FC<FlatListProps<ItemT>> {
+    return forwardRef(function WrappedFlatList(
+      {
+        style: styleProp,
+        contentContainerStyle: contentContainerStyleProp,
+        ...rest
+      }: FlatListProps<ItemT>,
+      ref: Ref<FlatList>
+    ) {
+      const styles = useTakimoto(style);
+      const contentContainerStyles = useTakimoto(contentContainerStyle);
+
+      return (
+        <FlatList
           {...rest}
           style={[styles, styleProp]}
           contentContainerStyle={[
