@@ -4,9 +4,8 @@ import {
   AuthRequestPromptOptions,
   AuthSessionResult,
 } from "expo-auth-session";
-import { useEffect, useState, useCallback } from "react";
-
 import Constants from "expo-constants";
+import { useEffect, useState, useCallback } from "react";
 import { AniListClientID } from "yep/constants";
 
 const redirectUri = makeRedirectUri({

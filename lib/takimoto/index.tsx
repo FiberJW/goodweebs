@@ -1,3 +1,12 @@
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  forwardRef,
+  FC,
+  Ref,
+} from "react";
 import {
   ViewStyle,
   ScaledSize,
@@ -17,15 +26,6 @@ import {
   ScrollView,
   ScrollViewProps,
 } from "react-native";
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  useMemo,
-  forwardRef,
-  FC,
-  Ref,
-} from "react";
 
 type DeclarativeWindowSizeStyles<StyleT> = {
   "<"?: {
@@ -81,13 +81,13 @@ function useTakimoto<StyleT>(style: DynamicKeys<StyleT>) {
   const styles = useMemo(() => {
     const styleCopy = { ...style };
     const styleWithoutExtras = (() => {
-      let s = { ...styleCopy };
+      const s = { ...styleCopy };
       delete s.whenHeight;
       delete s.whenWidth;
       return s as StyleT;
     })();
 
-    let stylesArray = [styleWithoutExtras];
+    const stylesArray = [styleWithoutExtras];
 
     for (const operator in styleCopy.whenHeight) {
       if (styleCopy.whenHeight.hasOwnProperty(operator)) {

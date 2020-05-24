@@ -1,13 +1,11 @@
+import { ApolloProvider } from "@apollo/react-hooks";
+import { AppLoading } from "expo";
 import React, { useState, useEffect } from "react";
 import { AsyncStorage } from "react-native";
 import * as Sentry from "sentry-expo";
-import { AppLoading } from "expo";
-
-import { ApolloProvider } from "@apollo/react-hooks";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
-
-import { useFonts } from "yep/hooks/font";
 import { client } from "yep/graphql/client";
+import { useFonts } from "yep/hooks/font";
 import { Navigation } from "yep/navigation";
 
 Sentry.init({

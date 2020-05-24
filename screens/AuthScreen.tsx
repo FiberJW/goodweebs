@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
-import { dark } from "yep/themes";
-import { takimoto } from "yep/lib/takimoto";
-import { AsyncStorage } from "react-native";
-import { RootStackParamList } from "yep/navigation";
-import { ANILIST_ACCESS_TOKEN_STORAGE, AniListClientID } from "yep/constants";
 import { StackNavigationProp } from "@react-navigation/stack";
+import React, { useEffect } from "react";
+import { AsyncStorage } from "react-native";
+import { ANILIST_ACCESS_TOKEN_STORAGE, AniListClientID } from "yep/constants";
 import { useAniListAuthRequest } from "yep/hooks/auth";
+import { takimoto } from "yep/lib/takimoto";
+import { RootStackParamList } from "yep/navigation";
+import { dark } from "yep/themes";
 
 type ButtonProps = {
   label: string;

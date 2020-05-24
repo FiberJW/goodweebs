@@ -1,6 +1,6 @@
 import React from "react";
-import { takimoto } from "yep/lib/takimoto";
 import { Header } from "yep/components/Header";
+import { takimoto } from "yep/lib/takimoto";
 
 export function SettingsScreen() {
   return (

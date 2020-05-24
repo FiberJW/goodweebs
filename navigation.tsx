@@ -1,13 +1,13 @@
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
-import { Image, StatusBar } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { dark } from "yep/themes";
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { Image, StatusBar } from "react-native";
 import { AnimeListScreen } from "yep/screens/AnimeListScreen";
+import { AuthScreen } from "yep/screens/AuthScreen";
+import { DetailsScreen } from "yep/screens/DetailsScreen";
 import { DiscoverScreen } from "yep/screens/DiscoverScreen";
 import { ProfileScreen } from "yep/screens/ProfileScreen";
-import { DetailsScreen } from "yep/screens/DetailsScreen";
-import { AuthScreen } from "yep/screens/AuthScreen";
+import { dark } from "yep/themes";
 
 export type RootStackParamList = {
   Tabs: undefined;

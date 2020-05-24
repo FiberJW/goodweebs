@@ -1,9 +1,9 @@
-import { ApolloClient } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
-import { HttpLink } from "apollo-link-http";
-import { onError } from "apollo-link-error";
+import { ApolloClient } from "apollo-client";
 import { ApolloLink } from "apollo-link";
 import { setContext } from "apollo-link-context";
+import { onError } from "apollo-link-error";
+import { HttpLink } from "apollo-link-http";
 import { AsyncStorage } from "react-native";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 

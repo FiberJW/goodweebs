@@ -1,8 +1,7 @@
-import React from "react";
-import { dark } from "yep/themes";
-import { takimoto } from "yep/lib/takimoto";
-
 import Constants from "expo-constants";
+import React from "react";
+import { takimoto } from "yep/lib/takimoto";
+import { dark } from "yep/themes";
 
 const Container = takimoto.Text({
   backgroundColor: dark.navBackground,

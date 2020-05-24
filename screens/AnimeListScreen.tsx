@@ -1,8 +1,6 @@
-import React, { useState } from "react";
-import { takimoto } from "yep/lib/takimoto";
-import { Header } from "yep/components/Header";
 import { useQuery } from "@apollo/react-hooks";
-import { GetViewer } from "yep/graphql/queries/Viewer";
+import React, { useState } from "react";
+import { Header } from "yep/components/Header";
 import {
   GetViewerQuery,
   GetViewerQueryVariables,
@@ -11,6 +9,8 @@ import {
   MediaListStatus,
 } from "yep/graphql/generated";
 import { GetAnimeList } from "yep/graphql/queries/AnimeList";
+import { GetViewer } from "yep/graphql/queries/Viewer";
+import { takimoto } from "yep/lib/takimoto";
 
 export function AnimeListScreen() {
   const [status, setStatus] = useState<MediaListStatus>(
