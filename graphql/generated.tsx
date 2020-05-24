@@ -4276,6 +4276,47 @@ export type UserModData = {
   counts?: Maybe<Scalars['Json']>;
 };
 
+export type GetAnimeListQueryVariables = {
+  userId?: Maybe<Scalars['Int']>;
+  status?: Maybe<MediaListStatus>;
+};
+
+
+export type GetAnimeListQuery = (
+  { __typename?: 'Query' }
+  & { MediaListCollection?: Maybe<(
+    { __typename?: 'MediaListCollection' }
+    & Pick<MediaListCollection, 'hasNextChunk'>
+    & { lists?: Maybe<Array<Maybe<(
+      { __typename?: 'MediaListGroup' }
+      & { entries?: Maybe<Array<Maybe<(
+        { __typename?: 'MediaList' }
+        & Pick<MediaList, 'id' | 'mediaId' | 'score' | 'progress'>
+        & { media?: Maybe<(
+          { __typename?: 'Media' }
+          & Pick<Media, 'id' | 'type' | 'format' | 'status' | 'description' | 'episodes' | 'bannerImage'>
+          & { title?: Maybe<(
+            { __typename?: 'MediaTitle' }
+            & Pick<MediaTitle, 'romaji' | 'english' | 'native' | 'userPreferred'>
+          )>, endDate?: Maybe<(
+            { __typename?: 'FuzzyDate' }
+            & Pick<FuzzyDate, 'year' | 'month' | 'day'>
+          )>, startDate?: Maybe<(
+            { __typename?: 'FuzzyDate' }
+            & Pick<FuzzyDate, 'year' | 'month' | 'day'>
+          )>, coverImage?: Maybe<(
+            { __typename?: 'MediaCoverImage' }
+            & Pick<MediaCoverImage, 'extraLarge' | 'large' | 'medium' | 'color'>
+          )>, nextAiringEpisode?: Maybe<(
+            { __typename?: 'AiringSchedule' }
+            & Pick<AiringSchedule, 'id'>
+          )> }
+        )> }
+      )>>> }
+    )>>> }
+  )> }
+);
+
 export type GetViewerQueryVariables = {};
 
 
@@ -4292,6 +4333,75 @@ export type GetViewerQuery = (
 );
 
 
+export const GetAnimeListDocument = gql`
+    query GetAnimeList($userId: Int, $status: MediaListStatus) {
+  MediaListCollection(userId: $userId, type: ANIME, status: $status) {
+    lists {
+      entries {
+        id
+        mediaId
+        score
+        progress
+        media {
+          id
+          title {
+            romaji
+            english
+            native
+            userPreferred
+          }
+          type
+          format
+          status
+          description
+          endDate {
+            year
+            month
+            day
+          }
+          startDate {
+            year
+            month
+            day
+          }
+          episodes
+          coverImage {
+            extraLarge
+            large
+            medium
+            color
+          }
+          bannerImage
+          nextAiringEpisode {
+            id
+          }
+        }
+      }
+    }
+    hasNextChunk
+  }
+}
+    `;
+export type GetAnimeListComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetAnimeListQuery, GetAnimeListQueryVariables>, 'query'>;
+
+    export const GetAnimeListComponent = (props: GetAnimeListComponentProps) => (
+      <ApolloReactComponents.Query<GetAnimeListQuery, GetAnimeListQueryVariables> query={GetAnimeListDocument} {...props} />
+    );
+    
+export type GetAnimeListProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<GetAnimeListQuery, GetAnimeListQueryVariables>
+    } & TChildProps;
+export function withGetAnimeList<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  GetAnimeListQuery,
+  GetAnimeListQueryVariables,
+  GetAnimeListProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, GetAnimeListQuery, GetAnimeListQueryVariables, GetAnimeListProps<TChildProps, TDataName>>(GetAnimeListDocument, {
+      alias: 'getAnimeList',
+      ...operationOptions
+    });
+};
+export type GetAnimeListQueryResult = ApolloReactCommon.QueryResult<GetAnimeListQuery, GetAnimeListQueryVariables>;
 export const GetViewerDocument = gql`
     query GetViewer {
   Viewer {
