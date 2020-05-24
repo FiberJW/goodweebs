@@ -41,12 +41,7 @@ export function AuthScreen({ navigation }: Props) {
   });
 
   return (
-    <Container
-      contentContainerStyle={{
-        justifyContent: "space-between",
-        alignItems: "center",
-      }}
-    >
+    <Container>
       <BrandingGroup>
         <Logo source={require("yep/assets/launch/logo-wrapped-dark.png")} />
         <BrandingSpacer />
@@ -78,11 +73,17 @@ export function AuthScreen({ navigation }: Props) {
   );
 }
 
-const Container = takimoto.ScrollView({
-  flex: 1,
-  padding: 16,
-  paddingTop: 88,
-});
+const Container = takimoto.ScrollView(
+  {
+    flex: 1,
+    padding: 16,
+    paddingTop: 88,
+  },
+  {
+    justifyContent: "space-between",
+    alignItems: "center",
+  }
+);
 
 const Logo = takimoto.Image({
   width: 256,

@@ -212,14 +212,32 @@ export const takimoto = {
       );
     });
   },
-  ScrollView(style: DynamicKeys<ViewStyle>): FC<ScrollViewProps> {
+  ScrollView(
+    style: DynamicKeys<ViewStyle>,
+    contentContainerStyle: DynamicKeys<ViewStyle> = {}
+  ): FC<ScrollViewProps> {
     return forwardRef(function WrappedScrollView(
-      { style: styleProp, ...rest }: ScrollViewProps,
+      {
+        style: styleProp,
+        contentContainerStyle: contentContainerStyleProp,
+        ...rest
+      }: ScrollViewProps,
       ref: Ref<ScrollView>
     ) {
       const styles = useTakimoto(style);
+      const contentContainerStyles = useTakimoto(contentContainerStyle);
 
-      return <ScrollView {...rest} style={[styles, styleProp]} ref={ref} />;
+      return (
+        <ScrollView
+          {...rest}
+          style={[styles, styleProp]}
+          contentContainerStyle={[
+            contentContainerStyles,
+            contentContainerStyleProp,
+          ]}
+          ref={ref}
+        />
+      );
     });
   },
   TextInput(style: DynamicKeys<TextStyle>): FC<TextInputProps> {
