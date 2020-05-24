@@ -8,7 +8,7 @@ import { AuthScreen } from "yep/screens/AuthScreen";
 import { DetailsScreen } from "yep/screens/DetailsScreen";
 import { DiscoverScreen } from "yep/screens/DiscoverScreen";
 import { ProfileScreen } from "yep/screens/ProfileScreen";
-import { dark } from "yep/themes";
+import { darkTheme } from "yep/themes";
 
 export type RootStackParamList = {
   Tabs: undefined;
@@ -124,10 +124,10 @@ export const theme: typeof DefaultTheme = {
   dark: true,
   colors: {
     ...DefaultTheme.colors,
-    primary: dark.text,
-    background: dark.background,
-    card: dark.navBackground,
-    text: dark.text,
+    primary: darkTheme.text,
+    background: darkTheme.background,
+    card: darkTheme.navBackground,
+    text: darkTheme.text,
     border: "transparent",
   },
 };

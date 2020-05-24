@@ -11,6 +11,7 @@ import {
 import { GetAnimeList } from "yep/graphql/queries/AnimeList";
 import { GetViewer } from "yep/graphql/queries/Viewer";
 import { takimoto } from "yep/lib/takimoto";
+import { getString, StringCase } from "yep/strings";
 
 export function AnimeListScreen() {
   const [status, setStatus] = useState<MediaListStatus>(
@@ -36,7 +37,7 @@ export function AnimeListScreen() {
 
   return (
     <Container>
-      <Header label="Anime" />
+      <Header label={getString("anime", StringCase.TITLE)} />
     </Container>
   );
 }

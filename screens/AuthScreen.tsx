@@ -5,7 +5,8 @@ import { ANILIST_ACCESS_TOKEN_STORAGE, AniListClientID } from "yep/constants";
 import { useAniListAuthRequest } from "yep/hooks/auth";
 import { takimoto } from "yep/lib/takimoto";
 import { RootStackParamList } from "yep/navigation";
-import { dark } from "yep/themes";
+import { getString } from "yep/strings";
+import { darkTheme } from "yep/themes";
 
 type ButtonProps = {
   label: string;
@@ -25,7 +26,7 @@ type Props = {
 };
 
 export function AuthScreen({ navigation }: Props) {
-  const [request, response, promptAsync] = useAniListAuthRequest({
+  const [, , promptAsync] = useAniListAuthRequest({
     clientID: AniListClientID.SIMULATOR,
   });
 
@@ -45,13 +46,11 @@ export function AuthScreen({ navigation }: Props) {
       <BrandingGroup>
         <Logo source={require("yep/assets/launch/logo-wrapped-dark.png")} />
         <BrandingSpacer />
-        <Tagline>An anime tracking app powered by AniList and Expo.</Tagline>
+        <Tagline>{getString("tagline")}</Tagline>
       </BrandingGroup>
-      <Tagline>request {JSON.stringify(request)}</Tagline>
-      <Tagline>response {JSON.stringify(response)}</Tagline>
       <ButtonGroup>
         <Button
-          label="Log in"
+          label={getString("logIn")}
           onPress={async () => {
             const result = await promptAsync();
             if (result.type === "error" || result.type === "success") {
@@ -66,8 +65,8 @@ export function AuthScreen({ navigation }: Props) {
           }}
         />
         <ButtonSpacer />
-        <Button label="Sign up" onPress={() => {}} />
-        <AniListFootnote>via AniList</AniListFootnote>
+        <Button label={getString("signUp")} onPress={() => {}} />
+        <AniListFootnote>{getString("AniListAuthAttribution")}</AniListFootnote>
       </ButtonGroup>
     </Container>
   );
@@ -97,7 +96,7 @@ const ButtonSpacer = takimoto.View({ height: 8 });
 const BrandingSpacer = takimoto.View({ height: 16 });
 
 const ButtonTouchable = takimoto.TouchableOpacity({
-  backgroundColor: dark.primaryButton,
+  backgroundColor: darkTheme.primaryButton,
   padding: 16,
   borderRadius: 8,
   justifyContent: "center",
@@ -108,14 +107,14 @@ const ButtonTouchable = takimoto.TouchableOpacity({
 const ButtonLabel = takimoto.Text({
   fontFamily: "Manrope-SemiBold",
   fontSize: 16,
-  color: dark.text,
+  color: darkTheme.text,
   textAlign: "center",
 });
 
 const Tagline = takimoto.Text({
   fontFamily: "Manrope-Regular",
   fontSize: 16,
-  color: dark.text,
+  color: darkTheme.text,
   textAlign: "center",
   maxWidth: 300,
 });
@@ -125,7 +124,7 @@ const BrandingGroup = takimoto.View({ alignItems: "center" });
 const AniListFootnote = takimoto.Text({
   fontFamily: "Manrope-Regular",
   fontSize: 12.8,
-  color: dark.footnote,
+  color: darkTheme.footnote,
   textAlign: "center",
   marginTop: 8,
 });

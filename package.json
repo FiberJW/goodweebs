@@ -37,7 +37,8 @@
     "react-native-safe-area-context": "0.7.3",
     "react-native-screens": "~2.2.0",
     "react-native-web": "~0.11.7",
-    "sentry-expo": "expo/sentry-expo#@fiberjw/written-in-typescript"
+    "sentry-expo": "expo/sentry-expo#@fiberjw/written-in-typescript",
+    "title": "^3.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

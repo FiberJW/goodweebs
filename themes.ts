@@ -1,6 +1,6 @@
 import { darkGray, black, white, white80 } from "yep/colors";
 
-export const dark = {
+export const darkTheme = {
   background: darkGray,
   navBackground: black,
   primaryButton: black,

@@ -1,16 +1,16 @@
 import Constants from "expo-constants";
 import React from "react";
 import { takimoto } from "yep/lib/takimoto";
-import { dark } from "yep/themes";
+import { darkTheme } from "yep/themes";
 
 const Container = takimoto.Text({
-  backgroundColor: dark.navBackground,
+  backgroundColor: darkTheme.navBackground,
   padding: 16,
   width: "100%",
 });
 
 const Label = takimoto.Text({
-  color: dark.text,
+  color: darkTheme.text,
   fontFamily: "Manrope-ExtraBold",
   fontSize: 25,
 });
