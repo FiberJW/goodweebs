@@ -1,5 +1,7 @@
-exports.handler = (event, _context, callback) => {
+exports.handler = (event, context, callback) => {
   const params = event.path.split("#")[1];
+
+  console.log({ event, context });
 
   const response = {
     statusCode: 301,
