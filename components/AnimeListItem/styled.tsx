@@ -43,13 +43,12 @@ export const BroadcastSchedule = takimoto.Text({
 export const TitleAndBroadcastColumn = takimoto.View({
   alignItems: "flex-start",
   justifyContent: "space-between",
-  flex: 0.6,
+  flex: 1,
 });
 
 export const ProgressColumn = takimoto.View({
   alignItems: "flex-end",
   justifyContent: "space-between",
-  flex: 0.4,
 });
 
 export const Spacer = takimoto.View({
