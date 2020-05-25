@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/react-hooks";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import React, { useState } from "react";
+import { AnimeListItem } from "yep/components/AnimeListItem";
 import { Header } from "yep/components/Header";
 import { StatusChip } from "yep/components/StatusChip";
 import { Statuses, Sorts } from "yep/constants";
@@ -58,6 +59,7 @@ export function AnimeListScreen() {
       <Header label={getString("anime", StringCase.TITLE)} />
       <Container>
         <StatusChipList
+          showsHorizontalScrollIndicator={false}
           horizontal
           data={Statuses}
           ItemSeparatorComponent={StatusChipListDivider}
@@ -98,6 +100,9 @@ export function AnimeListScreen() {
             <SortIcon source={require("yep/assets/icons/ui/sort.png")} />
           </SortTouchable>
         </CountAndSortRow>
+        <Spacer />
+        <AnimeListItem />
+        <Spacer />
       </Container>
     </Root>
   );

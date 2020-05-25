@@ -1,19 +1,7 @@
 import Constants from "expo-constants";
 import React from "react";
-import { takimoto } from "yep/lib/takimoto";
-import { darkTheme } from "yep/themes";
 
-const Container = takimoto.Text({
-  backgroundColor: darkTheme.navBackground,
-  padding: 16,
-  width: "100%",
-});
-
-const Label = takimoto.Text({
-  color: darkTheme.text,
-  fontFamily: "Manrope-ExtraBold",
-  fontSize: 25,
-});
+import { Container, Label } from "./styled";
 
 type Props = {
   label: string;
