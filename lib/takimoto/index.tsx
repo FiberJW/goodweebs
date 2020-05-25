@@ -21,6 +21,8 @@ import {
   ImageStyle,
   ImageProps,
   Image,
+  ImageBackground,
+  ImageBackgroundProps,
   TextInput,
   TextInputProps,
   ScrollView,
@@ -28,6 +30,7 @@ import {
   FlatList,
   FlatListProps,
 } from "react-native";
+import { LinearGradient, LinearGradientProps } from "expo-linear-gradient";
 
 type DeclarativeWindowSizeStyles<StyleT> = {
   "<"?: {
@@ -211,6 +214,28 @@ export const takimoto = {
 
       return (
         <TouchableOpacity {...rest} style={[styles, styleProp]} ref={ref} />
+      );
+    });
+  },
+  LinearGradient(style: DynamicKeys<ViewStyle>): FC<LinearGradientProps> {
+    return forwardRef(function WrappedLinearGradient(
+      { style: styleProp, ...rest }: LinearGradientProps,
+      ref: Ref<LinearGradient>
+    ) {
+      const styles = useTakimoto(style);
+
+      return <LinearGradient {...rest} style={[styles, styleProp]} ref={ref} />;
+    });
+  },
+  ImageBackground(style: DynamicKeys<ViewStyle>): FC<ImageBackgroundProps> {
+    return forwardRef(function WrappedImageBackground(
+      { style: styleProp, ...rest }: ImageBackgroundProps,
+      ref: Ref<ImageBackground>
+    ) {
+      const styles = useTakimoto(style);
+
+      return (
+        <ImageBackground {...rest} style={[styles, styleProp]} ref={ref} />
       );
     });
   },

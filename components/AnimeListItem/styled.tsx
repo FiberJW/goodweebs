@@ -1,5 +1,5 @@
 import React from "react";
-import { ImageSourcePropType } from "react-native";
+import { ImageSourcePropType, StyleSheet } from "react-native";
 import { takimoto } from "yep/lib/takimoto";
 import { darkTheme } from "yep/themes";
 
@@ -10,10 +10,18 @@ export const Container = takimoto.TouchableOpacity({
   flexDirection: "row",
 });
 
-export const Poster = takimoto.Image({
+export const Poster = takimoto.ImageBackground({
   height: 80,
   width: 56,
   borderRadius: 4,
+  overflow: "hidden",
+});
+
+export const PosterGradient = takimoto.LinearGradient({
+  ...StyleSheet.absoluteFillObject,
+  justifyContent: "flex-end",
+  alignItems: "flex-end",
+  padding: 4,
 });
 
 export const BroadcastIcon = takimoto.Image({

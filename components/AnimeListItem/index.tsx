@@ -12,6 +12,8 @@ import {
   ProgressButton,
   Spacer,
   ProgressButtonSpacer,
+  PosterGradient,
+  BroadcastIcon,
 } from "./styled";
 
 type Props = {
@@ -34,7 +36,13 @@ export function AnimeListItem() {
           uri:
             "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx104462-KrVWRvPcR7ci.jpg",
         }}
-      />
+      >
+        <PosterGradient colors={["transparent", "rgba(0,0,0,0.5)"]}>
+          <BroadcastIcon
+            source={require("yep/assets/icons/ui/broadcast.png")}
+          />
+        </PosterGradient>
+      </Poster>
       <Spacer />
       <TitleAndBroadcastColumn>
         <Title numberOfLines={2}>A Certain Scientific Railgun T</Title>

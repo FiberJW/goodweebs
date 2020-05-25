@@ -27,6 +27,7 @@
     "expo": "~37.0.3",
     "expo-auth-session": "~1.2.1",
     "expo-font": "~8.1.0",
+    "expo-linear-gradient": "~8.1.0",
     "expo-web-browser": "~8.2.1",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
