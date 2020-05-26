@@ -94,18 +94,18 @@ export const List = takimoto.FlatList<{
 
 export const ListSpacer = takimoto.View({ width: 8 });
 
-export const Poster = takimoto.ImageBackground({
-  height: 80,
-  width: 56,
+export const Poster = takimoto.Image({
+  height: 128,
+  width: 89.6,
   borderRadius: 4,
   overflow: "hidden",
   backgroundColor: darkTheme.listItemBackground,
 });
 
-export const Person = takimoto.ImageBackground({
-  height: 56,
-  width: 56,
-  borderRadius: 28,
+export const Person = takimoto.Image({
+  height: 128,
+  width: 128,
+  borderRadius: 64,
   overflow: "hidden",
   backgroundColor: darkTheme.listItemBackground,
 });

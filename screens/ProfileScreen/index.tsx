@@ -52,6 +52,7 @@ export function ProfileScreen() {
           <ListHeader>Favorite Anime</ListHeader>
           <List
             horizontal
+            showsHorizontalScrollIndicator={false}
             ItemSeparatorComponent={ListSpacer}
             keyExtractor={(item) => item.id}
             data={[{ id: "1" }, { id: "2" }, { id: "3" }]}
@@ -67,6 +68,7 @@ export function ProfileScreen() {
           <ListHeader>Favorite Characters</ListHeader>
           <List
             horizontal
+            showsHorizontalScrollIndicator={false}
             ItemSeparatorComponent={ListSpacer}
             keyExtractor={(item) => item.id}
             data={[{ id: "1" }, { id: "2" }, { id: "3" }]}
@@ -74,7 +76,7 @@ export function ProfileScreen() {
               <Person
                 source={{
                   uri:
-                    "https://vignette.wikia.nocookie.net/new-game/images/c/cd/Hajime_98.PNG/revision/latest?cb=20200319114118",
+                    "https://vignette.wikia.nocookie.net/new-game/images/5/52/Th-c5.png/revision/latest?cb=20180121131726",
                 }}
               />
             )}
