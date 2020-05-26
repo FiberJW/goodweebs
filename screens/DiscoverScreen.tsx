@@ -1,7 +1,8 @@
 import React from "react";
+
 import { Header } from "yep/components/Header";
-import { takimoto } from "yep/lib/takimoto";
 import { getString, StringCase } from "yep/strings";
+import { takimoto } from "yep/takimoto";
 
 export function DiscoverScreen() {
   return (

@@ -1,6 +1,7 @@
 import React from "react";
 import { ImageSourcePropType, StyleSheet } from "react-native";
-import { takimoto } from "yep/lib/takimoto";
+
+import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 
 export const Container = takimoto.TouchableOpacity({

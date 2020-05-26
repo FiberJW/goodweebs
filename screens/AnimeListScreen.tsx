@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/react-hooks";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import React, { useState } from "react";
+
 import { AnimeListItem } from "yep/components/AnimeListItem";
 import { Header } from "yep/components/Header";
 import { StatusChip } from "yep/components/StatusChip";
@@ -15,8 +16,8 @@ import {
 } from "yep/graphql/generated";
 import { GetAnimeList } from "yep/graphql/queries/AnimeList";
 import { GetViewer } from "yep/graphql/queries/Viewer";
-import { takimoto } from "yep/lib/takimoto";
 import { getString, StringCase } from "yep/strings";
+import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 
 export function AnimeListScreen() {
@@ -55,9 +56,9 @@ export function AnimeListScreen() {
   const sortText = `Sort: ${sort.label}`;
 
   return (
-    <Root>
+    <OuterContainer>
       <Header label={getString("anime", StringCase.TITLE)} />
-      <Container>
+      <InnerContainer>
         <StatusChipList
           showsHorizontalScrollIndicator={false}
           horizontal
@@ -103,17 +104,16 @@ export function AnimeListScreen() {
         <Spacer />
         <AnimeListItem />
         <Spacer />
-      </Container>
-    </Root>
+      </InnerContainer>
+    </OuterContainer>
   );
 }
 
-const Root = takimoto.View({
+const OuterContainer = takimoto.View({
   flex: 1,
 });
 
-const Container = takimoto.View({
-  // flex: 1,
+const InnerContainer = takimoto.View({
   padding: 16,
 });
 

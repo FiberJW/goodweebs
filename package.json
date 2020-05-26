@@ -7,7 +7,7 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "generate": "graphql-codegen --config codegen.yml",
-    "lint": "eslint . --ext .ts,.js,.tsx --fix --ignore-path graphql/generated.tsx"
+    "lint": "eslint . --ext .ts,.js,.tsx --fix "
   },
   "dependencies": {
     "@apollo/react-components": "^3.1.5",
@@ -63,13 +63,37 @@
     "typescript": "~3.8.3"
   },
   "eslintConfig": {
+    "ignorePatterns": [
+      "graphql/generated.tsx"
+    ],
     "plugins": [
       "react-native"
     ],
     "extends": [
       "universe/native",
       "plugin:react-native/all"
-    ]
+    ],
+    "rules": {
+      "import/order": [
+        "error",
+        {
+          "newlines-between": "always",
+          "alphabetize": {
+            "order": "asc"
+          },
+          "pathGroups": [
+            {
+              "pattern": "yep/**",
+              "group": "external",
+              "position": "after"
+            }
+          ],
+          "pathGroupsExcludedImportTypes": [
+            "builtin"
+          ]
+        }
+      ]
+    }
   },
   "private": true
 }

@@ -5,6 +5,7 @@ import { setContext } from "apollo-link-context";
 import { onError } from "apollo-link-error";
 import { HttpLink } from "apollo-link-http";
 import { AsyncStorage } from "react-native";
+
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 
 const authLink = setContext(async (_, { headers }) => {

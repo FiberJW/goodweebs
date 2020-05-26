@@ -1,5 +1,6 @@
 import React from "react";
-import { takimoto } from "yep/lib/takimoto";
+
+import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 
 type Props = {

@@ -3,6 +3,7 @@ import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { Image, StatusBar } from "react-native";
+
 import { AnimeListScreen } from "yep/screens/AnimeListScreen";
 import { AuthScreen } from "yep/screens/AuthScreen";
 import { DetailsScreen } from "yep/screens/DetailsScreen";

@@ -1,3 +1,4 @@
+import { LinearGradient, LinearGradientProps } from "expo-linear-gradient";
 import React, {
   useState,
   useCallback,
@@ -30,7 +31,6 @@ import {
   FlatList,
   FlatListProps,
 } from "react-native";
-import { LinearGradient, LinearGradientProps } from "expo-linear-gradient";
 
 type DeclarativeWindowSizeStyles<StyleT> = {
   "<"?: {

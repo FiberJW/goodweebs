@@ -14,7 +14,7 @@ import {
   ProgressButtonSpacer,
   PosterGradient,
   BroadcastIcon,
-} from "./styled";
+} from "./styles";
 
 type Props = {
   onIncrement: () => void;

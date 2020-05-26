@@ -1,6 +1,7 @@
 import React from "react";
-import { takimoto } from "yep/lib/takimoto";
+
 import { getString, StringCase } from "yep/strings";
+import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 
 export function DetailsScreen() {

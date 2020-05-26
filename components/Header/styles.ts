@@ -1,4 +1,4 @@
-import { takimoto } from "yep/lib/takimoto";
+import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 
 export const Container = takimoto.Text({

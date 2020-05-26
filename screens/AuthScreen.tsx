@@ -1,25 +1,14 @@
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useEffect } from "react";
 import { AsyncStorage } from "react-native";
-import { ANILIST_ACCESS_TOKEN_STORAGE, AniListClientID } from "yep/constants";
+
+import { AuthButton } from "yep/components/AuthButton";
+import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { useAniListAuthRequest } from "yep/hooks/auth";
-import { takimoto } from "yep/lib/takimoto";
 import { RootStackParamList } from "yep/navigation";
 import { getString } from "yep/strings";
+import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
-
-type ButtonProps = {
-  label: string;
-  onPress: () => void;
-};
-
-function Button({ onPress, label }: ButtonProps) {
-  return (
-    <ButtonTouchable onPress={onPress}>
-      <ButtonLabel>{label}</ButtonLabel>
-    </ButtonTouchable>
-  );
-}
 
 type Props = {
   navigation: StackNavigationProp<RootStackParamList>;
@@ -40,14 +29,14 @@ export function AuthScreen({ navigation }: Props) {
   });
 
   return (
-    <Container>
+    <Container showsVerticalScrollIndicator={false}>
       <BrandingGroup>
         <Logo source={require("yep/assets/launch/logo-wrapped-dark.png")} />
         <BrandingSpacer />
         <Tagline>{getString("tagline")}</Tagline>
       </BrandingGroup>
       <ButtonGroup>
-        <Button
+        <AuthButton
           label={getString("logIn")}
           onPress={async () => {
             const result = await promptAsync();
@@ -64,7 +53,7 @@ export function AuthScreen({ navigation }: Props) {
           }}
         />
         <ButtonSpacer />
-        <Button label={getString("signUp")} onPress={() => {}} />
+        <AuthButton label={getString("signUp")} onPress={() => {}} />
         <AniListFootnote>{getString("AniListAuthAttribution")}</AniListFootnote>
       </ButtonGroup>
     </Container>
@@ -93,22 +82,6 @@ const ButtonGroup = takimoto.View({ width: "100%" });
 const ButtonSpacer = takimoto.View({ height: 8 });
 
 const BrandingSpacer = takimoto.View({ height: 16 });
-
-const ButtonTouchable = takimoto.TouchableOpacity({
-  backgroundColor: darkTheme.primaryButton,
-  padding: 16,
-  borderRadius: 8,
-  justifyContent: "center",
-  alignItems: "center",
-  width: "100%",
-});
-
-const ButtonLabel = takimoto.Text({
-  fontFamily: "Manrope-SemiBold",
-  fontSize: 16,
-  color: darkTheme.text,
-  textAlign: "center",
-});
 
 const Tagline = takimoto.Text({
   fontFamily: "Manrope-Regular",

@@ -6,6 +6,7 @@ import {
 } from "expo-auth-session";
 import Constants from "expo-constants";
 import { useEffect, useState, useCallback } from "react";
+
 import { AniListClientID } from "yep/constants";
 
 const redirectUri = makeRedirectUri({

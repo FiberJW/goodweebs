@@ -1,7 +1,7 @@
 import Constants from "expo-constants";
 import React from "react";
 
-import { Container, Label } from "./styled";
+import { Container, Label } from "./styles";
 
 type Props = {
   label: string;

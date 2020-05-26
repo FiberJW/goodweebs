@@ -4,6 +4,7 @@ import { AppLoading } from "expo";
 import React, { useState, useEffect } from "react";
 import { AsyncStorage } from "react-native";
 import * as Sentry from "sentry-expo";
+
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { client } from "yep/graphql/client";
 import { useFonts } from "yep/hooks/font";
