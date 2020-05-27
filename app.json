@@ -22,6 +22,10 @@
       "buildNumber": "0.0.1",
       "bundleIdentifier": "com.fiberjw.goodweebs"
     },
-    "android": { "package": "com.fiberjw.goodweebs", "versionCode": 1 }
+    "android": {
+      "package": "com.fiberjw.goodweebs",
+      "versionCode": 1,
+      "permissions": []
+    }
   }
 }
