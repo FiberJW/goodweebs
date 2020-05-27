@@ -25,7 +25,8 @@ export const AnimeFragment = gql`
     description
     averageScore
     coverImage {
-      extraLarge
+      large
+      medium
       color
     }
     nextAiringEpisode {

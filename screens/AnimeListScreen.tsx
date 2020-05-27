@@ -56,7 +56,6 @@ export function AnimeListScreen({ navigation }: Props) {
       status,
       sort: [sort.value],
     },
-    notifyOnNetworkStatusChange: true,
   });
 
   const [updateProgress] = useMutation<

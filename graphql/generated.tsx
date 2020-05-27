@@ -4290,7 +4290,7 @@ export type AnimeFragmentFragment = (
     & Pick<FuzzyDate, 'year' | 'month' | 'day'>
   )>, coverImage?: Maybe<(
     { __typename?: 'MediaCoverImage' }
-    & Pick<MediaCoverImage, 'extraLarge' | 'color'>
+    & Pick<MediaCoverImage, 'large' | 'medium' | 'color'>
   )>, nextAiringEpisode?: Maybe<(
     { __typename?: 'AiringSchedule' }
     & Pick<AiringSchedule, 'id' | 'airingAt' | 'episode' | 'timeUntilAiring'>
@@ -4484,7 +4484,8 @@ export const AnimeFragmentFragmentDoc = gql`
   description
   averageScore
   coverImage {
-    extraLarge
+    large
+    medium
     color
   }
   nextAiringEpisode {

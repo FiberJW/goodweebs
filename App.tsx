@@ -18,6 +18,8 @@ Sentry.init({
     "https://b2756b0df548451d98707d024aff00d1@o58038.ingest.sentry.io/5248224",
 });
 
+// TODO: ya need better error handling + user-facing notifications
+
 export default function App() {
   const [checkedForToken, setCheckedForToken] = useState(false);
   const [accessToken, setAccessToken] = useState<string | null>(null);

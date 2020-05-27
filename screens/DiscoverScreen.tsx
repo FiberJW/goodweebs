@@ -41,15 +41,14 @@ export function DiscoverScreen({ navigation }: Props) {
     GetTrendingTVAnime,
     {
       variables: { season: mediaSeason, year, perPage: 30 },
-      notifyOnNetworkStatusChange: true,
+      pollInterval: 5000,
     }
   );
 
-  const {
-    loading: loadingSearch,
-    data: searchData,
-    refetch: refetchSearch,
-  } = useQuery<SearchAnimeQuery, SearchAnimeQueryVariables>(SearchAnime, {
+  const { loading: loadingSearch, data: searchData } = useQuery<
+    SearchAnimeQuery,
+    SearchAnimeQueryVariables
+  >(SearchAnime, {
     skip: searchTerm.trim().length === 0,
     variables: { search: searchTerm },
     notifyOnNetworkStatusChange: true,
@@ -124,7 +123,7 @@ export function DiscoverScreen({ navigation }: Props) {
               >
                 <Poster
                   resizeMode="cover"
-                  source={{ uri: item.coverImage?.extraLarge ?? "" }}
+                  source={{ uri: item.coverImage?.large ?? "" }}
                 />
                 <PosterTitle numberOfLines={2}>
                   {item.title?.english ||

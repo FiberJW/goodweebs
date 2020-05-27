@@ -42,7 +42,7 @@ export function AnimeListItem({
       <Poster
         resizeMode="cover"
         source={{
-          uri: media.coverImage?.extraLarge ?? "",
+          uri: media.coverImage?.large ?? "",
         }}
       />
       <Spacer />
@@ -85,7 +85,9 @@ export function AnimeListItem({
               media.status === MediaStatus.NotYetReleased || progress === 0
             }
             icon={require("yep/assets/icons/progress-decrement.png")}
-            onPress={onDecrement}
+            onPress={() => {
+              onDecrement();
+            }}
           />
           <ProgressButtonSpacer />
           <ProgressButton
@@ -98,7 +100,9 @@ export function AnimeListItem({
                 ? require("yep/assets/icons/progress-complete.png")
                 : require("yep/assets/icons/progress-increment.png")
             }
-            onPress={onIncrement}
+            onPress={() => {
+              onIncrement();
+            }}
           />
         </ProgressButtonGroup>
       </ProgressColumn>
