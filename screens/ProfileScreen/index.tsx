@@ -126,6 +126,7 @@ export function ProfileScreen({ navigation }: Props) {
                   renderItem={({ item }) => (
                     <FavoriteContainer>
                       <Poster
+                        resizeMode="cover"
                         source={{
                           uri: item?.coverImage?.large ?? "",
                         }}
@@ -152,6 +153,7 @@ export function ProfileScreen({ navigation }: Props) {
               renderItem={({ item }) => (
                 <FavoriteContainer>
                   <Poster
+                    resizeMode="cover"
                     source={{
                       uri: item.image?.large ?? "",
                     }}

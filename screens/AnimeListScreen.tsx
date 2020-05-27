@@ -1,8 +1,10 @@
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useState } from "react";
 
 import { AnimeListItem } from "yep/components/AnimeListItem";
+import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
 import { StatusChip } from "yep/components/StatusChip";
 import { Statuses, Sorts } from "yep/constants";
@@ -20,13 +22,17 @@ import {
 import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
 import { GetAnimeList } from "yep/graphql/queries/AnimeList";
 import { GetViewer } from "yep/graphql/queries/Viewer";
+import { RootStackParamList } from "yep/navigation";
 import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { notEmpty } from "yep/utils";
-import { EmptyState } from "yep/components/EmptyState";
 
-export function AnimeListScreen() {
+type Props = {
+  navigation: StackNavigationProp<RootStackParamList>;
+};
+
+export function AnimeListScreen({ navigation }: Props) {
   const [status, setStatus] = useState<MediaListStatus>(Statuses[0].value);
 
   const [sort, setSort] = useState<{ label: string; value: MediaListSort }>(
@@ -156,6 +162,7 @@ export function AnimeListScreen() {
               keyExtractor={(item) => `${item.id}`}
               renderItem={({ item }) => (
                 <AnimeListItem
+                  navigation={navigation}
                   progress={item.progress ?? 0}
                   onIncrement={async () => {
                     await updateProgress({

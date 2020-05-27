@@ -1,7 +1,9 @@
+import { StackNavigationProp } from "@react-navigation/stack";
 import { formatDistanceToNow, add } from "date-fns";
 import React from "react";
 
 import { AnimeFragmentFragment, MediaStatus } from "yep/graphql/generated";
+import { RootStackParamList } from "yep/navigation";
 
 import {
   Container,
@@ -22,6 +24,7 @@ type Props = {
   onDecrement: () => void;
   progress: number;
   media: AnimeFragmentFragment;
+  navigation: StackNavigationProp<RootStackParamList>;
 };
 
 export function AnimeListItem({
@@ -29,9 +32,13 @@ export function AnimeListItem({
   media,
   onIncrement,
   onDecrement,
+  navigation,
 }: Props) {
   return (
-    <Container activeOpacity={0.7}>
+    <Container
+      activeOpacity={0.7}
+      onPress={() => navigation.navigate("Details")}
+    >
       <Poster
         resizeMode="cover"
         source={{

@@ -1,7 +1,9 @@
 import { useQuery } from "@apollo/react-hooks";
+import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useState } from "react";
 import { Dimensions } from "react-native";
 
+import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
 import { SearchBox } from "yep/components/SearchBox";
 import {
@@ -16,13 +18,17 @@ import {
   SearchAnime,
   year,
 } from "yep/graphql/queries/Discover";
+import { RootStackParamList, Navigation } from "yep/navigation";
 import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { notEmpty } from "yep/utils";
-import { EmptyState } from "yep/components/EmptyState";
 
-export function DiscoverScreen() {
+type Props = {
+  navigation: StackNavigationProp<RootStackParamList>;
+};
+
+export function DiscoverScreen({ navigation }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
 
   const showSearchResultsView = searchTerm.length > 0;
@@ -90,6 +96,7 @@ export function DiscoverScreen() {
               keyExtractor={(item) => `${item.id}`}
               renderItem={({ item, index }) => (
                 <PosterContainer
+                  onPress={() => navigation.navigate("Details")}
                   style={
                     (index + 1) % 3 !== 0 ? { marginRight: 16 } : undefined
                   }
@@ -112,9 +119,13 @@ export function DiscoverScreen() {
             keyExtractor={(item) => `${item.id}`}
             renderItem={({ item, index }) => (
               <PosterContainer
+                onPress={() => navigation.navigate("Details")}
                 style={(index + 1) % 3 !== 0 ? { marginRight: 16 } : undefined}
               >
-                <Poster source={{ uri: item.coverImage?.extraLarge ?? "" }} />
+                <Poster
+                  resizeMode="cover"
+                  source={{ uri: item.coverImage?.extraLarge ?? "" }}
+                />
                 <PosterTitle numberOfLines={2}>
                   {item.title?.english ||
                     item.title?.romaji ||
@@ -149,7 +160,7 @@ const PosterTitle = takimoto.Text({
   color: darkTheme.text,
 });
 
-const PosterContainer = takimoto.View({
+const PosterContainer = takimoto.TouchableOpacity({
   alignItems: "center",
 });
 
