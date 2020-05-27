@@ -1,11 +1,27 @@
+import Constants from "expo-constants";
+
 import { MediaListStatus, MediaListSort } from "yep/graphql/generated";
 
-export const ANILIST_ACCESS_TOKEN_STORAGE = `com.goodweebs.app.access_token`;
-
-export enum AniListClientID {
+enum AniListClientID {
   SIMULATOR = 3549,
   CLIENT = 3559,
+  PROD = 3568,
 }
+
+export const CLIENT_ID = (() => {
+  if (Constants.appOwnership === "standalone") {
+    return AniListClientID.PROD;
+  }
+
+  if (__DEV__) {
+    if (!Constants.isDevice) return AniListClientID.SIMULATOR;
+    return AniListClientID.CLIENT;
+  }
+
+  return AniListClientID.CLIENT;
+})();
+
+export const ANILIST_ACCESS_TOKEN_STORAGE = `com.fiberjw.goodweebs.${CLIENT_ID}.access_token`;
 
 export const Statuses: { label: string; value: MediaListStatus }[] = [
   { label: "Watching", value: MediaListStatus.Current },

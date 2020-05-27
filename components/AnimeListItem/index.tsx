@@ -1,5 +1,6 @@
+import { format } from "date-fns";
 import React from "react";
-import { format, add } from "date-fns";
+
 import { AnimeFragmentFragment, MediaStatus } from "yep/graphql/generated";
 
 import {
@@ -14,8 +15,6 @@ import {
   ProgressButton,
   Spacer,
   ProgressButtonSpacer,
-  PosterGradient,
-  BroadcastIcon,
 } from "./styles";
 
 type Props = {

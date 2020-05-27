@@ -30,6 +30,8 @@ import {
   ScrollViewProps,
   FlatList,
   FlatListProps,
+  ActivityIndicator,
+  ActivityIndicatorProps,
 } from "react-native";
 
 type DeclarativeWindowSizeStyles<StyleT> = {
@@ -214,6 +216,18 @@ export const takimoto = {
 
       return (
         <TouchableOpacity {...rest} style={[styles, styleProp]} ref={ref} />
+      );
+    });
+  },
+  ActivityIndicator(style: DynamicKeys<ViewStyle>): FC<ActivityIndicatorProps> {
+    return forwardRef(function WrappedActivityIndicator(
+      { style: styleProp, ...rest }: ActivityIndicatorProps,
+      ref: Ref<ActivityIndicator>
+    ) {
+      const styles = useTakimoto(style);
+
+      return (
+        <ActivityIndicator {...rest} style={[styles, styleProp]} ref={ref} />
       );
     });
   },

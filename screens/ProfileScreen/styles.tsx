@@ -22,6 +22,7 @@ export const UserInfoAndStatsContainer = takimoto.View({
 export const Avatar = takimoto.Image({
   height: 40,
   width: 40,
+  borderRadius: 20,
   marginRight: 8,
 });
 
@@ -77,22 +78,34 @@ export const ListHeader = takimoto.Text({
   fontFamily: "Manrope-SemiBold",
   fontSize: 25,
   color: darkTheme.text,
-
   marginBottom: 8,
 });
 
-export const List = takimoto.FlatList<{
-  id: string;
-}>(
-  {
-    marginBottom: 8,
-  },
-  {
-    alignItems: "flex-start",
-  }
-);
+export function makeListWithType<T>() {
+  return takimoto.FlatList<T>(
+    {
+      marginBottom: 8,
+    },
+    {
+      alignItems: "flex-start",
+    }
+  );
+}
 
 export const ListSpacer = takimoto.View({ width: 8 });
+
+export const FavoriteContainer = takimoto.View({
+  alignItems: "center",
+});
+
+export const FavoriteName = takimoto.Text({
+  fontFamily: "Manrope-Regular",
+  fontSize: 16,
+  color: darkTheme.text,
+  marginTop: 8,
+  textAlign: "center",
+  maxWidth: 89.6,
+});
 
 export const Poster = takimoto.Image({
   height: 128,

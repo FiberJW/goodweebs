@@ -11,6 +11,7 @@ import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 const authLink = setContext(async (_, { headers }) => {
   // get the authentication token from local storage if it exists
   const token = await AsyncStorage.getItem(ANILIST_ACCESS_TOKEN_STORAGE);
+
   // return the headers to the context so httpLink can read them
   return {
     headers: {

@@ -20,6 +20,8 @@ import { GetViewer } from "yep/graphql/queries/Viewer";
 import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
+import { RefreshControl } from "react-native";
+import { white } from "yep/colors";
 
 export function AnimeListScreen() {
   const [status, setStatus] = useState<MediaListStatus>(Statuses[0].value);
@@ -35,7 +37,7 @@ export function AnimeListScreen() {
     GetViewerQueryVariables
   >(GetViewer);
 
-  const { loading: loadingAnimeList, data: animeListData } = useQuery<
+  const { loading: loadingAnimeList, data: animeListData, refetch } = useQuery<
     GetAnimeListQuery,
     GetAnimeListQueryVariables
   >(GetAnimeList, {
@@ -44,6 +46,7 @@ export function AnimeListScreen() {
       userId: viewerData?.Viewer?.id,
       status,
     },
+    notifyOnNetworkStatusChange: true,
   });
 
   console.log({ loadingViewer, loadingAnimeList, viewerData, animeListData });
@@ -58,10 +61,19 @@ export function AnimeListScreen() {
 
   // TODO: maybe make this better? feels a little dank
   const AnimeFlatList = makeAnimeFlatList<typeof list[number]>();
+  const refreshing = loadingViewer || loadingAnimeList;
 
   return (
     <OuterContainer>
-      <Header label={getString("anime", StringCase.TITLE)} />
+      <Header
+        label={getString("anime", StringCase.TITLE)}
+        onSyncPress={() =>
+          refetch({
+            userId: viewerData?.Viewer?.id,
+            status,
+          })
+        }
+      />
       <InnerContainer>
         <StatusChipListContainer>
           <StatusChipList
@@ -109,11 +121,25 @@ export function AnimeListScreen() {
           </SortTouchable>
         </CountAndSortRow>
         <Spacer />
+        {/* {refreshing && <Spinner size="large" color={white} />} */}
         <AnimeListContainer>
           <AnimeFlatList
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={AnimeListDivider}
             data={list}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={() =>
+                  refetch({
+                    userId: viewerData?.Viewer?.id,
+                    status,
+                  })
+                }
+                tintColor={white}
+                titleColor={white}
+              />
+            }
             keyExtractor={(item) => `${item?.id}`}
             renderItem={({ item }) => (
               <AnimeListItem
@@ -171,6 +197,10 @@ const Count = takimoto.Text({
   fontFamily: "Manrope-Regular",
   fontSize: 12.8,
   color: darkTheme.listCount,
+});
+
+export const Spinner = takimoto.ActivityIndicator({
+  paddingBottom: 16,
 });
 
 const SortTouchable = takimoto.TouchableOpacity({

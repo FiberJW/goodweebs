@@ -21,63 +21,77 @@ export function AuthScreen({ navigation }: Props) {
     (async () => {
       try {
         const token = await AsyncStorage.getItem(ANILIST_ACCESS_TOKEN_STORAGE);
+        console.log({ token });
         if (token) {
           navigation.replace("Tabs");
         }
       } catch (_) {}
     })();
-  });
+  }, []);
 
   return (
-    <Container showsVerticalScrollIndicator={false}>
-      <BrandingGroup>
-        <Logo source={require("yep/assets/launch/logo-wrapped-dark.png")} />
-        <BrandingSpacer />
-        <Tagline>{getString("tagline")}</Tagline>
-      </BrandingGroup>
-      <ButtonGroup>
-        <AuthButton
-          label={getString("logIn")}
-          onPress={async () => {
-            const result = await promptAsync();
-            console.log({ result });
-            if (result.type === "error" || result.type === "success") {
-              if (result.params.access_token) {
-                await AsyncStorage.setItem(
-                  ANILIST_ACCESS_TOKEN_STORAGE,
-                  result.params.access_token
-                );
-                navigation.replace("Tabs");
+    <OuterContainer>
+      <InnerContainer
+        alwaysBounceVertical={false}
+        showsVerticalScrollIndicator={false}
+      >
+        <BrandingGroup>
+          <Logo source={require("yep/assets/launch/logo-wrapped-dark.png")} />
+          <BrandingSpacer />
+          <Tagline>{getString("tagline")}</Tagline>
+        </BrandingGroup>
+        <ButtonGroup>
+          <AuthButton
+            label={getString("logIn")}
+            onPress={async () => {
+              const result = await promptAsync();
+              console.log({ result });
+              if (result.type === "error" || result.type === "success") {
+                if (result.params.access_token) {
+                  await AsyncStorage.setItem(
+                    ANILIST_ACCESS_TOKEN_STORAGE,
+                    result.params.access_token
+                  );
+                  navigation.replace("Tabs");
+                }
               }
-            }
-          }}
-        />
-        <ButtonSpacer />
-        <AuthButton label={getString("signUp")} onPress={() => {}} />
-        <AniListFootnote>{getString("AniListAuthAttribution")}</AniListFootnote>
-      </ButtonGroup>
-    </Container>
+            }}
+          />
+          <ButtonSpacer />
+          <AuthButton label={getString("signUp")} onPress={() => {}} />
+          <AniListFootnote>
+            {getString("AniListAuthAttribution")}
+          </AniListFootnote>
+        </ButtonGroup>
+      </InnerContainer>
+    </OuterContainer>
   );
 }
 
-const Container = takimoto.ScrollView(
+const InnerContainer = takimoto.ScrollView(
   {
-    flex: 1,
-    padding: 16,
     paddingTop: 88,
   },
   {
+    flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
   }
 );
+
+const OuterContainer = takimoto.View({
+  flex: 1,
+  padding: 16,
+});
 
 const Logo = takimoto.Image({
   width: 256,
   height: 159.24,
 });
 
-const ButtonGroup = takimoto.View({ width: "100%" });
+const ButtonGroup = takimoto.View({
+  width: "100%",
+});
 
 const ButtonSpacer = takimoto.View({ height: 8 });
 

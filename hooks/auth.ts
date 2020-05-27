@@ -7,7 +7,7 @@ import {
 import Constants from "expo-constants";
 import { useEffect, useState, useCallback } from "react";
 
-import { AniListClientID } from "yep/constants";
+import { CLIENT_ID } from "yep/constants";
 
 const redirectUri = makeRedirectUri({
   native: "goodweebs://redirect",
@@ -22,11 +22,7 @@ export function useAniListAuthRequest(): [
   const [request, setRequest] = useState<AuthRequest | null>(null);
   const [result, setResult] = useState<AuthSessionResult | null>(null);
 
-  const clientID = Constants.isDevice
-    ? AniListClientID.CLIENT
-    : AniListClientID.SIMULATOR;
-
-  const AniListURL = `https://anilist.co/api/v2/oauth/authorize?client_id=${clientID}&response_type=token`;
+  const AniListURL = `https://anilist.co/api/v2/oauth/authorize?client_id=${CLIENT_ID}&response_type=token`;
 
   const promptAsync = useCallback(
     async (options: AuthRequestPromptOptions = {}) => {

@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
-import * as React from 'react';
 import * as ApolloReactCommon from '@apollo/react-common';
+import * as React from 'react';
 import * as ApolloReactComponents from '@apollo/react-components';
 import * as ApolloReactHoc from '@apollo/react-hoc';
 export type Maybe<T> = T | null;
@@ -4297,6 +4297,48 @@ export type AnimeFragmentFragment = (
   )> }
 );
 
+export type UpdateProgressMutationVariables = {
+  id?: Maybe<Scalars['Int']>;
+  progress?: Maybe<Scalars['Int']>;
+};
+
+
+export type UpdateProgressMutation = (
+  { __typename?: 'Mutation' }
+  & { SaveMediaListEntry?: Maybe<(
+    { __typename?: 'MediaList' }
+    & Pick<MediaList, 'id'>
+  )> }
+);
+
+export type UpdateScoreMutationVariables = {
+  id?: Maybe<Scalars['Int']>;
+  scoreRaw?: Maybe<Scalars['Int']>;
+};
+
+
+export type UpdateScoreMutation = (
+  { __typename?: 'Mutation' }
+  & { SaveMediaListEntry?: Maybe<(
+    { __typename?: 'MediaList' }
+    & Pick<MediaList, 'id'>
+  )> }
+);
+
+export type UpdateStatusMutationVariables = {
+  id?: Maybe<Scalars['Int']>;
+  status?: Maybe<MediaListStatus>;
+};
+
+
+export type UpdateStatusMutation = (
+  { __typename?: 'Mutation' }
+  & { SaveMediaListEntry?: Maybe<(
+    { __typename?: 'MediaList' }
+    & Pick<MediaList, 'id'>
+  )> }
+);
+
 export type GetAnimeListQueryVariables = {
   userId?: Maybe<Scalars['Int']>;
   status?: Maybe<MediaListStatus>;
@@ -4355,6 +4397,44 @@ export type GetViewerQuery = (
     & { avatar?: Maybe<(
       { __typename?: 'UserAvatar' }
       & Pick<UserAvatar, 'large' | 'medium'>
+    )>, favourites?: Maybe<(
+      { __typename?: 'Favourites' }
+      & { anime?: Maybe<(
+        { __typename?: 'MediaConnection' }
+        & { nodes?: Maybe<Array<Maybe<(
+          { __typename?: 'Media' }
+          & Pick<Media, 'id'>
+          & { title?: Maybe<(
+            { __typename?: 'MediaTitle' }
+            & Pick<MediaTitle, 'english' | 'romaji' | 'native'>
+          )>, coverImage?: Maybe<(
+            { __typename?: 'MediaCoverImage' }
+            & Pick<MediaCoverImage, 'large' | 'medium'>
+          )> }
+        )>>> }
+      )>, characters?: Maybe<(
+        { __typename?: 'CharacterConnection' }
+        & { nodes?: Maybe<Array<Maybe<(
+          { __typename?: 'Character' }
+          & Pick<Character, 'id'>
+          & { name?: Maybe<(
+            { __typename?: 'CharacterName' }
+            & Pick<CharacterName, 'full'>
+          )>, image?: Maybe<(
+            { __typename?: 'CharacterImage' }
+            & Pick<CharacterImage, 'large' | 'medium'>
+          )> }
+        )>>> }
+      )> }
+    )>, statistics?: Maybe<(
+      { __typename?: 'UserStatisticTypes' }
+      & { anime?: Maybe<(
+        { __typename?: 'UserStatistics' }
+        & Pick<UserStatistics, 'count' | 'minutesWatched'>
+      )>, manga?: Maybe<(
+        { __typename?: 'UserStatistics' }
+        & Pick<UserStatistics, 'count' | 'chaptersRead'>
+      )> }
     )> }
   )> }
 );
@@ -4395,6 +4475,93 @@ export const AnimeFragmentFragmentDoc = gql`
   }
 }
     `;
+export const UpdateProgressDocument = gql`
+    mutation UpdateProgress($id: Int, $progress: Int) {
+  SaveMediaListEntry(id: $id, progress: $progress) {
+    id
+  }
+}
+    `;
+export type UpdateProgressMutationFn = ApolloReactCommon.MutationFunction<UpdateProgressMutation, UpdateProgressMutationVariables>;
+export type UpdateProgressComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateProgressMutation, UpdateProgressMutationVariables>, 'mutation'>;
+
+    export const UpdateProgressComponent = (props: UpdateProgressComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateProgressMutation, UpdateProgressMutationVariables> mutation={UpdateProgressDocument} {...props} />
+    );
+    
+export type UpdateProgressProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateProgressMutation, UpdateProgressMutationVariables>
+    } & TChildProps;
+export function withUpdateProgress<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  UpdateProgressMutation,
+  UpdateProgressMutationVariables,
+  UpdateProgressProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, UpdateProgressMutation, UpdateProgressMutationVariables, UpdateProgressProps<TChildProps, TDataName>>(UpdateProgressDocument, {
+      alias: 'updateProgress',
+      ...operationOptions
+    });
+};
+export type UpdateProgressMutationResult = ApolloReactCommon.MutationResult<UpdateProgressMutation>;
+export type UpdateProgressMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateProgressMutation, UpdateProgressMutationVariables>;
+export const UpdateScoreDocument = gql`
+    mutation UpdateScore($id: Int, $scoreRaw: Int) {
+  SaveMediaListEntry(id: $id, scoreRaw: $scoreRaw) {
+    id
+  }
+}
+    `;
+export type UpdateScoreMutationFn = ApolloReactCommon.MutationFunction<UpdateScoreMutation, UpdateScoreMutationVariables>;
+export type UpdateScoreComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateScoreMutation, UpdateScoreMutationVariables>, 'mutation'>;
+
+    export const UpdateScoreComponent = (props: UpdateScoreComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateScoreMutation, UpdateScoreMutationVariables> mutation={UpdateScoreDocument} {...props} />
+    );
+    
+export type UpdateScoreProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateScoreMutation, UpdateScoreMutationVariables>
+    } & TChildProps;
+export function withUpdateScore<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  UpdateScoreMutation,
+  UpdateScoreMutationVariables,
+  UpdateScoreProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, UpdateScoreMutation, UpdateScoreMutationVariables, UpdateScoreProps<TChildProps, TDataName>>(UpdateScoreDocument, {
+      alias: 'updateScore',
+      ...operationOptions
+    });
+};
+export type UpdateScoreMutationResult = ApolloReactCommon.MutationResult<UpdateScoreMutation>;
+export type UpdateScoreMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateScoreMutation, UpdateScoreMutationVariables>;
+export const UpdateStatusDocument = gql`
+    mutation UpdateStatus($id: Int, $status: MediaListStatus) {
+  SaveMediaListEntry(id: $id, status: $status) {
+    id
+  }
+}
+    `;
+export type UpdateStatusMutationFn = ApolloReactCommon.MutationFunction<UpdateStatusMutation, UpdateStatusMutationVariables>;
+export type UpdateStatusComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateStatusMutation, UpdateStatusMutationVariables>, 'mutation'>;
+
+    export const UpdateStatusComponent = (props: UpdateStatusComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateStatusMutation, UpdateStatusMutationVariables> mutation={UpdateStatusDocument} {...props} />
+    );
+    
+export type UpdateStatusProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateStatusMutation, UpdateStatusMutationVariables>
+    } & TChildProps;
+export function withUpdateStatus<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  UpdateStatusMutation,
+  UpdateStatusMutationVariables,
+  UpdateStatusProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, UpdateStatusMutation, UpdateStatusMutationVariables, UpdateStatusProps<TChildProps, TDataName>>(UpdateStatusDocument, {
+      alias: 'updateStatus',
+      ...operationOptions
+    });
+};
+export type UpdateStatusMutationResult = ApolloReactCommon.MutationResult<UpdateStatusMutation>;
+export type UpdateStatusMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateStatusMutation, UpdateStatusMutationVariables>;
 export const GetAnimeListDocument = gql`
     query GetAnimeList($userId: Int, $status: MediaListStatus) {
   MediaListCollection(userId: $userId, type: ANIME, status: $status) {
@@ -4474,6 +4641,44 @@ export const GetViewerDocument = gql`
     avatar {
       large
       medium
+    }
+    favourites {
+      anime {
+        nodes {
+          id
+          title {
+            english
+            romaji
+            native
+          }
+          coverImage {
+            large
+            medium
+          }
+        }
+      }
+      characters {
+        nodes {
+          id
+          name {
+            full
+          }
+          image {
+            large
+            medium
+          }
+        }
+      }
+    }
+    statistics {
+      anime {
+        count
+        minutesWatched
+      }
+      manga {
+        count
+        chaptersRead
+      }
     }
   }
 }

@@ -9,6 +9,44 @@ export const GetViewer = gql`
         large
         medium
       }
+      favourites {
+        anime {
+          nodes {
+            id
+            title {
+              english
+              romaji
+              native
+            }
+            coverImage {
+              large
+              medium
+            }
+          }
+        }
+        characters {
+          nodes {
+            id
+            name {
+              full
+            }
+            image {
+              large
+              medium
+            }
+          }
+        }
+      }
+      statistics {
+        anime {
+          count
+          minutesWatched
+        }
+        manga {
+          count
+          chaptersRead
+        }
+      }
     }
   }
 `;
