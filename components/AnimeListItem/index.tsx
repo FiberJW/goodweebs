@@ -38,9 +38,7 @@ export function AnimeListItem() {
         }}
       >
         <PosterGradient colors={["transparent", "rgba(0,0,0,0.5)"]}>
-          <BroadcastIcon
-            source={require("yep/assets/icons/ui/broadcast.png")}
-          />
+          <BroadcastIcon source={require("yep/assets/icons/broadcast.png")} />
         </PosterGradient>
       </Poster>
       <Spacer />
@@ -55,12 +53,12 @@ export function AnimeListItem() {
         <EpisodeProgress>EP: 0/25</EpisodeProgress>
         <ProgressButtonGroup>
           <ProgressButton
-            icon={require("yep/assets/icons/ui/progress-decrement.png")}
+            icon={require("yep/assets/icons/progress-decrement.png")}
             onPress={() => {}}
           />
           <ProgressButtonSpacer />
           <ProgressButton
-            icon={require("yep/assets/icons/ui/progress-increment.png")}
+            icon={require("yep/assets/icons/progress-increment.png")}
             onPress={() => {}}
           />
         </ProgressButtonGroup>

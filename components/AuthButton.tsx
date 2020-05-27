@@ -4,7 +4,7 @@ import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 
 const ButtonTouchable = takimoto.TouchableOpacity({
-  backgroundColor: darkTheme.primaryButton,
+  backgroundColor: darkTheme.secondaryButton,
   padding: 16,
   borderRadius: 8,
   justifyContent: "center",

@@ -1,18 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Header } from "yep/components/Header";
+import { SearchBox } from "yep/components/SearchBox";
 import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
 
 export function DiscoverScreen() {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const showSearchResultsView = searchTerm.length > 0;
+
   return (
-    <Container>
+    <OuterContainer>
       <Header label={getString("discover", StringCase.TITLE)} />
-    </Container>
+      <SearchBox
+        value={searchTerm}
+        onChangeText={(text) => setSearchTerm(text)}
+        placeholder="Search anime, manga, and more"
+        onCancelPress={() => {
+          setSearchTerm("");
+        }}
+        onClearPress={() => {
+          setSearchTerm("");
+        }}
+      />
+      <InnerContainer />
+    </OuterContainer>
   );
 }
 
-const Container = takimoto.View({
+const OuterContainer = takimoto.View({
   flex: 1,
-  alignItems: "center",
+});
+
+const InnerContainer = takimoto.View({
+  flex: 1,
+  padding: 16,
 });

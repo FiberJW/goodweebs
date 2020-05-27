@@ -3,14 +3,15 @@ import {
   black,
   white,
   white80,
+  white40,
   expoBlurple,
   white10,
 } from "yep/colors";
 
 export const darkTheme = {
-  background: darkGray,
-  navBackground: black,
-  primaryButton: black,
+  background: black,
+  navBackground: darkGray,
+  secondaryButton: white40,
   text: white,
   textInverted: black,
   iconFill: white,
@@ -20,4 +21,5 @@ export const darkTheme = {
   listCount: white80,
   accent: expoBlurple,
   listItemBackground: white10,
+  inputPlaceholder: white40,
 };

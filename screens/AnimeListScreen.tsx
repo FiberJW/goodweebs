@@ -98,7 +98,7 @@ export function AnimeListScreen() {
             }}
           >
             <SortLabel>{sortText}</SortLabel>
-            <SortIcon source={require("yep/assets/icons/ui/sort.png")} />
+            <SortIcon source={require("yep/assets/icons/sort.png")} />
           </SortTouchable>
         </CountAndSortRow>
         <Spacer />

@@ -69,7 +69,7 @@ export const ProgressButtonGroup = takimoto.View({ flexDirection: "row" });
 export const ProgressButtonSpacer = takimoto.View({ width: 8 });
 
 const ProgressButtonTouchable = takimoto.TouchableOpacity({
-  backgroundColor: darkTheme.primaryButton,
+  backgroundColor: darkTheme.secondaryButton,
   paddingVertical: 8,
   paddingHorizontal: 16,
   borderRadius: 4,

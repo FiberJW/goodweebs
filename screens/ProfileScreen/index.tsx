@@ -34,7 +34,7 @@ export function ProfileScreen() {
                 source={
                   false
                     ? { uri: "" }
-                    : require("yep/assets/icons/ui/avatar-placeholder.png")
+                    : require("yep/assets/icons/avatar-placeholder.png")
                 }
               />
               <Username numberOfLines={1}>goodweebs_user_7</Username>
