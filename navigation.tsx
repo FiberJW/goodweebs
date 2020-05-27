@@ -140,7 +140,7 @@ type NavigationProps = {
 export function Navigation({ accessToken }: NavigationProps) {
   return (
     <NavigationContainer theme={theme}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="light-content" translucent />
       <Stack.Navigator
         initialRouteName={accessToken ? "Tabs" : "Auth"}
         screenOptions={{
