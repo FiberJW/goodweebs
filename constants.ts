@@ -14,8 +14,9 @@ export const CLIENT_ID = (() => {
   }
 
   if (__DEV__) {
-    if (!Constants.isDevice) return AniListClientID.SIMULATOR;
-    return AniListClientID.CLIENT;
+    // if (!Constants.isDevice) return AniListClientID.SIMULATOR;
+    // return AniListClientID.CLIENT;
+    return AniListClientID.SIMULATOR;
   }
 
   return AniListClientID.CLIENT;

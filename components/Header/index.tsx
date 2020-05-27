@@ -1,5 +1,6 @@
 import Constants from "expo-constants";
 import React from "react";
+import { Platform } from "react-native";
 
 import { white } from "yep/colors";
 
@@ -22,9 +23,10 @@ export function Header({
   return (
     <Container
       style={{
-        paddingTop: statusBarPadding
-          ? 16 + Constants.statusBarHeight
-          : undefined,
+        paddingTop:
+          Platform.OS === "ios" && statusBarPadding
+            ? 16 + Constants.statusBarHeight
+            : undefined,
       }}
     >
       <Label>{label}</Label>
