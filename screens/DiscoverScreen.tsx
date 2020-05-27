@@ -95,7 +95,9 @@ export function DiscoverScreen({ navigation }: Props) {
               keyExtractor={(item) => `${item.id}`}
               renderItem={({ item, index }) => (
                 <PosterContainer
-                  onPress={() => navigation.navigate("Details")}
+                  onPress={() =>
+                    navigation.navigate("Details", { id: item.id })
+                  }
                   style={
                     (index + 1) % 3 !== 0 ? { marginRight: 16 } : undefined
                   }
@@ -118,7 +120,7 @@ export function DiscoverScreen({ navigation }: Props) {
             keyExtractor={(item) => `${item.id}`}
             renderItem={({ item, index }) => (
               <PosterContainer
-                onPress={() => navigation.navigate("Details")}
+                onPress={() => navigation.navigate("Details", { id: item.id })}
                 style={(index + 1) % 3 !== 0 ? { marginRight: 16 } : undefined}
               >
                 <Poster

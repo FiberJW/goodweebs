@@ -1,10 +1,28 @@
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { formatDistanceToNow, add } from "date-fns";
 import React from "react";
+import { Picker } from "react-native";
+import title from "title";
 
 import { white15 } from "yep/colors";
+import { EmptyState } from "yep/components/EmptyState";
+import { Statuses } from "yep/constants";
+import {
+  GetAnimeQuery,
+  GetAnimeQueryVariables,
+  MediaStatus,
+  UpdateStatusMutation,
+  UpdateStatusMutationVariables,
+} from "yep/graphql/generated";
+import { GetAnime } from "yep/graphql/queries/AnimeDetails";
 import { RootStackParamList } from "yep/navigation";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
+import { UpdateStatus } from "yep/graphql/mutations/UpdateStatus";
+import { useActionSheet } from "@expo/react-native-action-sheet";
+import { da } from "date-fns/locale";
 
 const Container = takimoto.ScrollView({
   flex: 1,
@@ -127,54 +145,131 @@ function Button({ label, onPress }: ButtonProps) {
 
 type Props = {
   navigation: StackNavigationProp<RootStackParamList>;
+  route: RouteProp<RootStackParamList, "Details">;
 };
 
-export function DetailsScreen({ navigation }: Props) {
-  return (
+export function DetailsScreen({ route }: Props) {
+  const { showActionSheetWithOptions } = useActionSheet();
+
+  const { loading, data, refetch } = useQuery<
+    GetAnimeQuery,
+    GetAnimeQueryVariables
+  >(GetAnime, { variables: { id: route.params.id } });
+
+  const [updateStatus] = useMutation<
+    UpdateStatusMutation,
+    UpdateStatusMutationVariables
+  >(UpdateStatus);
+
+  return loading ? (
+    <EmptyState />
+  ) : (
     <Container
       showsVerticalScrollIndicator={false}
       alwaysBounceVertical={false}
     >
-      <Title numberOfLines={1}>New Game!!</Title>
-      <AiringContainer>
-        <AiringText>Episode 429 airs in 5 days</AiringText>
-      </AiringContainer>
+      <Title numberOfLines={1}>
+        {data?.Media?.title?.english ||
+          data?.Media?.title?.romaji ||
+          data?.Media?.title?.native}
+      </Title>
+
       <PosterAndInfoContainer>
         <Poster
           resizeMode="cover"
           source={{
-            uri:
-              "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx109020-WRWPZflDSuxa.png",
+            uri: data?.Media?.coverImage?.large ?? "",
           }}
         />
         <InfoTable>
           <InfoRow>
-            <Info label="Episodes" value="12" />
-            <Info label="Genre" value="Slice of Life, Romance, Drama" />
+            <Info label="Episodes" value={`${data?.Media?.episodes}`} />
+            <Info label="Genre" value={data?.Media?.genres?.join(", ") ?? ""} />
           </InfoRow>
           <InfoRowSpacer />
           <InfoRow>
-            <Info label="Score" value="9.3" />
-            <Info label="Rank" value="#4" />
+            <Info label="Score" value={`${data?.Media?.averageScore}/100`} />
+            <Info label="Status" value={title(`${data?.Media?.status}`)} />
+          </InfoRow>
+          <InfoRowSpacer />
+          <InfoRow>
+            <Info
+              label="Progress"
+              value={`${data?.Media?.mediaListEntry?.progress ?? 0}/${
+                data?.Media?.episodes ?? "?"
+              } EP`}
+            />
+            {data?.Media?.status === MediaStatus.Releasing ? (
+              <Info
+                label="Next Episode"
+                value={`EP ${
+                  data?.Media?.nextAiringEpisode?.episode
+                } airs in ${formatDistanceToNow(
+                  add(new Date(), {
+                    seconds:
+                      data?.Media?.nextAiringEpisode?.timeUntilAiring ?? 0,
+                  })
+                )}`}
+              />
+            ) : null}
+
+            {data?.Media?.status === MediaStatus.NotYetReleased
+              ? data?.Media?.startDate?.month !== null &&
+                data?.Media?.startDate?.month !== undefined && (
+                  <Info
+                    label="Start Date"
+                    value={`${data?.Media?.startDate?.month}/${data?.Media?.startDate?.month}/${data?.Media?.startDate?.year}`}
+                  />
+                )
+              : null}
+
+            {data?.Media?.status === MediaStatus.Finished ||
+            data?.Media?.status === MediaStatus.Cancelled
+              ? data?.Media?.endDate?.month !== null &&
+                data?.Media?.endDate?.month !== undefined && (
+                  <Info
+                    label="End Date"
+                    value={`${data?.Media?.endDate?.month}/${data?.Media?.endDate?.month}/${data?.Media?.endDate?.year}`}
+                  />
+                )
+              : null}
           </InfoRow>
         </InfoTable>
       </PosterAndInfoContainer>
       <ButtonsRow>
-        <Button label="WATCHING" onPress={() => {}} />
-        <ButtonSpacer />
-        <Button label="11/23 EP" onPress={() => {}} />
-        <ButtonSpacer />
-        <Button label="--/10" onPress={() => {}} />
+        <Button
+          label={
+            Statuses.find(
+              (x) => x.value === data?.Media?.mediaListEntry?.status
+            )?.label ?? "Add to List"
+          }
+          onPress={() => {
+            const options = Statuses.map((s) => s.label);
+
+            const destructiveButtonIndex = Statuses.findIndex(
+              (s) => s.value === data?.Media?.mediaListEntry?.status
+            );
+
+            showActionSheetWithOptions(
+              {
+                options,
+                destructiveButtonIndex,
+                destructiveColor: darkTheme.accent,
+              },
+              async (buttonIndex) => {
+                await updateStatus({
+                  variables: {
+                    id: data?.Media?.mediaListEntry?.id,
+                    status: Statuses[buttonIndex].value,
+                  },
+                });
+                await refetch({ id: data?.Media?.id });
+              }
+            );
+          }}
+        />
       </ButtonsRow>
-      <Description>
-        I bought a whole bunch of shungite! Rocks. Do you know what shungite is?
-        Anybody know what shungite is? No, not Suge Knight. I think he’s locked
-        up in prison. Talking shungite! Anyways, it’s a 2 billion year old..
-        like rock, stone that protects against frequencies and unwanted
-        frequencies that may be traveling in the air. That's my story, I bought
-        a whole bunch of stuff, put them around la casa, little pyramids, stuff
-        like that.
-      </Description>
+      <Description>{data?.Media?.description}</Description>
     </Container>
   );
 }

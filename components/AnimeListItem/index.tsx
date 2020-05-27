@@ -37,7 +37,7 @@ export function AnimeListItem({
   return (
     <Container
       activeOpacity={0.7}
-      onPress={() => navigation.navigate("Details")}
+      onPress={() => navigation.navigate("Details", { id: media.id })}
     >
       <Poster
         resizeMode="cover"

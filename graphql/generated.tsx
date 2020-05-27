@@ -4294,6 +4294,9 @@ export type AnimeFragmentFragment = (
   )>, nextAiringEpisode?: Maybe<(
     { __typename?: 'AiringSchedule' }
     & Pick<AiringSchedule, 'id' | 'airingAt' | 'episode' | 'timeUntilAiring'>
+  )>, mediaListEntry?: Maybe<(
+    { __typename?: 'MediaList' }
+    & Pick<MediaList, 'progress' | 'status' | 'score' | 'id'>
   )> }
 );
 
@@ -4336,6 +4339,19 @@ export type UpdateStatusMutation = (
   & { SaveMediaListEntry?: Maybe<(
     { __typename?: 'MediaList' }
     & Pick<MediaList, 'id'>
+  )> }
+);
+
+export type GetAnimeQueryVariables = {
+  id?: Maybe<Scalars['Int']>;
+};
+
+
+export type GetAnimeQuery = (
+  { __typename?: 'Query' }
+  & { Media?: Maybe<(
+    { __typename?: 'Media' }
+    & AnimeFragmentFragment
   )> }
 );
 
@@ -4494,6 +4510,12 @@ export const AnimeFragmentFragmentDoc = gql`
     episode
     timeUntilAiring
   }
+  mediaListEntry {
+    progress
+    status
+    score
+    id
+  }
 }
     `;
 export const UpdateProgressDocument = gql`
@@ -4583,6 +4605,33 @@ export function withUpdateStatus<TProps, TChildProps = {}, TDataName extends str
 };
 export type UpdateStatusMutationResult = ApolloReactCommon.MutationResult<UpdateStatusMutation>;
 export type UpdateStatusMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateStatusMutation, UpdateStatusMutationVariables>;
+export const GetAnimeDocument = gql`
+    query GetAnime($id: Int) {
+  Media(id: $id) {
+    ...AnimeFragment
+  }
+}
+    ${AnimeFragmentFragmentDoc}`;
+export type GetAnimeComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetAnimeQuery, GetAnimeQueryVariables>, 'query'>;
+
+    export const GetAnimeComponent = (props: GetAnimeComponentProps) => (
+      <ApolloReactComponents.Query<GetAnimeQuery, GetAnimeQueryVariables> query={GetAnimeDocument} {...props} />
+    );
+    
+export type GetAnimeProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<GetAnimeQuery, GetAnimeQueryVariables>
+    } & TChildProps;
+export function withGetAnime<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  GetAnimeQuery,
+  GetAnimeQueryVariables,
+  GetAnimeProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, GetAnimeQuery, GetAnimeQueryVariables, GetAnimeProps<TChildProps, TDataName>>(GetAnimeDocument, {
+      alias: 'getAnime',
+      ...operationOptions
+    });
+};
+export type GetAnimeQueryResult = ApolloReactCommon.QueryResult<GetAnimeQuery, GetAnimeQueryVariables>;
 export const GetAnimeListDocument = gql`
     query GetAnimeList($userId: Int, $status: MediaListStatus, $sort: [MediaListSort]) {
   MediaListCollection(userId: $userId, type: ANIME, status: $status, sort: $sort) {

@@ -14,7 +14,7 @@ import { darkTheme } from "yep/themes";
 export type RootStackParamList = {
   Tabs: undefined;
   Auth: undefined;
-  Details: { id: string };
+  Details: { id: number };
 };
 
 const Tab = createBottomTabNavigator();

@@ -35,5 +35,11 @@ export const AnimeFragment = gql`
       episode
       timeUntilAiring
     }
+    mediaListEntry {
+      progress
+      status
+      score
+      id
+    }
   }
 `;
