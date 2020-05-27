@@ -20,3 +20,7 @@ An <a href="https://anilist.co/user/fiberjw">AniList</a> client built with <a hr
 [![supports web](https://img.shields.io/badge/web-4630EB.svg?style=flat-square&logo=GOOGLE-CHROME&labelColor=4285F4&logoColor=fff)](https://github.com/expo/expo)
 
 </div>
+
+## **Make it work.** Make it right. Make it fast.
+
+Right now I'm making it work :)

@@ -13,6 +13,7 @@ import {
   GetAnimeListQueryVariables,
   MediaListStatus,
   MediaListSort,
+  AnimeFragmentFragment,
 } from "yep/graphql/generated";
 import { GetAnimeList } from "yep/graphql/queries/AnimeList";
 import { GetViewer } from "yep/graphql/queries/Viewer";
@@ -55,25 +56,31 @@ export function AnimeListScreen() {
   const listCountText = `${list.length} title${list.length !== 1 ? "s" : ""}`;
   const sortText = `Sort: ${sort.label}`;
 
+  // TODO: maybe make this better? feels a little dank
+  const AnimeFlatList = makeAnimeFlatList<typeof list[number]>();
+
   return (
     <OuterContainer>
       <Header label={getString("anime", StringCase.TITLE)} />
       <InnerContainer>
-        <StatusChipList
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          data={Statuses}
-          ItemSeparatorComponent={StatusChipListDivider}
-          keyExtractor={({ label }) => label}
-          renderItem={({ item: { label, value } }) => (
-            <StatusChip
-              label={label}
-              key={label}
-              onPress={() => setStatus(value)}
-              isSelected={status === value}
-            />
-          )}
-        />
+        <StatusChipListContainer>
+          <StatusChipList
+            alwaysBounceVertical={false}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+            data={Statuses}
+            ItemSeparatorComponent={StatusChipListDivider}
+            keyExtractor={({ label }) => label}
+            renderItem={({ item: { label, value } }) => (
+              <StatusChip
+                label={label}
+                key={label}
+                onPress={() => setStatus(value)}
+                isSelected={status === value}
+              />
+            )}
+          />
+        </StatusChipListContainer>
         <Spacer />
         <CountAndSortRow>
           <Count>{listCountText}</Count>
@@ -102,8 +109,23 @@ export function AnimeListScreen() {
           </SortTouchable>
         </CountAndSortRow>
         <Spacer />
-        <AnimeListItem />
-        <Spacer />
+        <AnimeListContainer>
+          <AnimeFlatList
+            showsVerticalScrollIndicator={false}
+            ItemSeparatorComponent={AnimeListDivider}
+            data={list}
+            keyExtractor={(item) => `${item?.id}`}
+            renderItem={({ item }) => (
+              <AnimeListItem
+                progress={item?.progress ?? 0}
+                onIncrement={() => {}}
+                onDecrement={() => {}}
+                onComplete={() => {}}
+                media={item?.media as AnimeFragmentFragment}
+              />
+            )}
+          />
+        </AnimeListContainer>
       </InnerContainer>
     </OuterContainer>
   );
@@ -115,23 +137,30 @@ const OuterContainer = takimoto.View({
 
 const InnerContainer = takimoto.View({
   padding: 16,
+  flex: 1,
 });
 
 const Spacer = takimoto.View({
   height: 16,
 });
 
+const StatusChipListContainer = takimoto.View({});
 const StatusChipList = takimoto.FlatList<{
   label: string;
   value: MediaListStatus;
-}>(
-  {},
-  {
-    alignItems: "flex-start",
-  }
-);
+}>({}, {});
+
+function makeAnimeFlatList<T>() {
+  return takimoto.FlatList<T>({}, {});
+}
+
+const AnimeListDivider = takimoto.View({ height: 8 });
 
 const StatusChipListDivider = takimoto.View({ width: 4 });
+
+const AnimeListContainer = takimoto.View({
+  flex: 1,
+});
 
 const CountAndSortRow = takimoto.View({
   flexDirection: "row",

@@ -85,11 +85,20 @@ const ProgressButtonIcon = takimoto.Image({
 type ProgressButtonProps = {
   onPress: () => void;
   icon: ImageSourcePropType;
+  disabled?: boolean;
 };
 
-export function ProgressButton({ onPress, icon }: ProgressButtonProps) {
+export function ProgressButton({
+  onPress,
+  icon,
+  disabled,
+}: ProgressButtonProps) {
   return (
-    <ProgressButtonTouchable onPress={onPress}>
+    <ProgressButtonTouchable
+      onPress={onPress}
+      disabled={disabled}
+      style={disabled ? { opacity: 0.4 } : undefined}
+    >
       <ProgressButtonIcon source={icon} />
     </ProgressButtonTouchable>
   );

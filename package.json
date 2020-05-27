@@ -24,6 +24,7 @@
     "apollo-link-context": "^1.0.20",
     "apollo-link-error": "^1.1.13",
     "apollo-link-http": "^1.5.17",
+    "date-fns": "^2.14.0",
     "expo": "~37.0.3",
     "expo-auth-session": "~1.2.1",
     "expo-font": "~8.1.0",
