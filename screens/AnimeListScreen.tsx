@@ -24,6 +24,7 @@ import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { notEmpty } from "yep/utils";
+import { EmptyState } from "yep/components/EmptyState";
 
 export function AnimeListScreen() {
   const [status, setStatus] = useState<MediaListStatus>(Statuses[0].value);
@@ -180,28 +181,15 @@ export function AnimeListScreen() {
             />
           </AnimeListContainer>
         ) : (
-          <Jail>
-            <SugeKnight source={require("yep/assets/SHUNGITE.gif")} />
-          </Jail>
+          <EmptyState />
         )}
       </InnerContainer>
     </OuterContainer>
   );
 }
 
-const SugeKnight = takimoto.Image({
-  height: 112,
-  width: 112,
-});
-
 const OuterContainer = takimoto.View({
   flex: 1,
-});
-
-const Jail = takimoto.View({
-  flex: 1,
-  alignItems: "center",
-  justifyContent: "center",
 });
 
 const InnerContainer = takimoto.View({

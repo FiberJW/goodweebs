@@ -28,8 +28,8 @@ export const GetTrendingTVAnime = gql`
   query GetTrendingAnime(
     $season: MediaSeason
     $year: Int
-    $page: Int
-    $perPage: Int = 10
+    $page: Int = 1
+    $perPage: Int = 20
   ) {
     Page(page: $page, perPage: $perPage) {
       pageInfo {
@@ -42,7 +42,28 @@ export const GetTrendingTVAnime = gql`
         format: TV
         isAdult: false
         type: ANIME
-        sort: [TRENDING_DESC, TITLE_ROMAJI]
+        sort: [TRENDING_DESC]
+      ) {
+        ...AnimeFragment
+      }
+    }
+  }
+  ${AnimeFragment}
+`;
+
+export const SearchAnime = gql`
+  query SearchAnime($search: String) {
+    Page {
+      pageInfo {
+        hasNextPage
+        total
+      }
+      media(
+        search: $search
+        format: TV
+        isAdult: false
+        type: ANIME
+        sort: [TRENDING_DESC]
       ) {
         ...AnimeFragment
       }

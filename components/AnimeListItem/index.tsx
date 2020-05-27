@@ -30,7 +30,6 @@ export function AnimeListItem({
   onIncrement,
   onDecrement,
 }: Props) {
-  console.log("timeUntilAiring", media.nextAiringEpisode?.timeUntilAiring);
   return (
     <Container activeOpacity={0.7}>
       <Poster

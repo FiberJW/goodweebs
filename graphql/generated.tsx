@@ -4387,6 +4387,25 @@ export type GetTrendingAnimeQuery = (
   )> }
 );
 
+export type SearchAnimeQueryVariables = {
+  search?: Maybe<Scalars['String']>;
+};
+
+
+export type SearchAnimeQuery = (
+  { __typename?: 'Query' }
+  & { Page?: Maybe<(
+    { __typename?: 'Page' }
+    & { pageInfo?: Maybe<(
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'hasNextPage' | 'total'>
+    )>, media?: Maybe<Array<Maybe<(
+      { __typename?: 'Media' }
+      & AnimeFragmentFragment
+    )>>> }
+  )> }
+);
+
 export type GetViewerQueryVariables = {};
 
 
@@ -4602,13 +4621,13 @@ export function withGetAnimeList<TProps, TChildProps = {}, TDataName extends str
 };
 export type GetAnimeListQueryResult = ApolloReactCommon.QueryResult<GetAnimeListQuery, GetAnimeListQueryVariables>;
 export const GetTrendingAnimeDocument = gql`
-    query GetTrendingAnime($season: MediaSeason, $year: Int, $page: Int, $perPage: Int = 10) {
+    query GetTrendingAnime($season: MediaSeason, $year: Int, $page: Int = 1, $perPage: Int = 20) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       hasNextPage
       total
     }
-    media(season: $season, seasonYear: $year, format: TV, isAdult: false, type: ANIME, sort: [TRENDING_DESC, TITLE_ROMAJI]) {
+    media(season: $season, seasonYear: $year, format: TV, isAdult: false, type: ANIME, sort: [TRENDING_DESC]) {
       ...AnimeFragment
     }
   }
@@ -4634,6 +4653,39 @@ export function withGetTrendingAnime<TProps, TChildProps = {}, TDataName extends
     });
 };
 export type GetTrendingAnimeQueryResult = ApolloReactCommon.QueryResult<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>;
+export const SearchAnimeDocument = gql`
+    query SearchAnime($search: String) {
+  Page {
+    pageInfo {
+      hasNextPage
+      total
+    }
+    media(search: $search, format: TV, isAdult: false, type: ANIME, sort: [TRENDING_DESC]) {
+      ...AnimeFragment
+    }
+  }
+}
+    ${AnimeFragmentFragmentDoc}`;
+export type SearchAnimeComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<SearchAnimeQuery, SearchAnimeQueryVariables>, 'query'>;
+
+    export const SearchAnimeComponent = (props: SearchAnimeComponentProps) => (
+      <ApolloReactComponents.Query<SearchAnimeQuery, SearchAnimeQueryVariables> query={SearchAnimeDocument} {...props} />
+    );
+    
+export type SearchAnimeProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<SearchAnimeQuery, SearchAnimeQueryVariables>
+    } & TChildProps;
+export function withSearchAnime<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  SearchAnimeQuery,
+  SearchAnimeQueryVariables,
+  SearchAnimeProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, SearchAnimeQuery, SearchAnimeQueryVariables, SearchAnimeProps<TChildProps, TDataName>>(SearchAnimeDocument, {
+      alias: 'searchAnime',
+      ...operationOptions
+    });
+};
+export type SearchAnimeQueryResult = ApolloReactCommon.QueryResult<SearchAnimeQuery, SearchAnimeQueryVariables>;
 export const GetViewerDocument = gql`
     query GetViewer {
   Viewer {
