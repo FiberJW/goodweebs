@@ -57,8 +57,6 @@ export function AuthScreen({ navigation }: Props) {
               }
             }}
           />
-          <ButtonSpacer />
-          <AuthButton label={getString("signUp")} onPress={() => {}} />
           <AniListFootnote>
             {getString("AniListAuthAttribution")}
           </AniListFootnote>
