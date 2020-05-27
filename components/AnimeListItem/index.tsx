@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { formatDistanceToNow, add } from "date-fns";
 import React from "react";
 
 import { AnimeFragmentFragment, MediaStatus } from "yep/graphql/generated";
@@ -20,12 +20,17 @@ import {
 type Props = {
   onIncrement: () => void;
   onDecrement: () => void;
-  onComplete: () => void;
   progress: number;
   media: AnimeFragmentFragment;
 };
 
-export function AnimeListItem({ progress, media }: Props) {
+export function AnimeListItem({
+  progress,
+  media,
+  onIncrement,
+  onDecrement,
+}: Props) {
+  console.log("timeUntilAiring", media.nextAiringEpisode?.timeUntilAiring);
   return (
     <Container activeOpacity={0.7}>
       <Poster
@@ -41,10 +46,11 @@ export function AnimeListItem({ progress, media }: Props) {
         </Title>
         {media.status === MediaStatus.Releasing ? (
           <BroadcastSchedule numberOfLines={1}>
-            Next EP:{" "}
-            {format(
-              new Date((media.nextAiringEpisode?.airingAt ?? 0) * 1000),
-              "M/d/yy HH:mm"
+            EP {media.nextAiringEpisode?.episode} airs in{" "}
+            {formatDistanceToNow(
+              add(new Date(), {
+                seconds: media.nextAiringEpisode?.timeUntilAiring ?? 0,
+              })
             )}
           </BroadcastSchedule>
         ) : media.status === MediaStatus.NotYetReleased ? (
@@ -69,19 +75,24 @@ export function AnimeListItem({ progress, media }: Props) {
         </EpisodeProgress>
         <ProgressButtonGroup>
           <ProgressButton
-            disabled={progress === 0}
+            disabled={
+              media.status === MediaStatus.NotYetReleased || progress === 0
+            }
             icon={require("yep/assets/icons/progress-decrement.png")}
-            onPress={() => {}}
+            onPress={onDecrement}
           />
           <ProgressButtonSpacer />
           <ProgressButton
-            disabled={progress === (media.episodes ?? 0)}
+            disabled={
+              media.status === MediaStatus.NotYetReleased ||
+              progress === (media.episodes ?? 0)
+            }
             icon={
               progress === (media.episodes ?? 0) - 1
                 ? require("yep/assets/icons/progress-complete.png")
                 : require("yep/assets/icons/progress-increment.png")
             }
-            onPress={() => {}}
+            onPress={onIncrement}
           />
         </ProgressButtonGroup>
       </ProgressColumn>

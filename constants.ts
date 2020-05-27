@@ -32,8 +32,8 @@ export const Statuses: { label: string; value: MediaListStatus }[] = [
 ];
 
 export const Sorts: { label: string; value: MediaListSort }[] = [
-  { label: "Title", value: MediaListSort.MediaTitleEnglish },
+  // { label: "Title", value: MediaListSort.MediaTitleEnglish }, // Currently Bugged https://github.com/AniList/ApiV2-GraphQL-Docs/issues/94
+  { label: "Last Updated", value: MediaListSort.UpdatedTimeDesc },
   { label: "Highest Rated", value: MediaListSort.ScoreDesc },
   { label: "Lowest Rated", value: MediaListSort.Score },
-  { label: "Last Updated", value: MediaListSort.UpdatedTimeDesc },
 ];

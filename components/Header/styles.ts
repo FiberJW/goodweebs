@@ -21,4 +21,9 @@ export const SyncIcon = takimoto.Image({
   width: 24,
 });
 
+export const Spinner = takimoto.ActivityIndicator({
+  height: 24,
+  width: 24,
+});
+
 export const SyncTouchable = takimoto.TouchableOpacity({});

@@ -4342,6 +4342,7 @@ export type UpdateStatusMutation = (
 export type GetAnimeListQueryVariables = {
   userId?: Maybe<Scalars['Int']>;
   status?: Maybe<MediaListStatus>;
+  sort?: Maybe<Array<Maybe<MediaListSort>>>;
 };
 
 
@@ -4563,8 +4564,8 @@ export function withUpdateStatus<TProps, TChildProps = {}, TDataName extends str
 export type UpdateStatusMutationResult = ApolloReactCommon.MutationResult<UpdateStatusMutation>;
 export type UpdateStatusMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateStatusMutation, UpdateStatusMutationVariables>;
 export const GetAnimeListDocument = gql`
-    query GetAnimeList($userId: Int, $status: MediaListStatus) {
-  MediaListCollection(userId: $userId, type: ANIME, status: $status) {
+    query GetAnimeList($userId: Int, $status: MediaListStatus, $sort: [MediaListSort]) {
+  MediaListCollection(userId: $userId, type: ANIME, status: $status, sort: $sort) {
     lists {
       entries {
         id

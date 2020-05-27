@@ -22,7 +22,7 @@ export function AuthScreen({ navigation }: Props) {
     (async () => {
       try {
         const token = await AsyncStorage.getItem(ANILIST_ACCESS_TOKEN_STORAGE);
-        console.log({ token });
+
         if (token) {
           navigation.replace("Tabs");
         }
@@ -47,7 +47,7 @@ export function AuthScreen({ navigation }: Props) {
               label={getString("logIn")}
               onPress={async () => {
                 const result = await promptAsync();
-                console.log({ result });
+
                 if (result.type === "error" || result.type === "success") {
                   if (result.params.access_token) {
                     await AsyncStorage.setItem(

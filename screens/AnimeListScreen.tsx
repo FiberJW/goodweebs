@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import React, { useState } from "react";
 
@@ -14,14 +14,16 @@ import {
   MediaListStatus,
   MediaListSort,
   AnimeFragmentFragment,
+  UpdateProgressMutation,
+  UpdateProgressMutationVariables,
 } from "yep/graphql/generated";
+import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
 import { GetAnimeList } from "yep/graphql/queries/AnimeList";
 import { GetViewer } from "yep/graphql/queries/Viewer";
 import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
-import { RefreshControl } from "react-native";
-import { white } from "yep/colors";
+import { notEmpty } from "yep/utils";
 
 export function AnimeListScreen() {
   const [status, setStatus] = useState<MediaListStatus>(Statuses[0].value);
@@ -45,28 +47,35 @@ export function AnimeListScreen() {
     variables: {
       userId: viewerData?.Viewer?.id,
       status,
+      sort: [sort.value],
     },
     notifyOnNetworkStatusChange: true,
   });
 
-  console.log({ loadingViewer, loadingAnimeList, viewerData, animeListData });
+  const [updateProgress] = useMutation<
+    UpdateProgressMutation,
+    UpdateProgressMutationVariables
+  >(UpdateProgress);
 
-  const list =
+  const list = (
     (animeListData?.MediaListCollection?.lists &&
       animeListData?.MediaListCollection?.lists[0]?.entries) ??
-    [];
+    []
+  ).filter(notEmpty);
 
   const listCountText = `${list.length} title${list.length !== 1 ? "s" : ""}`;
   const sortText = `Sort: ${sort.label}`;
 
   // TODO: maybe make this better? feels a little dank
   const AnimeFlatList = makeAnimeFlatList<typeof list[number]>();
+
   const refreshing = loadingViewer || loadingAnimeList;
 
   return (
     <OuterContainer>
       <Header
         label={getString("anime", StringCase.TITLE)}
+        refreshing={refreshing}
         onSyncPress={() =>
           refetch({
             userId: viewerData?.Viewer?.id,
@@ -121,44 +130,78 @@ export function AnimeListScreen() {
           </SortTouchable>
         </CountAndSortRow>
         <Spacer />
-        {/* {refreshing && <Spinner size="large" color={white} />} */}
-        <AnimeListContainer>
-          <AnimeFlatList
-            showsVerticalScrollIndicator={false}
-            ItemSeparatorComponent={AnimeListDivider}
-            data={list}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={() =>
-                  refetch({
-                    userId: viewerData?.Viewer?.id,
-                    status,
-                  })
-                }
-                tintColor={white}
-                titleColor={white}
-              />
-            }
-            keyExtractor={(item) => `${item?.id}`}
-            renderItem={({ item }) => (
-              <AnimeListItem
-                progress={item?.progress ?? 0}
-                onIncrement={() => {}}
-                onDecrement={() => {}}
-                onComplete={() => {}}
-                media={item?.media as AnimeFragmentFragment}
-              />
-            )}
-          />
-        </AnimeListContainer>
+
+        {list.length ? (
+          <AnimeListContainer>
+            <AnimeFlatList
+              showsVerticalScrollIndicator={false}
+              ItemSeparatorComponent={AnimeListDivider}
+              data={list}
+              // refreshControl={
+              //   <RefreshControl
+              //     refreshing={refreshing && refreshedFromGesture}
+              //     onRefresh={async () => {
+              //       setRefreshedFromGesture(true);
+              //       await refetch({
+              //         userId: viewerData?.Viewer?.id,
+              //         status,
+              //       });
+              //       setRefreshedFromGesture(false);
+              //     }}
+              //     tintColor={white}
+              //     titleColor={white}
+              //   />
+              // }
+              keyExtractor={(item) => `${item.id}`}
+              renderItem={({ item }) => (
+                <AnimeListItem
+                  progress={item.progress ?? 0}
+                  onIncrement={async () => {
+                    await updateProgress({
+                      variables: {
+                        id: item.id,
+                        progress: (item.progress ?? 0) + 1,
+                      },
+                    });
+                    await refetch();
+                  }}
+                  onDecrement={async () => {
+                    await updateProgress({
+                      variables: {
+                        id: item.id,
+                        progress: (item.progress ?? 0) - 1,
+                      },
+                    });
+                    await refetch();
+                  }}
+                  media={item?.media as AnimeFragmentFragment}
+                />
+              )}
+            />
+          </AnimeListContainer>
+        ) : (
+          <Jail>
+            <SugeKnight source={require("yep/assets/SHUNGITE.gif")} />
+          </Jail>
+        )}
       </InnerContainer>
     </OuterContainer>
   );
 }
 
+const SugeKnight = takimoto.Image({
+  height: 112,
+  width: 112,
+});
+
 const OuterContainer = takimoto.View({
   flex: 1,
+});
+
+const Jail = takimoto.View({
+  flex: 1,
+  alignItems: "center",
+  justifyContent: "center",
 });
 
 const InnerContainer = takimoto.View({

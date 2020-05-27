@@ -11,6 +11,7 @@ import { GetViewerQuery, GetViewerQueryVariables } from "yep/graphql/generated";
 import { GetViewer } from "yep/graphql/queries/Viewer";
 import { RootStackParamList } from "yep/navigation";
 import { StringCase, getString } from "yep/strings";
+import { notEmpty } from "yep/utils";
 
 import {
   OuterContainer,
@@ -30,10 +31,6 @@ import {
   FavoriteName,
   EverythingButTheCTA,
 } from "./styles";
-
-function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
-  return value !== null && value !== undefined;
-}
 
 type Props = {
   navigation: StackNavigationProp<RootStackParamList>;
