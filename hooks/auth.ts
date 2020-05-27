@@ -4,14 +4,12 @@ import {
   AuthRequestPromptOptions,
   AuthSessionResult,
 } from "expo-auth-session";
-import Constants from "expo-constants";
 import { useEffect, useState, useCallback } from "react";
 
 import { CLIENT_ID } from "yep/constants";
 
 const redirectUri = makeRedirectUri({
   native: "goodweebs://redirect",
-  useProxy: Constants.isDevice,
 });
 
 export function useAniListAuthRequest(): [
