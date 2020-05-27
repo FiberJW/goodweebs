@@ -1,6 +1,7 @@
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useEffect } from "react";
 import { AsyncStorage } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { AuthButton } from "yep/components/AuthButton";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
@@ -30,39 +31,41 @@ export function AuthScreen({ navigation }: Props) {
   }, []);
 
   return (
-    <OuterContainer>
-      <InnerContainer
-        alwaysBounceVertical={false}
-        showsVerticalScrollIndicator={false}
-      >
-        <BrandingGroup>
-          <Logo source={require("yep/assets/launch/logo-wrapped-dark.png")} />
-          <BrandingSpacer />
-          <Tagline>{getString("tagline")}</Tagline>
-        </BrandingGroup>
-        <ButtonGroup>
-          <AuthButton
-            label={getString("logIn")}
-            onPress={async () => {
-              const result = await promptAsync();
-              console.log({ result });
-              if (result.type === "error" || result.type === "success") {
-                if (result.params.access_token) {
-                  await AsyncStorage.setItem(
-                    ANILIST_ACCESS_TOKEN_STORAGE,
-                    result.params.access_token
-                  );
-                  navigation.replace("Tabs");
+    <SafeAreaView style={{ flex: 1 }}>
+      <OuterContainer>
+        <InnerContainer
+          alwaysBounceVertical={false}
+          showsVerticalScrollIndicator={false}
+        >
+          <BrandingGroup>
+            <Logo source={require("yep/assets/launch/logo-wrapped-dark.png")} />
+            <BrandingSpacer />
+            <Tagline>{getString("tagline")}</Tagline>
+          </BrandingGroup>
+          <ButtonGroup>
+            <AuthButton
+              label={getString("logIn")}
+              onPress={async () => {
+                const result = await promptAsync();
+                console.log({ result });
+                if (result.type === "error" || result.type === "success") {
+                  if (result.params.access_token) {
+                    await AsyncStorage.setItem(
+                      ANILIST_ACCESS_TOKEN_STORAGE,
+                      result.params.access_token
+                    );
+                    navigation.replace("Tabs");
+                  }
                 }
-              }
-            }}
-          />
-          <AniListFootnote>
-            {getString("AniListAuthAttribution")}
-          </AniListFootnote>
-        </ButtonGroup>
-      </InnerContainer>
-    </OuterContainer>
+              }}
+            />
+            <AniListFootnote>
+              {getString("AniListAuthAttribution")}
+            </AniListFootnote>
+          </ButtonGroup>
+        </InnerContainer>
+      </OuterContainer>
+    </SafeAreaView>
   );
 }
 
@@ -90,8 +93,6 @@ const Logo = takimoto.Image({
 const ButtonGroup = takimoto.View({
   width: "100%",
 });
-
-const ButtonSpacer = takimoto.View({ height: 8 });
 
 const BrandingSpacer = takimoto.View({ height: 16 });
 
