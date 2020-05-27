@@ -19,8 +19,9 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
+      "buildNumber": "0.0.1",
       "bundleIdentifier": "com.goodweebs.app"
     },
-    "android": { "package": "com.goodweebs.app" }
+    "android": { "package": "com.goodweebs.app", "versionCode": 1 }
   }
 }

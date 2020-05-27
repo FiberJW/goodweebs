@@ -102,7 +102,7 @@ export function DiscoverScreen({ navigation }: Props) {
                     (index + 1) % 3 !== 0 ? { marginRight: 16 } : undefined
                   }
                 >
-                  <Poster source={{ uri: item.coverImage?.extraLarge ?? "" }} />
+                  <Poster source={{ uri: item.coverImage?.large ?? "" }} />
                   <PosterTitle numberOfLines={2}>
                     {item.title?.english ||
                       item.title?.romaji ||

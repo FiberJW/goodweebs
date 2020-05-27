@@ -58,13 +58,7 @@ export const SearchAnime = gql`
         hasNextPage
         total
       }
-      media(
-        search: $search
-        format: TV
-        isAdult: false
-        type: ANIME
-        sort: [TRENDING_DESC]
-      ) {
+      media(search: $search, format: TV, isAdult: false, type: ANIME) {
         ...AnimeFragment
       }
     }
