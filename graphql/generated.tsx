@@ -4329,7 +4329,7 @@ export type UpdateScoreMutation = (
 );
 
 export type UpdateStatusMutationVariables = {
-  id?: Maybe<Scalars['Int']>;
+  mediaId?: Maybe<Scalars['Int']>;
   status?: Maybe<MediaListStatus>;
 };
 
@@ -4577,8 +4577,8 @@ export function withUpdateScore<TProps, TChildProps = {}, TDataName extends stri
 export type UpdateScoreMutationResult = ApolloReactCommon.MutationResult<UpdateScoreMutation>;
 export type UpdateScoreMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateScoreMutation, UpdateScoreMutationVariables>;
 export const UpdateStatusDocument = gql`
-    mutation UpdateStatus($id: Int, $status: MediaListStatus) {
-  SaveMediaListEntry(id: $id, status: $status) {
+    mutation UpdateStatus($mediaId: Int, $status: MediaListStatus) {
+  SaveMediaListEntry(mediaId: $mediaId, status: $status) {
     id
   }
 }

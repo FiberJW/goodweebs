@@ -259,7 +259,7 @@ export function DetailsScreen({ route }: Props) {
               async (buttonIndex) => {
                 await updateStatus({
                   variables: {
-                    id: data?.Media?.mediaListEntry?.id,
+                    mediaId: data?.Media?.id,
                     status: Statuses[buttonIndex].value,
                   },
                 });
