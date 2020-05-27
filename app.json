@@ -20,8 +20,8 @@
     "ios": {
       "supportsTablet": true,
       "buildNumber": "0.0.1",
-      "bundleIdentifier": "com.goodweebs.app"
+      "bundleIdentifier": "com.fiberjw.goodweebs"
     },
-    "android": { "package": "com.goodweebs.app", "versionCode": 1 }
+    "android": { "package": "com.fiberjw.goodweebs", "versionCode": 1 }
   }
 }
