@@ -6,12 +6,13 @@ import {
   white40,
   expoBlurple,
   white10,
+  white15,
 } from "yep/colors";
 
 export const darkTheme = {
   background: black,
   navBackground: darkGray,
-  secondaryButton: white40,
+  secondaryButton: white15,
   text: white,
   textInverted: black,
   iconFill: white,
