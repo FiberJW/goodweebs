@@ -143,29 +143,33 @@ export function ProfileScreen({ navigation }: Props) {
                 />
               </>
             ) : null}
-            <ListHeader>Favorite Characters</ListHeader>
-            <FavoriteCharacterList
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              ItemSeparatorComponent={ListSpacer}
-              keyExtractor={(item) => `${item.id}`}
-              data={characterList}
-              renderItem={({ item }) => (
-                <FavoriteContainer>
-                  <Poster
-                    resizeMode="cover"
-                    source={{
-                      uri: item.image?.large ?? "",
-                    }}
-                  />
-                  {item?.name ? (
-                    <FavoriteName numberOfLines={2}>
-                      {item.name.full}
-                    </FavoriteName>
-                  ) : null}
-                </FavoriteContainer>
-              )}
-            />
+            {characterList.length ? (
+              <>
+                <ListHeader>Favorite Characters</ListHeader>
+                <FavoriteCharacterList
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  ItemSeparatorComponent={ListSpacer}
+                  keyExtractor={(item) => `${item.id}`}
+                  data={characterList}
+                  renderItem={({ item }) => (
+                    <FavoriteContainer>
+                      <Poster
+                        resizeMode="cover"
+                        source={{
+                          uri: item.image?.large ?? "",
+                        }}
+                      />
+                      {item?.name ? (
+                        <FavoriteName numberOfLines={2}>
+                          {item.name.full}
+                        </FavoriteName>
+                      ) : null}
+                    </FavoriteContainer>
+                  )}
+                />
+              </>
+            ) : null}
           </EverythingButTheCTA>
         ) : null}
         <AuthButton
