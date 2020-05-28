@@ -41,7 +41,6 @@ export function DiscoverScreen({ navigation }: Props) {
     GetTrendingTVAnime,
     {
       variables: { season: mediaSeason, year, perPage: 30 },
-      pollInterval: 5000,
     }
   );
 
