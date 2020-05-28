@@ -22,6 +22,8 @@ An <a href="https://anilist.co/user/fiberjw">AniList</a> client built with <a hr
 
 </div>
 
-## **Make it work.** Make it right. Make it fast.
+## 🚧 Status: WIP
+
+> **Make it work.** Make it right. Make it fast.
 
 Right now I'm making it work :)
