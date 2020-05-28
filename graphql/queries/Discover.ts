@@ -58,7 +58,12 @@ export const SearchAnime = gql`
         hasNextPage
         total
       }
-      media(search: $search, format: TV, isAdult: false, type: ANIME) {
+      media(
+        search: $search
+        format_not_in: [MANGA, MUSIC, NOVEL, ONE_SHOT]
+        isAdult: false
+        type: ANIME
+      ) {
         ...AnimeFragment
       }
     }
