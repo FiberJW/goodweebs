@@ -17,7 +17,7 @@ export const darkTheme = {
   textInverted: black,
   iconFill: white,
   footnote: white80,
-  chipBorder: white,
+  chipBorder: white40,
   selectedChipFill: white,
   listCount: white80,
   accent: expoBlurple,
