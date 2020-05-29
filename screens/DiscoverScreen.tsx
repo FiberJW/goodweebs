@@ -18,7 +18,7 @@ import {
   SearchAnime,
   year,
 } from "yep/graphql/queries/Discover";
-import { RootStackParamList, Navigation } from "yep/navigation";
+import { RootStackParamList } from "yep/navigation";
 import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";

@@ -1,9 +1,9 @@
 import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { formatDistanceToNow, add } from "date-fns";
 import React from "react";
-import { Picker } from "react-native";
 import title from "title";
 
 import { white15 } from "yep/colors";
@@ -16,13 +16,11 @@ import {
   UpdateStatusMutation,
   UpdateStatusMutationVariables,
 } from "yep/graphql/generated";
+import { UpdateStatus } from "yep/graphql/mutations/UpdateStatus";
 import { GetAnime } from "yep/graphql/queries/AnimeDetails";
 import { RootStackParamList } from "yep/navigation";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
-import { UpdateStatus } from "yep/graphql/mutations/UpdateStatus";
-import { useActionSheet } from "@expo/react-native-action-sheet";
-import { da } from "date-fns/locale";
 
 const Container = takimoto.ScrollView({
   flex: 1,
@@ -40,20 +38,6 @@ const Title = takimoto.Text({
   color: darkTheme.text,
   fontFamily: "Manrope-ExtraBold",
   fontSize: 31.25,
-  marginBottom: 16,
-});
-
-const AiringText = takimoto.Text({
-  color: darkTheme.text,
-  fontFamily: "Manrope-Regular",
-  fontSize: 12.8,
-});
-
-const AiringContainer = takimoto.View({
-  width: "100%",
-  backgroundColor: darkTheme.navBackground,
-  padding: 16,
-  borderRadius: 8,
   marginBottom: 16,
 });
 
@@ -108,8 +92,6 @@ const ButtonsRow = takimoto.View({
   alignItems: "center",
   marginBottom: 16,
 });
-
-const ButtonSpacer = takimoto.View({ width: 8 });
 
 const ButtonTouchable = takimoto.TouchableOpacity({
   backgroundColor: white15,

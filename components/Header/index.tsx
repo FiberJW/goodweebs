@@ -4,7 +4,7 @@ import { Platform, Animated, Easing } from "react-native";
 
 import { white } from "yep/colors";
 
-import { Container, Label, SyncTouchable, SyncIcon, Spinner } from "./styles";
+import { Container, Label, SyncTouchable, Spinner } from "./styles";
 
 type Props = {
   label: string;

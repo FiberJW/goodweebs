@@ -75,6 +75,8 @@
       "plugin:react-native/all"
     ],
     "rules": {
+      "react-native/no-inline-styles": 0,
+      "react-native/no-raw-text": 0,
       "import/order": [
         "error",
         {
