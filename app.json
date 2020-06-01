@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "goodweebs",
-    "slug": "goodweebs",
+    "name": "goodweebs-issue",
+    "slug": "goodweebs-issue",
     "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/launch/icon.png",
-    "scheme": "goodweebs",
+    "scheme": "goodweebs-issue",
     "privacy": "unlisted",
     "splash": {
       "image": "./assets/launch/splash.png",
@@ -20,10 +20,10 @@
     "ios": {
       "supportsTablet": true,
       "buildNumber": "0.0.1",
-      "bundleIdentifier": "com.fiberjw.goodweebs"
+      "bundleIdentifier": "com.fiberjw.goodweebs.issue"
     },
     "android": {
-      "package": "com.fiberjw.goodweebs",
+      "package": "com.fiberjw.goodweebs.issue",
       "versionCode": 1,
       "permissions": []
     }

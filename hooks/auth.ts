@@ -9,7 +9,7 @@ import { useEffect, useState, useCallback } from "react";
 import { CLIENT_ID } from "yep/constants";
 
 const redirectUri = makeRedirectUri({
-  native: "goodweebs://redirect",
+  useProxy: true,
 });
 
 export function useAniListAuthRequest(): [
