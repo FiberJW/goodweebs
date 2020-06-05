@@ -70,16 +70,16 @@ export const ProgressButtonSpacer = takimoto.View({ width: 8 });
 
 const ProgressButtonTouchable = takimoto.TouchableOpacity({
   backgroundColor: darkTheme.secondaryButton,
-  paddingVertical: 16,
-  paddingHorizontal: 24,
+  paddingVertical: 12,
+  paddingHorizontal: 20,
   borderRadius: 8,
   justifyContent: "center",
   alignItems: "center",
 });
 
 const ProgressButtonIcon = takimoto.Image({
-  height: 8,
-  width: 8,
+  height: 16,
+  width: 16,
 });
 
 type ProgressButtonProps = {
