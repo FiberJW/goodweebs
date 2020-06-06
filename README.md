@@ -27,3 +27,8 @@ An <a href="https://anilist.co/user/fiberjw">AniList</a> client built with <a hr
 > **Make it work.** Make it right. Make it fast.
 
 Right now I'm making it work :)
+
+## 📲 Try it out!
+
+- [iOS (via Testflight)](https://testflight.apple.com/join/exothjj2)
+- [Android (Early Access/Beta)](https://play.google.com/store/apps/details?id=com.fiberjw.goodweebs)
