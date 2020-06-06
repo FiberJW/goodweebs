@@ -11,7 +11,7 @@
     "splash": {
       "image": "./assets/launch/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#010209"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -19,13 +19,18 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "0.0.2",
+      "buildNumber": "0.0.3",
       "bundleIdentifier": "com.fiberjw.goodweebs"
     },
     "android": {
       "package": "com.fiberjw.goodweebs",
-      "versionCode": 2,
-      "permissions": []
+      "versionCode": 3,
+      "permissions": [],
+      "adaptiveIcon": {
+        "backgroundColor": "#651FFF",
+        "backgroundImage": "./assets/launch/android-background.png",
+        "foregroundImage": "./assets/launch/android-foreground.png"
+      }
     }
   }
 }
