@@ -23,6 +23,7 @@ type Props = {
   onIncrement: () => void;
   onDecrement: () => void;
   progress: number;
+  disabled?: boolean;
   media: AnimeFragmentFragment;
   navigation: StackNavigationProp<RootStackParamList>;
 };
@@ -30,6 +31,7 @@ type Props = {
 export function AnimeListItem({
   progress,
   media,
+  disabled,
   onIncrement,
   onDecrement,
   navigation,
@@ -82,7 +84,9 @@ export function AnimeListItem({
         <ProgressButtonGroup>
           <ProgressButton
             disabled={
-              media.status === MediaStatus.NotYetReleased || progress === 0
+              disabled ||
+              media.status === MediaStatus.NotYetReleased ||
+              progress === 0
             }
             icon={require("yep/assets/icons/progress-decrement.png")}
             onPress={() => {
@@ -92,6 +96,7 @@ export function AnimeListItem({
           <ProgressButtonSpacer />
           <ProgressButton
             disabled={
+              disabled ||
               media.status === MediaStatus.NotYetReleased ||
               progress === (media.episodes ?? 0)
             }

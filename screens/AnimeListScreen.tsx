@@ -27,6 +27,7 @@ import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { notEmpty } from "yep/utils";
+import { AnimeListItemContainer } from "yep/containers/AnimeListItemContainer";
 
 type Props = {
   navigation: StackNavigationProp<RootStackParamList>;
@@ -160,28 +161,13 @@ export function AnimeListScreen({ navigation }: Props) {
               // }
               keyExtractor={(item) => `${item.id}`}
               renderItem={({ item }) => (
-                <AnimeListItem
+                <AnimeListItemContainer
+                  seedData={{
+                    id: item.id,
+                    progress: item.progress ?? 0,
+                    media: item.media ?? null,
+                  }}
                   navigation={navigation}
-                  progress={item.progress ?? 0}
-                  onIncrement={async () => {
-                    await updateProgress({
-                      variables: {
-                        id: item.id,
-                        progress: (item.progress ?? 0) + 1,
-                      },
-                    });
-                    await refetch();
-                  }}
-                  onDecrement={async () => {
-                    await updateProgress({
-                      variables: {
-                        id: item.id,
-                        progress: (item.progress ?? 0) - 1,
-                      },
-                    });
-                    await refetch();
-                  }}
-                  media={item?.media as AnimeFragmentFragment}
                 />
               )}
             />
