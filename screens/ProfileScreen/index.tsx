@@ -58,12 +58,7 @@ export function ProfileScreen({ navigation }: Props) {
 
   return (
     <OuterContainer>
-      <Header
-        label={getString("profile", StringCase.TITLE)}
-        onSyncPress={async () => {
-          await refetch();
-        }}
-      />
+      <Header label={getString("profile", StringCase.TITLE)} />
       <InnerContainer
         refreshControl={
           <RefreshControl
@@ -73,7 +68,6 @@ export function ProfileScreen({ navigation }: Props) {
             titleColor={white}
           />
         }
-        alwaysBounceVertical={false}
         showsVerticalScrollIndicator={false}
       >
         {viewerData?.Viewer ? (

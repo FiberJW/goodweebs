@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/react-hooks";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useState } from "react";
-import { Dimensions } from "react-native";
+import { Dimensions, RefreshControl } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
@@ -44,7 +44,7 @@ export function DiscoverScreen({ navigation }: Props) {
     }
   );
 
-  const { loading: loadingSearch, data: searchData } = useQuery<
+  const { data: searchData } = useQuery<
     SearchAnimeQuery,
     SearchAnimeQueryVariables
   >(SearchAnime, {
@@ -61,11 +61,7 @@ export function DiscoverScreen({ navigation }: Props) {
 
   return (
     <OuterContainer>
-      <Header
-        label={getString("discover", StringCase.TITLE)}
-        refreshing={loadingTrending || loadingSearch}
-        onSyncPress={() => refetchTrending({ season: mediaSeason, year })}
-      />
+      <Header label={getString("discover", StringCase.TITLE)} />
       <SearchBox
         value={searchTerm}
         onChangeText={(text) => setSearchTerm(text)}
@@ -117,6 +113,14 @@ export function DiscoverScreen({ navigation }: Props) {
             ItemSeparatorComponent={Divider}
             data={trendingList}
             numColumns={3}
+            refreshControl={
+              <RefreshControl
+                refreshing={loadingTrending}
+                onRefresh={() => refetchTrending({ season: mediaSeason, year })}
+                tintColor={darkTheme.text}
+                titleColor={darkTheme.text}
+              />
+            }
             keyExtractor={(item) => `${item.id}`}
             renderItem={({ item, index }) => (
               <PosterContainer
