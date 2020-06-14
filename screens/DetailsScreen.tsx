@@ -227,17 +227,24 @@ export function DetailsScreen({ route }: Props) {
           onPress={() => {
             const options = Statuses.map((s) => s.label);
 
+            options.push("Cancel");
+
             const destructiveButtonIndex = Statuses.findIndex(
               (s) => s.value === data?.Media?.mediaListEntry?.status
             );
+
+            const cancelButtonIndex = options.length - 1;
 
             showActionSheetWithOptions(
               {
                 options,
                 destructiveButtonIndex,
+                cancelButtonIndex,
                 destructiveColor: darkTheme.accent,
               },
               async (buttonIndex) => {
+                if (buttonIndex === cancelButtonIndex) return;
+
                 await updateStatus({
                   variables: {
                     mediaId: data?.Media?.id,
