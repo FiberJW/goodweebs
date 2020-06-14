@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/react-hooks";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { sortBy } from "lodash";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { RefreshControl } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
@@ -45,17 +45,23 @@ export function AnimeListScreen({ navigation }: Props) {
       userId: viewerData?.Viewer?.id,
       status,
     },
+    fetchPolicy: "no-cache",
     notifyOnNetworkStatusChange: true,
   });
 
-  const list = sortBy(
-    (
-      (animeListData?.MediaListCollection?.lists &&
-        animeListData?.MediaListCollection?.lists[0]?.entries) ??
-      []
-    ).filter(notEmpty),
-    (m) => m.media?.title?.english
+  const list = useMemo(
+    () =>
+      sortBy(
+        (
+          (animeListData?.MediaListCollection?.lists &&
+            animeListData?.MediaListCollection?.lists[0]?.entries) ??
+          []
+        ).filter(notEmpty),
+        (m) => m.media?.title?.english
+      ),
+    [animeListData]
   );
+
   const listCountText = `${list.length} title${list.length !== 1 ? "s" : ""}`;
 
   // TODO: maybe make this better? feels a little dank
@@ -110,7 +116,7 @@ export function AnimeListScreen({ navigation }: Props) {
                   titleColor={darkTheme.text}
                 />
               }
-              keyExtractor={(item) => `${item.id}`}
+              keyExtractor={(item) => `${item.mediaId}`}
               renderItem={({ item }) => (
                 <AnimeListItemContainer
                   seedData={{
