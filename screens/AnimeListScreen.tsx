@@ -1,25 +1,21 @@
-import { useQuery, useMutation } from "@apollo/react-hooks";
-import { useActionSheet } from "@expo/react-native-action-sheet";
+import { useQuery } from "@apollo/react-hooks";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { sortBy } from "lodash";
 import React, { useState } from "react";
+import { RefreshControl } from "react-native";
 
-import { AnimeListItem } from "yep/components/AnimeListItem";
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
 import { StatusChip } from "yep/components/StatusChip";
-import { Statuses, Sorts } from "yep/constants";
+import { Statuses } from "yep/constants";
+import { AnimeListItemContainer } from "yep/containers/AnimeListItemContainer";
 import {
   GetViewerQuery,
   GetViewerQueryVariables,
   GetAnimeListQuery,
   GetAnimeListQueryVariables,
   MediaListStatus,
-  MediaListSort,
-  AnimeFragmentFragment,
-  UpdateProgressMutation,
-  UpdateProgressMutationVariables,
 } from "yep/graphql/generated";
-import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
 import { GetAnimeList } from "yep/graphql/queries/AnimeList";
 import { GetViewer } from "yep/graphql/queries/Viewer";
 import { RootStackParamList } from "yep/navigation";
@@ -27,7 +23,6 @@ import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { notEmpty } from "yep/utils";
-import { AnimeListItemContainer } from "yep/containers/AnimeListItemContainer";
 
 type Props = {
   navigation: StackNavigationProp<RootStackParamList>;
@@ -35,12 +30,6 @@ type Props = {
 
 export function AnimeListScreen({ navigation }: Props) {
   const [status, setStatus] = useState<MediaListStatus>(Statuses[0].value);
-
-  const [sort, setSort] = useState<{ label: string; value: MediaListSort }>(
-    Sorts[0]
-  );
-
-  const { showActionSheetWithOptions } = useActionSheet();
 
   const { loading: loadingViewer, data: viewerData } = useQuery<
     GetViewerQuery,
@@ -55,23 +44,19 @@ export function AnimeListScreen({ navigation }: Props) {
     variables: {
       userId: viewerData?.Viewer?.id,
       status,
-      sort: [sort.value],
     },
+    notifyOnNetworkStatusChange: true,
   });
 
-  const [updateProgress] = useMutation<
-    UpdateProgressMutation,
-    UpdateProgressMutationVariables
-  >(UpdateProgress);
-
-  const list = (
-    (animeListData?.MediaListCollection?.lists &&
-      animeListData?.MediaListCollection?.lists[0]?.entries) ??
-    []
-  ).filter(notEmpty);
-
+  const list = sortBy(
+    (
+      (animeListData?.MediaListCollection?.lists &&
+        animeListData?.MediaListCollection?.lists[0]?.entries) ??
+      []
+    ).filter(notEmpty),
+    (m) => m.media?.title?.english
+  );
   const listCountText = `${list.length} title${list.length !== 1 ? "s" : ""}`;
-  const sortText = `Sort: ${sort.label}`;
 
   // TODO: maybe make this better? feels a little dank
   const AnimeFlatList = makeAnimeFlatList<typeof list[number]>();
@@ -80,16 +65,7 @@ export function AnimeListScreen({ navigation }: Props) {
 
   return (
     <OuterContainer>
-      <Header
-        label={getString("anime", StringCase.TITLE)}
-        refreshing={refreshing}
-        onSyncPress={() =>
-          refetch({
-            userId: viewerData?.Viewer?.id,
-            status,
-          })
-        }
-      />
+      <Header label={getString("anime", StringCase.TITLE)} />
       <InnerContainer>
         <StatusChipListContainer>
           <StatusChipList
@@ -112,29 +88,6 @@ export function AnimeListScreen({ navigation }: Props) {
         <Spacer />
         <CountAndSortRow>
           <Count>{listCountText}</Count>
-          <SortTouchable
-            onPress={() => {
-              const options = Sorts.map((s) => s.label);
-
-              const destructiveButtonIndex = Sorts.findIndex(
-                (s) => s.value === sort.value
-              );
-
-              showActionSheetWithOptions(
-                {
-                  options,
-                  destructiveButtonIndex,
-                  destructiveColor: darkTheme.accent,
-                },
-                (buttonIndex) => {
-                  setSort(Sorts[buttonIndex]);
-                }
-              );
-            }}
-          >
-            <SortLabel>{sortText}</SortLabel>
-            <SortIcon source={require("yep/assets/icons/sort.png")} />
-          </SortTouchable>
         </CountAndSortRow>
         <Spacer />
 
@@ -144,21 +97,19 @@ export function AnimeListScreen({ navigation }: Props) {
               showsVerticalScrollIndicator={false}
               ItemSeparatorComponent={AnimeListDivider}
               data={list}
-              // refreshControl={
-              //   <RefreshControl
-              //     refreshing={refreshing && refreshedFromGesture}
-              //     onRefresh={async () => {
-              //       setRefreshedFromGesture(true);
-              //       await refetch({
-              //         userId: viewerData?.Viewer?.id,
-              //         status,
-              //       });
-              //       setRefreshedFromGesture(false);
-              //     }}
-              //     tintColor={white}
-              //     titleColor={white}
-              //   />
-              // }
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={async () => {
+                    await refetch({
+                      userId: viewerData?.Viewer?.id,
+                      status,
+                    });
+                  }}
+                  tintColor={darkTheme.text}
+                  titleColor={darkTheme.text}
+                />
+              }
               keyExtractor={(item) => `${item.id}`}
               renderItem={({ item }) => (
                 <AnimeListItemContainer
@@ -167,6 +118,12 @@ export function AnimeListScreen({ navigation }: Props) {
                     progress: item.progress ?? 0,
                     media: item.media ?? null,
                   }}
+                  refetchList={() =>
+                    refetch({
+                      userId: viewerData?.Viewer?.id,
+                      status,
+                    })
+                  }
                   navigation={navigation}
                 />
               )}
@@ -224,21 +181,4 @@ const Count = takimoto.Text({
 
 export const Spinner = takimoto.ActivityIndicator({
   paddingBottom: 16,
-});
-
-const SortTouchable = takimoto.TouchableOpacity({
-  flexDirection: "row",
-  alignItems: "center",
-});
-
-const SortLabel = takimoto.Text({
-  fontFamily: "Manrope-Regular",
-  fontSize: 12.8,
-  color: darkTheme.text,
-  marginRight: 4,
-});
-
-const SortIcon = takimoto.Image({
-  height: 16,
-  width: 16,
 });
