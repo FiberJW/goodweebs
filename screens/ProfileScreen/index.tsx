@@ -7,6 +7,7 @@ import { white } from "yep/colors";
 import { AuthButton } from "yep/components/AuthButton";
 import { Header } from "yep/components/Header";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
+import { client } from "yep/graphql/client";
 import { GetViewerQuery, GetViewerQueryVariables } from "yep/graphql/generated";
 import { GetViewer } from "yep/graphql/queries/Viewer";
 import { RootStackParamList } from "yep/navigation";
@@ -175,8 +176,9 @@ export function ProfileScreen({ navigation }: Props) {
         <AuthButton
           label="Log out"
           onPress={async () => {
-            await AsyncStorage.removeItem(ANILIST_ACCESS_TOKEN_STORAGE);
             navigation.replace("Auth");
+            await client.clearStore();
+            await AsyncStorage.removeItem(ANILIST_ACCESS_TOKEN_STORAGE);
           }}
         />
       </InnerContainer>
