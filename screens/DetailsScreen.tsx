@@ -4,6 +4,9 @@ import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { formatDistanceToNow, add } from "date-fns";
 import React from "react";
+import { StyleSheet } from "react-native";
+import HTMLView from "react-native-htmlview";
+import { useSafeArea } from "react-native-safe-area-context";
 import title from "title";
 
 import { white15 } from "yep/colors";
@@ -109,12 +112,6 @@ const ButtonLabel = takimoto.Text({
   textAlign: "center",
 });
 
-const Description = takimoto.Text({
-  fontSize: 16,
-  color: darkTheme.text,
-  fontFamily: "Manrope-Regular",
-});
-
 type ButtonProps = { label: string; onPress: () => void };
 
 function Button({ label, onPress }: ButtonProps) {
@@ -132,6 +129,7 @@ type Props = {
 
 export function DetailsScreen({ route }: Props) {
   const { showActionSheetWithOptions } = useActionSheet();
+  const insets = useSafeArea();
 
   const { loading, data, refetch } = useQuery<
     GetAnimeQuery,
@@ -147,6 +145,7 @@ export function DetailsScreen({ route }: Props) {
     <EmptyState />
   ) : (
     <Container
+      contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
       showsVerticalScrollIndicator={false}
       alwaysBounceVertical={false}
     >
@@ -251,7 +250,27 @@ export function DetailsScreen({ route }: Props) {
           }}
         />
       </ButtonsRow>
-      <Description>{data?.Media?.description}</Description>
+      {data?.Media?.description ? (
+        <HTMLView
+          value={`<p>${data?.Media?.description}</p>`}
+          stylesheet={htmlViewStyle}
+        />
+      ) : null}
     </Container>
   );
 }
+
+const htmlViewStyle = StyleSheet.create({
+  // eslint-disable-next-line
+  p: {
+    color: darkTheme.text,
+    fontFamily: "Manrope-Regular",
+    fontSize: 16,
+  },
+  // eslint-disable-next-line
+  i: {
+    color: darkTheme.text,
+    fontFamily: "Manrope-Regular",
+    fontSize: 16,
+  },
+});

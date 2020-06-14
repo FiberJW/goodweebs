@@ -14,7 +14,12 @@ export function StatusChip({ label, onPress, isSelected }: Props) {
     <Container
       onPress={onPress}
       style={
-        isSelected ? { backgroundColor: darkTheme.selectedChipFill } : undefined
+        isSelected
+          ? {
+              backgroundColor: darkTheme.selectedChipFill,
+              borderColor: darkTheme.text,
+            }
+          : undefined
       }
     >
       <Label style={isSelected ? { color: darkTheme.textInverted } : undefined}>
