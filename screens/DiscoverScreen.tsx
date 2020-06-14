@@ -78,16 +78,14 @@ export function DiscoverScreen({ navigation }: Props) {
         }}
       />
       <InnerContainer>
-        <ListHeader>
-          {showSearchResultsView
-            ? `Search results for: ${searchTerm}`
-            : "Top 30 trending anime"}
-        </ListHeader>
         {showSearchResultsView ? (
           searchList.length === 0 ? (
             <EmptyState />
           ) : (
             <SearchList
+              ListHeaderComponent={() => (
+                <ListHeader>Search results for: {searchTerm}</ListHeader>
+              )}
               ItemSeparatorComponent={Divider}
               data={searchList}
               numColumns={3}
@@ -113,6 +111,9 @@ export function DiscoverScreen({ navigation }: Props) {
           )
         ) : (
           <TrendingList
+            ListHeaderComponent={() => (
+              <ListHeader>Top 30 trending anime</ListHeader>
+            )}
             ItemSeparatorComponent={Divider}
             data={trendingList}
             numColumns={3}
