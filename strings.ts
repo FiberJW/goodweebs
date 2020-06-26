@@ -8,7 +8,8 @@ type StringNames =
   | "anime"
   | "discover"
   | "profile"
-  | "details";
+  | "details"
+  | "goodweebs";
 
 type StringDefinitions = {
   [p in StringNames]: string;
@@ -30,6 +31,7 @@ export const en_us: StringDefinitions = {
   discover: "discover",
   profile: "profile",
   details: "details",
+  goodweebs: "Goodweebs",
 };
 
 export function getString(
