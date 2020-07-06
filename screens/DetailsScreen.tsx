@@ -3,15 +3,15 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { formatDistanceToNow, add } from "date-fns";
-import React from "react";
-import { StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, ActivityIndicator } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { useSafeArea } from "react-native-safe-area-context";
 import title from "title";
 
 import { white15 } from "yep/colors";
 import { EmptyState } from "yep/components/EmptyState";
-import { Statuses } from "yep/constants";
+import { MediaListStatusWithLabel, MediaStatusWithLabel } from "yep/constants";
 import {
   GetAnimeQuery,
   GetAnimeQueryVariables,
@@ -112,12 +112,21 @@ const ButtonLabel = takimoto.Text({
   textAlign: "center",
 });
 
-type ButtonProps = { label: string; onPress: () => void };
+type ButtonProps = {
+  label: string;
+  onPress: () => void;
+  disabled?: boolean;
+  loading?: boolean;
+};
 
-function Button({ label, onPress }: ButtonProps) {
+function Button({ label, onPress, disabled, loading }: ButtonProps) {
   return (
-    <ButtonTouchable onPress={onPress}>
-      <ButtonLabel>{label}</ButtonLabel>
+    <ButtonTouchable onPress={onPress} disabled={disabled || loading}>
+      {loading ? (
+        <ActivityIndicator color={darkTheme.text} />
+      ) : (
+        <ButtonLabel>{label}</ButtonLabel>
+      )}
     </ButtonTouchable>
   );
 }
@@ -130,6 +139,7 @@ type Props = {
 export function DetailsScreen({ route }: Props) {
   const { showActionSheetWithOptions } = useActionSheet();
   const insets = useSafeArea();
+  const [loadingStatus, setLoadingStatus] = useState(false);
 
   const { loading, data, refetch } = useQuery<
     GetAnimeQuery,
@@ -169,8 +179,17 @@ export function DetailsScreen({ route }: Props) {
           </InfoRow>
           <InfoRowSpacer />
           <InfoRow>
-            <Info label="Score" value={`${data?.Media?.averageScore}/100`} />
-            <Info label="Status" value={title(`${data?.Media?.status}`)} />
+            {data?.Media?.averageScore ? (
+              <Info label="Score" value={`${data?.Media?.averageScore}/100`} />
+            ) : null}
+            <Info
+              label="Status"
+              value={title(
+                MediaStatusWithLabel.find(
+                  (m) => m.value === data?.Media?.status
+                )?.label ?? ""
+              )}
+            />
           </InfoRow>
           <InfoRowSpacer />
           <InfoRow>
@@ -219,17 +238,18 @@ export function DetailsScreen({ route }: Props) {
       </PosterAndInfoContainer>
       <ButtonsRow>
         <Button
+          loading={loadingStatus}
           label={
-            Statuses.find(
+            MediaListStatusWithLabel.find(
               (x) => x.value === data?.Media?.mediaListEntry?.status
             )?.label ?? "Add to List"
           }
           onPress={() => {
-            const options = Statuses.map((s) => s.label);
+            const options = MediaListStatusWithLabel.map((s) => s.label);
 
             options.push("Cancel");
 
-            const destructiveButtonIndex = Statuses.findIndex(
+            const destructiveButtonIndex = MediaListStatusWithLabel.findIndex(
               (s) => s.value === data?.Media?.mediaListEntry?.status
             );
 
@@ -245,13 +265,15 @@ export function DetailsScreen({ route }: Props) {
               async (buttonIndex) => {
                 if (buttonIndex === cancelButtonIndex) return;
 
+                setLoadingStatus(true);
                 await updateStatus({
                   variables: {
                     mediaId: data?.Media?.id,
-                    status: Statuses[buttonIndex].value,
+                    status: MediaListStatusWithLabel[buttonIndex].value,
                   },
                 });
                 await refetch({ id: data?.Media?.id });
+                setLoadingStatus(false);
               }
             );
           }}

@@ -1,6 +1,10 @@
 import Constants from "expo-constants";
 
-import { MediaListStatus, MediaListSort } from "yep/graphql/generated";
+import {
+  MediaListStatus,
+  MediaListSort,
+  MediaStatus,
+} from "yep/graphql/generated";
 
 enum AniListClientID {
   SIMULATOR = 3549,
@@ -24,12 +28,25 @@ export const CLIENT_ID = (() => {
 
 export const ANILIST_ACCESS_TOKEN_STORAGE = `com.fiberjw.goodweebs.${CLIENT_ID}.access_token`;
 
-export const Statuses: { label: string; value: MediaListStatus }[] = [
+export const MediaListStatusWithLabel: {
+  label: string;
+  value: MediaListStatus;
+}[] = [
   { label: "Watching", value: MediaListStatus.Current },
   { label: "On Hold", value: MediaListStatus.Paused },
   { label: "Plan to Watch", value: MediaListStatus.Planning },
   { label: "Dropped", value: MediaListStatus.Dropped },
   { label: "Completed", value: MediaListStatus.Completed },
+];
+
+export const MediaStatusWithLabel: {
+  label: string;
+  value: MediaStatus;
+}[] = [
+  { label: "Finished", value: MediaStatus.Finished },
+  { label: "Currently releasing", value: MediaStatus.Releasing },
+  { label: "Not yet released", value: MediaStatus.NotYetReleased },
+  { label: "Cancelled", value: MediaStatus.Cancelled },
 ];
 
 export const Sorts: { label: string; value: MediaListSort }[] = [

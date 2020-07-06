@@ -7,7 +7,7 @@ import { RefreshControl } from "react-native";
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
 import { StatusChip } from "yep/components/StatusChip";
-import { Statuses } from "yep/constants";
+import { MediaListStatusWithLabel } from "yep/constants";
 import { AnimeListItemContainer } from "yep/containers/AnimeListItemContainer";
 import {
   GetViewerQuery,
@@ -29,7 +29,9 @@ type Props = {
 };
 
 export function AnimeListScreen({ navigation }: Props) {
-  const [status, setStatus] = useState<MediaListStatus>(Statuses[0].value);
+  const [status, setStatus] = useState<MediaListStatus>(
+    MediaListStatusWithLabel[0].value
+  );
 
   const { loading: loadingViewer, data: viewerData } = useQuery<
     GetViewerQuery,
@@ -78,7 +80,7 @@ export function AnimeListScreen({ navigation }: Props) {
             alwaysBounceVertical={false}
             showsHorizontalScrollIndicator={false}
             horizontal
-            data={Statuses}
+            data={MediaListStatusWithLabel}
             ItemSeparatorComponent={StatusChipListDivider}
             keyExtractor={({ label }) => label}
             renderItem={({ item: { label, value } }) => (
