@@ -98,7 +98,7 @@ export function AnimeListItem({
             disabled={
               disabled ||
               media.status === MediaStatus.NotYetReleased ||
-              progress === (media.episodes ?? 0)
+              progress === media.episodes
             }
             icon={
               progress === (media.episodes ?? 0) - 1
