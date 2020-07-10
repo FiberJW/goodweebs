@@ -180,7 +180,10 @@ export function DetailsScreen({ route }: Props) {
           <InfoRowSpacer />
           <InfoRow>
             {data?.Media?.averageScore ? (
-              <Info label="Score" value={`${data?.Media?.averageScore}/100`} />
+              <Info
+                label="Average Score"
+                value={`${data?.Media?.averageScore}/100`}
+              />
             ) : null}
             <Info
               label="Status"
