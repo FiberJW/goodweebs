@@ -3680,6 +3680,7 @@ export type InternalPageMediaSubmissionsArgs = {
   userId?: Maybe<Scalars['Int']>;
   status?: Maybe<SubmissionStatus>;
   type?: Maybe<MediaType>;
+  sort?: Maybe<Array<Maybe<SubmissionSort>>>;
 };
 
 
@@ -3688,6 +3689,7 @@ export type InternalPageCharacterSubmissionsArgs = {
   characterId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   status?: Maybe<SubmissionStatus>;
+  sort?: Maybe<Array<Maybe<SubmissionSort>>>;
 };
 
 
@@ -3696,6 +3698,7 @@ export type InternalPageStaffSubmissionsArgs = {
   staffId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   status?: Maybe<SubmissionStatus>;
+  sort?: Maybe<Array<Maybe<SubmissionSort>>>;
 };
 
 
@@ -3712,6 +3715,7 @@ export type InternalPageRevisionHistoryArgs = {
 /** Page of data (Used for internal use only) */
 export type InternalPageModActionsArgs = {
   userId?: Maybe<Scalars['Int']>;
+  modId?: Maybe<Scalars['Int']>;
 };
 
 
@@ -4032,6 +4036,12 @@ export enum SubmissionStatus {
   Rejected = 'REJECTED',
   PartiallyAccepted = 'PARTIALLY_ACCEPTED',
   Accepted = 'ACCEPTED'
+}
+
+/** Submission sort enums */
+export enum SubmissionSort {
+  Id = 'ID',
+  IdDesc = 'ID_DESC'
 }
 
 /** Media submission */
@@ -4513,7 +4523,7 @@ export const AnimeFragmentFragmentDoc = gql`
   mediaListEntry {
     progress
     status
-    score
+    score(format: POINT_10)
     id
   }
 }

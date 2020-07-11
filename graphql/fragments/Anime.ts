@@ -38,7 +38,7 @@ export const AnimeFragment = gql`
     mediaListEntry {
       progress
       status
-      score
+      score(format: POINT_10)
       id
     }
   }

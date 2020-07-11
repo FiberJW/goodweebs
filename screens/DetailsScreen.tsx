@@ -3,8 +3,8 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { formatDistanceToNow, add } from "date-fns";
-import React, { useState } from "react";
-import { StyleSheet, ActivityIndicator } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, ActivityIndicator, RefreshControl } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { useSafeArea } from "react-native-safe-area-context";
 import title from "title";
@@ -18,7 +18,13 @@ import {
   MediaStatus,
   UpdateStatusMutation,
   UpdateStatusMutationVariables,
+  UpdateScoreMutation,
+  UpdateScoreMutationVariables,
+  UpdateProgressMutation,
+  UpdateProgressMutationVariables,
 } from "yep/graphql/generated";
+import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
+import { UpdateScore } from "yep/graphql/mutations/UpdateScore";
 import { UpdateStatus } from "yep/graphql/mutations/UpdateStatus";
 import { GetAnime } from "yep/graphql/queries/AnimeDetails";
 import { RootStackParamList } from "yep/navigation";
@@ -131,6 +137,127 @@ function Button({ label, onPress, disabled, loading }: ButtonProps) {
   );
 }
 
+const StepperWithLabelContainer = takimoto.View({
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "space-between",
+  width: "100%",
+});
+
+const StepperLabel = takimoto.Text({
+  fontSize: 16,
+  color: darkTheme.text,
+  fontFamily: "Manrope-SemiBold",
+  textAlign: "center",
+});
+
+const StepperContainer = takimoto.View({
+  flexDirection: "row",
+  alignItems: "center",
+});
+const StepperSpacer = takimoto.View({
+  height: 16,
+});
+
+const StepperCount = takimoto.Text({
+  fontSize: 16,
+  color: darkTheme.text,
+  fontFamily: "Manrope-SemiBold",
+  textAlign: "center",
+  width: 48,
+});
+
+type StepperProps = {
+  defaultValue: number;
+  label: string;
+  upperBound?: number;
+  lowerBound: number;
+  onChange: (value: number) => void;
+};
+
+function Stepper({
+  defaultValue,
+  upperBound,
+  lowerBound,
+  label,
+  onChange,
+}: StepperProps) {
+  const [count, setCount] = useState(defaultValue);
+
+  useEffect(
+    function callOnChangeWhenCountChanges() {
+      onChange(count);
+    },
+    [count]
+  );
+
+  useEffect(
+    function setCountWhenDefaultValueChanges() {
+      setCount(defaultValue);
+    },
+    [defaultValue]
+  );
+
+  return (
+    <StepperWithLabelContainer>
+      <StepperLabel>{label}</StepperLabel>
+      <StepperContainer>
+        <StepperButton
+          type="decrement"
+          disabled={count === lowerBound}
+          onPress={() => {
+            setCount((c) => c - 1);
+          }}
+        />
+        <StepperCount>{count}</StepperCount>
+        <StepperButton
+          type="increment"
+          disabled={count === upperBound}
+          onPress={() => {
+            setCount((c) => c + 1);
+          }}
+        />
+      </StepperContainer>
+    </StepperWithLabelContainer>
+  );
+}
+
+const StepperButtonTouchable = takimoto.TouchableOpacity({
+  padding: 8,
+  borderRadius: 16,
+  backgroundColor: darkTheme.secondaryButton,
+});
+
+const StepperButtonIcon = takimoto.Image({
+  height: 16,
+  width: 16,
+  tintColor: darkTheme.text,
+});
+
+type StepperButtonProps = {
+  onPress: () => void;
+  disabled?: boolean;
+  type: "increment" | "decrement";
+};
+
+function StepperButton({ onPress, type, disabled }: StepperButtonProps) {
+  return (
+    <StepperButtonTouchable
+      disabled={disabled}
+      onPress={onPress}
+      style={disabled ? { opacity: 0.6 } : null}
+    >
+      <StepperButtonIcon
+        source={
+          type === "increment"
+            ? require("yep/assets/icons/progress-increment.png")
+            : require("yep/assets/icons/progress-decrement.png")
+        }
+      />
+    </StepperButtonTouchable>
+  );
+}
+
 type Props = {
   navigation: StackNavigationProp<RootStackParamList>;
   route: RouteProp<RootStackParamList, "Details">;
@@ -144,20 +271,40 @@ export function DetailsScreen({ route }: Props) {
   const { loading, data, refetch } = useQuery<
     GetAnimeQuery,
     GetAnimeQueryVariables
-  >(GetAnime, { variables: { id: route.params.id } });
+  >(GetAnime, {
+    variables: { id: route.params.id },
+    notifyOnNetworkStatusChange: true,
+  });
 
   const [updateStatus] = useMutation<
     UpdateStatusMutation,
     UpdateStatusMutationVariables
   >(UpdateStatus);
 
-  return loading ? (
+  const [updateScore] = useMutation<
+    UpdateScoreMutation,
+    UpdateScoreMutationVariables
+  >(UpdateScore);
+
+  const [updateProgress] = useMutation<
+    UpdateProgressMutation,
+    UpdateProgressMutationVariables
+  >(UpdateProgress);
+
+  return !data ? (
     <EmptyState />
   ) : (
     <Container
       contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
       showsVerticalScrollIndicator={false}
-      alwaysBounceVertical={false}
+      refreshControl={
+        <RefreshControl
+          refreshing={loading}
+          onRefresh={() => refetch({ id: route.params.id })}
+          tintColor={darkTheme.text}
+          titleColor={darkTheme.text}
+        />
+      }
     >
       <Title numberOfLines={1}>
         {data?.Media?.title?.english ||
@@ -174,7 +321,9 @@ export function DetailsScreen({ route }: Props) {
         />
         <InfoTable>
           <InfoRow>
-            <Info label="Episodes" value={`${data?.Media?.episodes}`} />
+            {data?.Media?.episodes ? (
+              <Info label="Episodes" value={`${data?.Media?.episodes}`} />
+            ) : null}
             <Info label="Genre" value={data?.Media?.genres?.join(", ") ?? ""} />
           </InfoRow>
           <InfoRowSpacer />
@@ -182,7 +331,7 @@ export function DetailsScreen({ route }: Props) {
             {data?.Media?.averageScore ? (
               <Info
                 label="Average Score"
-                value={`${data?.Media?.averageScore}/100`}
+                value={`${data?.Media?.averageScore / 10} / 10`}
               />
             ) : null}
             <Info
@@ -282,6 +431,50 @@ export function DetailsScreen({ route }: Props) {
           }}
         />
       </ButtonsRow>
+      {data.Media?.mediaListEntry ? (
+        <>
+          <Stepper
+            label="Progress"
+            defaultValue={data?.Media?.mediaListEntry?.progress ?? 0}
+            upperBound={data?.Media?.episodes ?? undefined}
+            lowerBound={0}
+            onChange={async (progress) => {
+              try {
+                await updateProgress({
+                  variables: {
+                    id: data?.Media?.mediaListEntry?.id,
+                    progress,
+                  },
+                });
+                await refetch({ id: data?.Media?.id });
+              } catch (_e) {
+                // TODO: display error
+              }
+            }}
+          />
+          <StepperSpacer />
+          <Stepper
+            label="Score"
+            defaultValue={data?.Media?.mediaListEntry?.score ?? 5}
+            upperBound={10}
+            lowerBound={0}
+            onChange={async (s) => {
+              try {
+                await updateScore({
+                  variables: {
+                    id: data?.Media?.mediaListEntry?.id,
+                    scoreRaw: s * 10,
+                  },
+                });
+                await refetch({ id: data?.Media?.id });
+              } catch (_e) {
+                // TODO: display error
+              }
+            }}
+          />
+          <StepperSpacer />
+        </>
+      ) : null}
       {data?.Media?.description ? (
         <HTMLView
           value={`<p>${data?.Media?.description}</p>`}

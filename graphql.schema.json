@@ -21673,6 +21673,20 @@
                   "ofType": null
                 },
                 "defaultValue": null
+              },
+              {
+                "name": "sort",
+                "description": "The order the results will be returned in",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "SubmissionSort",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
               }
             ],
             "type": {
@@ -21720,6 +21734,20 @@
                   "ofType": null
                 },
                 "defaultValue": null
+              },
+              {
+                "name": "sort",
+                "description": "The order the results will be returned in",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "SubmissionSort",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
               }
             ],
             "type": {
@@ -21765,6 +21793,20 @@
                   "kind": "ENUM",
                   "name": "SubmissionStatus",
                   "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "sort",
+                "description": "The order the results will be returned in",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "SubmissionSort",
+                    "ofType": null
+                  }
                 },
                 "defaultValue": null
               }
@@ -21870,6 +21912,16 @@
             "args": [
               {
                 "name": "userId",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "modId",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
@@ -24719,6 +24771,29 @@
           },
           {
             "name": "ACCEPTED",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "SubmissionSort",
+        "description": "Submission sort enums",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "ID",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "ID_DESC",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
