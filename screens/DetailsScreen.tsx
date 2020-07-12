@@ -27,10 +27,10 @@ import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
 import { UpdateScore } from "yep/graphql/mutations/UpdateScore";
 import { UpdateStatus } from "yep/graphql/mutations/UpdateStatus";
 import { GetAnime } from "yep/graphql/queries/AnimeDetails";
+import { useDidMountEffect, useNow } from "yep/hooks/helpers";
 import { RootStackParamList } from "yep/navigation";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
-import { useDidMountEffect } from "yep/hooks/helpers";
 
 const Container = takimoto.ScrollView({
   flex: 1,
@@ -270,6 +270,8 @@ export function DetailsScreen({ route }: Props) {
   const [loadingStatus, setLoadingStatus] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
 
+  const now = useNow();
+
   const { loading, data, refetch } = useQuery<
     GetAnimeQuery,
     GetAnimeQueryVariables
@@ -369,7 +371,7 @@ export function DetailsScreen({ route }: Props) {
                     value={`EP ${
                       data?.Media?.nextAiringEpisode?.episode
                     } airs in ${formatDistanceToNow(
-                      add(new Date(), {
+                      add(now, {
                         seconds:
                           data?.Media?.nextAiringEpisode?.timeUntilAiring ?? 0,
                       })

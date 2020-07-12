@@ -3,6 +3,7 @@ import { formatDistanceToNow, add } from "date-fns";
 import React from "react";
 
 import { AnimeFragmentFragment, MediaStatus } from "yep/graphql/generated";
+import { useNow } from "yep/hooks/helpers";
 import { RootStackParamList } from "yep/navigation";
 
 import {
@@ -36,6 +37,8 @@ export function AnimeListItem({
   onDecrement,
   navigation,
 }: Props) {
+  const now = useNow();
+
   return (
     <Container
       activeOpacity={0.7}
@@ -56,7 +59,7 @@ export function AnimeListItem({
           <BroadcastSchedule numberOfLines={1}>
             EP {media.nextAiringEpisode?.episode} airs in{" "}
             {formatDistanceToNow(
-              add(new Date(), {
+              add(now, {
                 seconds: media.nextAiringEpisode?.timeUntilAiring ?? 0,
               })
             )}
