@@ -30,13 +30,14 @@ type Props = {
 
 export function DiscoverScreen({ navigation }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   const showSearchResultsView = searchTerm.length > 0;
 
   const {
     loading: loadingTrending,
     data: trendingData,
-    refetch: refetchTrending,
+    refetch: refetchTrendingOriginal,
   } = useQuery<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>(
     GetTrendingTVAnime,
     {
@@ -58,6 +59,11 @@ export function DiscoverScreen({ navigation }: Props) {
 
   const SearchList = makeList<typeof searchList[number]>();
   const TrendingList = makeList<typeof trendingList[number]>();
+
+  async function refetchTrending() {
+    setIsFirstLoad(false);
+    await refetchTrendingOriginal({ season: mediaSeason, year });
+  }
 
   return (
     <OuterContainer>
@@ -115,8 +121,8 @@ export function DiscoverScreen({ navigation }: Props) {
             numColumns={3}
             refreshControl={
               <RefreshControl
-                refreshing={loadingTrending}
-                onRefresh={() => refetchTrending({ season: mediaSeason, year })}
+                refreshing={!isFirstLoad && loadingTrending}
+                onRefresh={refetchTrending}
                 tintColor={darkTheme.text}
                 titleColor={darkTheme.text}
               />

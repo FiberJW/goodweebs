@@ -30,6 +30,7 @@ import { GetAnime } from "yep/graphql/queries/AnimeDetails";
 import { RootStackParamList } from "yep/navigation";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
+import { useDidMountEffect } from "yep/hooks/helpers";
 
 const Container = takimoto.ScrollView({
   flex: 1,
@@ -184,7 +185,7 @@ function Stepper({
 }: StepperProps) {
   const [count, setCount] = useState(defaultValue);
 
-  useEffect(
+  useDidMountEffect(
     function callOnChangeWhenCountChanges() {
       onChange(count);
     },
@@ -267,6 +268,7 @@ export function DetailsScreen({ route }: Props) {
   const { showActionSheetWithOptions } = useActionSheet();
   const insets = useSafeArea();
   const [loadingStatus, setLoadingStatus] = useState(false);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   const { loading, data, refetch } = useQuery<
     GetAnimeQuery,
@@ -291,196 +293,208 @@ export function DetailsScreen({ route }: Props) {
     UpdateProgressMutationVariables
   >(UpdateProgress);
 
-  return !data ? (
-    <EmptyState />
-  ) : (
+  async function refetchAnime() {
+    setIsFirstLoad(false);
+    await refetch({ id: route.params.id });
+  }
+
+  return (
     <Container
       contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
       showsVerticalScrollIndicator={false}
       refreshControl={
         <RefreshControl
-          refreshing={loading}
-          onRefresh={() => refetch({ id: route.params.id })}
+          refreshing={!isFirstLoad && loading}
+          onRefresh={refetchAnime}
           tintColor={darkTheme.text}
           titleColor={darkTheme.text}
         />
       }
     >
-      <Title numberOfLines={1}>
-        {data?.Media?.title?.english ||
-          data?.Media?.title?.romaji ||
-          data?.Media?.title?.native}
-      </Title>
-
-      <PosterAndInfoContainer>
-        <Poster
-          resizeMode="cover"
-          source={{
-            uri: data?.Media?.coverImage?.large ?? "",
-          }}
-        />
-        <InfoTable>
-          <InfoRow>
-            {data?.Media?.episodes ? (
-              <Info label="Episodes" value={`${data?.Media?.episodes}`} />
-            ) : null}
-            <Info label="Genre" value={data?.Media?.genres?.join(", ") ?? ""} />
-          </InfoRow>
-          <InfoRowSpacer />
-          <InfoRow>
-            {data?.Media?.averageScore ? (
-              <Info
-                label="Average Score"
-                value={`${data?.Media?.averageScore / 10} / 10`}
-              />
-            ) : null}
-            <Info
-              label="Status"
-              value={title(
-                MediaStatusWithLabel.find(
-                  (m) => m.value === data?.Media?.status
-                )?.label ?? ""
-              )}
-            />
-          </InfoRow>
-          <InfoRowSpacer />
-          <InfoRow>
-            <Info
-              label="Progress"
-              value={`${data?.Media?.mediaListEntry?.progress ?? 0}/${
-                data?.Media?.episodes ?? "?"
-              } EP`}
-            />
-            {data?.Media?.status === MediaStatus.Releasing ? (
-              <Info
-                label="Next Episode"
-                value={`EP ${
-                  data?.Media?.nextAiringEpisode?.episode
-                } airs in ${formatDistanceToNow(
-                  add(new Date(), {
-                    seconds:
-                      data?.Media?.nextAiringEpisode?.timeUntilAiring ?? 0,
-                  })
-                )}`}
-              />
-            ) : null}
-
-            {data?.Media?.status === MediaStatus.NotYetReleased
-              ? data?.Media?.startDate?.month !== null &&
-                data?.Media?.startDate?.month !== undefined && (
-                  <Info
-                    label="Start Date"
-                    value={`${data?.Media?.startDate?.month}/${data?.Media?.startDate?.month}/${data?.Media?.startDate?.year}`}
-                  />
-                )
-              : null}
-
-            {data?.Media?.status === MediaStatus.Finished ||
-            data?.Media?.status === MediaStatus.Cancelled
-              ? data?.Media?.endDate?.month !== null &&
-                data?.Media?.endDate?.month !== undefined && (
-                  <Info
-                    label="End Date"
-                    value={`${data?.Media?.endDate?.month}/${data?.Media?.endDate?.month}/${data?.Media?.endDate?.year}`}
-                  />
-                )
-              : null}
-          </InfoRow>
-        </InfoTable>
-      </PosterAndInfoContainer>
-      <ButtonsRow>
-        <Button
-          loading={loadingStatus}
-          label={
-            MediaListStatusWithLabel.find(
-              (x) => x.value === data?.Media?.mediaListEntry?.status
-            )?.label ?? "Add to List"
-          }
-          onPress={() => {
-            const options = MediaListStatusWithLabel.map((s) => s.label);
-
-            options.push("Cancel");
-
-            const destructiveButtonIndex = MediaListStatusWithLabel.findIndex(
-              (s) => s.value === data?.Media?.mediaListEntry?.status
-            );
-
-            const cancelButtonIndex = options.length - 1;
-
-            showActionSheetWithOptions(
-              {
-                options,
-                destructiveButtonIndex,
-                cancelButtonIndex,
-                destructiveColor: darkTheme.accent,
-              },
-              async (buttonIndex) => {
-                if (buttonIndex === cancelButtonIndex) return;
-
-                setLoadingStatus(true);
-                await updateStatus({
-                  variables: {
-                    mediaId: data?.Media?.id,
-                    status: MediaListStatusWithLabel[buttonIndex].value,
-                  },
-                });
-                await refetch({ id: data?.Media?.id });
-                setLoadingStatus(false);
-              }
-            );
-          }}
-        />
-      </ButtonsRow>
-      {data.Media?.mediaListEntry ? (
+      {!data ? (
+        <EmptyState />
+      ) : (
         <>
-          <Stepper
-            label="Progress"
-            defaultValue={data?.Media?.mediaListEntry?.progress ?? 0}
-            upperBound={data?.Media?.episodes ?? undefined}
-            lowerBound={0}
-            onChange={async (progress) => {
-              try {
-                await updateProgress({
-                  variables: {
-                    id: data?.Media?.mediaListEntry?.id,
-                    progress,
-                  },
-                });
-                await refetch({ id: data?.Media?.id });
-              } catch (_e) {
-                // TODO: display error
+          <Title numberOfLines={1}>
+            {data?.Media?.title?.english ||
+              data?.Media?.title?.romaji ||
+              data?.Media?.title?.native}
+          </Title>
+
+          <PosterAndInfoContainer>
+            <Poster
+              resizeMode="cover"
+              source={{
+                uri: data?.Media?.coverImage?.large ?? "",
+              }}
+            />
+            <InfoTable>
+              <InfoRow>
+                {data?.Media?.episodes ? (
+                  <Info label="Episodes" value={`${data?.Media?.episodes}`} />
+                ) : null}
+                <Info
+                  label="Genre"
+                  value={data?.Media?.genres?.join(", ") ?? ""}
+                />
+              </InfoRow>
+              <InfoRowSpacer />
+              <InfoRow>
+                {data?.Media?.averageScore ? (
+                  <Info
+                    label="Average Score"
+                    value={`${data?.Media?.averageScore / 10} / 10`}
+                  />
+                ) : null}
+                <Info
+                  label="Status"
+                  value={title(
+                    MediaStatusWithLabel.find(
+                      (m) => m.value === data?.Media?.status
+                    )?.label ?? ""
+                  )}
+                />
+              </InfoRow>
+              <InfoRowSpacer />
+              <InfoRow>
+                <Info
+                  label="Progress"
+                  value={`${data?.Media?.mediaListEntry?.progress ?? 0}/${
+                    data?.Media?.episodes ?? "?"
+                  } EP`}
+                />
+                {data?.Media?.status === MediaStatus.Releasing ? (
+                  <Info
+                    label="Next Episode"
+                    value={`EP ${
+                      data?.Media?.nextAiringEpisode?.episode
+                    } airs in ${formatDistanceToNow(
+                      add(new Date(), {
+                        seconds:
+                          data?.Media?.nextAiringEpisode?.timeUntilAiring ?? 0,
+                      })
+                    )}`}
+                  />
+                ) : null}
+
+                {data?.Media?.status === MediaStatus.NotYetReleased
+                  ? data?.Media?.startDate?.month !== null &&
+                    data?.Media?.startDate?.month !== undefined && (
+                      <Info
+                        label="Start Date"
+                        value={`${data?.Media?.startDate?.month}/${data?.Media?.startDate?.month}/${data?.Media?.startDate?.year}`}
+                      />
+                    )
+                  : null}
+
+                {data?.Media?.status === MediaStatus.Finished ||
+                data?.Media?.status === MediaStatus.Cancelled
+                  ? data?.Media?.endDate?.month !== null &&
+                    data?.Media?.endDate?.month !== undefined && (
+                      <Info
+                        label="End Date"
+                        value={`${data?.Media?.endDate?.month}/${data?.Media?.endDate?.month}/${data?.Media?.endDate?.year}`}
+                      />
+                    )
+                  : null}
+              </InfoRow>
+            </InfoTable>
+          </PosterAndInfoContainer>
+          <ButtonsRow>
+            <Button
+              loading={loadingStatus}
+              label={
+                MediaListStatusWithLabel.find(
+                  (x) => x.value === data?.Media?.mediaListEntry?.status
+                )?.label ?? "Add to List"
               }
-            }}
-          />
-          <StepperSpacer />
-          <Stepper
-            label="Score"
-            defaultValue={data?.Media?.mediaListEntry?.score ?? 5}
-            upperBound={10}
-            lowerBound={0}
-            onChange={async (s) => {
-              try {
-                await updateScore({
-                  variables: {
-                    id: data?.Media?.mediaListEntry?.id,
-                    scoreRaw: s * 10,
+              onPress={() => {
+                const options = MediaListStatusWithLabel.map((s) => s.label);
+
+                options.push("Cancel");
+
+                const destructiveButtonIndex = MediaListStatusWithLabel.findIndex(
+                  (s) => s.value === data?.Media?.mediaListEntry?.status
+                );
+
+                const cancelButtonIndex = options.length - 1;
+
+                showActionSheetWithOptions(
+                  {
+                    options,
+                    destructiveButtonIndex,
+                    cancelButtonIndex,
+                    destructiveColor: darkTheme.accent,
                   },
-                });
-                await refetch({ id: data?.Media?.id });
-              } catch (_e) {
-                // TODO: display error
-              }
-            }}
-          />
-          <StepperSpacer />
+                  async (buttonIndex) => {
+                    if (buttonIndex === cancelButtonIndex) return;
+
+                    setLoadingStatus(true);
+                    await updateStatus({
+                      variables: {
+                        mediaId: data?.Media?.id,
+                        status: MediaListStatusWithLabel[buttonIndex].value,
+                      },
+                    });
+                    await refetchAnime();
+                    setLoadingStatus(false);
+                  }
+                );
+              }}
+            />
+          </ButtonsRow>
+          {data.Media?.mediaListEntry ? (
+            <>
+              <Stepper
+                label="Progress"
+                defaultValue={data?.Media?.mediaListEntry?.progress ?? 0}
+                upperBound={data?.Media?.episodes ?? undefined}
+                lowerBound={0}
+                onChange={async (progress) => {
+                  try {
+                    await updateProgress({
+                      variables: {
+                        id: data?.Media?.mediaListEntry?.id,
+                        progress,
+                      },
+                    });
+                    await refetchAnime();
+                  } catch (_e) {
+                    // TODO: display error
+                  }
+                }}
+              />
+              <StepperSpacer />
+              <Stepper
+                label="Score"
+                defaultValue={data?.Media?.mediaListEntry?.score ?? 5}
+                upperBound={10}
+                lowerBound={0}
+                onChange={async (s) => {
+                  try {
+                    await updateScore({
+                      variables: {
+                        id: data?.Media?.mediaListEntry?.id,
+                        scoreRaw: s * 10,
+                      },
+                    });
+                    await refetchAnime();
+                  } catch (_e) {
+                    // TODO: display error
+                  }
+                }}
+              />
+              <StepperSpacer />
+            </>
+          ) : null}
+          {data?.Media?.description ? (
+            <HTMLView
+              value={`<p>${data?.Media?.description}</p>`}
+              stylesheet={htmlViewStyle}
+            />
+          ) : null}
         </>
-      ) : null}
-      {data?.Media?.description ? (
-        <HTMLView
-          value={`<p>${data?.Media?.description}</p>`}
-          stylesheet={htmlViewStyle}
-        />
-      ) : null}
+      )}
     </Container>
   );
 }
