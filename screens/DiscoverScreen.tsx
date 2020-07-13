@@ -113,9 +113,13 @@ export function DiscoverScreen({ navigation }: Props) {
           )
         ) : (
           <TrendingList
-            ListHeaderComponent={() => (
-              <ListHeader>Top 30 trending anime</ListHeader>
-            )}
+            ListHeaderComponent={() =>
+              trendingList.length ? (
+                <ListHeader>
+                  Top {trendingList.length} trending anime
+                </ListHeader>
+              ) : null
+            }
             ItemSeparatorComponent={Divider}
             data={trendingList}
             numColumns={3}
