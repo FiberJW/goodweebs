@@ -12,7 +12,7 @@ import { GetViewerQuery, GetViewerQueryVariables } from "yep/graphql/generated";
 import { GetViewer } from "yep/graphql/queries/Viewer";
 import { RootStackParamList } from "yep/navigation";
 import { StringCase, getString } from "yep/strings";
-import { notEmpty } from "yep/utils";
+import { notEmpty, getTitle } from "yep/utils";
 
 import {
   OuterContainer,
@@ -128,9 +128,7 @@ export function ProfileScreen({ navigation }: Props) {
                       />
                       {item?.title ? (
                         <FavoriteName numberOfLines={2}>
-                          {item.title.english ||
-                            item.title.romaji ||
-                            item.title.native}
+                          {getTitle(item.title)}
                         </FavoriteName>
                       ) : null}
                     </FavoriteContainer>

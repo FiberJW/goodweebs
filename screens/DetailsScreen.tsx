@@ -3,6 +3,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { formatDistanceToNow, add } from "date-fns";
+import _ from "lodash";
 import React, { useState, useEffect } from "react";
 import { StyleSheet, ActivityIndicator, RefreshControl } from "react-native";
 import HTMLView from "react-native-htmlview";
@@ -11,6 +12,7 @@ import title from "title";
 
 import { white15 } from "yep/colors";
 import { EmptyState } from "yep/components/EmptyState";
+import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { MediaListStatusWithLabel, MediaStatusWithLabel } from "yep/constants";
 import {
   GetAnimeQuery,
@@ -22,6 +24,9 @@ import {
   UpdateScoreMutationVariables,
   UpdateProgressMutation,
   UpdateProgressMutationVariables,
+  MediaRelation,
+  AnimeRelationFragment,
+  MediaType,
 } from "yep/graphql/generated";
 import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
 import { UpdateScore } from "yep/graphql/mutations/UpdateScore";
@@ -31,6 +36,7 @@ import { useDidMountEffect, useNow } from "yep/hooks/helpers";
 import { RootStackParamList } from "yep/navigation";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
+import { notEmpty, getTitle, getReadableMediaRelation } from "yep/utils";
 
 const Container = takimoto.ScrollView({
   flex: 1,
@@ -264,13 +270,13 @@ type Props = {
   route: RouteProp<RootStackParamList, "Details">;
 };
 
-export function DetailsScreen({ route }: Props) {
+export function DetailsScreen({ route, navigation }: Props) {
   const { showActionSheetWithOptions } = useActionSheet();
   const insets = useSafeArea();
   const [loadingStatus, setLoadingStatus] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
 
-  const now = useNow();
+  const now = useNow("minute");
 
   const { loading, data, refetch } = useQuery<
     GetAnimeQuery,
@@ -299,6 +305,28 @@ export function DetailsScreen({ route }: Props) {
     setIsFirstLoad(false);
     await refetch({ id: route.params.id });
   }
+
+  const relations = (data?.Media?.relations?.edges ?? [])?.filter(notEmpty);
+
+  const mappedRelations = _.reduce<
+    typeof relations[number],
+    { [K in MediaRelation]?: AnimeRelationFragment[] }
+  >(
+    relations,
+    function (result, value, key) {
+      if (
+        !value?.relationType ||
+        !value.node ||
+        !(value.node.type === MediaType.Anime)
+      )
+        return result;
+      (result[value?.relationType] || (result[value?.relationType] = [])).push(
+        value.node
+      );
+      return result;
+    },
+    {}
+  );
 
   return (
     <Container
@@ -344,7 +372,7 @@ export function DetailsScreen({ route }: Props) {
               <InfoRow>
                 {data?.Media?.averageScore ? (
                   <Info
-                    label="Average Score"
+                    label="Average score"
                     value={`${data?.Media?.averageScore / 10} / 10`}
                   />
                 ) : null}
@@ -367,7 +395,7 @@ export function DetailsScreen({ route }: Props) {
                 />
                 {data?.Media?.status === MediaStatus.Releasing ? (
                   <Info
-                    label="Next Episode"
+                    label="Next episode"
                     value={`EP ${
                       data?.Media?.nextAiringEpisode?.episode
                     } airs in ${formatDistanceToNow(
@@ -383,7 +411,7 @@ export function DetailsScreen({ route }: Props) {
                   ? data?.Media?.startDate?.month !== null &&
                     data?.Media?.startDate?.month !== undefined && (
                       <Info
-                        label="Start Date"
+                        label="Start date"
                         value={`${data?.Media?.startDate?.month}/${data?.Media?.startDate?.month}/${data?.Media?.startDate?.year}`}
                       />
                     )
@@ -394,7 +422,7 @@ export function DetailsScreen({ route }: Props) {
                   ? data?.Media?.endDate?.month !== null &&
                     data?.Media?.endDate?.month !== undefined && (
                       <Info
-                        label="End Date"
+                        label="End date"
                         value={`${data?.Media?.endDate?.month}/${data?.Media?.endDate?.month}/${data?.Media?.endDate?.year}`}
                       />
                     )
@@ -408,7 +436,7 @@ export function DetailsScreen({ route }: Props) {
               label={
                 MediaListStatusWithLabel.find(
                   (x) => x.value === data?.Media?.mediaListEntry?.status
-                )?.label ?? "Add to List"
+                )?.label ?? "Add to list"
               }
               onPress={() => {
                 const options = MediaListStatusWithLabel.map((s) => s.label);
@@ -495,9 +523,104 @@ export function DetailsScreen({ route }: Props) {
               stylesheet={htmlViewStyle}
             />
           ) : null}
+          <DescriptionSpacer />
         </>
       )}
+      {Object.keys(mappedRelations).map((key: string) => {
+        const relationType = key as MediaRelation;
+        const relations = mappedRelations[relationType] ?? [];
+
+        return (
+          <RelatedList
+            key={key}
+            relationType={relationType}
+            relations={relations}
+            navigation={navigation}
+          />
+        );
+      })}
     </Container>
+  );
+}
+
+const DescriptionSpacer = takimoto.View({
+  height: 16,
+});
+
+const RelatedListFlatList = takimoto.FlatList<AnimeRelationFragment>({
+  width: "100%",
+});
+
+const RelatedListSeparator = takimoto.View({ width: 8 });
+const RelatedListSpacer = takimoto.View({ height: 16 });
+
+const RelatedListHeader = takimoto.Text({
+  fontFamily: "Manrope-SemiBold",
+  color: darkTheme.text,
+  fontSize: 16,
+  marginBottom: 8,
+});
+
+type RelatedListProps = {
+  relations: AnimeRelationFragment[];
+  relationType: MediaRelation;
+  navigation: StackNavigationProp<RootStackParamList>;
+};
+
+function RelatedList({
+  relationType,
+  relations,
+  navigation,
+}: RelatedListProps) {
+  if (
+    // filter out non-anime relations
+    // TODO: add back in when DetailScreen can support Characters/People, Manga, and Studios
+    [
+      MediaRelation.Adaptation,
+      MediaRelation.Character,
+      MediaRelation.Other,
+      MediaRelation.Source,
+      MediaRelation.Contains,
+    ].includes(relationType)
+  ) {
+    return null;
+  }
+
+  return (
+    <>
+      <RelatedListHeader>
+        {getReadableMediaRelation(relationType)}
+      </RelatedListHeader>
+      <RelatedListFlatList
+        horizontal
+        ItemSeparatorComponent={RelatedListSeparator}
+        keyExtractor={(item) => `${item.id}`}
+        data={relations}
+        renderItem={({ item }) => {
+          return <RelatedItem anime={item} navigation={navigation} />;
+        }}
+      />
+      <RelatedListSpacer />
+    </>
+  );
+}
+
+type RelatedItemProps = {
+  anime: AnimeRelationFragment;
+  navigation: StackNavigationProp<RootStackParamList>;
+};
+
+function RelatedItem({ anime, navigation }: RelatedItemProps) {
+  if (!anime.coverImage?.large) return null;
+
+  return (
+    <PosterAndTitle
+      uri={anime.coverImage?.large}
+      onPress={() => {
+        navigation.push("Details", { id: anime.id });
+      }}
+      title={getTitle(anime.title)}
+    />
   );
 }
 

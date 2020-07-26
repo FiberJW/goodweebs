@@ -41,5 +41,30 @@ export const AnimeFragment = gql`
       score(format: POINT_10)
       id
     }
+    relations {
+      edges {
+        id
+        relationType
+        node {
+          ...AnimeRelation
+        }
+      }
+    }
+  }
+
+  fragment AnimeRelation on Media {
+    id
+    title {
+      romaji
+      native
+      english
+    }
+    type
+    format
+    coverImage {
+      large
+      medium
+      color
+    }
   }
 `;

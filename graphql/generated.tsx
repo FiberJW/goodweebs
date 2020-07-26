@@ -4307,6 +4307,28 @@ export type AnimeFragmentFragment = (
   )>, mediaListEntry?: Maybe<(
     { __typename?: 'MediaList' }
     & Pick<MediaList, 'progress' | 'status' | 'score' | 'id'>
+  )>, relations?: Maybe<(
+    { __typename?: 'MediaConnection' }
+    & { edges?: Maybe<Array<Maybe<(
+      { __typename?: 'MediaEdge' }
+      & Pick<MediaEdge, 'id' | 'relationType'>
+      & { node?: Maybe<(
+        { __typename?: 'Media' }
+        & AnimeRelationFragment
+      )> }
+    )>>> }
+  )> }
+);
+
+export type AnimeRelationFragment = (
+  { __typename?: 'Media' }
+  & Pick<Media, 'id' | 'type' | 'format'>
+  & { title?: Maybe<(
+    { __typename?: 'MediaTitle' }
+    & Pick<MediaTitle, 'romaji' | 'native' | 'english'>
+  )>, coverImage?: Maybe<(
+    { __typename?: 'MediaCoverImage' }
+    & Pick<MediaCoverImage, 'large' | 'medium' | 'color'>
   )> }
 );
 
@@ -4485,6 +4507,23 @@ export type GetViewerQuery = (
   )> }
 );
 
+export const AnimeRelationFragmentDoc = gql`
+    fragment AnimeRelation on Media {
+  id
+  title {
+    romaji
+    native
+    english
+  }
+  type
+  format
+  coverImage {
+    large
+    medium
+    color
+  }
+}
+    `;
 export const AnimeFragmentFragmentDoc = gql`
     fragment AnimeFragment on Media {
   id
@@ -4526,8 +4565,17 @@ export const AnimeFragmentFragmentDoc = gql`
     score(format: POINT_10)
     id
   }
+  relations {
+    edges {
+      id
+      relationType
+      node {
+        ...AnimeRelation
+      }
+    }
+  }
 }
-    `;
+    ${AnimeRelationFragmentDoc}`;
 export const UpdateProgressDocument = gql`
     mutation UpdateProgress($id: Int, $progress: Int) {
   SaveMediaListEntry(id: $id, progress: $progress) {

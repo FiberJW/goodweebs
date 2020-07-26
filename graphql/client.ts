@@ -29,8 +29,8 @@ export const client = new ApolloClient({
   link: ApolloLink.from([
     onError(({ graphQLErrors, networkError }) => {
       if (graphQLErrors)
-        graphQLErrors.forEach((e) => console.log("[GraphQL error]:", e));
-      if (networkError) console.log(`[Network error]: ${networkError}`);
+        graphQLErrors.forEach((e) => console.error("[GraphQL error]:", e));
+      if (networkError) console.error(`[Network error]: ${networkError}`);
     }),
     authLink.concat(httpLink),
   ]),
