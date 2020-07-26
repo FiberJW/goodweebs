@@ -192,7 +192,7 @@ function Stepper({
   const [count, setCount] = useState(defaultValue);
 
   useDidMountEffect(
-    function callOnChangeWhenCountChanges() {
+    function callOnlyChangeWhenCountChanges() {
       onChange(count);
     },
     [count]
