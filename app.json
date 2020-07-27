@@ -3,7 +3,7 @@
     "name": "Goodweebs",
     "slug": "goodweebs",
     "platforms": ["ios", "android", "web"],
-    "version": "0.0.2",
+    "version": "0.0.4",
     "orientation": "portrait",
     "icon": "./assets/launch/icon.png",
     "scheme": "goodweebs",
@@ -19,12 +19,12 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "0.0.3",
+      "buildNumber": "0.0.4",
       "bundleIdentifier": "com.fiberjw.goodweebs"
     },
     "android": {
       "package": "com.fiberjw.goodweebs",
-      "versionCode": 3,
+      "versionCode": 4,
       "permissions": [],
       "adaptiveIcon": {
         "backgroundColor": "#651FFF",
