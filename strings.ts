@@ -6,6 +6,9 @@ type StringNames =
   | "logIn"
   | "signUp"
   | "anime"
+  | "airing"
+  | "history"
+  | "broadcastHistory"
   | "discover"
   | "profile"
   | "details"
@@ -28,6 +31,9 @@ export const en_us: StringDefinitions = {
   logIn: "Log in",
   signUp: "Sign up",
   anime: "anime",
+  airing: "airing",
+  history: "history",
+  broadcastHistory: "Broadcast history",
   discover: "discover",
   profile: "profile",
   details: "details",

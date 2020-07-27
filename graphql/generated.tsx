@@ -4286,6 +4286,18 @@ export type UserModData = {
   counts?: Maybe<Scalars['Json']>;
 };
 
+export type AnimeRelationFragmentFragment = (
+  { __typename?: 'Media' }
+  & Pick<Media, 'id' | 'type' | 'format'>
+  & { title?: Maybe<(
+    { __typename?: 'MediaTitle' }
+    & Pick<MediaTitle, 'romaji' | 'native' | 'english'>
+  )>, coverImage?: Maybe<(
+    { __typename?: 'MediaCoverImage' }
+    & Pick<MediaCoverImage, 'large' | 'medium' | 'color'>
+  )> }
+);
+
 export type AnimeFragmentFragment = (
   { __typename?: 'Media' }
   & Pick<Media, 'id' | 'status' | 'genres' | 'duration' | 'episodes' | 'description' | 'averageScore'>
@@ -4314,21 +4326,9 @@ export type AnimeFragmentFragment = (
       & Pick<MediaEdge, 'id' | 'relationType'>
       & { node?: Maybe<(
         { __typename?: 'Media' }
-        & AnimeRelationFragment
+        & AnimeRelationFragmentFragment
       )> }
     )>>> }
-  )> }
-);
-
-export type AnimeRelationFragment = (
-  { __typename?: 'Media' }
-  & Pick<Media, 'id' | 'type' | 'format'>
-  & { title?: Maybe<(
-    { __typename?: 'MediaTitle' }
-    & Pick<MediaTitle, 'romaji' | 'native' | 'english'>
-  )>, coverImage?: Maybe<(
-    { __typename?: 'MediaCoverImage' }
-    & Pick<MediaCoverImage, 'large' | 'medium' | 'color'>
   )> }
 );
 
@@ -4410,6 +4410,32 @@ export type GetAnimeListQuery = (
         )> }
       )>>> }
     )>>> }
+  )> }
+);
+
+export type AiringNotificationFragmentFragment = (
+  { __typename?: 'AiringNotification' }
+  & Pick<AiringNotification, 'id' | 'type' | 'animeId' | 'episode' | 'contexts' | 'createdAt'>
+  & { media?: Maybe<(
+    { __typename?: 'Media' }
+    & AnimeRelationFragmentFragment
+  )> }
+);
+
+export type GetAnimeNotificationsQueryVariables = {};
+
+
+export type GetAnimeNotificationsQuery = (
+  { __typename?: 'Query' }
+  & { Page?: Maybe<(
+    { __typename?: 'Page' }
+    & { pageInfo?: Maybe<(
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'total' | 'perPage' | 'currentPage' | 'lastPage' | 'hasNextPage'>
+    )>, notifications?: Maybe<Array<Maybe<(
+      { __typename: 'AiringNotification' }
+      & AiringNotificationFragmentFragment
+    ) | { __typename: 'FollowingNotification' } | { __typename: 'ActivityMessageNotification' } | { __typename: 'ActivityMentionNotification' } | { __typename: 'ActivityReplyNotification' } | { __typename: 'ActivityReplySubscribedNotification' } | { __typename: 'ActivityLikeNotification' } | { __typename: 'ActivityReplyLikeNotification' } | { __typename: 'ThreadCommentMentionNotification' } | { __typename: 'ThreadCommentReplyNotification' } | { __typename: 'ThreadCommentSubscribedNotification' } | { __typename: 'ThreadCommentLikeNotification' } | { __typename: 'ThreadLikeNotification' } | { __typename: 'RelatedMediaAdditionNotification' }>>> }
   )> }
 );
 
@@ -4507,8 +4533,8 @@ export type GetViewerQuery = (
   )> }
 );
 
-export const AnimeRelationFragmentDoc = gql`
-    fragment AnimeRelation on Media {
+export const AnimeRelationFragmentFragmentDoc = gql`
+    fragment AnimeRelationFragment on Media {
   id
   title {
     romaji
@@ -4570,12 +4596,25 @@ export const AnimeFragmentFragmentDoc = gql`
       id
       relationType
       node {
-        ...AnimeRelation
+        ...AnimeRelationFragment
       }
     }
   }
 }
-    ${AnimeRelationFragmentDoc}`;
+    ${AnimeRelationFragmentFragmentDoc}`;
+export const AiringNotificationFragmentFragmentDoc = gql`
+    fragment AiringNotificationFragment on AiringNotification {
+  id
+  type
+  animeId
+  episode
+  contexts
+  createdAt
+  media {
+    ...AnimeRelationFragment
+  }
+}
+    ${AnimeRelationFragmentFragmentDoc}`;
 export const UpdateProgressDocument = gql`
     mutation UpdateProgress($id: Int, $progress: Int) {
   SaveMediaListEntry(id: $id, progress: $progress) {
@@ -4728,6 +4767,43 @@ export function withGetAnimeList<TProps, TChildProps = {}, TDataName extends str
     });
 };
 export type GetAnimeListQueryResult = ApolloReactCommon.QueryResult<GetAnimeListQuery, GetAnimeListQueryVariables>;
+export const GetAnimeNotificationsDocument = gql`
+    query GetAnimeNotifications {
+  Page(page: 1, perPage: 100) {
+    pageInfo {
+      total
+      perPage
+      currentPage
+      lastPage
+      hasNextPage
+    }
+    notifications(type: AIRING) {
+      __typename
+      ...AiringNotificationFragment
+    }
+  }
+}
+    ${AiringNotificationFragmentFragmentDoc}`;
+export type GetAnimeNotificationsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>, 'query'>;
+
+    export const GetAnimeNotificationsComponent = (props: GetAnimeNotificationsComponentProps) => (
+      <ApolloReactComponents.Query<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables> query={GetAnimeNotificationsDocument} {...props} />
+    );
+    
+export type GetAnimeNotificationsProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>
+    } & TChildProps;
+export function withGetAnimeNotifications<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  GetAnimeNotificationsQuery,
+  GetAnimeNotificationsQueryVariables,
+  GetAnimeNotificationsProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables, GetAnimeNotificationsProps<TChildProps, TDataName>>(GetAnimeNotificationsDocument, {
+      alias: 'getAnimeNotifications',
+      ...operationOptions
+    });
+};
+export type GetAnimeNotificationsQueryResult = ApolloReactCommon.QueryResult<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>;
 export const GetTrendingAnimeDocument = gql`
     query GetTrendingAnime($season: MediaSeason, $year: Int, $page: Int = 1, $perPage: Int = 20) {
   Page(page: $page, perPage: $perPage) {

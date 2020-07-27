@@ -1,5 +1,23 @@
 import gql from "graphql-tag";
 
+export const AnimeRelationFragment = gql`
+  fragment AnimeRelationFragment on Media {
+    id
+    title {
+      romaji
+      native
+      english
+    }
+    type
+    format
+    coverImage {
+      large
+      medium
+      color
+    }
+  }
+`;
+
 export const AnimeFragment = gql`
   fragment AnimeFragment on Media {
     id
@@ -46,25 +64,11 @@ export const AnimeFragment = gql`
         id
         relationType
         node {
-          ...AnimeRelation
+          ...AnimeRelationFragment
         }
       }
     }
   }
 
-  fragment AnimeRelation on Media {
-    id
-    title {
-      romaji
-      native
-      english
-    }
-    type
-    format
-    coverImage {
-      large
-      medium
-      color
-    }
-  }
+  ${AnimeRelationFragment}
 `;

@@ -25,7 +25,7 @@ import {
   UpdateProgressMutation,
   UpdateProgressMutationVariables,
   MediaRelation,
-  AnimeRelationFragment,
+  AnimeRelationFragmentFragment,
   MediaType,
 } from "yep/graphql/generated";
 import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
@@ -310,7 +310,7 @@ export function DetailsScreen({ route, navigation }: Props) {
 
   const mappedRelations = _.reduce<
     typeof relations[number],
-    { [K in MediaRelation]?: AnimeRelationFragment[] }
+    { [K in MediaRelation]?: AnimeRelationFragmentFragment[] }
   >(
     relations,
     function (result, value, key) {
@@ -345,7 +345,7 @@ export function DetailsScreen({ route, navigation }: Props) {
         <EmptyState />
       ) : (
         <>
-          <Title numberOfLines={1}>
+          <Title numberOfLines={5}>
             {data?.Media?.title?.english ||
               data?.Media?.title?.romaji ||
               data?.Media?.title?.native}
@@ -547,7 +547,7 @@ const DescriptionSpacer = takimoto.View({
   height: 16,
 });
 
-const RelatedListFlatList = takimoto.FlatList<AnimeRelationFragment>({
+const RelatedListFlatList = takimoto.FlatList<AnimeRelationFragmentFragment>({
   width: "100%",
 });
 
@@ -562,7 +562,7 @@ const RelatedListHeader = takimoto.Text({
 });
 
 type RelatedListProps = {
-  relations: AnimeRelationFragment[];
+  relations: AnimeRelationFragmentFragment[];
   relationType: MediaRelation;
   navigation: StackNavigationProp<RootStackParamList>;
 };
@@ -606,7 +606,7 @@ function RelatedList({
 }
 
 type RelatedItemProps = {
-  anime: AnimeRelationFragment;
+  anime: AnimeRelationFragmentFragment;
   navigation: StackNavigationProp<RootStackParamList>;
 };
 
@@ -615,6 +615,7 @@ function RelatedItem({ anime, navigation }: RelatedItemProps) {
 
   return (
     <PosterAndTitle
+      size="large"
       uri={anime.coverImage?.large}
       onPress={() => {
         navigation.push("Details", { id: anime.id });

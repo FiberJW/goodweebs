@@ -4,31 +4,33 @@ import { Dimensions } from "react-native";
 import { Container, Title, Image } from "./styles";
 
 type Props = {
-  small?: boolean;
+  size: "small" | "tiny" | "large";
   uri: string;
   title?: string;
   onPress?: () => void;
   disabled?: boolean;
 };
 
-export function PosterAndTitle({
-  small,
-  uri,
-  title,
-  onPress,
-  disabled,
-}: Props) {
-  const posterWidth = (Dimensions.get("window").width - 16 * 4) / 3;
-  const posterHeight = posterWidth * 1.4285714286;
+export function PosterAndTitle({ size, uri, title, onPress, disabled }: Props) {
+  let posterWidth: number;
+  switch (size) {
+    case "large":
+      posterWidth = (Dimensions.get("window").width - 16 * 4) / 3;
+      break;
+    case "small":
+      posterWidth = 56;
+      break;
+    case "tiny":
+      posterWidth = 48;
+      break;
+  }
+
+  const posterHeight = Math.round(posterWidth * 1.4285714286);
 
   return (
     <Container onPress={onPress} disabled={disabled}>
       <Image
-        style={
-          small
-            ? { height: 80, width: 56 }
-            : { width: posterWidth, height: posterHeight }
-        }
+        style={{ width: posterWidth, height: posterHeight }}
         source={{ uri }}
       />
       {title ? (

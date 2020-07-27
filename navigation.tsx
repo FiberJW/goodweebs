@@ -6,6 +6,7 @@ import { Image, StatusBar } from "react-native";
 
 import { AnimeListScreen } from "yep/screens/AnimeListScreen";
 import { AuthScreen } from "yep/screens/AuthScreen";
+import { BroadcastHistoryScreen } from "yep/screens/BroadcastHistoryScreen";
 import { DetailsScreen } from "yep/screens/DetailsScreen";
 import { DiscoverScreen } from "yep/screens/DiscoverScreen";
 import { ProfileScreen } from "yep/screens/ProfileScreen";
@@ -65,6 +66,22 @@ function Tabs() {
           ),
         }}
       /> */}
+      <Tab.Screen
+        name="Airing"
+        component={BroadcastHistoryScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Image
+              style={{
+                tintColor: color,
+                height: size,
+                width: size,
+              }}
+              source={require("yep/assets/icons/navigation/airing-tab.png")}
+            />
+          ),
+        }}
+      />
       <Tab.Screen
         name="Discover"
         component={DiscoverScreen}

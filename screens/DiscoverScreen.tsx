@@ -41,7 +41,7 @@ export function DiscoverScreen({ navigation }: Props) {
   } = useQuery<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>(
     GetTrendingTVAnime,
     {
-      variables: { season: mediaSeason, year, perPage: 30 },
+      variables: { perPage: 30 },
     }
   );
 
