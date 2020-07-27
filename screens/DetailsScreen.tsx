@@ -230,8 +230,8 @@ function Stepper({
 }
 
 const StepperButtonTouchable = takimoto.TouchableOpacity({
-  padding: 8,
-  borderRadius: 16,
+  padding: 16,
+  borderRadius: 32,
   backgroundColor: darkTheme.secondaryButton,
 });
 
