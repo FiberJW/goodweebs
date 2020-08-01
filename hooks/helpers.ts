@@ -9,7 +9,7 @@ export function useDidMountEffect(func: () => void, deps: any[]) {
   }, deps);
 }
 
-export function useNow(interval: "second" | "minute" = "second") {
+export function useNow(interval: "second" | "minute" = "minute") {
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {

@@ -276,7 +276,7 @@ export function DetailsScreen({ route, navigation }: Props) {
   const [loadingStatus, setLoadingStatus] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
 
-  const now = useNow("minute");
+  const now = useNow();
 
   const { loading, data, refetch } = useQuery<
     GetAnimeQuery,

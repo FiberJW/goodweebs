@@ -37,7 +37,7 @@ export function AnimeListItem({
   onDecrement,
   navigation,
 }: Props) {
-  const now = useNow("minute");
+  const now = useNow();
 
   return (
     <Container

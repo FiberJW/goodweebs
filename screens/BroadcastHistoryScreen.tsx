@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/react-hooks";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistance } from "date-fns";
 import React, { useMemo } from "react";
 import { RefreshControl } from "react-native";
 
@@ -13,6 +13,7 @@ import {
   AiringNotificationFragmentFragment,
 } from "yep/graphql/generated";
 import { GetAnimeNotifications } from "yep/graphql/queries/AnimeNotifications";
+import { useNow } from "yep/hooks/helpers";
 import { RootStackParamList } from "yep/navigation";
 import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
@@ -85,6 +86,7 @@ type AiringItemProps = {
 };
 
 function AiringItem({ navigation, notification }: AiringItemProps) {
+  const now = useNow();
   const posterUri = notification.media?.coverImage?.large;
 
   return (
@@ -100,10 +102,9 @@ function AiringItem({ navigation, notification }: AiringItemProps) {
         </AiringItemTitle>
         <AiringItemText numberOfLines={1}>
           Episode {notification.episode} aired{" "}
-          {formatDistanceToNow(
-            (notification.createdAt ?? new Date().getMilliseconds()) * 1000,
-            { addSuffix: true }
-          )}
+          {formatDistance((notification.createdAt ?? 0) * 1000, now, {
+            addSuffix: true,
+          })}
           .
         </AiringItemText>
       </AiringItemTextContainer>
