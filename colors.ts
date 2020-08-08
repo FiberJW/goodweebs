@@ -6,3 +6,5 @@ export const white80 = "rgba(255,255,255,0.80)";
 export const darkGray = "#242424";
 export const white = "#ffffff";
 export const expoBlurple = "#4630EB";
+export const goodweebsPurple = "#651FFF";
+export const badgeRed = "#EC4124";

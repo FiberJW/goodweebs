@@ -1,6 +1,7 @@
 import React from "react";
 import { ImageSourcePropType, StyleSheet } from "react-native";
 
+import { black, badgeRed } from "yep/colors";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 
@@ -101,5 +102,40 @@ export function ProgressButton({
     >
       <ProgressButtonIcon source={icon} />
     </ProgressButtonTouchable>
+  );
+}
+
+const EpisodesBehindContainer = takimoto.View({
+  position: "absolute",
+  top: 4,
+  right: 4,
+  height: 16,
+  width: 16,
+  borderRadius: 16,
+  backgroundColor: badgeRed,
+  justifyContent: "center",
+  alignItems: "center",
+  shadowColor: black,
+  shadowOffset: { height: 2, width: 0 },
+  shadowOpacity: 0.25,
+  shadowRadius: 4,
+});
+
+const EpisodesBehindText = takimoto.Text({
+  fontSize: 8,
+  textAlign: "center",
+  textAlignVertical: "center",
+  color: darkTheme.text,
+  fontFamily: "Manrope-SemiBold",
+});
+
+type EpisodesBehindProps = {
+  count: number;
+};
+export function EpisodesBehind({ count }: EpisodesBehindProps) {
+  return (
+    <EpisodesBehindContainer>
+      <EpisodesBehindText>{count}</EpisodesBehindText>
+    </EpisodesBehindContainer>
   );
 }

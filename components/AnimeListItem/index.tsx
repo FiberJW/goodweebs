@@ -2,7 +2,11 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { formatDistanceToNow, add } from "date-fns";
 import React from "react";
 
-import { AnimeFragmentFragment, MediaStatus } from "yep/graphql/generated";
+import {
+  AnimeFragmentFragment,
+  MediaStatus,
+  MediaListStatus,
+} from "yep/graphql/generated";
 import { useNow } from "yep/hooks/helpers";
 import { RootStackParamList } from "yep/navigation";
 
@@ -18,6 +22,7 @@ import {
   ProgressButton,
   Spacer,
   ProgressButtonSpacer,
+  EpisodesBehind,
 } from "./styles";
 
 type Props = {
@@ -39,6 +44,16 @@ export function AnimeListItem({
 }: Props) {
   const now = useNow();
 
+  const isAiringAndCurrentlyWatching =
+    media.status === MediaStatus.Releasing &&
+    media.mediaListEntry?.status === MediaListStatus.Current;
+
+  const episodesBehind =
+    isAiringAndCurrentlyWatching &&
+    media.nextAiringEpisode?.episode !== undefined
+      ? media.nextAiringEpisode.episode - 1 - progress
+      : 0;
+
   return (
     <Container
       activeOpacity={0.7}
@@ -49,7 +64,9 @@ export function AnimeListItem({
         source={{
           uri: media.coverImage?.large ?? "",
         }}
-      />
+      >
+        {episodesBehind > 0 ? <EpisodesBehind count={episodesBehind} /> : null}
+      </Poster>
       <Spacer />
       <TitleAndBroadcastColumn>
         <Title numberOfLines={2}>
