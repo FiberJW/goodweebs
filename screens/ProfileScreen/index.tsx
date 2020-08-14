@@ -20,16 +20,20 @@ import {
   UserInfoAndStatsContainer,
   Avatar,
   UserInfoRow,
+  ListItemSpacer,
   Username,
+  ListHeaderSpacer,
   StatsRow,
   Stat,
   ListHeader,
   makeListWithType,
   ListSpacer,
   Poster,
+  AvatarSpacer,
   FavoriteContainer,
   FavoriteName,
   EverythingButTheCTA,
+  VerticalSpacer,
 } from "./styles";
 
 type Props = {
@@ -80,8 +84,10 @@ export function ProfileScreen({ navigation }: Props) {
                       : require("yep/assets/icons/avatar-placeholder.png")
                   }
                 />
+                <AvatarSpacer />
                 <Username numberOfLines={1}>{viewerData.Viewer.name}</Username>
               </UserInfoRow>
+              <VerticalSpacer />
               <StatsRow>
                 <Stat
                   label="Total Anime"
@@ -99,11 +105,13 @@ export function ProfileScreen({ navigation }: Props) {
             </UserInfoAndStatsContainer>
             {animeList.length ? (
               <>
+                <VerticalSpacer />
                 <ListHeader>Favorite Anime</ListHeader>
+                <ListHeaderSpacer />
                 <FavoriteAnimeList
                   horizontal
                   showsHorizontalScrollIndicator={false}
-                  ItemSeparatorComponent={ListSpacer}
+                  ItemSeparatorComponent={ListItemSpacer}
                   keyExtractor={(item) => `${item.id}`}
                   data={animeList}
                   renderItem={({ item }) => (
@@ -115,22 +123,28 @@ export function ProfileScreen({ navigation }: Props) {
                         }}
                       />
                       {item?.title ? (
-                        <FavoriteName numberOfLines={2}>
-                          {getTitle(item.title)}
-                        </FavoriteName>
+                        <>
+                          <ListSpacer />
+                          <FavoriteName numberOfLines={2}>
+                            {getTitle(item.title)}
+                          </FavoriteName>
+                        </>
                       ) : null}
                     </FavoriteContainer>
                   )}
                 />
               </>
             ) : null}
+
             {characterList.length ? (
               <>
+                <VerticalSpacer />
                 <ListHeader>Favorite Characters</ListHeader>
+                <ListHeaderSpacer />
                 <FavoriteCharacterList
                   horizontal
                   showsHorizontalScrollIndicator={false}
-                  ItemSeparatorComponent={ListSpacer}
+                  ItemSeparatorComponent={ListItemSpacer}
                   keyExtractor={(item) => `${item.id}`}
                   data={characterList}
                   renderItem={({ item }) => (
@@ -142,9 +156,12 @@ export function ProfileScreen({ navigation }: Props) {
                         }}
                       />
                       {item?.name ? (
-                        <FavoriteName numberOfLines={2}>
-                          {item.name.full}
-                        </FavoriteName>
+                        <>
+                          <ListSpacer />
+                          <FavoriteName numberOfLines={2}>
+                            {item.name.full}
+                          </FavoriteName>
+                        </>
                       ) : null}
                     </FavoriteContainer>
                   )}
@@ -153,6 +170,7 @@ export function ProfileScreen({ navigation }: Props) {
             ) : null}
           </EverythingButTheCTA>
         ) : null}
+        <VerticalSpacer />
         <AuthButton
           label="Log out"
           onPress={async () => {
