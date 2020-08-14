@@ -5,7 +5,6 @@ import {
   white40,
   expoBlurple,
   white10,
-  white20,
   white95,
   white15,
   white12_5,

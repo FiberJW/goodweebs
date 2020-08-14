@@ -23,7 +23,6 @@ import {
   Username,
   StatsRow,
   Stat,
-  StatsRowSpacer,
   ListHeader,
   makeListWithType,
   ListSpacer,
@@ -95,17 +94,6 @@ export function ProfileScreen({ navigation }: Props) {
                       60 /
                       24
                   )}
-                />
-              </StatsRow>
-              <StatsRowSpacer />
-              <StatsRow>
-                <Stat
-                  label="Total Manga"
-                  value={viewerData.Viewer.statistics?.manga?.count ?? 0}
-                />
-                <Stat
-                  label="Chapters Read"
-                  value={viewerData.Viewer.statistics?.manga?.chaptersRead ?? 0}
                 />
               </StatsRow>
             </UserInfoAndStatsContainer>
