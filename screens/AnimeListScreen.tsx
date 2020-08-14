@@ -99,47 +99,44 @@ export function AnimeListScreen({ navigation }: Props) {
         </CountAndSortRow>
         <Spacer />
 
-        {list.length ? (
-          <AnimeListContainer>
-            <AnimeFlatList
-              showsVerticalScrollIndicator={false}
-              ItemSeparatorComponent={AnimeListDivider}
-              data={list}
-              refreshControl={
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={async () => {
-                    await refetch({
-                      userId: viewerData?.Viewer?.id,
-                      status,
-                    });
-                  }}
-                  tintColor={darkTheme.text}
-                  titleColor={darkTheme.text}
-                />
-              }
-              keyExtractor={(item) => `${item.mediaId}`}
-              renderItem={({ item }) => (
-                <AnimeListItemContainer
-                  seedData={{
-                    id: item.id,
-                    progress: item.progress ?? 0,
-                    media: item.media ?? null,
-                  }}
-                  refetchList={() =>
-                    refetch({
-                      userId: viewerData?.Viewer?.id,
-                      status,
-                    })
-                  }
-                  navigation={navigation}
-                />
-              )}
-            />
-          </AnimeListContainer>
-        ) : (
-          <EmptyState />
-        )}
+        <AnimeListContainer>
+          <AnimeFlatList
+            showsVerticalScrollIndicator={false}
+            ItemSeparatorComponent={AnimeListDivider}
+            data={list}
+            ListEmptyComponent={<EmptyState />}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={async () => {
+                  await refetch({
+                    userId: viewerData?.Viewer?.id,
+                    status,
+                  });
+                }}
+                tintColor={darkTheme.text}
+                titleColor={darkTheme.text}
+              />
+            }
+            keyExtractor={(item) => `${item.mediaId}`}
+            renderItem={({ item }) => (
+              <AnimeListItemContainer
+                seedData={{
+                  id: item.id,
+                  progress: item.progress ?? 0,
+                  media: item.media ?? null,
+                }}
+                refetchList={() =>
+                  refetch({
+                    userId: viewerData?.Viewer?.id,
+                    status,
+                  })
+                }
+                navigation={navigation}
+              />
+            )}
+          />
+        </AnimeListContainer>
       </InnerContainer>
     </OuterContainer>
   );

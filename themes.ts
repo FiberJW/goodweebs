@@ -5,15 +5,16 @@ import {
   white40,
   expoBlurple,
   white10,
+  white20,
   white95,
-  white5,
   white15,
+  white12_5,
 } from "yep/colors";
 
 export const darkTheme = {
   background: black,
   navBackground: darkGray,
-  secondaryButton: white10,
+  secondaryButton: white12_5,
   text: white95,
   textInverted: black,
   iconFill: white95,
@@ -22,6 +23,6 @@ export const darkTheme = {
   selectedChipFill: white95,
   listCount: white80,
   accent: expoBlurple,
-  listItemBackground: white5,
+  listItemBackground: white10,
   inputPlaceholder: white40,
 };

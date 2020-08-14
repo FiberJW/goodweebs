@@ -50,31 +50,28 @@ export function BroadcastHistoryScreen({ navigation }: Props) {
     <OuterContainer>
       <Header label={getString("broadcastHistory", StringCase.TITLE)} />
       <InnerContainer>
-        {list.length ? (
-          <AnimeListContainer>
-            <AiringFlatList
-              showsVerticalScrollIndicator={false}
-              ItemSeparatorComponent={AnimeListDivider}
-              data={list}
-              refreshControl={
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={async () => {
-                    await refetch();
-                  }}
-                  tintColor={darkTheme.text}
-                  titleColor={darkTheme.text}
-                />
-              }
-              keyExtractor={(item) => `${item.id}`}
-              renderItem={({ item }) => (
-                <AiringItem navigation={navigation} notification={item} />
-              )}
-            />
-          </AnimeListContainer>
-        ) : (
-          <EmptyState />
-        )}
+        <AnimeListContainer>
+          <AiringFlatList
+            showsVerticalScrollIndicator={false}
+            ItemSeparatorComponent={AnimeListDivider}
+            ListEmptyComponent={<EmptyState />}
+            data={list}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={async () => {
+                  await refetch();
+                }}
+                tintColor={darkTheme.text}
+                titleColor={darkTheme.text}
+              />
+            }
+            keyExtractor={(item) => `${item.id}`}
+            renderItem={({ item }) => (
+              <AiringItem navigation={navigation} notification={item} />
+            )}
+          />
+        </AnimeListContainer>
       </InnerContainer>
     </OuterContainer>
   );
