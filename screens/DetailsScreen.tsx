@@ -3,6 +3,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { formatDistanceToNow, add } from "date-fns";
+import * as Haptics from "expo-haptics";
 import _ from "lodash";
 import React, { useState, useEffect } from "react";
 import { StyleSheet, ActivityIndicator, RefreshControl } from "react-native";
@@ -572,6 +573,7 @@ export function DetailsScreen({ route, navigation }: Props) {
                 upperBound={data?.Media?.episodes ?? undefined}
                 lowerBound={0}
                 onChange={async (progress) => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                   try {
                     await updateProgress({
                       id: data?.Media?.mediaListEntry?.id,
@@ -591,6 +593,7 @@ export function DetailsScreen({ route, navigation }: Props) {
                 upperBound={10}
                 lowerBound={0}
                 onChange={async (s) => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                   try {
                     await updateScore({
                       id: data?.Media?.mediaListEntry?.id,

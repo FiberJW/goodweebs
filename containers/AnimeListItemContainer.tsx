@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/react-hooks";
 import { StackNavigationProp } from "@react-navigation/stack";
+import * as Haptics from "expo-haptics";
 import React, { useState, useEffect } from "react";
 
 import { AnimeListItem } from "yep/components/AnimeListItem";
@@ -97,11 +98,7 @@ export function AnimeListItemContainer({
     const newProgress =
       type === "inc" ? progress + increment : progress - increment;
 
-    // abortLatest();
-    // await debouncedUpdateProgress.current(updateProgressWithOptimisticUI, {
-    //   id: data?.Media?.mediaListEntry?.id,
-    //   progress: newProgress,
-    // });
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     await updateProgressDebounced({
       id: data?.Media?.mediaListEntry?.id,
