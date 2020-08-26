@@ -7,7 +7,7 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "postinstall": "yarn generate",
-    "generate": "graphql-codegen --config codegen.yml",
+    "generate": "graphql-codegen --config codegen.yml -w",
     "lint": "eslint . --ext .ts,.js,.tsx --fix "
   },
   "dependencies": {
