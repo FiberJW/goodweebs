@@ -25,7 +25,6 @@ type Props = {
 
 export function DiscoverScreen({ navigation }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   const showSearchResultsView = searchTerm.length > 0;
 
@@ -37,10 +36,11 @@ export function DiscoverScreen({ navigation }: Props) {
     GetTrendingTVAnime,
     {
       variables: { perPage: 30 },
+      notifyOnNetworkStatusChange: true,
     }
   );
 
-  const { data: searchData } = useQuery<
+  const { data: searchData, loading: loadingSearchData } = useQuery<
     SearchAnimeQuery,
     SearchAnimeQueryVariables
   >(SearchAnime, {
@@ -56,9 +56,10 @@ export function DiscoverScreen({ navigation }: Props) {
   const TrendingList = makeList<typeof trendingList[number]>();
 
   async function refetchTrending() {
-    setIsFirstLoad(false);
     await refetchTrendingOriginal();
   }
+
+  console.log({ loadingSearchData });
 
   return (
     <OuterContainer>
@@ -76,15 +77,21 @@ export function DiscoverScreen({ navigation }: Props) {
       />
       <InnerContainer>
         {showSearchResultsView ? (
-          searchList.length === 0 ? (
-            <EmptyState />
-          ) : (
+          <>
+            <ListHeader>Search results for: {searchTerm}</ListHeader>
             <SearchList
-              ListHeaderComponent={() => (
-                <ListHeader>Search results for: {searchTerm}</ListHeader>
-              )}
               ItemSeparatorComponent={Divider}
               data={searchList}
+              ListEmptyComponent={() =>
+                loadingSearchData ? null : <EmptyState />
+              }
+              refreshControl={
+                <RefreshControl
+                  refreshing={loadingSearchData}
+                  tintColor={darkTheme.text}
+                  titleColor={darkTheme.text}
+                />
+              }
               numColumns={3}
               keyExtractor={(item) => `${item.id}`}
               renderItem={({ item, index }) => (
@@ -105,45 +112,47 @@ export function DiscoverScreen({ navigation }: Props) {
                 </PosterContainer>
               )}
             />
-          )
+          </>
         ) : (
-          <TrendingList
-            ListHeaderComponent={() =>
-              trendingList.length ? (
-                <ListHeader>
-                  Top {trendingList.length} trending anime
-                </ListHeader>
-              ) : null
-            }
-            ItemSeparatorComponent={Divider}
-            data={trendingList}
-            numColumns={3}
-            refreshControl={
-              <RefreshControl
-                refreshing={!isFirstLoad && loadingTrending}
-                onRefresh={refetchTrending}
-                tintColor={darkTheme.text}
-                titleColor={darkTheme.text}
-              />
-            }
-            keyExtractor={(item) => `${item.id}`}
-            renderItem={({ item, index }) => (
-              <PosterContainer
-                onPress={() => navigation.navigate("Details", { id: item.id })}
-                style={(index + 1) % 3 !== 0 ? { marginRight: 16 } : undefined}
-              >
-                <Poster
-                  resizeMode="cover"
-                  source={{ uri: item.coverImage?.large ?? "" }}
+          <>
+            {trendingList.length ? (
+              <ListHeader>Top {trendingList.length} trending anime</ListHeader>
+            ) : null}
+            <TrendingList
+              ItemSeparatorComponent={Divider}
+              data={trendingList}
+              numColumns={3}
+              refreshControl={
+                <RefreshControl
+                  refreshing={loadingTrending}
+                  onRefresh={refetchTrending}
+                  tintColor={darkTheme.text}
+                  titleColor={darkTheme.text}
                 />
-                <PosterTitle numberOfLines={2}>
-                  {item.title?.english ||
-                    item.title?.romaji ||
-                    item.title?.native}
-                </PosterTitle>
-              </PosterContainer>
-            )}
-          />
+              }
+              keyExtractor={(item) => `${item.id}`}
+              renderItem={({ item, index }) => (
+                <PosterContainer
+                  onPress={() =>
+                    navigation.navigate("Details", { id: item.id })
+                  }
+                  style={
+                    (index + 1) % 3 !== 0 ? { marginRight: 16 } : undefined
+                  }
+                >
+                  <Poster
+                    resizeMode="cover"
+                    source={{ uri: item.coverImage?.large ?? "" }}
+                  />
+                  <PosterTitle numberOfLines={2}>
+                    {item.title?.english ||
+                      item.title?.romaji ||
+                      item.title?.native}
+                  </PosterTitle>
+                </PosterContainer>
+              )}
+            />
+          </>
         )}
       </InnerContainer>
     </OuterContainer>

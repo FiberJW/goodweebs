@@ -54,7 +54,6 @@ export function AnimeListItemContainer({
         query: GetAnime,
         variables: { id: seedData?.media?.id },
       });
-      console.log({ variables, proxyData });
 
       // Write our data back to the cache with the new progress in it
       proxy.writeQuery<GetAnimeQuery>({
