@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/react-hooks";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useState, useEffect } from "react";
 
@@ -9,9 +9,11 @@ import {
   UpdateProgressMutationVariables,
   GetAnimeQuery,
   GetAnimeQueryVariables,
+  MediaList,
 } from "yep/graphql/generated";
 import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
 import { GetAnime } from "yep/graphql/queries/AnimeDetails";
+import { useDebouncedMutation } from "yep/hooks/helpers";
 import { RootStackParamList } from "yep/navigation";
 
 type Props = {
@@ -40,10 +42,42 @@ export function AnimeListItemContainer({
     }
   );
 
-  const [updateProgress] = useMutation<
+  const updateProgressDebounced = useDebouncedMutation<
     UpdateProgressMutation,
     UpdateProgressMutationVariables
-  >(UpdateProgress);
+  >({
+    mutationDocument: UpdateProgress,
+    makeUpdateFunction: (variables) => (proxy) => {
+      // Read the data from our cache for this query.
+      const proxyData = proxy.readQuery<GetAnimeQuery>({
+        query: GetAnime,
+        variables: { id: seedData?.media?.id },
+      });
+      console.log({ variables, proxyData });
+
+      // Write our data back to the cache with the new progress in it
+      proxy.writeQuery<GetAnimeQuery>({
+        query: GetAnime,
+        variables: { id: seedData?.media?.id },
+        data: {
+          ...proxyData,
+          Media: {
+            ...seedData?.media,
+            id: seedData?.media?.id as number,
+            mediaListEntry: {
+              ...(proxyData?.Media?.mediaListEntry as MediaList),
+              progress: variables?.progress,
+            },
+          },
+        },
+      });
+
+      if (variables?.progress === proxyData?.Media?.episodes) {
+        // TODO: show dropdown alert to notify that this anime was moved to "completed" list
+        setTimeout(refetchList, 1000);
+      }
+    },
+  });
 
   const progress =
     (shouldShowProgressShadow ? progressShadow : null) ??
@@ -63,38 +97,15 @@ export function AnimeListItemContainer({
     const newProgress =
       type === "inc" ? progress + increment : progress - increment;
 
-    await updateProgress({
-      variables: {
-        id: data?.Media?.mediaListEntry?.id,
-        progress: newProgress,
-      },
-      update: (proxy) => {
-        // Read the data from our cache for this query.
-        const data = proxy.readQuery<GetAnimeQuery>({
-          query: GetAnime,
-          variables: { id: seedData?.media?.id },
-        });
-        // Write our data back to the cache with the new progress in it
-        proxy.writeQuery<GetAnimeQuery>({
-          query: GetAnime,
-          variables: { id: seedData?.media?.id },
-          data: {
-            ...data,
-            Media: {
-              ...data?.Media,
-              // @ts-ignore this object will exist
-              mediaListEntry: {
-                ...data?.Media?.mediaListEntry,
-                progress: newProgress,
-              },
-            },
-          },
-        });
+    // abortLatest();
+    // await debouncedUpdateProgress.current(updateProgressWithOptimisticUI, {
+    //   id: data?.Media?.mediaListEntry?.id,
+    //   progress: newProgress,
+    // });
 
-        if (newProgress === data?.Media?.episodes) {
-          refetchList();
-        }
-      },
+    await updateProgressDebounced({
+      id: data?.Media?.mediaListEntry?.id,
+      progress: newProgress,
     });
   }
 

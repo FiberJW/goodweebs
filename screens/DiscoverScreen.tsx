@@ -12,12 +12,7 @@ import {
   SearchAnimeQuery,
   SearchAnimeQueryVariables,
 } from "yep/graphql/generated";
-import {
-  GetTrendingTVAnime,
-  mediaSeason,
-  SearchAnime,
-  year,
-} from "yep/graphql/queries/Discover";
+import { GetTrendingTVAnime, SearchAnime } from "yep/graphql/queries/Discover";
 import { RootStackParamList } from "yep/navigation";
 import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
@@ -62,7 +57,7 @@ export function DiscoverScreen({ navigation }: Props) {
 
   async function refetchTrending() {
     setIsFirstLoad(false);
-    await refetchTrendingOriginal({ season: mediaSeason, year });
+    await refetchTrendingOriginal();
   }
 
   return (

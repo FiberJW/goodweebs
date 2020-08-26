@@ -4440,8 +4440,6 @@ export type GetAnimeNotificationsQuery = (
 );
 
 export type GetTrendingAnimeQueryVariables = {
-  season?: Maybe<MediaSeason>;
-  year?: Maybe<Scalars['Int']>;
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
 };
@@ -4805,13 +4803,13 @@ export function withGetAnimeNotifications<TProps, TChildProps = {}, TDataName ex
 };
 export type GetAnimeNotificationsQueryResult = ApolloReactCommon.QueryResult<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>;
 export const GetTrendingAnimeDocument = gql`
-    query GetTrendingAnime($season: MediaSeason, $year: Int, $page: Int = 1, $perPage: Int = 20) {
+    query GetTrendingAnime($page: Int = 1, $perPage: Int = 20) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       hasNextPage
       total
     }
-    media(season: $season, seasonYear: $year, format: TV, isAdult: false, type: ANIME, sort: [TRENDING_DESC]) {
+    media(format: TV, isAdult: false, type: ANIME, sort: [TRENDING_DESC]) {
       ...AnimeFragment
     }
   }

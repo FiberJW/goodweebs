@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/react-hooks";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -27,12 +27,17 @@ import {
   MediaRelation,
   AnimeRelationFragmentFragment,
   MediaType,
+  MediaList,
 } from "yep/graphql/generated";
 import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
 import { UpdateScore } from "yep/graphql/mutations/UpdateScore";
 import { UpdateStatus } from "yep/graphql/mutations/UpdateStatus";
 import { GetAnime } from "yep/graphql/queries/AnimeDetails";
-import { useDidMountEffect, useNow } from "yep/hooks/helpers";
+import {
+  useDidMountEffect,
+  useNow,
+  useDebouncedMutation,
+} from "yep/hooks/helpers";
 import { RootStackParamList } from "yep/navigation";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
@@ -289,20 +294,99 @@ export function DetailsScreen({ route, navigation }: Props) {
     notifyOnNetworkStatusChange: true,
   });
 
-  const [updateStatus] = useMutation<
+  const updateStatus = useDebouncedMutation<
     UpdateStatusMutation,
     UpdateStatusMutationVariables
-  >(UpdateStatus);
+  >({
+    mutationDocument: UpdateStatus,
+    makeUpdateFunction: (variables) => (proxy) => {
+      // Read the data from our cache for this query.
+      const proxyData = proxy.readQuery<GetAnimeQuery>({
+        query: GetAnime,
+        variables: { id: route.params.id },
+      });
 
-  const [updateScore] = useMutation<
+      // Write our data back to the cache with the new progress in it
+      proxy.writeQuery<GetAnimeQuery>({
+        query: GetAnime,
+        variables: { id: route.params.id },
+        data: {
+          ...proxyData,
+          Media: {
+            ...proxyData?.Media,
+            id: proxyData?.Media?.id as number,
+            mediaListEntry: {
+              ...(proxyData?.Media?.mediaListEntry as MediaList),
+              status: variables?.status,
+            },
+          },
+        },
+      });
+    },
+    wait: 0,
+  });
+
+  const updateScore = useDebouncedMutation<
     UpdateScoreMutation,
     UpdateScoreMutationVariables
-  >(UpdateScore);
+  >({
+    mutationDocument: UpdateScore,
+    makeUpdateFunction: (variables) => (proxy) => {
+      // Read the data from our cache for this query.
+      const proxyData = proxy.readQuery<GetAnimeQuery>({
+        query: GetAnime,
+        variables: { id: route.params.id },
+      });
 
-  const [updateProgress] = useMutation<
+      // Write our data back to the cache with the new progress in it
+      proxy.writeQuery<GetAnimeQuery>({
+        query: GetAnime,
+        variables: { id: route.params.id },
+        data: {
+          ...proxyData,
+          Media: {
+            ...proxyData?.Media,
+            id: proxyData?.Media?.id as number,
+            mediaListEntry: {
+              ...(proxyData?.Media?.mediaListEntry as MediaList),
+              score: (variables?.scoreRaw ?? 0) / 10,
+            },
+          },
+        },
+      });
+    },
+  });
+
+  const updateProgress = useDebouncedMutation<
     UpdateProgressMutation,
     UpdateProgressMutationVariables
-  >(UpdateProgress);
+  >({
+    mutationDocument: UpdateProgress,
+    makeUpdateFunction: (variables) => (proxy) => {
+      // Read the data from our cache for this query.
+      const proxyData = proxy.readQuery<GetAnimeQuery>({
+        query: GetAnime,
+        variables: { id: route.params.id },
+      });
+
+      // Write our data back to the cache with the new progress in it
+      proxy.writeQuery<GetAnimeQuery>({
+        query: GetAnime,
+        variables: { id: route.params.id },
+        data: {
+          ...proxyData,
+          Media: {
+            ...proxyData?.Media,
+            id: proxyData?.Media?.id as number,
+            mediaListEntry: {
+              ...(proxyData?.Media?.mediaListEntry as MediaList),
+              progress: variables?.progress,
+            },
+          },
+        },
+      });
+    },
+  });
 
   async function refetchFromScroll() {
     setIsRefetchingFromScrollOrMount(true);
@@ -322,7 +406,7 @@ export function DetailsScreen({ route, navigation }: Props) {
     { [K in MediaRelation]?: AnimeRelationFragmentFragment[] }
   >(
     relations,
-    function (result, value, key) {
+    function (result, value, _key) {
       if (
         !value?.relationType ||
         !value.node ||
@@ -470,10 +554,8 @@ export function DetailsScreen({ route, navigation }: Props) {
 
                     setLoadingStatus(true);
                     await updateStatus({
-                      variables: {
-                        mediaId: data?.Media?.id,
-                        status: MediaListStatusWithLabel[buttonIndex].value,
-                      },
+                      mediaId: data?.Media?.id,
+                      status: MediaListStatusWithLabel[buttonIndex].value,
                     });
                     await refetchSilently();
                     setLoadingStatus(false);
@@ -492,14 +574,13 @@ export function DetailsScreen({ route, navigation }: Props) {
                 onChange={async (progress) => {
                   try {
                     await updateProgress({
-                      variables: {
-                        id: data?.Media?.mediaListEntry?.id,
-                        progress,
-                      },
+                      id: data?.Media?.mediaListEntry?.id,
+                      progress,
                     });
                     await refetchSilently();
-                  } catch (_e) {
+                  } catch (e) {
                     // TODO: display error
+                    console.error(e);
                   }
                 }}
               />
@@ -512,10 +593,8 @@ export function DetailsScreen({ route, navigation }: Props) {
                 onChange={async (s) => {
                   try {
                     await updateScore({
-                      variables: {
-                        id: data?.Media?.mediaListEntry?.id,
-                        scoreRaw: s * 10,
-                      },
+                      id: data?.Media?.mediaListEntry?.id,
+                      scoreRaw: s * 10,
                     });
                     await refetchSilently();
                   } catch (_e) {
