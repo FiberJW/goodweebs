@@ -13,3 +13,4 @@ export const white = "#ffffff";
 export const expoBlurple = "#4630EB";
 export const goodweebsPurple = "#651FFF";
 export const badgeRed = "#EC4124";
+export const alienGreen = "#00b248";

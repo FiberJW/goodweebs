@@ -129,13 +129,29 @@ const EpisodesBehindText = takimoto.Text({
   fontFamily: "Manrope-SemiBold",
 });
 
+const EpisodesBehindIcon = takimoto.Image({
+  height: 8,
+  width: 8,
+});
+
 type EpisodesBehindProps = {
   count: number;
 };
+
 export function EpisodesBehind({ count }: EpisodesBehindProps) {
+  if (count < 0) return null;
+
   return (
-    <EpisodesBehindContainer>
-      <EpisodesBehindText>{count}</EpisodesBehindText>
+    <EpisodesBehindContainer
+      style={count === 0 ? { backgroundColor: darkTheme.success } : undefined}
+    >
+      {count === 0 ? (
+        <EpisodesBehindIcon
+          source={require("yep/assets/icons/tiny-check-8px.png")}
+        />
+      ) : (
+        <EpisodesBehindText>{count}</EpisodesBehindText>
+      )}
     </EpisodesBehindContainer>
   );
 }

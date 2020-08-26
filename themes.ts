@@ -8,6 +8,7 @@ import {
   white95,
   white15,
   white12_5,
+  alienGreen,
 } from "yep/colors";
 
 export const darkTheme = {
@@ -24,4 +25,5 @@ export const darkTheme = {
   accent: expoBlurple,
   listItemBackground: white10,
   inputPlaceholder: white40,
+  success: alienGreen,
 };

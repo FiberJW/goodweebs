@@ -65,7 +65,9 @@ export function AnimeListItem({
           uri: media.coverImage?.large ?? "",
         }}
       >
-        {episodesBehind > 0 ? <EpisodesBehind count={episodesBehind} /> : null}
+        {isAiringAndCurrentlyWatching ? (
+          <EpisodesBehind count={episodesBehind} />
+        ) : null}
       </Poster>
       <Spacer />
       <TitleAndBroadcastColumn>
