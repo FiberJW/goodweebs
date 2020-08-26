@@ -436,7 +436,9 @@ export function DetailsScreen({ route, navigation }: Props) {
       }
     >
       {!data ? (
-        <EmptyState />
+        !loading ? (
+          <EmptyState />
+        ) : null
       ) : (
         <>
           <Title numberOfLines={5}>

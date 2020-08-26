@@ -54,7 +54,7 @@ export function BroadcastHistoryScreen({ navigation }: Props) {
           <AiringFlatList
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={AnimeListDivider}
-            ListEmptyComponent={<EmptyState />}
+            ListEmptyComponent={() => (refreshing ? null : <EmptyState />)}
             data={list}
             refreshControl={
               <RefreshControl

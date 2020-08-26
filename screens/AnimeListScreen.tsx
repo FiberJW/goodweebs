@@ -104,7 +104,7 @@ export function AnimeListScreen({ navigation }: Props) {
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={AnimeListDivider}
             data={list}
-            ListEmptyComponent={<EmptyState />}
+            ListEmptyComponent={() => (refreshing ? null : <EmptyState />)}
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}
