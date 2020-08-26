@@ -274,7 +274,10 @@ export function DetailsScreen({ route, navigation }: Props) {
   const { showActionSheetWithOptions } = useActionSheet();
   const insets = useSafeArea();
   const [loadingStatus, setLoadingStatus] = useState(false);
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [
+    isRefetchingFromScrollOrMount,
+    setIsRefetchingFromScrollOrMount,
+  ] = useState(true);
 
   const now = useNow();
 
@@ -301,8 +304,14 @@ export function DetailsScreen({ route, navigation }: Props) {
     UpdateProgressMutationVariables
   >(UpdateProgress);
 
-  async function refetchAnime() {
-    setIsFirstLoad(false);
+  async function refetchFromScroll() {
+    setIsRefetchingFromScrollOrMount(true);
+    await refetch({ id: route.params.id });
+    setIsRefetchingFromScrollOrMount(false);
+  }
+
+  async function refetchSilently() {
+    setIsRefetchingFromScrollOrMount(false);
     await refetch({ id: route.params.id });
   }
 
@@ -334,8 +343,8 @@ export function DetailsScreen({ route, navigation }: Props) {
       showsVerticalScrollIndicator={false}
       refreshControl={
         <RefreshControl
-          refreshing={!isFirstLoad && loading}
-          onRefresh={refetchAnime}
+          refreshing={isRefetchingFromScrollOrMount && loading}
+          onRefresh={refetchFromScroll}
           tintColor={darkTheme.text}
           titleColor={darkTheme.text}
         />
@@ -466,7 +475,7 @@ export function DetailsScreen({ route, navigation }: Props) {
                         status: MediaListStatusWithLabel[buttonIndex].value,
                       },
                     });
-                    await refetchAnime();
+                    await refetchSilently();
                     setLoadingStatus(false);
                   }
                 );
@@ -488,7 +497,7 @@ export function DetailsScreen({ route, navigation }: Props) {
                         progress,
                       },
                     });
-                    await refetchAnime();
+                    await refetchSilently();
                   } catch (_e) {
                     // TODO: display error
                   }
@@ -508,7 +517,7 @@ export function DetailsScreen({ route, navigation }: Props) {
                         scoreRaw: s * 10,
                       },
                     });
-                    await refetchAnime();
+                    await refetchSilently();
                   } catch (_e) {
                     // TODO: display error
                   }
