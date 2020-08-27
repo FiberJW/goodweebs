@@ -42,6 +42,7 @@ import {
 import { RootStackParamList } from "yep/navigation";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
+import { Manrope } from "yep/typefaces";
 import { notEmpty, getTitle, getReadableMediaRelation } from "yep/utils";
 
 const Container = takimoto.ScrollView({
@@ -58,7 +59,7 @@ const Poster = takimoto.Image({
 
 const Title = takimoto.Text({
   color: darkTheme.text,
-  fontFamily: "Manrope-ExtraBold",
+  fontFamily: Manrope.extraBold,
   fontSize: 31.25,
   marginBottom: 16,
 });
@@ -80,14 +81,14 @@ const InfoContainer = takimoto.View({
 });
 
 const InfoLabel = takimoto.Text({
-  fontFamily: "Manrope-Regular",
+  fontFamily: Manrope.regular,
   fontSize: 12.8,
   color: darkTheme.text,
   marginBottom: 4,
 });
 
 const InfoValue = takimoto.Text({
-  fontFamily: "Manrope-SemiBold",
+  fontFamily: Manrope.semiBold,
   fontSize: 16,
   color: darkTheme.text,
 });
@@ -127,7 +128,7 @@ const ButtonTouchable = takimoto.TouchableOpacity({
 const ButtonLabel = takimoto.Text({
   fontSize: 16,
   color: darkTheme.text,
-  fontFamily: "Manrope-SemiBold",
+  fontFamily: Manrope.semiBold,
   textAlign: "center",
 });
 
@@ -160,7 +161,7 @@ const StepperWithLabelContainer = takimoto.View({
 const StepperLabel = takimoto.Text({
   fontSize: 16,
   color: darkTheme.text,
-  fontFamily: "Manrope-SemiBold",
+  fontFamily: Manrope.semiBold,
   textAlign: "center",
 });
 
@@ -175,7 +176,7 @@ const StepperSpacer = takimoto.View({
 const StepperCount = takimoto.Text({
   fontSize: 16,
   color: darkTheme.text,
-  fontFamily: "Manrope-SemiBold",
+  fontFamily: Manrope.semiBold,
   textAlign: "center",
   width: 48,
 });
@@ -648,7 +649,7 @@ const RelatedListSeparator = takimoto.View({ width: 8 });
 const RelatedListSpacer = takimoto.View({ height: 16 });
 
 const RelatedListHeader = takimoto.Text({
-  fontFamily: "Manrope-SemiBold",
+  fontFamily: Manrope.semiBold,
   color: darkTheme.text,
   fontSize: 16,
   marginBottom: 8,
@@ -722,13 +723,13 @@ const htmlViewStyle = StyleSheet.create({
   // eslint-disable-next-line
   p: {
     color: darkTheme.text,
-    fontFamily: "Manrope-Regular",
+    fontFamily: Manrope.regular,
     fontSize: 16,
   },
   // eslint-disable-next-line
   i: {
     color: darkTheme.text,
-    fontFamily: "Manrope-Regular",
+    fontFamily: Manrope.regular,
     fontSize: 16,
   },
 });

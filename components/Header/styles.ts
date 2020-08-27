@@ -1,5 +1,6 @@
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
+import { Manrope } from "yep/typefaces";
 
 export const Container = takimoto.View({
   backgroundColor: darkTheme.navBackground,
@@ -12,7 +13,7 @@ export const Container = takimoto.View({
 
 export const Label = takimoto.Text({
   color: darkTheme.text,
-  fontFamily: "Manrope-ExtraBold",
+  fontFamily: Manrope.extraBold,
   fontSize: 25,
 });
 

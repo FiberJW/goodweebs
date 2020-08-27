@@ -2,6 +2,7 @@ import React from "react";
 
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
+import { Manrope } from "yep/typefaces";
 
 export const OuterContainer = takimoto.View({
   flex: 1,
@@ -34,7 +35,7 @@ export const UserInfoRow = takimoto.View({
 });
 
 export const Username = takimoto.Text({
-  fontFamily: "Manrope-SemiBold",
+  fontFamily: Manrope.semiBold,
   fontSize: 20,
   color: darkTheme.text,
 });
@@ -52,7 +53,7 @@ const StatContainer = takimoto.View({
 });
 
 const StatLabel = takimoto.Text({
-  fontFamily: "Manrope-Regular",
+  fontFamily: Manrope.regular,
   fontSize: 12.8,
   color: darkTheme.text,
 });
@@ -60,7 +61,7 @@ const StatLabel = takimoto.Text({
 const StatSpacer = takimoto.View({ height: 4 });
 
 const StatValue = takimoto.Text({
-  fontFamily: "Manrope-SemiBold",
+  fontFamily: Manrope.semiBold,
   fontSize: 20,
   color: darkTheme.text,
 });
@@ -78,7 +79,7 @@ export function Stat({ label, value }: StatProps) {
 }
 
 export const ListHeader = takimoto.Text({
-  fontFamily: "Manrope-SemiBold",
+  fontFamily: Manrope.semiBold,
   fontSize: 25,
   color: darkTheme.text,
 });
@@ -103,7 +104,7 @@ export const FavoriteContainer = takimoto.View({
 });
 
 export const FavoriteName = takimoto.Text({
-  fontFamily: "Manrope-Regular",
+  fontFamily: Manrope.regular,
   fontSize: 16,
   color: darkTheme.text,
 

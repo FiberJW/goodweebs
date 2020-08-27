@@ -2,6 +2,7 @@ import React from "react";
 
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
+import { Manrope } from "yep/typefaces";
 
 type Props = {
   label: string;
@@ -40,6 +41,6 @@ const Container = takimoto.TouchableOpacity({
 
 const Label = takimoto.Text({
   fontSize: 12.8,
-  fontFamily: "Manrope-SemiBold",
+  fontFamily: Manrope.semiBold,
   color: darkTheme.text,
 });

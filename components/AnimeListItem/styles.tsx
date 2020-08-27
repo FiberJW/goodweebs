@@ -4,6 +4,7 @@ import { ImageSourcePropType, StyleSheet } from "react-native";
 import { black, badgeRed } from "yep/colors";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
+import { Manrope } from "yep/typefaces";
 
 export const Container = takimoto.TouchableOpacity({
   padding: 8,
@@ -32,13 +33,13 @@ export const BroadcastIcon = takimoto.Image({
 });
 
 export const Title = takimoto.Text({
-  fontFamily: "Manrope-SemiBold",
+  fontFamily: Manrope.semiBold,
   color: darkTheme.text,
   fontSize: 16,
 });
 
 export const EpisodeProgress = takimoto.Text({
-  fontFamily: "Manrope-ExtraLight",
+  fontFamily: Manrope.extraLight,
   color: darkTheme.text,
   fontSize: 20,
   textAlign: "right",
@@ -47,7 +48,7 @@ export const EpisodeProgress = takimoto.Text({
 export const BroadcastSchedule = takimoto.Text({
   fontSize: 12.8,
   color: darkTheme.footnote,
-  fontFamily: "Manrope-Regular",
+  fontFamily: Manrope.regular,
 });
 
 export const TitleAndBroadcastColumn = takimoto.View({
@@ -126,7 +127,7 @@ const EpisodesBehindText = takimoto.Text({
   textAlign: "center",
   textAlignVertical: "center",
   color: darkTheme.text,
-  fontFamily: "Manrope-SemiBold",
+  fontFamily: Manrope.semiBold,
 });
 
 const EpisodesBehindIcon = takimoto.Image({

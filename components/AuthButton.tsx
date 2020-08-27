@@ -2,6 +2,7 @@ import React from "react";
 
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
+import { Manrope } from "yep/typefaces";
 
 const ButtonTouchable = takimoto.TouchableOpacity({
   backgroundColor: darkTheme.secondaryButton,
@@ -13,7 +14,7 @@ const ButtonTouchable = takimoto.TouchableOpacity({
 });
 
 const ButtonLabel = takimoto.Text({
-  fontFamily: "Manrope-SemiBold",
+  fontFamily: Manrope.semiBold,
   fontSize: 16,
   color: darkTheme.text,
   textAlign: "center",

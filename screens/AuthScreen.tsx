@@ -10,6 +10,7 @@ import { RootStackParamList } from "yep/navigation";
 import { getString } from "yep/strings";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
+import { Manrope } from "yep/typefaces";
 
 type Props = {
   navigation: StackNavigationProp<RootStackParamList>;
@@ -97,7 +98,7 @@ const ButtonGroup = takimoto.View({
 const BrandingSpacer = takimoto.View({ height: 16 });
 
 const Tagline = takimoto.Text({
-  fontFamily: "Manrope-Regular",
+  fontFamily: Manrope.regular,
   fontSize: 16,
   color: darkTheme.text,
   textAlign: "center",
@@ -107,7 +108,7 @@ const Tagline = takimoto.Text({
 const BrandingGroup = takimoto.View({ alignItems: "center" });
 
 const AniListFootnote = takimoto.Text({
-  fontFamily: "Manrope-Regular",
+  fontFamily: Manrope.regular,
   fontSize: 12.8,
   color: darkTheme.footnote,
   textAlign: "center",

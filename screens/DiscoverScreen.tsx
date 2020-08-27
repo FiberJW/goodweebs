@@ -17,6 +17,7 @@ import { RootStackParamList } from "yep/navigation";
 import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
+import { Manrope } from "yep/typefaces";
 import { notEmpty } from "yep/utils";
 
 type Props = {
@@ -172,7 +173,7 @@ const Poster = takimoto.Image({
 });
 
 const PosterTitle = takimoto.Text({
-  fontFamily: "Manrope-Regular",
+  fontFamily: Manrope.regular,
   fontSize: 12.8,
   textAlign: "center",
   maxWidth: posterWidth,
@@ -197,7 +198,7 @@ const Divider = takimoto.View({
 });
 
 const ListHeader = takimoto.Text({
-  fontFamily: "Manrope-SemiBold",
+  fontFamily: Manrope.semiBold,
   fontSize: 20,
   color: darkTheme.text,
   marginBottom: 16,

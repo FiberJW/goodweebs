@@ -1,5 +1,6 @@
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
+import { Manrope } from "yep/typefaces";
 
 export const Container = takimoto.View({
   backgroundColor: darkTheme.navBackground,
@@ -22,7 +23,7 @@ export const SearchInputContainer = takimoto.View({
 export const SearchInput = takimoto.TextInput({
   color: darkTheme.text,
   fontSize: 16,
-  fontFamily: "Manrope-Regular",
+  fontFamily: Manrope.regular,
   flex: 1,
 });
 
@@ -47,5 +48,5 @@ export const CancelTouchable = takimoto.TouchableOpacity({ marginLeft: 8 });
 export const CancelLabel = takimoto.Text({
   color: darkTheme.text,
   fontSize: 16,
-  fontFamily: "Manrope-Regular",
+  fontFamily: Manrope.regular,
 });

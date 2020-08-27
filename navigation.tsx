@@ -12,6 +12,8 @@ import { DiscoverScreen } from "yep/screens/DiscoverScreen";
 import { ProfileScreen } from "yep/screens/ProfileScreen";
 import { darkTheme } from "yep/themes";
 
+import { Manrope } from "./typefaces";
+
 export type RootStackParamList = {
   Tabs: undefined;
   Auth: undefined;
@@ -28,7 +30,7 @@ function Tabs() {
         showLabel: false,
         labelStyle: {
           fontSize: 12.8,
-          fontFamily: "Manrope-Medium",
+          fontFamily: Manrope.medium,
         },
       }}
     >
@@ -166,7 +168,7 @@ export function Navigation({ accessToken }: NavigationProps) {
         screenOptions={{
           title: "",
           headerTitleStyle: {
-            fontFamily: "Manrope-SemiBold",
+            fontFamily: Manrope.semiBold,
           },
         }}
       >

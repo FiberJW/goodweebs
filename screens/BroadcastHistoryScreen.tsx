@@ -18,6 +18,7 @@ import { RootStackParamList } from "yep/navigation";
 import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
+import { Manrope } from "yep/typefaces";
 import { notEmpty, getTitle } from "yep/utils";
 
 type Props = {
@@ -116,7 +117,7 @@ export const AiringItemTextContainer = takimoto.View({
 });
 
 export const AiringItemTitle = takimoto.Text({
-  fontFamily: "Manrope-SemiBold",
+  fontFamily: Manrope.semiBold,
   color: darkTheme.text,
   fontSize: 16,
   marginBottom: 4,
@@ -130,7 +131,7 @@ const AiringItemContainer = takimoto.TouchableOpacity({
 });
 
 const AiringItemText = takimoto.Text({
-  fontFamily: "Manrope-Regular",
+  fontFamily: Manrope.regular,
   fontSize: 12.8,
   color: darkTheme.text,
   maxWidth: "100%",

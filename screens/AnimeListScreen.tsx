@@ -22,6 +22,7 @@ import { RootStackParamList } from "yep/navigation";
 import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
+import { Manrope } from "yep/typefaces";
 import { notEmpty } from "yep/utils";
 
 type Props = {
@@ -179,7 +180,7 @@ const CountAndSortRow = takimoto.View({
 });
 
 const Count = takimoto.Text({
-  fontFamily: "Manrope-Regular",
+  fontFamily: Manrope.regular,
   fontSize: 12.8,
   color: darkTheme.listCount,
 });
