@@ -1,7 +1,8 @@
 import { useQuery } from "@apollo/react-hooks";
+import { useFocusEffect } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { sortBy } from "lodash";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { RefreshControl } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
@@ -30,6 +31,7 @@ type Props = {
 };
 
 export function AnimeListScreen({ navigation }: Props) {
+  const [isFirstFocus, setIsFirstFocus] = useState(true);
   const [status, setStatus] = useState<MediaListStatus>(
     MediaListStatusWithLabel[0].value
   );
@@ -71,6 +73,25 @@ export function AnimeListScreen({ navigation }: Props) {
   const AnimeFlatList = makeAnimeFlatList<typeof list[number]>();
 
   const refreshing = loadingViewer || loadingAnimeList;
+
+  useFocusEffect(
+    useCallback(
+      function refetchWhenRefocused() {
+        if (isFirstFocus) {
+          setIsFirstFocus(false);
+          return;
+        }
+
+        if (viewerData) {
+          refetch({
+            userId: viewerData?.Viewer?.id,
+            status,
+          });
+        }
+      },
+      [isFirstFocus, viewerData, status]
+    )
+  );
 
   return (
     <OuterContainer>

@@ -1,7 +1,8 @@
 import { useQuery } from "@apollo/react-hooks";
+import { useFocusEffect } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { formatDistance } from "date-fns";
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import { RefreshControl } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
@@ -26,6 +27,7 @@ type Props = {
 };
 
 export function BroadcastHistoryScreen({ navigation }: Props) {
+  const [isFirstFocus, setIsFirstFocus] = useState(true);
   const { loading, data, refetch } = useQuery<
     GetAnimeNotificationsQuery,
     GetAnimeNotificationsQueryVariables
@@ -46,6 +48,20 @@ export function BroadcastHistoryScreen({ navigation }: Props) {
   const AiringFlatList = makeAiringFlatList<typeof list[number]>();
 
   const refreshing = loading;
+
+  useFocusEffect(
+    useCallback(
+      function refetchWhenRefocused() {
+        if (isFirstFocus) {
+          setIsFirstFocus(false);
+          return;
+        }
+
+        refetch();
+      },
+      [isFirstFocus]
+    )
+  );
 
   return (
     <OuterContainer>
