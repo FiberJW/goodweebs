@@ -60,8 +60,6 @@ export function DiscoverScreen({ navigation }: Props) {
     await refetchTrendingOriginal();
   }
 
-  console.log({ loadingSearchData });
-
   return (
     <OuterContainer>
       <Header label={getString("discover", StringCase.TITLE)} />
