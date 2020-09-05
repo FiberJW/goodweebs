@@ -1,11 +1,7 @@
 import React from "react";
 import { ImageSourcePropType, StyleSheet } from "react-native";
 
-import {
-  bubbleGumBackground,
-  bubbleGumBorder,
-  bubbleGumText,
-} from "yep/colors";
+import { dangoPinkBackground, dangoPink, dangoPinkText } from "yep/colors";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
@@ -117,12 +113,12 @@ const EpisodesBehindContainer = takimoto.View({
   height: 16,
   width: 16,
   borderRadius: 16,
-  backgroundColor: bubbleGumBackground,
+  backgroundColor: dangoPinkBackground,
   justifyContent: "center",
   alignItems: "center",
   borderWidth: 1,
-  borderColor: bubbleGumBorder,
-  shadowColor: bubbleGumText,
+  borderColor: dangoPink,
+  shadowColor: dangoPinkText,
   shadowOffset: { height: 2, width: 0 },
   shadowOpacity: 0.25,
   shadowRadius: 4,
@@ -132,7 +128,7 @@ const EpisodesBehindText = takimoto.Text({
   fontSize: 8,
   textAlign: "center",
   textAlignVertical: "center",
-  color: bubbleGumText,
+  color: dangoPinkText,
   fontFamily: Manrope.semiBold,
 });
 

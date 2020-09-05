@@ -10,11 +10,10 @@ export const white80 = "rgba(255,255,255,0.80)";
 export const white95 = "rgba(255,255,255,0.95)";
 export const darkGray = "#15161D";
 export const white = "#ffffff";
-export const expoBlurple = "#4630EB";
 export const goodweebsPurple = "#651FFF";
 export const badgeRed = "#EC4124";
 export const alienGreen = "#00b248";
 
-export const bubbleGumBackground = "#FFCFF1";
-export const bubbleGumBorder = "#F48FB1";
-export const bubbleGumText = "#AD2754";
+export const dangoPink = "#F48FB1";
+export const dangoPinkBackground = "#FFCFF1";
+export const dangoPinkText = "#AD2754";
