@@ -1,7 +1,11 @@
 import React from "react";
 import { ImageSourcePropType, StyleSheet } from "react-native";
 
-import { black, badgeRed } from "yep/colors";
+import {
+  bubbleGumBackground,
+  bubbleGumBorder,
+  bubbleGumText,
+} from "yep/colors";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
@@ -113,10 +117,12 @@ const EpisodesBehindContainer = takimoto.View({
   height: 16,
   width: 16,
   borderRadius: 16,
-  backgroundColor: badgeRed,
+  backgroundColor: bubbleGumBackground,
   justifyContent: "center",
   alignItems: "center",
-  shadowColor: black,
+  borderWidth: 1,
+  borderColor: bubbleGumBorder,
+  shadowColor: bubbleGumText,
   shadowOffset: { height: 2, width: 0 },
   shadowOpacity: 0.25,
   shadowRadius: 4,
@@ -126,13 +132,8 @@ const EpisodesBehindText = takimoto.Text({
   fontSize: 8,
   textAlign: "center",
   textAlignVertical: "center",
-  color: darkTheme.text,
+  color: bubbleGumText,
   fontFamily: Manrope.semiBold,
-});
-
-const EpisodesBehindIcon = takimoto.Image({
-  height: 8,
-  width: 8,
 });
 
 type EpisodesBehindProps = {
@@ -140,19 +141,11 @@ type EpisodesBehindProps = {
 };
 
 export function EpisodesBehind({ count }: EpisodesBehindProps) {
-  if (count < 0) return null;
+  if (count <= 0) return null;
 
   return (
-    <EpisodesBehindContainer
-      style={count === 0 ? { backgroundColor: darkTheme.success } : undefined}
-    >
-      {count === 0 ? (
-        <EpisodesBehindIcon
-          source={require("yep/assets/icons/tiny-check-8px.png")}
-        />
-      ) : (
-        <EpisodesBehindText>{count}</EpisodesBehindText>
-      )}
+    <EpisodesBehindContainer>
+      <EpisodesBehindText>{count}</EpisodesBehindText>
     </EpisodesBehindContainer>
   );
 }

@@ -14,3 +14,7 @@ export const expoBlurple = "#4630EB";
 export const goodweebsPurple = "#651FFF";
 export const badgeRed = "#EC4124";
 export const alienGreen = "#00b248";
+
+export const bubbleGumBackground = "#FFCFF1";
+export const bubbleGumBorder = "#F48FB1";
+export const bubbleGumText = "#AD2754";
