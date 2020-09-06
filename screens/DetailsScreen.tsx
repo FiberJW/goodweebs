@@ -308,22 +308,24 @@ export function DetailsScreen({ route, navigation }: Props) {
         variables: { id: route.params.id },
       });
 
-      // Write our data back to the cache with the new progress in it
-      proxy.writeQuery<GetAnimeQuery>({
-        query: GetAnime,
-        variables: { id: route.params.id },
-        data: {
-          ...proxyData,
-          Media: {
-            ...proxyData?.Media,
-            id: proxyData?.Media?.id as number,
-            mediaListEntry: {
-              ...(proxyData?.Media?.mediaListEntry as MediaList),
-              status: variables?.status,
+      if (proxyData?.Media?.mediaListEntry) {
+        // Write our data back to the cache with the new progress in it
+        proxy.writeQuery<GetAnimeQuery>({
+          query: GetAnime,
+          variables: { id: route.params.id },
+          data: {
+            ...proxyData,
+            Media: {
+              ...proxyData?.Media,
+              id: proxyData?.Media?.id as number,
+              mediaListEntry: {
+                ...(proxyData?.Media?.mediaListEntry as MediaList),
+                status: variables?.status,
+              },
             },
           },
-        },
-      });
+        });
+      }
     },
     wait: 0,
   });
@@ -387,6 +389,11 @@ export function DetailsScreen({ route, navigation }: Props) {
           },
         },
       });
+
+      if (variables?.progress === proxyData?.Media?.episodes) {
+        // TODO: show dropdown alert to notify that this anime was moved to "completed" list
+        setTimeout(refetchFromScroll, 1000);
+      }
     },
   });
 
