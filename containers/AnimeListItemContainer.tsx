@@ -91,6 +91,7 @@ export function AnimeListItemContainer({
   }, [data?.Media?.mediaListEntry?.progress]);
 
   async function changeProgress(type: "inc" | "dec", increment = 1) {
+    if (!data || loading) return;
     // optimistic UI updates aren't fast enough
     setProgressShadow((p) => (type === "inc" ? p + increment : p - increment));
     setShouldShowProgressShadow(true);
@@ -109,7 +110,6 @@ export function AnimeListItemContainer({
     <AnimeListItem
       navigation={navigation}
       progress={progress}
-      disabled={loading}
       onIncrement={async () => changeProgress("inc")}
       onDecrement={async () => changeProgress("dec")}
       media={(data?.Media ?? seedData?.media) as AnimeFragmentFragment}
