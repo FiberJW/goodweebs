@@ -1,4 +1,3 @@
-import { useQuery } from "@apollo/client";
 import { useFocusEffect } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { sortBy } from "lodash";
@@ -11,14 +10,10 @@ import { StatusChip } from "yep/components/StatusChip";
 import { MediaListStatusWithLabel } from "yep/constants";
 import { AnimeListItemContainer } from "yep/containers/AnimeListItemContainer";
 import {
-  GetViewerQuery,
-  GetViewerQueryVariables,
-  GetAnimeListQuery,
-  GetAnimeListQueryVariables,
   MediaListStatus,
+  useGetViewerQuery,
+  useGetAnimeListQuery,
 } from "yep/graphql/generated";
-import { GetAnimeList } from "yep/graphql/queries/AnimeList";
-import { GetViewer } from "yep/graphql/queries/Viewer";
 import { RootStackParamList } from "yep/navigation";
 import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
@@ -36,15 +31,13 @@ export function AnimeListScreen({ navigation }: Props) {
     MediaListStatusWithLabel[0].value
   );
 
-  const { loading: loadingViewer, data: viewerData } = useQuery<
-    GetViewerQuery,
-    GetViewerQueryVariables
-  >(GetViewer);
+  const { loading: loadingViewer, data: viewerData } = useGetViewerQuery();
 
-  const { loading: loadingAnimeList, data: animeListData, refetch } = useQuery<
-    GetAnimeListQuery,
-    GetAnimeListQueryVariables
-  >(GetAnimeList, {
+  const {
+    loading: loadingAnimeList,
+    data: animeListData,
+    refetch,
+  } = useGetAnimeListQuery({
     skip: !viewerData?.Viewer?.id,
     variables: {
       userId: viewerData?.Viewer?.id,

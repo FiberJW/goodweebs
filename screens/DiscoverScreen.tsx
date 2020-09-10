@@ -1,4 +1,3 @@
-import { useQuery } from "@apollo/client";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useState } from "react";
 import { Dimensions, RefreshControl } from "react-native";
@@ -7,12 +6,9 @@ import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
 import { SearchBox } from "yep/components/SearchBox";
 import {
-  GetTrendingAnimeQuery,
-  GetTrendingAnimeQueryVariables,
-  SearchAnimeQuery,
-  SearchAnimeQueryVariables,
+  useGetTrendingAnimeQuery,
+  useSearchAnimeQuery,
 } from "yep/graphql/generated";
-import { GetTrendingTVAnime, SearchAnime } from "yep/graphql/queries/Discover";
 import { RootStackParamList } from "yep/navigation";
 import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
@@ -33,18 +29,12 @@ export function DiscoverScreen({ navigation }: Props) {
     loading: loadingTrending,
     data: trendingData,
     refetch: refetchTrendingOriginal,
-  } = useQuery<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>(
-    GetTrendingTVAnime,
-    {
-      variables: { perPage: 30 },
-      notifyOnNetworkStatusChange: true,
-    }
-  );
+  } = useGetTrendingAnimeQuery({
+    variables: { perPage: 30 },
+    notifyOnNetworkStatusChange: true,
+  });
 
-  const { data: searchData, loading: loadingSearchData } = useQuery<
-    SearchAnimeQuery,
-    SearchAnimeQueryVariables
-  >(SearchAnime, {
+  const { data: searchData, loading: loadingSearchData } = useSearchAnimeQuery({
     skip: searchTerm.trim().length === 0,
     variables: { search: searchTerm },
     notifyOnNetworkStatusChange: true,

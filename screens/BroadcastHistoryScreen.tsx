@@ -1,4 +1,3 @@
-import { useQuery } from "@apollo/client";
 import { useFocusEffect } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { formatDistance } from "date-fns";
@@ -9,11 +8,9 @@ import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import {
-  GetAnimeNotificationsQuery,
-  GetAnimeNotificationsQueryVariables,
   AiringNotificationFragmentFragment,
+  useGetAnimeNotificationsQuery,
 } from "yep/graphql/generated";
-import { GetAnimeNotifications } from "yep/graphql/queries/AnimeNotifications";
 import { useNow } from "yep/hooks/helpers";
 import { RootStackParamList } from "yep/navigation";
 import { getString, StringCase } from "yep/strings";
@@ -28,10 +25,7 @@ type Props = {
 
 export function BroadcastHistoryScreen({ navigation }: Props) {
   const [isFirstFocus, setIsFirstFocus] = useState(true);
-  const { loading, data, refetch } = useQuery<
-    GetAnimeNotificationsQuery,
-    GetAnimeNotificationsQueryVariables
-  >(GetAnimeNotifications, {
+  const { loading, data, refetch } = useGetAnimeNotificationsQuery({
     fetchPolicy: "no-cache",
     notifyOnNetworkStatusChange: true,
   });

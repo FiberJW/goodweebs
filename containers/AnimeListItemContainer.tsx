@@ -1,4 +1,3 @@
-import { useQuery } from "@apollo/client";
 import { StackNavigationProp } from "@react-navigation/stack";
 import * as Haptics from "expo-haptics";
 import React, { useState, useEffect } from "react";
@@ -9,11 +8,11 @@ import {
   UpdateProgressMutation,
   UpdateProgressMutationVariables,
   GetAnimeQuery,
-  GetAnimeQueryVariables,
   MediaList,
+  useGetAnimeQuery,
+  GetAnimeDocument,
 } from "yep/graphql/generated";
 import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
-import { GetAnime } from "yep/graphql/queries/AnimeDetails";
 import { useDebouncedMutation } from "yep/hooks/helpers";
 import { RootStackParamList } from "yep/navigation";
 
@@ -36,12 +35,9 @@ export function AnimeListItemContainer({
   const [shouldShowProgressShadow, setShouldShowProgressShadow] = useState(
     false
   );
-  const { loading, data } = useQuery<GetAnimeQuery, GetAnimeQueryVariables>(
-    GetAnime,
-    {
-      variables: { id: seedData?.media?.id },
-    }
-  );
+  const { loading, data } = useGetAnimeQuery({
+    variables: { id: seedData?.media?.id },
+  });
 
   const updateProgressDebounced = useDebouncedMutation<
     UpdateProgressMutation,
@@ -51,13 +47,13 @@ export function AnimeListItemContainer({
     makeUpdateFunction: (variables) => (proxy) => {
       // Read the data from our cache for this query.
       const proxyData = proxy.readQuery<GetAnimeQuery>({
-        query: GetAnime,
+        query: GetAnimeDocument,
         variables: { id: seedData?.media?.id },
       });
 
       // Write our data back to the cache with the new progress in it
       proxy.writeQuery<GetAnimeQuery>({
-        query: GetAnime,
+        query: GetAnimeDocument,
         variables: { id: seedData?.media?.id },
         data: {
           ...proxyData,

@@ -1,4 +1,3 @@
-import { useQuery } from "@apollo/client";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -17,7 +16,6 @@ import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { MediaListStatusWithLabel, MediaStatusWithLabel } from "yep/constants";
 import {
   GetAnimeQuery,
-  GetAnimeQueryVariables,
   MediaStatus,
   UpdateStatusMutation,
   UpdateStatusMutationVariables,
@@ -29,11 +27,12 @@ import {
   AnimeRelationFragmentFragment,
   MediaType,
   MediaList,
+  useGetAnimeQuery,
+  GetAnimeDocument,
+  UpdateProgressDocument,
+  UpdateScoreDocument,
+  UpdateStatusDocument,
 } from "yep/graphql/generated";
-import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
-import { UpdateScore } from "yep/graphql/mutations/UpdateScore";
-import { UpdateStatus } from "yep/graphql/mutations/UpdateStatus";
-import { GetAnime } from "yep/graphql/queries/AnimeDetails";
 import {
   useDidMountEffect,
   useNow,
@@ -288,10 +287,7 @@ export function DetailsScreen({ route, navigation }: Props) {
 
   const now = useNow();
 
-  const { loading, data, refetch } = useQuery<
-    GetAnimeQuery,
-    GetAnimeQueryVariables
-  >(GetAnime, {
+  const { loading, data, refetch } = useGetAnimeQuery({
     variables: { id: route.params.id },
     notifyOnNetworkStatusChange: true,
   });
@@ -300,18 +296,18 @@ export function DetailsScreen({ route, navigation }: Props) {
     UpdateStatusMutation,
     UpdateStatusMutationVariables
   >({
-    mutationDocument: UpdateStatus,
+    mutationDocument: UpdateStatusDocument,
     makeUpdateFunction: (variables) => (proxy) => {
       // Read the data from our cache for this query.
       const proxyData = proxy.readQuery<GetAnimeQuery>({
-        query: GetAnime,
+        query: GetAnimeDocument,
         variables: { id: route.params.id },
       });
 
       if (proxyData?.Media?.mediaListEntry) {
         // Write our data back to the cache with the new progress in it
         proxy.writeQuery<GetAnimeQuery>({
-          query: GetAnime,
+          query: GetAnimeDocument,
           variables: { id: route.params.id },
           data: {
             ...proxyData,
@@ -336,17 +332,17 @@ export function DetailsScreen({ route, navigation }: Props) {
     UpdateScoreMutation,
     UpdateScoreMutationVariables
   >({
-    mutationDocument: UpdateScore,
+    mutationDocument: UpdateScoreDocument,
     makeUpdateFunction: (variables) => (proxy) => {
       // Read the data from our cache for this query.
       const proxyData = proxy.readQuery<GetAnimeQuery>({
-        query: GetAnime,
+        query: GetAnimeDocument,
         variables: { id: route.params.id },
       });
 
       // Write our data back to the cache with the new progress in it
       proxy.writeQuery<GetAnimeQuery>({
-        query: GetAnime,
+        query: GetAnimeDocument,
         variables: { id: route.params.id },
         data: {
           ...proxyData,
@@ -367,17 +363,17 @@ export function DetailsScreen({ route, navigation }: Props) {
     UpdateProgressMutation,
     UpdateProgressMutationVariables
   >({
-    mutationDocument: UpdateProgress,
+    mutationDocument: UpdateProgressDocument,
     makeUpdateFunction: (variables) => (proxy) => {
       // Read the data from our cache for this query.
       const proxyData = proxy.readQuery<GetAnimeQuery>({
-        query: GetAnime,
+        query: GetAnimeDocument,
         variables: { id: route.params.id },
       });
 
       // Write our data back to the cache with the new progress in it
       proxy.writeQuery<GetAnimeQuery>({
-        query: GetAnime,
+        query: GetAnimeDocument,
         variables: { id: route.params.id },
         data: {
           ...proxyData,

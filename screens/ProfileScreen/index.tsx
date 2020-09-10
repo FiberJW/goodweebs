@@ -1,4 +1,3 @@
-import { useQuery } from "@apollo/client";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { AsyncStorage, RefreshControl } from "react-native";
@@ -8,8 +7,7 @@ import { AuthButton } from "yep/components/AuthButton";
 import { Header } from "yep/components/Header";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { client } from "yep/graphql/client";
-import { GetViewerQuery, GetViewerQueryVariables } from "yep/graphql/generated";
-import { GetViewer } from "yep/graphql/queries/Viewer";
+import { useGetViewerQuery } from "yep/graphql/generated";
 import { RootStackParamList } from "yep/navigation";
 import { StringCase, getString } from "yep/strings";
 import { notEmpty, getTitle } from "yep/utils";
@@ -41,10 +39,11 @@ type Props = {
 };
 
 export function ProfileScreen({ navigation }: Props) {
-  const { loading: loadingViewer, data: viewerData, refetch } = useQuery<
-    GetViewerQuery,
-    GetViewerQueryVariables
-  >(GetViewer, { notifyOnNetworkStatusChange: true });
+  const {
+    loading: loadingViewer,
+    data: viewerData,
+    refetch,
+  } = useGetViewerQuery({ notifyOnNetworkStatusChange: true });
 
   const animeList = (viewerData?.Viewer?.favourites?.anime?.nodes ?? []).filter(
     notEmpty
