@@ -1,4 +1,4 @@
-import { ApolloProvider } from "@apollo/react-hooks";
+import { ApolloProvider } from "@apollo/client";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { AppLoading } from "expo";
 import React, { useState, useEffect } from "react";

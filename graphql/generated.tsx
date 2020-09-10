@@ -1,10 +1,7 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as React from 'react';
-import * as ApolloReactComponents from '@apollo/react-components';
-import * as ApolloReactHoc from '@apollo/react-hoc';
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -4332,10 +4329,10 @@ export type AnimeFragmentFragment = (
   )> }
 );
 
-export type UpdateProgressMutationVariables = {
+export type UpdateProgressMutationVariables = Exact<{
   id?: Maybe<Scalars['Int']>;
   progress?: Maybe<Scalars['Int']>;
-};
+}>;
 
 
 export type UpdateProgressMutation = (
@@ -4346,10 +4343,10 @@ export type UpdateProgressMutation = (
   )> }
 );
 
-export type UpdateScoreMutationVariables = {
+export type UpdateScoreMutationVariables = Exact<{
   id?: Maybe<Scalars['Int']>;
   scoreRaw?: Maybe<Scalars['Int']>;
-};
+}>;
 
 
 export type UpdateScoreMutation = (
@@ -4360,10 +4357,10 @@ export type UpdateScoreMutation = (
   )> }
 );
 
-export type UpdateStatusMutationVariables = {
+export type UpdateStatusMutationVariables = Exact<{
   mediaId?: Maybe<Scalars['Int']>;
   status?: Maybe<MediaListStatus>;
-};
+}>;
 
 
 export type UpdateStatusMutation = (
@@ -4374,9 +4371,9 @@ export type UpdateStatusMutation = (
   )> }
 );
 
-export type GetAnimeQueryVariables = {
+export type GetAnimeQueryVariables = Exact<{
   id?: Maybe<Scalars['Int']>;
-};
+}>;
 
 
 export type GetAnimeQuery = (
@@ -4387,11 +4384,11 @@ export type GetAnimeQuery = (
   )> }
 );
 
-export type GetAnimeListQueryVariables = {
+export type GetAnimeListQueryVariables = Exact<{
   userId?: Maybe<Scalars['Int']>;
   status?: Maybe<MediaListStatus>;
   sort?: Maybe<Array<Maybe<MediaListSort>>>;
-};
+}>;
 
 
 export type GetAnimeListQuery = (
@@ -4422,7 +4419,7 @@ export type AiringNotificationFragmentFragment = (
   )> }
 );
 
-export type GetAnimeNotificationsQueryVariables = {};
+export type GetAnimeNotificationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAnimeNotificationsQuery = (
@@ -4439,10 +4436,10 @@ export type GetAnimeNotificationsQuery = (
   )> }
 );
 
-export type GetTrendingAnimeQueryVariables = {
+export type GetTrendingAnimeQueryVariables = Exact<{
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
-};
+}>;
 
 
 export type GetTrendingAnimeQuery = (
@@ -4459,9 +4456,9 @@ export type GetTrendingAnimeQuery = (
   )> }
 );
 
-export type SearchAnimeQueryVariables = {
+export type SearchAnimeQueryVariables = Exact<{
   search?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type SearchAnimeQuery = (
@@ -4478,7 +4475,7 @@ export type SearchAnimeQuery = (
   )> }
 );
 
-export type GetViewerQueryVariables = {};
+export type GetViewerQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetViewerQuery = (
@@ -4620,28 +4617,32 @@ export const UpdateProgressDocument = gql`
   }
 }
     `;
-export type UpdateProgressMutationFn = ApolloReactCommon.MutationFunction<UpdateProgressMutation, UpdateProgressMutationVariables>;
-export type UpdateProgressComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateProgressMutation, UpdateProgressMutationVariables>, 'mutation'>;
+export type UpdateProgressMutationFn = Apollo.MutationFunction<UpdateProgressMutation, UpdateProgressMutationVariables>;
 
-    export const UpdateProgressComponent = (props: UpdateProgressComponentProps) => (
-      <ApolloReactComponents.Mutation<UpdateProgressMutation, UpdateProgressMutationVariables> mutation={UpdateProgressDocument} {...props} />
-    );
-    
-export type UpdateProgressProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateProgressMutation, UpdateProgressMutationVariables>
-    } & TChildProps;
-export function withUpdateProgress<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  UpdateProgressMutation,
-  UpdateProgressMutationVariables,
-  UpdateProgressProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, UpdateProgressMutation, UpdateProgressMutationVariables, UpdateProgressProps<TChildProps, TDataName>>(UpdateProgressDocument, {
-      alias: 'updateProgress',
-      ...operationOptions
-    });
-};
-export type UpdateProgressMutationResult = ApolloReactCommon.MutationResult<UpdateProgressMutation>;
-export type UpdateProgressMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateProgressMutation, UpdateProgressMutationVariables>;
+/**
+ * __useUpdateProgressMutation__
+ *
+ * To run a mutation, you first call `useUpdateProgressMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProgressMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProgressMutation, { data, loading, error }] = useUpdateProgressMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      progress: // value for 'progress'
+ *   },
+ * });
+ */
+export function useUpdateProgressMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProgressMutation, UpdateProgressMutationVariables>) {
+        return Apollo.useMutation<UpdateProgressMutation, UpdateProgressMutationVariables>(UpdateProgressDocument, baseOptions);
+      }
+export type UpdateProgressMutationHookResult = ReturnType<typeof useUpdateProgressMutation>;
+export type UpdateProgressMutationResult = Apollo.MutationResult<UpdateProgressMutation>;
+export type UpdateProgressMutationOptions = Apollo.BaseMutationOptions<UpdateProgressMutation, UpdateProgressMutationVariables>;
 export const UpdateScoreDocument = gql`
     mutation UpdateScore($id: Int, $scoreRaw: Int) {
   SaveMediaListEntry(id: $id, scoreRaw: $scoreRaw) {
@@ -4649,28 +4650,32 @@ export const UpdateScoreDocument = gql`
   }
 }
     `;
-export type UpdateScoreMutationFn = ApolloReactCommon.MutationFunction<UpdateScoreMutation, UpdateScoreMutationVariables>;
-export type UpdateScoreComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateScoreMutation, UpdateScoreMutationVariables>, 'mutation'>;
+export type UpdateScoreMutationFn = Apollo.MutationFunction<UpdateScoreMutation, UpdateScoreMutationVariables>;
 
-    export const UpdateScoreComponent = (props: UpdateScoreComponentProps) => (
-      <ApolloReactComponents.Mutation<UpdateScoreMutation, UpdateScoreMutationVariables> mutation={UpdateScoreDocument} {...props} />
-    );
-    
-export type UpdateScoreProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateScoreMutation, UpdateScoreMutationVariables>
-    } & TChildProps;
-export function withUpdateScore<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  UpdateScoreMutation,
-  UpdateScoreMutationVariables,
-  UpdateScoreProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, UpdateScoreMutation, UpdateScoreMutationVariables, UpdateScoreProps<TChildProps, TDataName>>(UpdateScoreDocument, {
-      alias: 'updateScore',
-      ...operationOptions
-    });
-};
-export type UpdateScoreMutationResult = ApolloReactCommon.MutationResult<UpdateScoreMutation>;
-export type UpdateScoreMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateScoreMutation, UpdateScoreMutationVariables>;
+/**
+ * __useUpdateScoreMutation__
+ *
+ * To run a mutation, you first call `useUpdateScoreMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateScoreMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateScoreMutation, { data, loading, error }] = useUpdateScoreMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      scoreRaw: // value for 'scoreRaw'
+ *   },
+ * });
+ */
+export function useUpdateScoreMutation(baseOptions?: Apollo.MutationHookOptions<UpdateScoreMutation, UpdateScoreMutationVariables>) {
+        return Apollo.useMutation<UpdateScoreMutation, UpdateScoreMutationVariables>(UpdateScoreDocument, baseOptions);
+      }
+export type UpdateScoreMutationHookResult = ReturnType<typeof useUpdateScoreMutation>;
+export type UpdateScoreMutationResult = Apollo.MutationResult<UpdateScoreMutation>;
+export type UpdateScoreMutationOptions = Apollo.BaseMutationOptions<UpdateScoreMutation, UpdateScoreMutationVariables>;
 export const UpdateStatusDocument = gql`
     mutation UpdateStatus($mediaId: Int, $status: MediaListStatus) {
   SaveMediaListEntry(mediaId: $mediaId, status: $status) {
@@ -4678,28 +4683,32 @@ export const UpdateStatusDocument = gql`
   }
 }
     `;
-export type UpdateStatusMutationFn = ApolloReactCommon.MutationFunction<UpdateStatusMutation, UpdateStatusMutationVariables>;
-export type UpdateStatusComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateStatusMutation, UpdateStatusMutationVariables>, 'mutation'>;
+export type UpdateStatusMutationFn = Apollo.MutationFunction<UpdateStatusMutation, UpdateStatusMutationVariables>;
 
-    export const UpdateStatusComponent = (props: UpdateStatusComponentProps) => (
-      <ApolloReactComponents.Mutation<UpdateStatusMutation, UpdateStatusMutationVariables> mutation={UpdateStatusDocument} {...props} />
-    );
-    
-export type UpdateStatusProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
-      [key in TDataName]: ApolloReactCommon.MutationFunction<UpdateStatusMutation, UpdateStatusMutationVariables>
-    } & TChildProps;
-export function withUpdateStatus<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  UpdateStatusMutation,
-  UpdateStatusMutationVariables,
-  UpdateStatusProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withMutation<TProps, UpdateStatusMutation, UpdateStatusMutationVariables, UpdateStatusProps<TChildProps, TDataName>>(UpdateStatusDocument, {
-      alias: 'updateStatus',
-      ...operationOptions
-    });
-};
-export type UpdateStatusMutationResult = ApolloReactCommon.MutationResult<UpdateStatusMutation>;
-export type UpdateStatusMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateStatusMutation, UpdateStatusMutationVariables>;
+/**
+ * __useUpdateStatusMutation__
+ *
+ * To run a mutation, you first call `useUpdateStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateStatusMutation, { data, loading, error }] = useUpdateStatusMutation({
+ *   variables: {
+ *      mediaId: // value for 'mediaId'
+ *      status: // value for 'status'
+ *   },
+ * });
+ */
+export function useUpdateStatusMutation(baseOptions?: Apollo.MutationHookOptions<UpdateStatusMutation, UpdateStatusMutationVariables>) {
+        return Apollo.useMutation<UpdateStatusMutation, UpdateStatusMutationVariables>(UpdateStatusDocument, baseOptions);
+      }
+export type UpdateStatusMutationHookResult = ReturnType<typeof useUpdateStatusMutation>;
+export type UpdateStatusMutationResult = Apollo.MutationResult<UpdateStatusMutation>;
+export type UpdateStatusMutationOptions = Apollo.BaseMutationOptions<UpdateStatusMutation, UpdateStatusMutationVariables>;
 export const GetAnimeDocument = gql`
     query GetAnime($id: Int) {
   Media(id: $id) {
@@ -4707,26 +4716,35 @@ export const GetAnimeDocument = gql`
   }
 }
     ${AnimeFragmentFragmentDoc}`;
-export type GetAnimeComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetAnimeQuery, GetAnimeQueryVariables>, 'query'>;
 
-    export const GetAnimeComponent = (props: GetAnimeComponentProps) => (
-      <ApolloReactComponents.Query<GetAnimeQuery, GetAnimeQueryVariables> query={GetAnimeDocument} {...props} />
-    );
-    
-export type GetAnimeProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<GetAnimeQuery, GetAnimeQueryVariables>
-    } & TChildProps;
-export function withGetAnime<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  GetAnimeQuery,
-  GetAnimeQueryVariables,
-  GetAnimeProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, GetAnimeQuery, GetAnimeQueryVariables, GetAnimeProps<TChildProps, TDataName>>(GetAnimeDocument, {
-      alias: 'getAnime',
-      ...operationOptions
-    });
-};
-export type GetAnimeQueryResult = ApolloReactCommon.QueryResult<GetAnimeQuery, GetAnimeQueryVariables>;
+/**
+ * __useGetAnimeQuery__
+ *
+ * To run a query within a React component, call `useGetAnimeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAnimeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAnimeQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetAnimeQuery(baseOptions?: Apollo.QueryHookOptions<GetAnimeQuery, GetAnimeQueryVariables>) {
+        return Apollo.useQuery<GetAnimeQuery, GetAnimeQueryVariables>(GetAnimeDocument, baseOptions);
+      }
+export function useGetAnimeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAnimeQuery, GetAnimeQueryVariables>) {
+          return Apollo.useLazyQuery<GetAnimeQuery, GetAnimeQueryVariables>(GetAnimeDocument, baseOptions);
+        }
+export type GetAnimeQueryHookResult = ReturnType<typeof useGetAnimeQuery>;
+export type GetAnimeLazyQueryHookResult = ReturnType<typeof useGetAnimeLazyQuery>;
+export type GetAnimeQueryResult = Apollo.QueryResult<GetAnimeQuery, GetAnimeQueryVariables>;
+export function refetchGetAnimeQuery(variables?: GetAnimeQueryVariables) {
+      return { query: GetAnimeDocument, variables: variables }
+    }
 export const GetAnimeListDocument = gql`
     query GetAnimeList($userId: Int, $status: MediaListStatus, $sort: [MediaListSort]) {
   MediaListCollection(userId: $userId, type: ANIME, status: $status, sort: $sort) {
@@ -4745,26 +4763,37 @@ export const GetAnimeListDocument = gql`
   }
 }
     ${AnimeFragmentFragmentDoc}`;
-export type GetAnimeListComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetAnimeListQuery, GetAnimeListQueryVariables>, 'query'>;
 
-    export const GetAnimeListComponent = (props: GetAnimeListComponentProps) => (
-      <ApolloReactComponents.Query<GetAnimeListQuery, GetAnimeListQueryVariables> query={GetAnimeListDocument} {...props} />
-    );
-    
-export type GetAnimeListProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<GetAnimeListQuery, GetAnimeListQueryVariables>
-    } & TChildProps;
-export function withGetAnimeList<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  GetAnimeListQuery,
-  GetAnimeListQueryVariables,
-  GetAnimeListProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, GetAnimeListQuery, GetAnimeListQueryVariables, GetAnimeListProps<TChildProps, TDataName>>(GetAnimeListDocument, {
-      alias: 'getAnimeList',
-      ...operationOptions
-    });
-};
-export type GetAnimeListQueryResult = ApolloReactCommon.QueryResult<GetAnimeListQuery, GetAnimeListQueryVariables>;
+/**
+ * __useGetAnimeListQuery__
+ *
+ * To run a query within a React component, call `useGetAnimeListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAnimeListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAnimeListQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      status: // value for 'status'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useGetAnimeListQuery(baseOptions?: Apollo.QueryHookOptions<GetAnimeListQuery, GetAnimeListQueryVariables>) {
+        return Apollo.useQuery<GetAnimeListQuery, GetAnimeListQueryVariables>(GetAnimeListDocument, baseOptions);
+      }
+export function useGetAnimeListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAnimeListQuery, GetAnimeListQueryVariables>) {
+          return Apollo.useLazyQuery<GetAnimeListQuery, GetAnimeListQueryVariables>(GetAnimeListDocument, baseOptions);
+        }
+export type GetAnimeListQueryHookResult = ReturnType<typeof useGetAnimeListQuery>;
+export type GetAnimeListLazyQueryHookResult = ReturnType<typeof useGetAnimeListLazyQuery>;
+export type GetAnimeListQueryResult = Apollo.QueryResult<GetAnimeListQuery, GetAnimeListQueryVariables>;
+export function refetchGetAnimeListQuery(variables?: GetAnimeListQueryVariables) {
+      return { query: GetAnimeListDocument, variables: variables }
+    }
 export const GetAnimeNotificationsDocument = gql`
     query GetAnimeNotifications {
   Page(page: 1, perPage: 100) {
@@ -4782,26 +4811,34 @@ export const GetAnimeNotificationsDocument = gql`
   }
 }
     ${AiringNotificationFragmentFragmentDoc}`;
-export type GetAnimeNotificationsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>, 'query'>;
 
-    export const GetAnimeNotificationsComponent = (props: GetAnimeNotificationsComponentProps) => (
-      <ApolloReactComponents.Query<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables> query={GetAnimeNotificationsDocument} {...props} />
-    );
-    
-export type GetAnimeNotificationsProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>
-    } & TChildProps;
-export function withGetAnimeNotifications<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  GetAnimeNotificationsQuery,
-  GetAnimeNotificationsQueryVariables,
-  GetAnimeNotificationsProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables, GetAnimeNotificationsProps<TChildProps, TDataName>>(GetAnimeNotificationsDocument, {
-      alias: 'getAnimeNotifications',
-      ...operationOptions
-    });
-};
-export type GetAnimeNotificationsQueryResult = ApolloReactCommon.QueryResult<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>;
+/**
+ * __useGetAnimeNotificationsQuery__
+ *
+ * To run a query within a React component, call `useGetAnimeNotificationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAnimeNotificationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAnimeNotificationsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAnimeNotificationsQuery(baseOptions?: Apollo.QueryHookOptions<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>) {
+        return Apollo.useQuery<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>(GetAnimeNotificationsDocument, baseOptions);
+      }
+export function useGetAnimeNotificationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>) {
+          return Apollo.useLazyQuery<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>(GetAnimeNotificationsDocument, baseOptions);
+        }
+export type GetAnimeNotificationsQueryHookResult = ReturnType<typeof useGetAnimeNotificationsQuery>;
+export type GetAnimeNotificationsLazyQueryHookResult = ReturnType<typeof useGetAnimeNotificationsLazyQuery>;
+export type GetAnimeNotificationsQueryResult = Apollo.QueryResult<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>;
+export function refetchGetAnimeNotificationsQuery(variables?: GetAnimeNotificationsQueryVariables) {
+      return { query: GetAnimeNotificationsDocument, variables: variables }
+    }
 export const GetTrendingAnimeDocument = gql`
     query GetTrendingAnime($page: Int = 1, $perPage: Int = 20) {
   Page(page: $page, perPage: $perPage) {
@@ -4815,26 +4852,36 @@ export const GetTrendingAnimeDocument = gql`
   }
 }
     ${AnimeFragmentFragmentDoc}`;
-export type GetTrendingAnimeComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>, 'query'>;
 
-    export const GetTrendingAnimeComponent = (props: GetTrendingAnimeComponentProps) => (
-      <ApolloReactComponents.Query<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables> query={GetTrendingAnimeDocument} {...props} />
-    );
-    
-export type GetTrendingAnimeProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>
-    } & TChildProps;
-export function withGetTrendingAnime<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  GetTrendingAnimeQuery,
-  GetTrendingAnimeQueryVariables,
-  GetTrendingAnimeProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables, GetTrendingAnimeProps<TChildProps, TDataName>>(GetTrendingAnimeDocument, {
-      alias: 'getTrendingAnime',
-      ...operationOptions
-    });
-};
-export type GetTrendingAnimeQueryResult = ApolloReactCommon.QueryResult<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>;
+/**
+ * __useGetTrendingAnimeQuery__
+ *
+ * To run a query within a React component, call `useGetTrendingAnimeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTrendingAnimeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTrendingAnimeQuery({
+ *   variables: {
+ *      page: // value for 'page'
+ *      perPage: // value for 'perPage'
+ *   },
+ * });
+ */
+export function useGetTrendingAnimeQuery(baseOptions?: Apollo.QueryHookOptions<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>) {
+        return Apollo.useQuery<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>(GetTrendingAnimeDocument, baseOptions);
+      }
+export function useGetTrendingAnimeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>) {
+          return Apollo.useLazyQuery<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>(GetTrendingAnimeDocument, baseOptions);
+        }
+export type GetTrendingAnimeQueryHookResult = ReturnType<typeof useGetTrendingAnimeQuery>;
+export type GetTrendingAnimeLazyQueryHookResult = ReturnType<typeof useGetTrendingAnimeLazyQuery>;
+export type GetTrendingAnimeQueryResult = Apollo.QueryResult<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>;
+export function refetchGetTrendingAnimeQuery(variables?: GetTrendingAnimeQueryVariables) {
+      return { query: GetTrendingAnimeDocument, variables: variables }
+    }
 export const SearchAnimeDocument = gql`
     query SearchAnime($search: String) {
   Page {
@@ -4848,26 +4895,35 @@ export const SearchAnimeDocument = gql`
   }
 }
     ${AnimeFragmentFragmentDoc}`;
-export type SearchAnimeComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<SearchAnimeQuery, SearchAnimeQueryVariables>, 'query'>;
 
-    export const SearchAnimeComponent = (props: SearchAnimeComponentProps) => (
-      <ApolloReactComponents.Query<SearchAnimeQuery, SearchAnimeQueryVariables> query={SearchAnimeDocument} {...props} />
-    );
-    
-export type SearchAnimeProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<SearchAnimeQuery, SearchAnimeQueryVariables>
-    } & TChildProps;
-export function withSearchAnime<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  SearchAnimeQuery,
-  SearchAnimeQueryVariables,
-  SearchAnimeProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, SearchAnimeQuery, SearchAnimeQueryVariables, SearchAnimeProps<TChildProps, TDataName>>(SearchAnimeDocument, {
-      alias: 'searchAnime',
-      ...operationOptions
-    });
-};
-export type SearchAnimeQueryResult = ApolloReactCommon.QueryResult<SearchAnimeQuery, SearchAnimeQueryVariables>;
+/**
+ * __useSearchAnimeQuery__
+ *
+ * To run a query within a React component, call `useSearchAnimeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchAnimeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchAnimeQuery({
+ *   variables: {
+ *      search: // value for 'search'
+ *   },
+ * });
+ */
+export function useSearchAnimeQuery(baseOptions?: Apollo.QueryHookOptions<SearchAnimeQuery, SearchAnimeQueryVariables>) {
+        return Apollo.useQuery<SearchAnimeQuery, SearchAnimeQueryVariables>(SearchAnimeDocument, baseOptions);
+      }
+export function useSearchAnimeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchAnimeQuery, SearchAnimeQueryVariables>) {
+          return Apollo.useLazyQuery<SearchAnimeQuery, SearchAnimeQueryVariables>(SearchAnimeDocument, baseOptions);
+        }
+export type SearchAnimeQueryHookResult = ReturnType<typeof useSearchAnimeQuery>;
+export type SearchAnimeLazyQueryHookResult = ReturnType<typeof useSearchAnimeLazyQuery>;
+export type SearchAnimeQueryResult = Apollo.QueryResult<SearchAnimeQuery, SearchAnimeQueryVariables>;
+export function refetchSearchAnimeQuery(variables?: SearchAnimeQueryVariables) {
+      return { query: SearchAnimeDocument, variables: variables }
+    }
 export const GetViewerDocument = gql`
     query GetViewer {
   Viewer {
@@ -4918,26 +4974,34 @@ export const GetViewerDocument = gql`
   }
 }
     `;
-export type GetViewerComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetViewerQuery, GetViewerQueryVariables>, 'query'>;
 
-    export const GetViewerComponent = (props: GetViewerComponentProps) => (
-      <ApolloReactComponents.Query<GetViewerQuery, GetViewerQueryVariables> query={GetViewerDocument} {...props} />
-    );
-    
-export type GetViewerProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<GetViewerQuery, GetViewerQueryVariables>
-    } & TChildProps;
-export function withGetViewer<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  GetViewerQuery,
-  GetViewerQueryVariables,
-  GetViewerProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, GetViewerQuery, GetViewerQueryVariables, GetViewerProps<TChildProps, TDataName>>(GetViewerDocument, {
-      alias: 'getViewer',
-      ...operationOptions
-    });
-};
-export type GetViewerQueryResult = ApolloReactCommon.QueryResult<GetViewerQuery, GetViewerQueryVariables>;
+/**
+ * __useGetViewerQuery__
+ *
+ * To run a query within a React component, call `useGetViewerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetViewerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetViewerQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetViewerQuery(baseOptions?: Apollo.QueryHookOptions<GetViewerQuery, GetViewerQueryVariables>) {
+        return Apollo.useQuery<GetViewerQuery, GetViewerQueryVariables>(GetViewerDocument, baseOptions);
+      }
+export function useGetViewerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetViewerQuery, GetViewerQueryVariables>) {
+          return Apollo.useLazyQuery<GetViewerQuery, GetViewerQueryVariables>(GetViewerDocument, baseOptions);
+        }
+export type GetViewerQueryHookResult = ReturnType<typeof useGetViewerQuery>;
+export type GetViewerLazyQueryHookResult = ReturnType<typeof useGetViewerLazyQuery>;
+export type GetViewerQueryResult = Apollo.QueryResult<GetViewerQuery, GetViewerQueryVariables>;
+export function refetchGetViewerQuery(variables?: GetViewerQueryVariables) {
+      return { query: GetViewerDocument, variables: variables }
+    }
 
       export interface IntrospectionResultData {
         __schema: {

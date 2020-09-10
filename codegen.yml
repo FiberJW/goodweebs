@@ -8,6 +8,9 @@ generates:
       - "typescript-operations"
       - "typescript-react-apollo"
       - "fragment-matcher"
+    config:
+      reactApolloVersion: 3
+      withRefetchFn: true
   ./graphql.schema.json:
     plugins:
       - "introspection"

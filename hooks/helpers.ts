@@ -1,7 +1,9 @@
-import type { MutationFunctionOptions } from "@apollo/react-common";
-import type { ExecutionResult } from "@apollo/react-common/lib/types/types";
-import { useMutation } from "@apollo/react-hooks";
-import { MutationUpdaterFn } from "apollo-client";
+import {
+  MutationFunctionOptions,
+  useMutation,
+  FetchResult,
+  MutationUpdaterFn,
+} from "@apollo/client";
 import { DocumentNode } from "graphql";
 import { debounce } from "lodash";
 import { useRef, useEffect, useState } from "react";
@@ -55,7 +57,7 @@ export function useDebouncedMutation<
         mutationFunc: ({
           variables,
         }: MutationFunctionOptions<MutationData, MutationVariables>) => Promise<
-          ExecutionResult<MutationData>
+          FetchResult<MutationData>
         >,
         variables?: MutationVariables
       ) => {

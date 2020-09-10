@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { AsyncStorage, RefreshControl } from "react-native";
