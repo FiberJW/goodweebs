@@ -325,6 +325,8 @@ export function DetailsScreen({ route, navigation }: Props) {
             },
           },
         });
+      } else {
+        refetchSilently();
       }
     },
     wait: 0,
