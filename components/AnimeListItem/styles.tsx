@@ -1,7 +1,7 @@
 import React from "react";
 import { ImageSourcePropType, StyleSheet } from "react-native";
 
-import { dangoPinkBackground, dangoPink, dangoPinkText } from "yep/colors";
+import { badgeRed, white, black } from "yep/colors";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
@@ -113,12 +113,10 @@ const EpisodesBehindContainer = takimoto.View({
   height: 16,
   width: 16,
   borderRadius: 16,
-  backgroundColor: dangoPinkBackground,
+  backgroundColor: badgeRed,
   justifyContent: "center",
   alignItems: "center",
-  borderWidth: 1,
-  borderColor: dangoPink,
-  shadowColor: dangoPinkText,
+  shadowColor: black,
   shadowOffset: { height: 2, width: 0 },
   shadowOpacity: 0.25,
   shadowRadius: 4,
@@ -128,7 +126,7 @@ const EpisodesBehindText = takimoto.Text({
   fontSize: 8,
   textAlign: "center",
   textAlignVertical: "center",
-  color: dangoPinkText,
+  color: white,
   fontFamily: Manrope.semiBold,
 });
 
