@@ -1,5 +1,5 @@
 import React from "react";
-import { ImageSourcePropType, StyleSheet } from "react-native";
+import { ImageSourcePropType, StyleSheet, Platform } from "react-native";
 
 import { badgeRed, white, black } from "yep/colors";
 import { takimoto } from "yep/takimoto";
@@ -128,6 +128,7 @@ const EpisodesBehindText = takimoto.Text({
   textAlignVertical: "center",
   color: white,
   fontFamily: Manrope.semiBold,
+  marginTop: Platform.OS === "android" ? -1 : undefined,
 });
 
 type EpisodesBehindProps = {
