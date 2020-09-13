@@ -1,6 +1,6 @@
 import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
-import { AsyncStorage, RefreshControl } from "react-native";
+import { Alert, AsyncStorage, RefreshControl } from "react-native";
 
 import { white } from "yep/colors";
 import { AuthButton } from "yep/components/AuthButton";
@@ -11,6 +11,7 @@ import { useGetViewerQuery } from "yep/graphql/generated";
 import { RootStackParamList } from "yep/navigation";
 import { StringCase, getString } from "yep/strings";
 import { notEmpty, getTitle } from "yep/utils";
+import * as Updates from "expo-updates";
 
 import {
   OuterContainer,
@@ -79,7 +80,11 @@ export function ProfileScreen({ navigation }: Props) {
                 <Avatar
                   source={
                     viewerData?.Viewer?.avatar
-                      ? { uri: viewerData?.Viewer?.avatar?.medium }
+                      ? {
+                          uri:
+                            viewerData?.Viewer?.avatar?.large ??
+                            viewerData?.Viewer?.avatar?.medium,
+                        }
                       : require("yep/assets/icons/avatar-placeholder.png")
                   }
                 />
@@ -173,9 +178,17 @@ export function ProfileScreen({ navigation }: Props) {
         <AuthButton
           label="Log out"
           onPress={async () => {
-            navigation.replace("Auth");
-            await client.clearStore();
-            await AsyncStorage.removeItem(ANILIST_ACCESS_TOKEN_STORAGE);
+            Alert.alert("Are you sure that you want to log out?", undefined, [
+              { style: "cancel", text: "Cancel" },
+              {
+                text: "Log out",
+                style: "destructive",
+                onPress: async () => {
+                  await AsyncStorage.removeItem(ANILIST_ACCESS_TOKEN_STORAGE);
+                  await Updates.reloadAsync();
+                },
+              },
+            ]);
           }}
         />
       </InnerContainer>
