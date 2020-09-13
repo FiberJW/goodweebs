@@ -1,4 +1,5 @@
 import { StackNavigationProp } from "@react-navigation/stack";
+import * as Updates from "expo-updates";
 import React from "react";
 import { Alert, AsyncStorage, RefreshControl } from "react-native";
 
@@ -6,12 +7,10 @@ import { white } from "yep/colors";
 import { AuthButton } from "yep/components/AuthButton";
 import { Header } from "yep/components/Header";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
-import { client } from "yep/graphql/client";
 import { useGetViewerQuery } from "yep/graphql/generated";
 import { RootStackParamList } from "yep/navigation";
 import { StringCase, getString } from "yep/strings";
 import { notEmpty, getTitle } from "yep/utils";
-import * as Updates from "expo-updates";
 
 import {
   OuterContainer,
@@ -39,7 +38,7 @@ type Props = {
   navigation: StackNavigationProp<RootStackParamList>;
 };
 
-export function ProfileScreen({ navigation }: Props) {
+export function ProfileScreen(_: Props) {
   const {
     loading: loadingViewer,
     data: viewerData,
