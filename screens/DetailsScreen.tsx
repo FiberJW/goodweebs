@@ -5,12 +5,34 @@ import { formatDistanceToNow, add } from "date-fns";
 import * as Haptics from "expo-haptics";
 import _ from "lodash";
 import React, { useState, useEffect } from "react";
-import { StyleSheet, ActivityIndicator, RefreshControl } from "react-native";
+import {
+  StyleSheet,
+  ActivityIndicator,
+  RefreshControl,
+  Pressable,
+  Text,
+  Linking,
+  View,
+} from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 import HTMLView from "react-native-htmlview";
 import { useSafeArea } from "react-native-safe-area-context";
 import title from "title";
 
-import { white15 } from "yep/colors";
+import {
+  animeLabPurple,
+  crunchyrollOrange,
+  funimationPurple,
+  huluGreen,
+  netflixRed,
+  twitterBlue,
+  vrvYellow,
+  white15,
+  youtubeRed,
+  vizRed,
+  hboMaxPink,
+  tubiOrange,
+} from "yep/colors";
 import { EmptyState } from "yep/components/EmptyState";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { MediaListStatusWithLabel, MediaStatusWithLabel } from "yep/constants";
@@ -26,6 +48,7 @@ import {
   MediaRelation,
   AnimeRelationFragmentFragment,
   MediaType,
+  MediaExternalLinkDataFragment,
   MediaList,
   useGetAnimeQuery,
   GetAnimeDocument,
@@ -625,6 +648,7 @@ export function DetailsScreen({ route, navigation }: Props) {
           <DescriptionSpacer />
         </>
       )}
+      {/* TODO: maybe this should be a flatlist */}
       {Object.keys(mappedRelations).map((key: string) => {
         const relationType = key as MediaRelation;
         const relations = mappedRelations[relationType] ?? [];
@@ -638,7 +662,99 @@ export function DetailsScreen({ route, navigation }: Props) {
           />
         );
       })}
+
+      <View style={{ height: 16 }} />
+      <Text
+        style={{
+          fontFamily: Manrope.semiBold,
+          color: darkTheme.text,
+          fontSize: 20,
+        }}
+      >
+        External / Streaming Links
+      </Text>
+      <View style={{ height: 16 }} />
+      <FlatList
+        data={data?.Media?.externalLinks?.filter(notEmpty)}
+        keyExtractor={(item, index) => `${item.id}`}
+        renderItem={({ item }) => <ExternalLink {...item} />}
+        ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
+      />
     </Container>
+  );
+}
+
+function ExternalLink({ id, url, site }: MediaExternalLinkDataFragment) {
+  let backgroundColor = darkTheme.secondaryButton;
+  let textColor = darkTheme.text;
+
+  switch (site) {
+    case "Crunchyroll":
+      backgroundColor = crunchyrollOrange;
+      break;
+    case "Twitter":
+      backgroundColor = twitterBlue;
+      break;
+    case "Funimation":
+      backgroundColor = funimationPurple;
+      break;
+    case "VRV":
+      backgroundColor = vrvYellow;
+      textColor = darkTheme.textInverted;
+      break;
+    case "Hulu":
+      backgroundColor = huluGreen;
+      textColor = darkTheme.textInverted;
+      break;
+    case "AnimeLab":
+      backgroundColor = animeLabPurple;
+      break;
+    case "Youtube":
+      backgroundColor = youtubeRed;
+      break;
+    case "Netflix":
+      backgroundColor = netflixRed;
+      break;
+    case "Viz":
+      backgroundColor = vizRed;
+      break;
+    case "HBO Max":
+      backgroundColor = hboMaxPink;
+      break;
+    case "Tubi TV":
+      backgroundColor = tubiOrange;
+      break;
+    default:
+      // TODO: log what other values are being read somewhere so I can pick those off
+      backgroundColor = darkTheme.secondaryButton;
+      break;
+  }
+
+  return (
+    <Pressable
+      style={{
+        backgroundColor,
+        padding: 16,
+        borderRadius: 8,
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+      }}
+      onPress={() => {
+        if (url) Linking.openURL(url);
+      }}
+    >
+      <Text
+        style={{
+          fontFamily: Manrope.semiBold,
+          fontSize: 16,
+          color: textColor,
+          textAlign: "center",
+        }}
+      >
+        {site}
+      </Text>
+    </Pressable>
   );
 }
 

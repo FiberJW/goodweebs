@@ -19,6 +19,19 @@ export const AnimeRelationFragment = gql`
 `;
 
 export const AnimeFragment = gql`
+  fragment StreamingLinkData on MediaStreamingEpisode {
+    title
+    thumbnail
+    url
+    site
+  }
+
+  fragment MediaExternalLinkData on MediaExternalLink {
+    id
+    url
+    site
+  }
+
   fragment AnimeFragment on Media {
     id
     title {
@@ -46,6 +59,17 @@ export const AnimeFragment = gql`
       large
       medium
       color
+    }
+    trailer {
+      id
+      site
+      thumbnail
+    }
+    streamingEpisodes {
+      ...StreamingLinkData
+    }
+    externalLinks {
+      ...MediaExternalLinkData
     }
     nextAiringEpisode {
       id

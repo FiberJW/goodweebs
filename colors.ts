@@ -17,3 +17,15 @@ export const alienGreen = "#00b248";
 export const dangoPink = "#F48FB1";
 export const dangoPinkBackground = "#FFCFF1";
 export const dangoPinkText = "#AD2754";
+
+export const crunchyrollOrange = "#F47521";
+export const twitterBlue = "#1da1f2";
+export const funimationPurple = "#410099";
+export const vrvYellow = "#ffdd00";
+export const huluGreen = "#1ce783";
+export const animeLabPurple = "#420098";
+export const youtubeRed = "#ff0000";
+export const netflixRed = "#e50914";
+export const vizRed = "#ff0000";
+export const hboMaxPink = "#b535f6";
+export const tubiOrange = "#ff501a";

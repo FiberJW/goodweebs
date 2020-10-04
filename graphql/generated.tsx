@@ -4295,6 +4295,16 @@ export type AnimeRelationFragmentFragment = (
   )> }
 );
 
+export type StreamingLinkDataFragment = (
+  { __typename?: 'MediaStreamingEpisode' }
+  & Pick<MediaStreamingEpisode, 'title' | 'thumbnail' | 'url' | 'site'>
+);
+
+export type MediaExternalLinkDataFragment = (
+  { __typename?: 'MediaExternalLink' }
+  & Pick<MediaExternalLink, 'id' | 'url' | 'site'>
+);
+
 export type AnimeFragmentFragment = (
   { __typename?: 'Media' }
   & Pick<Media, 'id' | 'status' | 'genres' | 'duration' | 'episodes' | 'description' | 'averageScore'>
@@ -4310,7 +4320,16 @@ export type AnimeFragmentFragment = (
   )>, coverImage?: Maybe<(
     { __typename?: 'MediaCoverImage' }
     & Pick<MediaCoverImage, 'large' | 'medium' | 'color'>
-  )>, nextAiringEpisode?: Maybe<(
+  )>, trailer?: Maybe<(
+    { __typename?: 'MediaTrailer' }
+    & Pick<MediaTrailer, 'id' | 'site' | 'thumbnail'>
+  )>, streamingEpisodes?: Maybe<Array<Maybe<(
+    { __typename?: 'MediaStreamingEpisode' }
+    & StreamingLinkDataFragment
+  )>>>, externalLinks?: Maybe<Array<Maybe<(
+    { __typename?: 'MediaExternalLink' }
+    & MediaExternalLinkDataFragment
+  )>>>, nextAiringEpisode?: Maybe<(
     { __typename?: 'AiringSchedule' }
     & Pick<AiringSchedule, 'id' | 'airingAt' | 'episode' | 'timeUntilAiring'>
   )>, mediaListEntry?: Maybe<(
@@ -4528,6 +4547,21 @@ export type GetViewerQuery = (
   )> }
 );
 
+export const StreamingLinkDataFragmentDoc = gql`
+    fragment StreamingLinkData on MediaStreamingEpisode {
+  title
+  thumbnail
+  url
+  site
+}
+    `;
+export const MediaExternalLinkDataFragmentDoc = gql`
+    fragment MediaExternalLinkData on MediaExternalLink {
+  id
+  url
+  site
+}
+    `;
 export const AnimeRelationFragmentFragmentDoc = gql`
     fragment AnimeRelationFragment on Media {
   id
@@ -4574,6 +4608,17 @@ export const AnimeFragmentFragmentDoc = gql`
     medium
     color
   }
+  trailer {
+    id
+    site
+    thumbnail
+  }
+  streamingEpisodes {
+    ...StreamingLinkData
+  }
+  externalLinks {
+    ...MediaExternalLinkData
+  }
   nextAiringEpisode {
     id
     airingAt
@@ -4596,7 +4641,9 @@ export const AnimeFragmentFragmentDoc = gql`
     }
   }
 }
-    ${AnimeRelationFragmentFragmentDoc}`;
+    ${StreamingLinkDataFragmentDoc}
+${MediaExternalLinkDataFragmentDoc}
+${AnimeRelationFragmentFragmentDoc}`;
 export const AiringNotificationFragmentFragmentDoc = gql`
     fragment AiringNotificationFragment on AiringNotification {
   id
