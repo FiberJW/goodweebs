@@ -20,7 +20,8 @@
     "ios": {
       "supportsTablet": true,
       "buildNumber": "0.0.6",
-      "bundleIdentifier": "com.fiberjw.goodweebs"
+      "bundleIdentifier": "com.fiberjw.goodweebs",
+      "config": { "usesNonExemptEncryption": false }
     },
     "android": {
       "package": "com.fiberjw.goodweebs",
