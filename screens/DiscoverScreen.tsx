@@ -1,6 +1,6 @@
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useState } from "react";
-import { Dimensions, RefreshControl } from "react-native";
+import { RefreshControl, useWindowDimensions } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
@@ -22,6 +22,10 @@ type Props = {
 
 export function DiscoverScreen({ navigation }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
+  const { width: windowWidth } = useWindowDimensions();
+
+  const posterWidth = (windowWidth - 16 * 4) / 3;
+  const posterHeight = posterWidth * 1.4285714286;
 
   const showSearchResultsView = searchTerm.length > 0;
 
@@ -132,8 +136,17 @@ export function DiscoverScreen({ navigation }: Props) {
                   <Poster
                     resizeMode="cover"
                     source={{ uri: item.coverImage?.large ?? "" }}
+                    style={{
+                      height: posterHeight,
+                      width: posterWidth,
+                    }}
                   />
-                  <PosterTitle numberOfLines={2}>
+                  <PosterTitle
+                    numberOfLines={2}
+                    style={{
+                      maxWidth: posterWidth,
+                    }}
+                  >
                     {item.title?.english ||
                       item.title?.romaji ||
                       item.title?.native}
@@ -148,12 +161,7 @@ export function DiscoverScreen({ navigation }: Props) {
   );
 }
 
-const posterWidth = (Dimensions.get("window").width - 16 * 4) / 3;
-const posterHeight = posterWidth * 1.4285714286;
-
 const Poster = takimoto.Image({
-  height: posterHeight,
-  width: posterWidth,
   borderRadius: 4,
   overflow: "hidden",
   marginBottom: 8,
@@ -164,7 +172,6 @@ const PosterTitle = takimoto.Text({
   fontFamily: Manrope.regular,
   fontSize: 12.8,
   textAlign: "center",
-  maxWidth: posterWidth,
   color: darkTheme.text,
 });
 

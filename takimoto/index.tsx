@@ -1,17 +1,7 @@
 import { LinearGradient, LinearGradientProps } from "expo-linear-gradient";
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  useMemo,
-  forwardRef,
-  FC,
-  Ref,
-} from "react";
+import React, { useMemo, forwardRef, FC, Ref } from "react";
 import {
   ViewStyle,
-  ScaledSize,
-  Dimensions,
   ViewProps,
   View,
   TextStyle,
@@ -32,6 +22,7 @@ import {
   FlatListProps,
   ActivityIndicator,
   ActivityIndicatorProps,
+  useWindowDimensions,
 } from "react-native";
 
 type DeclarativeWindowSizeStyles<StyleT> = {
@@ -64,26 +55,8 @@ type DynamicKeys<StyleT> = StyleT & {
   whenHeight?: DeclarativeWindowSizeStyles<StyleT>;
 };
 
-type DimensionsChangeData = {
-  window: ScaledSize;
-  screen: ScaledSize;
-};
-
 function useTakimoto<StyleT>(style: DynamicKeys<StyleT>) {
-  const [windowSize, setWindowSize] = useState<ScaledSize>(
-    Dimensions.get("window")
-  );
-
-  const onDimensionsChange = useCallback(
-    ({ window }: DimensionsChangeData) => setWindowSize(window),
-    []
-  );
-
-  useEffect(function manageDimensionsEventListeners() {
-    Dimensions.addEventListener("change", onDimensionsChange);
-
-    return () => Dimensions.removeEventListener("change", onDimensionsChange);
-  }, []);
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
 
   const styles = useMemo(() => {
     const styleCopy = { ...style };
@@ -108,23 +81,23 @@ function useTakimoto<StyleT>(style: DynamicKeys<StyleT>) {
             const castedBreakpoint = (breakpoint as unknown) as keyof typeof breakpointBasedStyles;
             switch (castedOperator) {
               case "<":
-                if (windowSize.height < castedBreakpoint)
+                if (windowHeight < castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
               case "<=":
-                if (windowSize.height <= castedBreakpoint)
+                if (windowHeight <= castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
               case "=":
-                if (windowSize.height === castedBreakpoint)
+                if (windowHeight === castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
               case ">":
-                if (windowSize.height > castedBreakpoint)
+                if (windowHeight > castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
               case ">=":
-                if (windowSize.height >= castedBreakpoint)
+                if (windowHeight >= castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
             }
@@ -145,23 +118,23 @@ function useTakimoto<StyleT>(style: DynamicKeys<StyleT>) {
             const castedBreakpoint = (breakpoint as unknown) as keyof typeof breakpointBasedStyles;
             switch (castedOperator) {
               case "<":
-                if (windowSize.width < castedBreakpoint)
+                if (windowWidth < castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
               case "<=":
-                if (windowSize.width <= castedBreakpoint)
+                if (windowWidth <= castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
               case "=":
-                if (windowSize.width === castedBreakpoint)
+                if (windowWidth === castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
               case ">":
-                if (windowSize.width > castedBreakpoint)
+                if (windowWidth > castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
               case ">=":
-                if (windowSize.width >= castedBreakpoint)
+                if (windowWidth >= castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
             }
@@ -171,7 +144,7 @@ function useTakimoto<StyleT>(style: DynamicKeys<StyleT>) {
     }
 
     return stylesArray;
-  }, [windowSize]);
+  }, [windowHeight, windowWidth]);
 
   return styles;
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions } from "react-native";
+import { useWindowDimensions } from "react-native";
 
 import { Container, Title, Image } from "./styles";
 
@@ -12,10 +12,12 @@ type Props = {
 };
 
 export function PosterAndTitle({ size, uri, title, onPress, disabled }: Props) {
+  const { width: windowWidth } = useWindowDimensions();
+
   let posterWidth: number;
   switch (size) {
     case "large":
-      posterWidth = (Dimensions.get("window").width - 16 * 4) / 3;
+      posterWidth = (windowWidth - 16 * 4) / 3;
       break;
     case "small":
       posterWidth = 56;
