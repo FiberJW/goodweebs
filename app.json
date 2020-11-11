@@ -21,7 +21,8 @@
       "supportsTablet": true,
       "buildNumber": "0.0.6",
       "bundleIdentifier": "com.fiberjw.goodweebs",
-      "config": { "usesNonExemptEncryption": false }
+      "config": { "usesNonExemptEncryption": false },
+      "requireFullScreen": false
     },
     "android": {
       "package": "com.fiberjw.goodweebs",
