@@ -7,8 +7,6 @@ import {
   TextStyle,
   TextProps,
   Text,
-  TouchableOpacityProps,
-  TouchableOpacity,
   ImageStyle,
   ImageProps,
   Image,
@@ -178,18 +176,6 @@ export const takimoto = {
       const styles = useTakimoto(style);
 
       return <Image {...rest} style={[styles, styleProp]} ref={ref} />;
-    });
-  },
-  TouchableOpacity(style: DynamicKeys<ViewStyle>): FC<TouchableOpacityProps> {
-    return forwardRef(function WrappedTouchableOpacity(
-      { style: styleProp, ...rest }: TouchableOpacityProps,
-      ref: Ref<TouchableOpacity>
-    ) {
-      const styles = useTakimoto(style);
-
-      return (
-        <TouchableOpacity {...rest} style={[styles, styleProp]} ref={ref} />
-      );
     });
   },
   ActivityIndicator(style: DynamicKeys<ViewStyle>): FC<ActivityIndicatorProps> {
