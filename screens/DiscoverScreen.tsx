@@ -1,9 +1,10 @@
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useState } from "react";
-import { RefreshControl, useWindowDimensions } from "react-native";
+import { RefreshControl, StyleSheet, useWindowDimensions } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
+import { PressableOpacity } from "yep/components/PressableOpacity";
 import { SearchBox } from "yep/components/SearchBox";
 import {
   useGetTrendingAnimeQuery,
@@ -88,13 +89,14 @@ export function DiscoverScreen({ navigation }: Props) {
               numColumns={3}
               keyExtractor={(item) => `${item.id}`}
               renderItem={({ item, index }) => (
-                <PosterContainer
+                <PressableOpacity
                   onPress={() =>
                     navigation.navigate("Details", { id: item.id })
                   }
-                  style={
-                    (index + 1) % 3 !== 0 ? { marginRight: 16 } : undefined
-                  }
+                  style={[
+                    styles.posterContainer,
+                    (index + 1) % 3 !== 0 ? { marginRight: 16 } : undefined,
+                  ]}
                 >
                   <Poster source={{ uri: item.coverImage?.large ?? "" }} />
                   <PosterTitle numberOfLines={2}>
@@ -102,7 +104,7 @@ export function DiscoverScreen({ navigation }: Props) {
                       item.title?.romaji ||
                       item.title?.native}
                   </PosterTitle>
-                </PosterContainer>
+                </PressableOpacity>
               )}
             />
           </>
@@ -125,13 +127,14 @@ export function DiscoverScreen({ navigation }: Props) {
               }
               keyExtractor={(item) => `${item.id}`}
               renderItem={({ item, index }) => (
-                <PosterContainer
+                <PressableOpacity
                   onPress={() =>
                     navigation.navigate("Details", { id: item.id })
                   }
-                  style={
-                    (index + 1) % 3 !== 0 ? { marginRight: 16 } : undefined
-                  }
+                  style={[
+                    styles.posterContainer,
+                    (index + 1) % 3 !== 0 ? { marginRight: 16 } : undefined,
+                  ]}
                 >
                   <Poster
                     resizeMode="cover"
@@ -151,7 +154,7 @@ export function DiscoverScreen({ navigation }: Props) {
                       item.title?.romaji ||
                       item.title?.native}
                   </PosterTitle>
-                </PosterContainer>
+                </PressableOpacity>
               )}
             />
           </>
@@ -160,6 +163,12 @@ export function DiscoverScreen({ navigation }: Props) {
     </OuterContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  posterContainer: {
+    alignItems: "center",
+  },
+});
 
 const Poster = takimoto.Image({
   borderRadius: 4,
@@ -173,10 +182,6 @@ const PosterTitle = takimoto.Text({
   fontSize: 12.8,
   textAlign: "center",
   color: darkTheme.text,
-});
-
-const PosterContainer = takimoto.TouchableOpacity({
-  alignItems: "center",
 });
 
 const OuterContainer = takimoto.View({

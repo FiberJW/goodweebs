@@ -1,21 +1,29 @@
 import React, { PropsWithChildren } from "react";
-import { PressableProps, Pressable, Platform, View } from "react-native";
+import {
+  PressableProps,
+  Pressable,
+  Platform,
+  View,
+  ViewStyle,
+} from "react-native";
 
 import { white } from "yep/colors";
 
 type Props = PressableProps & {
   activeOpacity?: number;
   borderRadius?: number;
+  containerStyle?: ViewStyle;
 };
 
 export function PressableOpacity({
   activeOpacity,
   borderRadius,
   style,
+  containerStyle,
   ...rest
 }: Props) {
   return (
-    <BorderRadiusContainer borderRadius={borderRadius}>
+    <BorderRadiusContainer borderRadius={borderRadius} style={containerStyle}>
       <Pressable
         style={({ pressed }) => {
           const pressedStyles =
@@ -24,16 +32,15 @@ export function PressableOpacity({
           const pressedOpacity =
             Platform.OS !== "android" ? activeOpacity ?? 0.2 : 1;
 
+          const nativeStyle = {
+            opacity: pressed ? pressedOpacity : 1,
+            borderRadius,
+          };
+
           if (Array.isArray(pressedStyles)) {
-            return [
-              { opacity: pressed ? pressedOpacity : 1, borderRadius },
-              ...pressedStyles,
-            ];
+            return [nativeStyle, ...pressedStyles];
           }
-          return [
-            { opacity: pressed ? pressedOpacity : 1, borderRadius },
-            pressedStyles,
-          ];
+          return [nativeStyle, pressedStyles];
         }}
         android_ripple={{ color: white, borderless: false }}
         {...rest}
@@ -44,13 +51,19 @@ export function PressableOpacity({
 
 type BorderRadiusContainerProps = PropsWithChildren<{
   borderRadius?: number;
+  style?: ViewStyle;
 }>;
 
 function BorderRadiusContainer({
   borderRadius,
+  style,
   children,
 }: BorderRadiusContainerProps) {
   if (!borderRadius) return <>{children}</>;
 
-  return <View style={{ borderRadius, overflow: "hidden" }}>{children}</View>;
+  return (
+    <View style={[{ borderRadius, overflow: "hidden" }, style]}>
+      {children}
+    </View>
+  );
 }

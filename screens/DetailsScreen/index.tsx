@@ -4,37 +4,14 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { formatDistanceToNow, add } from "date-fns";
 import * as Haptics from "expo-haptics";
 import _ from "lodash";
-import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  ActivityIndicator,
-  RefreshControl,
-  Pressable,
-  Text,
-  Linking,
-  View,
-} from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, RefreshControl, Text, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import HTMLView from "react-native-htmlview";
 import { useSafeArea } from "react-native-safe-area-context";
 import title from "title";
 
-import {
-  animeLabPurple,
-  crunchyrollOrange,
-  funimationPurple,
-  huluGreen,
-  netflixRed,
-  twitterBlue,
-  vrvYellow,
-  white15,
-  youtubeRed,
-  vizRed,
-  hboMaxPink,
-  tubiOrange,
-} from "yep/colors";
 import { EmptyState } from "yep/components/EmptyState";
-import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { MediaListStatusWithLabel, MediaStatusWithLabel } from "yep/constants";
 import {
   GetAnimeQuery,
@@ -48,7 +25,6 @@ import {
   MediaRelation,
   AnimeRelationFragmentFragment,
   MediaType,
-  MediaExternalLinkDataFragment,
   MediaList,
   useGetAnimeQuery,
   GetAnimeDocument,
@@ -56,16 +32,17 @@ import {
   UpdateScoreDocument,
   UpdateStatusDocument,
 } from "yep/graphql/generated";
-import {
-  useDidMountEffect,
-  useNow,
-  useDebouncedMutation,
-} from "yep/hooks/helpers";
+import { useNow, useDebouncedMutation } from "yep/hooks/helpers";
 import { RootStackParamList } from "yep/navigation";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { notEmpty, getTitle, getReadableMediaRelation } from "yep/utils";
+import { notEmpty } from "yep/utils";
+
+import { Button } from "./Button";
+import { ExternalLink } from "./ExternalLink";
+import { RelatedList } from "./RelatedList";
+import { Stepper } from "./Stepper";
 
 const Container = takimoto.ScrollView({
   flex: 1,
@@ -137,162 +114,6 @@ const ButtonsRow = takimoto.View({
   alignItems: "center",
   marginBottom: 16,
 });
-
-const ButtonTouchable = takimoto.TouchableOpacity({
-  backgroundColor: white15,
-  padding: 8,
-  borderRadius: 8,
-  flex: 1,
-  justifyContent: "center",
-  alignItems: "center",
-});
-
-const ButtonLabel = takimoto.Text({
-  fontSize: 16,
-  color: darkTheme.text,
-  fontFamily: Manrope.semiBold,
-  textAlign: "center",
-});
-
-type ButtonProps = {
-  label: string;
-  onPress: () => void;
-  disabled?: boolean;
-  loading?: boolean;
-};
-
-function Button({ label, onPress, disabled, loading }: ButtonProps) {
-  return (
-    <ButtonTouchable onPress={onPress} disabled={disabled || loading}>
-      {loading ? (
-        <ActivityIndicator color={darkTheme.text} />
-      ) : (
-        <ButtonLabel>{label}</ButtonLabel>
-      )}
-    </ButtonTouchable>
-  );
-}
-
-const StepperWithLabelContainer = takimoto.View({
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "space-between",
-  width: "100%",
-});
-
-const StepperLabel = takimoto.Text({
-  fontSize: 16,
-  color: darkTheme.text,
-  fontFamily: Manrope.semiBold,
-  textAlign: "center",
-});
-
-const StepperContainer = takimoto.View({
-  flexDirection: "row",
-  alignItems: "center",
-});
-const StepperSpacer = takimoto.View({
-  height: 16,
-});
-
-const StepperCount = takimoto.Text({
-  fontSize: 16,
-  color: darkTheme.text,
-  fontFamily: Manrope.semiBold,
-  textAlign: "center",
-  width: 48,
-});
-
-type StepperProps = {
-  defaultValue: number;
-  label: string;
-  upperBound?: number;
-  lowerBound: number;
-  onChange: (value: number) => void;
-};
-
-function Stepper({
-  defaultValue,
-  upperBound,
-  lowerBound,
-  label,
-  onChange,
-}: StepperProps) {
-  const [count, setCount] = useState(defaultValue);
-
-  useDidMountEffect(
-    function callOnlyChangeWhenCountChanges() {
-      onChange(count);
-    },
-    [count]
-  );
-
-  useEffect(
-    function setCountWhenDefaultValueChanges() {
-      setCount(defaultValue);
-    },
-    [defaultValue]
-  );
-
-  return (
-    <StepperWithLabelContainer>
-      <StepperLabel>{label}</StepperLabel>
-      <StepperContainer>
-        <StepperButton
-          type="decrement"
-          disabled={count === lowerBound}
-          onPress={() => {
-            setCount((c) => c - 1);
-          }}
-        />
-        <StepperCount>{count}</StepperCount>
-        <StepperButton
-          type="increment"
-          disabled={count === upperBound}
-          onPress={() => {
-            setCount((c) => c + 1);
-          }}
-        />
-      </StepperContainer>
-    </StepperWithLabelContainer>
-  );
-}
-
-const StepperButtonTouchable = takimoto.TouchableOpacity({
-  padding: 16,
-  borderRadius: 32,
-  backgroundColor: darkTheme.secondaryButton,
-});
-
-const StepperButtonIcon = takimoto.Image({
-  height: 16,
-  width: 16,
-  tintColor: darkTheme.text,
-});
-
-type StepperButtonProps = {
-  onPress: () => void;
-  disabled?: boolean;
-  type: "increment" | "decrement";
-};
-
-function StepperButton({ onPress, type, disabled }: StepperButtonProps) {
-  return (
-    <StepperButtonTouchable
-      disabled={disabled}
-      onPress={onPress}
-      style={disabled ? { opacity: 0.6 } : null}
-    >
-      <StepperButtonIcon
-        source={
-          type === "increment"
-            ? require("yep/assets/icons/progress-increment.png")
-            : require("yep/assets/icons/progress-decrement.png")
-        }
-      />
-    </StepperButtonTouchable>
-  );
-}
 
 type Props = {
   navigation: StackNavigationProp<RootStackParamList>;
@@ -617,7 +438,6 @@ export function DetailsScreen({ route, navigation }: Props) {
                   }
                 }}
               />
-              <StepperSpacer />
               <Stepper
                 label="Score"
                 defaultValue={data?.Media?.mediaListEntry?.score ?? 5}
@@ -636,7 +456,6 @@ export function DetailsScreen({ route, navigation }: Props) {
                   }
                 }}
               />
-              <StepperSpacer />
             </>
           ) : null}
           {data?.Media?.description ? (
@@ -684,161 +503,9 @@ export function DetailsScreen({ route, navigation }: Props) {
   );
 }
 
-function ExternalLink({ id, url, site }: MediaExternalLinkDataFragment) {
-  let backgroundColor = darkTheme.secondaryButton;
-  let textColor = darkTheme.text;
-
-  switch (site) {
-    case "Crunchyroll":
-      backgroundColor = crunchyrollOrange;
-      break;
-    case "Twitter":
-      backgroundColor = twitterBlue;
-      break;
-    case "Funimation":
-      backgroundColor = funimationPurple;
-      break;
-    case "VRV":
-      backgroundColor = vrvYellow;
-      textColor = darkTheme.textInverted;
-      break;
-    case "Hulu":
-      backgroundColor = huluGreen;
-      textColor = darkTheme.textInverted;
-      break;
-    case "AnimeLab":
-      backgroundColor = animeLabPurple;
-      break;
-    case "Youtube":
-      backgroundColor = youtubeRed;
-      break;
-    case "Netflix":
-      backgroundColor = netflixRed;
-      break;
-    case "Viz":
-      backgroundColor = vizRed;
-      break;
-    case "HBO Max":
-      backgroundColor = hboMaxPink;
-      break;
-    case "Tubi TV":
-      backgroundColor = tubiOrange;
-      break;
-    default:
-      // TODO: log what other values are being read somewhere so I can pick those off
-      backgroundColor = darkTheme.secondaryButton;
-      break;
-  }
-
-  return (
-    <Pressable
-      style={{
-        backgroundColor,
-        padding: 16,
-        borderRadius: 8,
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-      }}
-      onPress={() => {
-        if (url) Linking.openURL(url);
-      }}
-    >
-      <Text
-        style={{
-          fontFamily: Manrope.semiBold,
-          fontSize: 16,
-          color: textColor,
-          textAlign: "center",
-        }}
-      >
-        {site}
-      </Text>
-    </Pressable>
-  );
-}
-
 const DescriptionSpacer = takimoto.View({
   height: 16,
 });
-
-const RelatedListFlatList = takimoto.FlatList<AnimeRelationFragmentFragment>({
-  width: "100%",
-});
-
-const RelatedListSeparator = takimoto.View({ width: 8 });
-const RelatedListSpacer = takimoto.View({ height: 16 });
-
-const RelatedListHeader = takimoto.Text({
-  fontFamily: Manrope.semiBold,
-  color: darkTheme.text,
-  fontSize: 16,
-  marginBottom: 8,
-});
-
-type RelatedListProps = {
-  relations: AnimeRelationFragmentFragment[];
-  relationType: MediaRelation;
-  navigation: StackNavigationProp<RootStackParamList>;
-};
-
-function RelatedList({
-  relationType,
-  relations,
-  navigation,
-}: RelatedListProps) {
-  if (
-    // filter out non-anime relations
-    // TODO: add back in when DetailScreen can support Characters/People, Manga, and Studios
-    [
-      MediaRelation.Adaptation,
-      MediaRelation.Character,
-      MediaRelation.Other,
-      MediaRelation.Source,
-      MediaRelation.Contains,
-    ].includes(relationType)
-  ) {
-    return null;
-  }
-
-  return (
-    <>
-      <RelatedListHeader>
-        {getReadableMediaRelation(relationType)}
-      </RelatedListHeader>
-      <RelatedListFlatList
-        horizontal
-        ItemSeparatorComponent={RelatedListSeparator}
-        keyExtractor={(item) => `${item.id}`}
-        data={relations}
-        renderItem={({ item }) => {
-          return <RelatedItem anime={item} navigation={navigation} />;
-        }}
-      />
-      <RelatedListSpacer />
-    </>
-  );
-}
-
-type RelatedItemProps = {
-  anime: AnimeRelationFragmentFragment;
-  navigation: StackNavigationProp<RootStackParamList>;
-};
-
-function RelatedItem({ anime, navigation }: RelatedItemProps) {
-  if (!anime.coverImage?.large) return null;
-
-  return (
-    <PosterAndTitle
-      size="large"
-      uri={anime.coverImage?.large}
-      onPress={() => {
-        navigation.push("Details", { id: anime.id });
-      }}
-      title={getTitle(anime.title)}
-    />
-  );
-}
 
 const htmlViewStyle = StyleSheet.create({
   // eslint-disable-next-line
