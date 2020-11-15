@@ -1,7 +1,9 @@
 import React from "react";
-import { useWindowDimensions } from "react-native";
+import { StyleSheet, useWindowDimensions } from "react-native";
 
-import { Container, Title, Image } from "./styles";
+import { PressableOpacity } from "../PressableOpacity";
+
+import { Title, Image } from "./styles";
 
 type Props = {
   size: "small" | "tiny" | "large";
@@ -30,7 +32,11 @@ export function PosterAndTitle({ size, uri, title, onPress, disabled }: Props) {
   const posterHeight = Math.round(posterWidth * 1.4285714286);
 
   return (
-    <Container onPress={onPress} disabled={disabled}>
+    <PressableOpacity
+      style={styles.container}
+      onPress={onPress}
+      disabled={disabled}
+    >
       <Image
         style={{ width: posterWidth, height: posterHeight }}
         source={{ uri }}
@@ -45,6 +51,12 @@ export function PosterAndTitle({ size, uri, title, onPress, disabled }: Props) {
           {title}
         </Title>
       ) : null}
-    </Container>
+    </PressableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+  },
+});

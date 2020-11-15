@@ -15,7 +15,3 @@ export const Title = takimoto.Text({
   textAlign: "center",
   color: darkTheme.text,
 });
-
-export const Container = takimoto.TouchableOpacity({
-  alignItems: "center",
-});
