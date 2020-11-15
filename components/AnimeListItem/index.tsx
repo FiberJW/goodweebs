@@ -1,6 +1,7 @@
 import { StackNavigationProp } from "@react-navigation/stack";
 import { formatDistanceToNow, add } from "date-fns";
 import React from "react";
+import { StyleSheet } from "react-native";
 
 import {
   AnimeFragmentFragment,
@@ -9,9 +10,12 @@ import {
 } from "yep/graphql/generated";
 import { useNow } from "yep/hooks/helpers";
 import { RootStackParamList } from "yep/navigation";
+import { darkTheme } from "yep/themes";
 
+import { PressableOpacity } from "../PressableOpacity";
+
+import { ProgressButton } from "./ProgressButton";
 import {
-  Container,
   Poster,
   TitleAndBroadcastColumn,
   Title,
@@ -19,7 +23,6 @@ import {
   ProgressColumn,
   EpisodeProgress,
   ProgressButtonGroup,
-  ProgressButton,
   Spacer,
   ProgressButtonSpacer,
   EpisodesBehind,
@@ -55,7 +58,9 @@ export function AnimeListItem({
       : 0;
 
   return (
-    <Container
+    <PressableOpacity
+      style={styles.container}
+      borderRadius={8}
       activeOpacity={0.7}
       onPress={() => navigation.navigate("Details", { id: media.id })}
     >
@@ -133,6 +138,14 @@ export function AnimeListItem({
           />
         </ProgressButtonGroup>
       </ProgressColumn>
-    </Container>
+    </PressableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: darkTheme.listItemBackground,
+    flexDirection: "row",
+    padding: 8,
+  },
+});
