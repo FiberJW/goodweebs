@@ -1,18 +1,17 @@
 import React, { useState, useRef } from "react";
-import { TextInputProps, TextInput } from "react-native";
+import {
+  TextInputProps,
+  TextInput,
+  StyleSheet,
+  View,
+  Image,
+  Text,
+} from "react-native";
 
 import { darkTheme } from "yep/themes";
+import { Manrope } from "yep/typefaces";
 
-import {
-  Container,
-  SearchInput,
-  SearchIcon,
-  SearchInputContainer,
-  ClearIcon,
-  ClearTouchable,
-  CancelLabel,
-  CancelTouchable,
-} from "./styles";
+import { PressableOpacity } from "../PressableOpacity";
 
 type Props = TextInputProps & {
   onCancelPress: () => void;
@@ -28,35 +27,78 @@ export function SearchBox({
   const inputRef = useRef<TextInput>(null);
 
   return (
-    <Container>
-      <SearchInputContainer>
-        <SearchIcon source={require("yep/assets/icons/search.png")} />
-        <SearchInput
+    <View style={styles.container}>
+      <View style={styles.searchInputContainer}>
+        <Image
+          style={styles.searchIcon}
+          source={require("yep/assets/icons/search.png")}
+        />
+        <TextInput
+          style={styles.searchInput}
           {...textInputProps}
-          // @ts-ignore
-          // TODO: ref works, but i messed up the types
           ref={inputRef}
           onFocus={() => setIsCancelButtonVisible(true)}
           placeholderTextColor={darkTheme.inputPlaceholder}
         />
         {(textInputProps.value?.length ?? 0) > 0 && (
-          <ClearTouchable onPress={onClearPress}>
-            <ClearIcon source={require("yep/assets/icons/clear.png")} />
-          </ClearTouchable>
+          <PressableOpacity onPress={onClearPress}>
+            <Image
+              style={styles.clearIcon}
+              source={require("yep/assets/icons/clear.png")}
+            />
+          </PressableOpacity>
         )}
-      </SearchInputContainer>
+      </View>
       {isCancelButtonVisible && (
-        <CancelTouchable
+        <PressableOpacity
           onPress={() => {
             setIsCancelButtonVisible(false);
             // eslint doesn't understand optional chaining
             inputRef.current?.blur(); // eslint-disable-line
             onCancelPress();
           }}
+          style={{ marginLeft: 8 }}
         >
-          <CancelLabel>Cancel</CancelLabel>
-        </CancelTouchable>
+          <Text style={styles.cancelLabel}>Cancel</Text>
+        </PressableOpacity>
       )}
-    </Container>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  cancelLabel: {
+    color: darkTheme.text,
+    fontFamily: Manrope.regular,
+    fontSize: 16,
+  },
+  clearIcon: { height: 16, marginLeft: 8, opacity: 0.4, width: 16 },
+  container: {
+    alignItems: "center",
+    backgroundColor: darkTheme.navBackground,
+    flexDirection: "row",
+    paddingBottom: 16,
+    paddingHorizontal: 16,
+    width: "100%",
+  },
+  searchIcon: {
+    height: 16,
+    marginRight: 8,
+    opacity: 0.4,
+    width: 16,
+  },
+  searchInput: {
+    color: darkTheme.text,
+    flex: 1,
+    fontFamily: Manrope.regular,
+    fontSize: 16,
+  },
+  searchInputContainer: {
+    alignItems: "center",
+    backgroundColor: darkTheme.background,
+    borderRadius: 8,
+    flexDirection: "row",
+    flex: 1,
+    padding: 8,
+  },
+});
