@@ -4,7 +4,9 @@ import { Platform, Animated, Easing } from "react-native";
 
 import { white } from "yep/colors";
 
-import { Container, Label, SyncTouchable, Spinner } from "./styles";
+import { PressableOpacity } from "../PressableOpacity";
+
+import { Container, Label, Spinner } from "./styles";
 
 type Props = {
   label: string;
@@ -38,7 +40,7 @@ export function Header({
       <Label>{label}</Label>
       {refreshing ? <Spinner color={white} size="large" /> : null}
       {onSyncPress && !refreshing ? (
-        <SyncTouchable
+        <PressableOpacity
           onPress={() => {
             Animated.timing(spinValue, {
               toValue: 1,
@@ -53,7 +55,7 @@ export function Header({
             source={require("yep/assets/icons/sync.png")}
             style={{ transform: [{ rotate: spin }], height: 24, width: 24 }}
           />
-        </SyncTouchable>
+        </PressableOpacity>
       ) : null}
     </Container>
   );

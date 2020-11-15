@@ -26,5 +26,3 @@ export const Spinner = takimoto.ActivityIndicator({
   height: 24,
   width: 24,
 });
-
-export const SyncTouchable = takimoto.TouchableOpacity({});
