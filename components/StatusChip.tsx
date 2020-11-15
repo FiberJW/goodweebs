@@ -1,8 +1,11 @@
 import React from "react";
+import { StyleSheet, Text } from "react-native";
 
-import { takimoto } from "yep/takimoto";
+import { transparent } from "yep/colors";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
+
+import { PressableOpacity } from "./PressableOpacity";
 
 type Props = {
   label: string;
@@ -12,35 +15,42 @@ type Props = {
 
 export function StatusChip({ label, onPress, isSelected }: Props) {
   return (
-    <Container
+    <PressableOpacity
       onPress={onPress}
-      style={
+      style={[
+        styles.container,
         isSelected
           ? {
               backgroundColor: darkTheme.selectedChipFill,
               borderColor: darkTheme.text,
             }
-          : undefined
-      }
+          : undefined,
+      ]}
+      borderRadius={4}
     >
-      <Label style={isSelected ? { color: darkTheme.textInverted } : undefined}>
+      <Text
+        style={[
+          styles.label,
+          isSelected ? { color: darkTheme.textInverted } : undefined,
+        ]}
+      >
         {label}
-      </Label>
-    </Container>
+      </Text>
+    </PressableOpacity>
   );
 }
 
-const Container = takimoto.TouchableOpacity({
-  backgroundColor: "transparent",
-  paddingVertical: 4,
-  paddingHorizontal: 8,
-  borderRadius: 4,
-  borderWidth: 1,
-  borderColor: darkTheme.chipBorder,
-});
-
-const Label = takimoto.Text({
-  fontSize: 12.8,
-  fontFamily: Manrope.semiBold,
-  color: darkTheme.text,
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: transparent,
+    borderColor: darkTheme.chipBorder,
+    borderWidth: 1,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  label: {
+    color: darkTheme.text,
+    fontFamily: Manrope.semiBold,
+    fontSize: 12.8,
+  },
 });
