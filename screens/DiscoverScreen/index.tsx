@@ -1,10 +1,9 @@
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useState } from "react";
-import { RefreshControl, StyleSheet, useWindowDimensions } from "react-native";
+import { RefreshControl, useWindowDimensions } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
-import { PressableOpacity } from "yep/components/PressableOpacity";
 import { SearchBox } from "yep/components/SearchBox";
 import {
   useGetTrendingAnimeQuery,
@@ -16,6 +15,8 @@ import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { notEmpty } from "yep/utils";
+
+import { DiscoverPoster } from "./DiscoverPoster";
 
 type Props = {
   navigation: StackNavigationProp<RootStackParamList>;
@@ -89,22 +90,10 @@ export function DiscoverScreen({ navigation }: Props) {
               numColumns={3}
               keyExtractor={(item) => `${item.id}`}
               renderItem={({ item, index }) => (
-                <PressableOpacity
-                  onPress={() =>
-                    navigation.navigate("Details", { id: item.id })
-                  }
-                  style={[
-                    styles.posterContainer,
-                    (index + 1) % 3 !== 0 ? { marginRight: 16 } : undefined,
-                  ]}
-                >
-                  <Poster source={{ uri: item.coverImage?.large ?? "" }} />
-                  <PosterTitle numberOfLines={2}>
-                    {item.title?.english ||
-                      item.title?.romaji ||
-                      item.title?.native}
-                  </PosterTitle>
-                </PressableOpacity>
+                <DiscoverPoster
+                  {...{ item, index, navigation, posterHeight, posterWidth }}
+                  key={item.id}
+                />
               )}
             />
           </>
@@ -126,36 +115,14 @@ export function DiscoverScreen({ navigation }: Props) {
                 />
               }
               keyExtractor={(item) => `${item.id}`}
-              renderItem={({ item, index }) => (
-                <PressableOpacity
-                  onPress={() =>
-                    navigation.navigate("Details", { id: item.id })
-                  }
-                  style={[
-                    styles.posterContainer,
-                    (index + 1) % 3 !== 0 ? { marginRight: 16 } : undefined,
-                  ]}
-                >
-                  <Poster
-                    resizeMode="cover"
-                    source={{ uri: item.coverImage?.large ?? "" }}
-                    style={{
-                      height: posterHeight,
-                      width: posterWidth,
-                    }}
+              renderItem={({ item, index }) => {
+                return (
+                  <DiscoverPoster
+                    {...{ item, index, navigation, posterHeight, posterWidth }}
+                    key={item.id}
                   />
-                  <PosterTitle
-                    numberOfLines={2}
-                    style={{
-                      maxWidth: posterWidth,
-                    }}
-                  >
-                    {item.title?.english ||
-                      item.title?.romaji ||
-                      item.title?.native}
-                  </PosterTitle>
-                </PressableOpacity>
-              )}
+                );
+              }}
             />
           </>
         )}
@@ -163,26 +130,6 @@ export function DiscoverScreen({ navigation }: Props) {
     </OuterContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  posterContainer: {
-    alignItems: "center",
-  },
-});
-
-const Poster = takimoto.Image({
-  borderRadius: 4,
-  overflow: "hidden",
-  marginBottom: 8,
-  backgroundColor: darkTheme.listItemBackground,
-});
-
-const PosterTitle = takimoto.Text({
-  fontFamily: Manrope.regular,
-  fontSize: 12.8,
-  textAlign: "center",
-  color: darkTheme.text,
-});
 
 const OuterContainer = takimoto.View({
   flex: 1,
