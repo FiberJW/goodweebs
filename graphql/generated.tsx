@@ -1177,6 +1177,12 @@ export type Media = {
 
 
 /** Anime or Manga */
+export type MediaStatusArgs = {
+  version?: Maybe<Scalars['Int']>;
+};
+
+
+/** Anime or Manga */
 export type MediaDescriptionArgs = {
   asHtml?: Maybe<Scalars['Boolean']>;
 };
@@ -1317,7 +1323,9 @@ export enum MediaStatus {
   /** To be released at a later date */
   NotYetReleased = 'NOT_YET_RELEASED',
   /** Ended before the work could be finished */
-  Cancelled = 'CANCELLED'
+  Cancelled = 'CANCELLED',
+  /** Version 2 only. Is currently paused from releasing and will resume at a later date */
+  Hiatus = 'HIATUS'
 }
 
 /** Date object that allows for incomplete date values (fuzzy) */
@@ -1497,6 +1505,7 @@ export type CharacterDescriptionArgs = {
 export type CharacterMediaArgs = {
   sort?: Maybe<Array<Maybe<MediaSort>>>;
   type?: Maybe<MediaType>;
+  onList?: Maybe<Scalars['Boolean']>;
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
 };
@@ -1623,6 +1632,8 @@ export type Staff = {
   staffMedia?: Maybe<MediaConnection>;
   /** Characters voiced by the actor */
   characters?: Maybe<CharacterConnection>;
+  /** Media the actor voiced characters in. (Same data as characters with media as node instead of characters) */
+  characterMedia?: Maybe<MediaConnection>;
   /** @deprecated No data available */
   updatedAt?: Maybe<Scalars['Int']>;
   /** Staff member that the submission is referencing */
@@ -1650,6 +1661,7 @@ export type StaffDescriptionArgs = {
 export type StaffStaffMediaArgs = {
   sort?: Maybe<Array<Maybe<MediaSort>>>;
   type?: Maybe<MediaType>;
+  onList?: Maybe<Scalars['Boolean']>;
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
 };
@@ -1658,6 +1670,15 @@ export type StaffStaffMediaArgs = {
 /** Voice actors or production staff */
 export type StaffCharactersArgs = {
   sort?: Maybe<Array<Maybe<CharacterSort>>>;
+  page?: Maybe<Scalars['Int']>;
+  perPage?: Maybe<Scalars['Int']>;
+};
+
+
+/** Voice actors or production staff */
+export type StaffCharacterMediaArgs = {
+  sort?: Maybe<Array<Maybe<MediaSort>>>;
+  onList?: Maybe<Scalars['Boolean']>;
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
 };
@@ -1760,6 +1781,7 @@ export type Studio = {
 export type StudioMediaArgs = {
   sort?: Maybe<Array<Maybe<MediaSort>>>;
   isMain?: Maybe<Scalars['Boolean']>;
+  onList?: Maybe<Scalars['Boolean']>;
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
 };

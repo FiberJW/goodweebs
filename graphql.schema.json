@@ -7358,7 +7358,18 @@
           {
             "name": "status",
             "description": "The current releasing status of the media",
-            "args": [],
+            "args": [
+              {
+                "name": "version",
+                "description": "Provide 2 to use new version 2 of sources enum",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
             "type": {
               "kind": "ENUM",
               "name": "MediaStatus",
@@ -8465,6 +8476,12 @@
             "description": "Ended before the work could be finished",
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "HIATUS",
+            "description": "Version 2 only. Is currently paused from releasing and will resume at a later date",
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "possibleTypes": null
@@ -9225,6 +9242,16 @@
                 "defaultValue": null
               },
               {
+                "name": "onList",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
                 "name": "page",
                 "description": "The page",
                 "type": {
@@ -9911,6 +9938,16 @@
                 "defaultValue": null
               },
               {
+                "name": "onList",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
                 "name": "page",
                 "description": "The page",
                 "type": {
@@ -9981,6 +10018,63 @@
             "type": {
               "kind": "OBJECT",
               "name": "CharacterConnection",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "characterMedia",
+            "description": "Media the actor voiced characters in. (Same data as characters with media as node instead of characters)",
+            "args": [
+              {
+                "name": "sort",
+                "description": null,
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "MediaSort",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "onList",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "page",
+                "description": "The page",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "perPage",
+                "description": "The amount of entries per page, max 25",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "MediaConnection",
               "ofType": null
             },
             "isDeprecated": false,
@@ -10545,6 +10639,16 @@
               {
                 "name": "isMain",
                 "description": "If the studio was the primary animation studio of the media",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "onList",
+                "description": null,
                 "type": {
                   "kind": "SCALAR",
                   "name": "Boolean",

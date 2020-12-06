@@ -1,6 +1,6 @@
 import { ApolloProvider } from "@apollo/client";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
-import { AppLoading } from "expo";
+import AppLoading from "expo-app-loading";
 import React, { useState, useEffect } from "react";
 import { AsyncStorage } from "react-native";
 import { enableScreens } from "react-native-screens";
