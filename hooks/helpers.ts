@@ -3,6 +3,7 @@ import {
   useMutation,
   FetchResult,
   MutationUpdaterFn,
+  PureQueryOptions,
 } from "@apollo/client";
 import { DocumentNode } from "graphql";
 import { debounce } from "lodash";
@@ -39,12 +40,14 @@ export function useDebouncedMutation<
   mutationDocument,
   makeUpdateFunction,
   wait = 250,
+  refetchQueries,
 }: {
   mutationDocument: DocumentNode;
   makeUpdateFunction?: (
     variables?: MutationVariables
   ) => MutationUpdaterFn<MutationData>;
   wait?: number;
+  refetchQueries?: PureQueryOptions[];
 }) {
   const [originalMutation] = useMutation<MutationData, MutationVariables>(
     mutationDocument
@@ -91,6 +94,8 @@ export function useDebouncedMutation<
       variables,
       context,
       update,
+      refetchQueries,
+      awaitRefetchQueries: refetchQueries ? true : undefined,
     });
   };
 

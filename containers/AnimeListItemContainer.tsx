@@ -11,8 +11,10 @@ import {
   MediaList,
   useGetAnimeQuery,
   GetAnimeDocument,
+  MediaListStatus,
 } from "yep/graphql/generated";
 import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
+import { GetAnimeList } from "yep/graphql/queries/AnimeList";
 import { useDebouncedMutation } from "yep/hooks/helpers";
 import { RootStackParamList } from "yep/navigation";
 
@@ -22,14 +24,14 @@ type Props = {
     progress: number;
     media: AnimeFragmentFragment | null;
   };
-  refetchList: () => void;
+  refetchListVariables: { userId?: number; status?: MediaListStatus | null };
   navigation: StackNavigationProp<RootStackParamList>;
 };
 
 export function AnimeListItemContainer({
   seedData,
   navigation,
-  refetchList,
+  refetchListVariables,
 }: Props) {
   const [progressShadow, setProgressShadow] = useState(seedData.progress);
   const [shouldShowProgressShadow, setShouldShowProgressShadow] = useState(
@@ -70,9 +72,12 @@ export function AnimeListItemContainer({
 
       if (variables?.progress === proxyData?.Media?.episodes) {
         // TODO: show dropdown alert to notify that this anime was moved to "completed" list
-        setTimeout(refetchList, 1000);
       }
     },
+    refetchQueries: [
+      { query: GetAnimeDocument, variables: { id: seedData?.media?.id } },
+      { query: GetAnimeList, variables: refetchListVariables },
+    ],
   });
 
   const progress =

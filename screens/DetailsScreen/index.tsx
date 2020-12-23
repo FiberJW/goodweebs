@@ -136,14 +136,12 @@ export function DetailsScreen({ route, navigation }: Props) {
   >({
     mutationDocument: UpdateStatusDocument,
     makeUpdateFunction: (variables) => (proxy) => {
-      // Read the data from our cache for this query.
       const proxyData = proxy.readQuery<GetAnimeQuery>({
         query: GetAnimeDocument,
         variables: { id: route.params.id },
       });
 
       if (proxyData?.Media?.mediaListEntry) {
-        // Write our data back to the cache with the new progress in it
         proxy.writeQuery<GetAnimeQuery>({
           query: GetAnimeDocument,
           variables: { id: route.params.id },
@@ -159,11 +157,12 @@ export function DetailsScreen({ route, navigation }: Props) {
             },
           },
         });
-      } else {
-        refetchSilently();
       }
     },
     wait: 0,
+    refetchQueries: [
+      { query: GetAnimeDocument, variables: { id: route.params.id } },
+    ],
   });
 
   const updateScore = useDebouncedMutation<
@@ -172,13 +171,11 @@ export function DetailsScreen({ route, navigation }: Props) {
   >({
     mutationDocument: UpdateScoreDocument,
     makeUpdateFunction: (variables) => (proxy) => {
-      // Read the data from our cache for this query.
       const proxyData = proxy.readQuery<GetAnimeQuery>({
         query: GetAnimeDocument,
         variables: { id: route.params.id },
       });
 
-      // Write our data back to the cache with the new progress in it
       proxy.writeQuery<GetAnimeQuery>({
         query: GetAnimeDocument,
         variables: { id: route.params.id },
@@ -195,6 +192,9 @@ export function DetailsScreen({ route, navigation }: Props) {
         },
       });
     },
+    refetchQueries: [
+      { query: GetAnimeDocument, variables: { id: route.params.id } },
+    ],
   });
 
   const updateProgress = useDebouncedMutation<
@@ -203,13 +203,11 @@ export function DetailsScreen({ route, navigation }: Props) {
   >({
     mutationDocument: UpdateProgressDocument,
     makeUpdateFunction: (variables) => (proxy) => {
-      // Read the data from our cache for this query.
       const proxyData = proxy.readQuery<GetAnimeQuery>({
         query: GetAnimeDocument,
         variables: { id: route.params.id },
       });
 
-      // Write our data back to the cache with the new progress in it
       proxy.writeQuery<GetAnimeQuery>({
         query: GetAnimeDocument,
         variables: { id: route.params.id },
@@ -228,20 +226,17 @@ export function DetailsScreen({ route, navigation }: Props) {
 
       if (variables?.progress === proxyData?.Media?.episodes) {
         // TODO: show dropdown alert to notify that this anime was moved to "completed" list
-        setTimeout(refetchFromScroll, 1000);
       }
     },
+    refetchQueries: [
+      { query: GetAnimeDocument, variables: { id: route.params.id } },
+    ],
   });
 
   async function refetchFromScroll() {
     setIsRefetchingFromScrollOrMount(true);
     await refetch({ id: route.params.id });
     setIsRefetchingFromScrollOrMount(false);
-  }
-
-  async function refetchSilently() {
-    setIsRefetchingFromScrollOrMount(false);
-    await refetch({ id: route.params.id });
   }
 
   const relations = (data?.Media?.relations?.edges ?? [])?.filter(notEmpty);
@@ -403,7 +398,6 @@ export function DetailsScreen({ route, navigation }: Props) {
                       mediaId: data?.Media?.id,
                       status: MediaListStatusWithLabel[buttonIndex].value,
                     });
-                    await refetchSilently();
                     setLoadingStatus(false);
                   }
                 );
@@ -424,7 +418,6 @@ export function DetailsScreen({ route, navigation }: Props) {
                       id: data?.Media?.mediaListEntry?.id,
                       progress,
                     });
-                    await refetchSilently();
                   } catch (e) {
                     // TODO: display error
                     console.error(e);
@@ -443,7 +436,6 @@ export function DetailsScreen({ route, navigation }: Props) {
                       id: data?.Media?.mediaListEntry?.id,
                       scoreRaw: s * 10,
                     });
-                    await refetchSilently();
                   } catch (_e) {
                     // TODO: display error
                   }
@@ -488,7 +480,7 @@ export function DetailsScreen({ route, navigation }: Props) {
       <View style={{ height: 16 }} />
       <FlatList
         data={data?.Media?.externalLinks?.filter(notEmpty)}
-        keyExtractor={(item, index) => `${item.id}`}
+        keyExtractor={(item) => `${item.id}`}
         renderItem={({ item }) => <ExternalLink {...item} />}
         ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
       />

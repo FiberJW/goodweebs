@@ -43,7 +43,6 @@ export function AnimeListScreen({ navigation }: Props) {
       userId: viewerData?.Viewer?.id,
       status,
     },
-    fetchPolicy: "no-cache",
     notifyOnNetworkStatusChange: true,
   });
 
@@ -141,12 +140,10 @@ export function AnimeListScreen({ navigation }: Props) {
                   progress: item.progress ?? 0,
                   media: item.media ?? null,
                 }}
-                refetchList={() =>
-                  refetch({
-                    userId: viewerData?.Viewer?.id,
-                    status,
-                  })
-                }
+                refetchListVariables={{
+                  userId: viewerData?.Viewer?.id,
+                  status,
+                }}
                 navigation={navigation}
               />
             )}
