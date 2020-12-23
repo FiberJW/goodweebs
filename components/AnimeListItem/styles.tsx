@@ -6,13 +6,6 @@ import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
-export const Poster = takimoto.ImageBackground({
-  height: 80,
-  width: 56,
-  borderRadius: 4,
-  overflow: "hidden",
-});
-
 export const PosterGradient = takimoto.LinearGradient({
   ...StyleSheet.absoluteFillObject,
   justifyContent: "flex-end",

@@ -2,7 +2,7 @@ import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
-export const Image = takimoto.Image({
+export const Image = takimoto.ImageBackground({
   borderRadius: 4,
   overflow: "hidden",
   backgroundColor: darkTheme.listItemBackground,

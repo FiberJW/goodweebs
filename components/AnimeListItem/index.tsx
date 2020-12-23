@@ -12,11 +12,11 @@ import { useNow } from "yep/hooks/helpers";
 import { RootStackParamList } from "yep/navigation";
 import { darkTheme } from "yep/themes";
 
+import { PosterAndTitle } from "../PosterAndTitle";
 import { PressableOpacity } from "../PressableOpacity";
 
 import { ProgressButton } from "./ProgressButton";
 import {
-  Poster,
   TitleAndBroadcastColumn,
   Title,
   BroadcastSchedule,
@@ -64,16 +64,11 @@ export function AnimeListItem({
       activeOpacity={0.7}
       onPress={() => navigation.navigate("Details", { id: media.id })}
     >
-      <Poster
-        resizeMode="cover"
-        source={{
-          uri: media.coverImage?.large ?? "",
-        }}
-      >
+      <PosterAndTitle uri={media.coverImage?.large ?? ""} size="small">
         {isAiringAndCurrentlyWatching ? (
           <EpisodesBehind count={episodesBehind} />
         ) : null}
-      </Poster>
+      </PosterAndTitle>
       <Spacer />
       <TitleAndBroadcastColumn>
         <Title numberOfLines={2}>

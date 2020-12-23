@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, useWindowDimensions } from "react-native";
+import React, { ReactNode } from "react";
+import { StyleSheet, useWindowDimensions, ViewStyle } from "react-native";
 
 import { PressableOpacity } from "../PressableOpacity";
 
@@ -11,9 +11,19 @@ type Props = {
   title?: string;
   onPress?: () => void;
   disabled?: boolean;
+  style?: ViewStyle;
+  children?: ReactNode;
 };
 
-export function PosterAndTitle({ size, uri, title, onPress, disabled }: Props) {
+export function PosterAndTitle({
+  size,
+  uri,
+  title,
+  onPress,
+  disabled,
+  style,
+  children,
+}: Props) {
   const { width: windowWidth } = useWindowDimensions();
 
   let posterWidth: number;
@@ -36,7 +46,7 @@ export function PosterAndTitle({ size, uri, title, onPress, disabled }: Props) {
 
   return (
     <PressableOpacity
-      style={styles.container}
+      style={[styles.container, style]}
       onPress={onPress}
       disabled={disabled}
     >
@@ -44,7 +54,9 @@ export function PosterAndTitle({ size, uri, title, onPress, disabled }: Props) {
         resizeMode="cover"
         style={{ width: posterWidth, height: posterHeight }}
         source={{ uri }}
-      />
+      >
+        {children}
+      </Image>
       {title ? (
         <Title
           numberOfLines={2}
