@@ -64,7 +64,7 @@ export function AnimeListItem({
       activeOpacity={0.7}
       onPress={() => navigation.navigate("Details", { id: media.id })}
     >
-      <PosterAndTitle uri={media.coverImage?.large ?? ""} size="small">
+      <PosterAndTitle uri={media.coverImage?.large ?? ""} size="small" disabled>
         {isAiringAndCurrentlyWatching ? (
           <EpisodesBehind count={episodesBehind} />
         ) : null}

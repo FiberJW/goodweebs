@@ -12,6 +12,7 @@ import { useSafeArea } from "react-native-safe-area-context";
 import title from "title";
 
 import { EmptyState } from "yep/components/EmptyState";
+import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { MediaListStatusWithLabel, MediaStatusWithLabel } from "yep/constants";
 import {
   GetAnimeQuery,
@@ -47,13 +48,6 @@ import { Stepper } from "./Stepper";
 const Container = takimoto.ScrollView({
   flex: 1,
   padding: 16,
-});
-
-const Poster = takimoto.Image({
-  height: 186,
-  width: 128,
-  borderRadius: 4,
-  marginRight: 16,
 });
 
 const Title = takimoto.Text({
@@ -296,13 +290,12 @@ export function DetailsScreen({ route, navigation }: Props) {
               data?.Media?.title?.romaji ||
               data?.Media?.title?.native}
           </Title>
-
           <PosterAndInfoContainer>
-            <Poster
-              resizeMode="cover"
-              source={{
-                uri: data?.Media?.coverImage?.large ?? "",
-              }}
+            <PosterAndTitle
+              disabled
+              size="details"
+              uri={data?.Media?.coverImage?.large ?? ""}
+              style={{ marginRight: 16 }}
             />
             <InfoTable>
               <InfoRow>

@@ -6,7 +6,7 @@ import { PressableOpacity } from "../PressableOpacity";
 import { Title, Image } from "./styles";
 
 type Props = {
-  size: "small" | "tiny" | "large" | "profile";
+  size: "small" | "tiny" | "large" | "profile" | "details";
   uri: string;
   title?: string;
   onPress?: () => void;
@@ -30,6 +30,9 @@ export function PosterAndTitle({
   switch (size) {
     case "large":
       posterWidth = (windowWidth - 16 * 4) / 3;
+      break;
+    case "details":
+      posterWidth = 128;
       break;
     case "profile":
       posterWidth = 89.6;
