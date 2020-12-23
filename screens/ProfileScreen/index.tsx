@@ -6,6 +6,7 @@ import { Alert, AsyncStorage, RefreshControl } from "react-native";
 import { white } from "yep/colors";
 import { AuthButton } from "yep/components/AuthButton";
 import { Header } from "yep/components/Header";
+import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { useGetViewerQuery } from "yep/graphql/generated";
 import { RootStackParamList } from "yep/navigation";
@@ -25,11 +26,8 @@ import {
   Stat,
   ListHeader,
   makeListWithType,
-  ListSpacer,
-  Poster,
   AvatarSpacer,
   FavoriteContainer,
-  FavoriteName,
   EverythingButTheCTA,
   VerticalSpacer,
 } from "./styles";
@@ -119,26 +117,17 @@ export function ProfileScreen(_: Props) {
                   data={animeList}
                   renderItem={({ item }) => (
                     <FavoriteContainer>
-                      <Poster
-                        resizeMode="cover"
-                        source={{
-                          uri: item?.coverImage?.large ?? "",
-                        }}
+                      <PosterAndTitle
+                        size="profile"
+                        uri={item?.coverImage?.large ?? ""}
+                        title={getTitle(item.title)}
+                        disabled
                       />
-                      {item?.title ? (
-                        <>
-                          <ListSpacer />
-                          <FavoriteName numberOfLines={2}>
-                            {getTitle(item.title)}
-                          </FavoriteName>
-                        </>
-                      ) : null}
                     </FavoriteContainer>
                   )}
                 />
               </>
             ) : null}
-
             {characterList.length ? (
               <>
                 <VerticalSpacer />
@@ -152,20 +141,12 @@ export function ProfileScreen(_: Props) {
                   data={characterList}
                   renderItem={({ item }) => (
                     <FavoriteContainer>
-                      <Poster
-                        resizeMode="cover"
-                        source={{
-                          uri: item.image?.large ?? "",
-                        }}
+                      <PosterAndTitle
+                        disabled
+                        size="profile"
+                        uri={item?.image?.large ?? ""}
+                        title={item.name?.full ?? undefined}
                       />
-                      {item?.name ? (
-                        <>
-                          <ListSpacer />
-                          <FavoriteName numberOfLines={2}>
-                            {item.name.full}
-                          </FavoriteName>
-                        </>
-                      ) : null}
                     </FavoriteContainer>
                   )}
                 />

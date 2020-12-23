@@ -97,27 +97,8 @@ export function makeListWithType<T>() {
 
 export const ListItemSpacer = takimoto.View({ width: 8 });
 
-export const ListSpacer = takimoto.View({ height: 8 });
-
 export const FavoriteContainer = takimoto.View({
   alignItems: "center",
-});
-
-export const FavoriteName = takimoto.Text({
-  fontFamily: Manrope.regular,
-  fontSize: 16,
-  color: darkTheme.text,
-
-  textAlign: "center",
-  maxWidth: 89.6,
-});
-
-export const Poster = takimoto.Image({
-  height: 128,
-  width: 89.6,
-  borderRadius: 4,
-  overflow: "hidden",
-  backgroundColor: darkTheme.listItemBackground,
 });
 
 export const Person = takimoto.Image({
