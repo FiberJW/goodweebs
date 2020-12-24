@@ -4,7 +4,7 @@ import React from "react";
 import { Alert, AsyncStorage, RefreshControl } from "react-native";
 
 import { white } from "yep/colors";
-import { AuthButton } from "yep/components/AuthButton";
+import { Button } from "yep/components/Button";
 import { Header } from "yep/components/Header";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
@@ -155,7 +155,7 @@ export function ProfileScreen(_: Props) {
           </EverythingButTheCTA>
         ) : null}
         <VerticalSpacer />
-        <AuthButton
+        <Button
           label="Log out"
           onPress={async () => {
             Alert.alert("Are you sure that you want to log out?", undefined, [

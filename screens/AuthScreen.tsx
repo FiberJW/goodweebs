@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { AsyncStorage } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { AuthButton } from "yep/components/AuthButton";
+import { Button } from "yep/components/Button";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { useAniListAuthRequest } from "yep/hooks/auth";
 import { RootStackParamList } from "yep/navigation";
@@ -44,7 +44,7 @@ export function AuthScreen({ navigation }: Props) {
             <Tagline>{getString("tagline")}</Tagline>
           </BrandingGroup>
           <ButtonGroup>
-            <AuthButton
+            <Button
               label={getString("logIn")}
               onPress={async () => {
                 const result = await promptAsync();

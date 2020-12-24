@@ -1,12 +1,22 @@
 import React from "react";
-
+import { StyleSheet, View, ViewStyle, Text } from "react-native";
 import { takimoto } from "yep/takimoto";
+import { Button } from "yep/components/Button";
 
-export function EmptyState() {
+type Props = {
+  style?: ViewStyle;
+  title: string;
+  description: string;
+  cta?: { label: string; onPress: () => void };
+};
+
+export function EmptyState({ title, description, style, cta }: Props) {
   return (
-    <Jail>
-      <SugeKnight source={require("yep/assets/SHUNGITE.gif")} />
-    </Jail>
+    <View style={[styles.container, style]}>
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.description}>{description}</Text>
+      {cta ? <Button {...cta} /> : null}
+    </View>
   );
 }
 
@@ -15,8 +25,12 @@ const SugeKnight = takimoto.Image({
   width: 112,
 });
 
-const Jail = takimoto.View({
-  flex: 1,
-  alignItems: "center",
-  justifyContent: "center",
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
+  },
+  title: {},
+  description: {},
 });
