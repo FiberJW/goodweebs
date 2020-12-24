@@ -14,7 +14,7 @@ import {
 export const darkTheme = {
   background: black,
   navBackground: darkGray,
-  secondaryButton: white12_5,
+  button: white12_5,
   text: white95,
   textInverted: black,
   iconFill: white95,

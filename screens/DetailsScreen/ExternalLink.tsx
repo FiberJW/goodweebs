@@ -20,7 +20,7 @@ import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
 export function ExternalLink({ id, url, site }: MediaExternalLinkDataFragment) {
-  let backgroundColor = darkTheme.secondaryButton;
+  let backgroundColor = darkTheme.button;
   let textColor = darkTheme.text;
 
   switch (site) {
@@ -61,7 +61,7 @@ export function ExternalLink({ id, url, site }: MediaExternalLinkDataFragment) {
       break;
     default:
       // TODO: log what other values are being read somewhere so I can pick those off
-      backgroundColor = darkTheme.secondaryButton;
+      backgroundColor = darkTheme.button;
       break;
   }
 

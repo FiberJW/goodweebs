@@ -31,7 +31,7 @@ export function ProgressButton({
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    backgroundColor: darkTheme.secondaryButton,
+    backgroundColor: darkTheme.button,
     justifyContent: "center",
     paddingHorizontal: 20,
     paddingVertical: 12,

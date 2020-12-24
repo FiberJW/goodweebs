@@ -33,7 +33,7 @@ export function AuthButton({ onPress, label }: AuthButtonProps) {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    backgroundColor: darkTheme.secondaryButton,
+    backgroundColor: darkTheme.button,
     justifyContent: "center",
     padding: 16,
     width: "100%",
