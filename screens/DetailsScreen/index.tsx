@@ -125,7 +125,7 @@ export function DetailsScreen({ route, navigation }: Props) {
 
   const now = useNow();
 
-  const { loading, data, refetch } = useGetAnimeQuery({
+  const { loading, data, refetch, error } = useGetAnimeQuery({
     variables: { id: route.params.id },
     notifyOnNetworkStatusChange: true,
   });
@@ -275,8 +275,11 @@ export function DetailsScreen({ route, navigation }: Props) {
       }
     >
       {!data ? (
-        !loading ? (
-          <EmptyState />
+        !loading && error ? (
+          <EmptyState
+            title="Could not find anime"
+            description={`We ran into an unexpected error loading the requested anime: ${error?.message}`}
+          />
         ) : null
       ) : (
         <>
@@ -307,7 +310,7 @@ export function DetailsScreen({ route, navigation }: Props) {
                 {data?.Media?.averageScore ? (
                   <Info
                     label="Average score"
-                    value={`${data?.Media?.averageScore / 10} / 10`}
+                    value={`${data?.Media?.averageScore ?? 0 / 10} / 10`}
                   />
                 ) : null}
                 <Info
@@ -404,7 +407,7 @@ export function DetailsScreen({ route, navigation }: Props) {
               }}
             />
           </ButtonsRow>
-          {data.Media?.mediaListEntry ? (
+          {data?.Media?.mediaListEntry ? (
             <>
               <Stepper
                 label="Progress"
@@ -450,40 +453,40 @@ export function DetailsScreen({ route, navigation }: Props) {
             />
           ) : null}
           <DescriptionSpacer />
+          {/* TODO: maybe this should be a flatlist */}
+          {Object.keys(mappedRelations).map((key: string) => {
+            const relationType = key as MediaRelation;
+            const relations = mappedRelations[relationType] ?? [];
+
+            return (
+              <RelatedList
+                key={key}
+                relationType={relationType}
+                relations={relations}
+                navigation={navigation}
+              />
+            );
+          })}
+
+          <View style={{ height: 16 }} />
+          <Text
+            style={{
+              fontFamily: Manrope.semiBold,
+              color: darkTheme.text,
+              fontSize: 20,
+            }}
+          >
+            External / Streaming Links
+          </Text>
+          <View style={{ height: 16 }} />
+          <FlatList
+            data={data?.Media?.externalLinks?.filter(notEmpty)}
+            keyExtractor={(item) => `${item.id}`}
+            renderItem={({ item }) => <ExternalLink {...item} />}
+            ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
+          />
         </>
       )}
-      {/* TODO: maybe this should be a flatlist */}
-      {Object.keys(mappedRelations).map((key: string) => {
-        const relationType = key as MediaRelation;
-        const relations = mappedRelations[relationType] ?? [];
-
-        return (
-          <RelatedList
-            key={key}
-            relationType={relationType}
-            relations={relations}
-            navigation={navigation}
-          />
-        );
-      })}
-
-      <View style={{ height: 16 }} />
-      <Text
-        style={{
-          fontFamily: Manrope.semiBold,
-          color: darkTheme.text,
-          fontSize: 20,
-        }}
-      >
-        External / Streaming Links
-      </Text>
-      <View style={{ height: 16 }} />
-      <FlatList
-        data={data?.Media?.externalLinks?.filter(notEmpty)}
-        keyExtractor={(item) => `${item.id}`}
-        renderItem={({ item }) => <ExternalLink {...item} />}
-        ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
-      />
     </Container>
   );
 }

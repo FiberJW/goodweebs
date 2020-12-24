@@ -78,7 +78,12 @@ export function DiscoverScreen({ navigation }: Props) {
               ItemSeparatorComponent={Divider}
               data={searchList}
               ListEmptyComponent={() =>
-                loadingSearchData ? null : <EmptyState />
+                loadingSearchData ? null : (
+                  <EmptyState
+                    title="No search results"
+                    description="You may have misspelled what you were looking for, or this anime isn’t listed on AniList."
+                  />
+                )
               }
               refreshControl={
                 <RefreshControl

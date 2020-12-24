@@ -1,4 +1,8 @@
-import { useFocusEffect } from "@react-navigation/native";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import {
+  CompositeNavigationProp,
+  useFocusEffect,
+} from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useMemo, useState, useCallback } from "react";
 import { RefreshControl } from "react-native";
@@ -9,7 +13,7 @@ import {
   AiringNotificationFragmentFragment,
   useGetAnimeNotificationsQuery,
 } from "yep/graphql/generated";
-import { RootStackParamList } from "yep/navigation";
+import { RootStackParamList, TabParamList } from "yep/navigation";
 import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
@@ -18,7 +22,10 @@ import { notEmpty } from "yep/utils";
 import { AiringItem } from "./AiringItem";
 
 type Props = {
-  navigation: StackNavigationProp<RootStackParamList>;
+  navigation: CompositeNavigationProp<
+    BottomTabNavigationProp<TabParamList, "Airing">,
+    StackNavigationProp<RootStackParamList>
+  >;
 };
 
 export function BroadcastHistoryScreen({ navigation }: Props) {
@@ -63,7 +70,20 @@ export function BroadcastHistoryScreen({ navigation }: Props) {
           <AiringFlatList
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={AnimeListDivider}
-            ListEmptyComponent={() => (refreshing ? null : <EmptyState />)}
+            ListEmptyComponent={() =>
+              refreshing ? null : (
+                <EmptyState
+                  title="No notifications"
+                  description="Explore the world of anime by adding some shows to your list!"
+                  cta={{
+                    label: "Discover new anime",
+                    onPress: () => {
+                      navigation.navigate("Discover");
+                    },
+                  }}
+                />
+              )
+            }
             data={list}
             refreshControl={
               <RefreshControl

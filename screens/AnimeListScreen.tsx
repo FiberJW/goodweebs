@@ -1,4 +1,8 @@
-import { useFocusEffect } from "@react-navigation/native";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import {
+  CompositeNavigationProp,
+  useFocusEffect,
+} from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { sortBy } from "lodash";
 import React, { useState, useMemo, useCallback } from "react";
@@ -14,7 +18,7 @@ import {
   useGetViewerQuery,
   useGetAnimeListQuery,
 } from "yep/graphql/generated";
-import { RootStackParamList } from "yep/navigation";
+import { RootStackParamList, TabParamList } from "yep/navigation";
 import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
@@ -22,7 +26,10 @@ import { Manrope } from "yep/typefaces";
 import { notEmpty } from "yep/utils";
 
 type Props = {
-  navigation: StackNavigationProp<RootStackParamList>;
+  navigation: CompositeNavigationProp<
+    BottomTabNavigationProp<TabParamList, "Anime">,
+    StackNavigationProp<RootStackParamList>
+  >;
 };
 
 export function AnimeListScreen({ navigation }: Props) {
@@ -118,7 +125,20 @@ export function AnimeListScreen({ navigation }: Props) {
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={AnimeListDivider}
             data={list}
-            ListEmptyComponent={() => (refreshing ? null : <EmptyState />)}
+            ListEmptyComponent={() =>
+              refreshing ? null : (
+                <EmptyState
+                  title="Empty list"
+                  description="Explore the world of anime by adding some shows to your list!"
+                  cta={{
+                    label: "Discover new anime",
+                    onPress: () => {
+                      navigation.navigate("Discover");
+                    },
+                  }}
+                />
+              )
+            }
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}

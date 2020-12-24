@@ -22,14 +22,23 @@ type Props = {
   label: string;
   onPress: () => void;
   size?: ButtonSize;
+  style?: ViewStyle;
+  containerStyle?: ViewStyle;
 };
 
-export function Button({ onPress, label, size = "normal" }: Props) {
+export function Button({
+  onPress,
+  label,
+  size = "normal",
+  style,
+  containerStyle,
+}: Props) {
   const { padding } = getDynamicButtonStyles(size);
 
   return (
     <PressableOpacity
-      style={[styles.container, { padding }]}
+      style={[styles.pressable, { padding }, style]}
+      containerStyle={containerStyle}
       borderRadius={8}
       onPress={onPress}
     >
@@ -39,16 +48,16 @@ export function Button({ onPress, label, size = "normal" }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    backgroundColor: darkTheme.button,
-    justifyContent: "center",
-    width: "100%",
-  },
   label: {
     color: darkTheme.text,
     fontFamily: Manrope.semiBold,
     fontSize: 16,
     textAlign: "center",
+  },
+  pressable: {
+    alignItems: "center",
+    backgroundColor: darkTheme.button,
+    justifyContent: "center",
+    width: "100%",
   },
 });

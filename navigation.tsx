@@ -20,7 +20,14 @@ export type RootStackParamList = {
   Details: { id: number };
 };
 
-const Tab = createBottomTabNavigator();
+export type TabParamList = {
+  Anime: undefined;
+  Airing: undefined;
+  Discover: undefined;
+  Profile: undefined;
+};
+
+const Tab = createBottomTabNavigator<TabParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
 function Tabs() {

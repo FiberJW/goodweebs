@@ -1,3 +1,5 @@
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { formatDistance } from "date-fns";
 import React from "react";
@@ -7,7 +9,7 @@ import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { AiringNotificationFragmentFragment } from "yep/graphql/generated";
 import { useNow } from "yep/hooks/helpers";
-import { RootStackParamList } from "yep/navigation";
+import { RootStackParamList, TabParamList } from "yep/navigation";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
@@ -15,7 +17,10 @@ import { getTitle } from "yep/utils";
 
 type AiringItemProps = {
   notification: AiringNotificationFragmentFragment;
-  navigation: StackNavigationProp<RootStackParamList>;
+  navigation: CompositeNavigationProp<
+    BottomTabNavigationProp<TabParamList, "Airing">,
+    StackNavigationProp<RootStackParamList>
+  >;
 };
 
 export function AiringItem({ navigation, notification }: AiringItemProps) {

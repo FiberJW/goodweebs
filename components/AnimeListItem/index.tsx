@@ -1,3 +1,5 @@
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { formatDistanceToNow, add } from "date-fns";
 import React from "react";
@@ -9,7 +11,7 @@ import {
   MediaListStatus,
 } from "yep/graphql/generated";
 import { useNow } from "yep/hooks/helpers";
-import { RootStackParamList } from "yep/navigation";
+import { RootStackParamList, TabParamList } from "yep/navigation";
 import { darkTheme } from "yep/themes";
 
 import { PosterAndTitle } from "../PosterAndTitle";
@@ -34,7 +36,10 @@ type Props = {
   progress: number;
   disabled?: boolean;
   media: AnimeFragmentFragment;
-  navigation: StackNavigationProp<RootStackParamList>;
+  navigation: CompositeNavigationProp<
+    BottomTabNavigationProp<TabParamList, "Anime">,
+    StackNavigationProp<RootStackParamList>
+  >;
 };
 
 export function AnimeListItem({

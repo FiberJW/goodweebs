@@ -1,7 +1,9 @@
 import React from "react";
-import { StyleSheet, View, ViewStyle, Text } from "react-native";
-import { takimoto } from "yep/takimoto";
+import { StyleSheet, View, ViewStyle, Text, Image } from "react-native";
+
 import { Button } from "yep/components/Button";
+import { darkTheme } from "yep/themes";
+import { Manrope } from "yep/typefaces";
 
 type Props = {
   style?: ViewStyle;
@@ -13,24 +15,43 @@ type Props = {
 export function EmptyState({ title, description, style, cta }: Props) {
   return (
     <View style={[styles.container, style]}>
+      <Image
+        source={require("yep/assets/icons/muted-logo.png")}
+        resizeMode="contain"
+        style={styles.icon}
+      />
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.description}>{description}</Text>
-      {cta ? <Button {...cta} /> : null}
+      {cta ? <Button {...cta} containerStyle={styles.cta} /> : null}
     </View>
   );
 }
-
-const SugeKnight = takimoto.Image({
-  height: 112,
-  width: 112,
-});
 
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flex: 1,
     justifyContent: "center",
+    padding: 16,
+    width: "100%",
   },
-  title: {},
-  description: {},
+  cta: { alignSelf: "stretch" },
+  description: {
+    color: darkTheme.subText,
+    fontFamily: Manrope.regular,
+    fontSize: 16,
+    marginBottom: 24,
+    textAlign: "center",
+  },
+  icon: {
+    marginBottom: 24,
+    width: 80,
+  },
+  title: {
+    color: darkTheme.text,
+    fontFamily: Manrope.semiBold,
+    fontSize: 20,
+    marginBottom: 16,
+    textAlign: "center",
+  },
 });

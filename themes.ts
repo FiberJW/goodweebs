@@ -16,6 +16,7 @@ export const darkTheme = {
   navBackground: darkGray,
   button: white12_5,
   text: white95,
+  subText: white80,
   textInverted: black,
   iconFill: white95,
   footnote: white80,
