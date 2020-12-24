@@ -6688,15 +6688,15 @@
           },
           {
             "name": "useLegacyLists",
-            "description": "(Site only) If the user should be using legacy css-supporting list versions",
+            "description": null,
             "args": [],
             "type": {
               "kind": "SCALAR",
               "name": "Boolean",
               "ofType": null
             },
-            "isDeprecated": false,
-            "deprecationReason": null
+            "isDeprecated": true,
+            "deprecationReason": "No longer used"
           },
           {
             "name": "animeList",

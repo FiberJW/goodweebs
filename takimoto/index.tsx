@@ -69,9 +69,7 @@ function useTakimoto<StyleT>(style: DynamicKeys<StyleT>) {
 
     for (const operator in styleCopy.whenHeight) {
       if (styleCopy.whenHeight.hasOwnProperty(operator)) {
-        const castedOperator = operator as keyof DeclarativeWindowSizeStyles<
-          StyleT
-        >;
+        const castedOperator = operator as keyof DeclarativeWindowSizeStyles<StyleT>;
         const breakpointBasedStyles = styleCopy.whenHeight[castedOperator];
 
         if (breakpointBasedStyles) {
@@ -106,9 +104,7 @@ function useTakimoto<StyleT>(style: DynamicKeys<StyleT>) {
 
     for (const operator in styleCopy.whenWidth) {
       if (styleCopy.whenWidth.hasOwnProperty(operator)) {
-        const castedOperator = operator as keyof DeclarativeWindowSizeStyles<
-          StyleT
-        >;
+        const castedOperator = operator as keyof DeclarativeWindowSizeStyles<StyleT>;
         const breakpointBasedStyles = styleCopy.whenWidth[castedOperator];
 
         if (breakpointBasedStyles) {

@@ -917,7 +917,7 @@ export type MediaListOptions = {
   scoreFormat?: Maybe<ScoreFormat>;
   /** The default order list rows should be displayed in */
   rowOrder?: Maybe<Scalars['String']>;
-  /** (Site only) If the user should be using legacy css-supporting list versions */
+  /** @deprecated No longer used */
   useLegacyLists?: Maybe<Scalars['Boolean']>;
   /** The user's anime list options */
   animeList?: Maybe<MediaListTypeOptions>;
