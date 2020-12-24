@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, ViewStyle } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, ViewStyle } from "react-native";
 
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { darkTheme } from "yep/themes";
@@ -22,13 +22,17 @@ type Props = {
   label: string;
   onPress: () => void;
   size?: ButtonSize;
+  disabled?: boolean;
   style?: ViewStyle;
   containerStyle?: ViewStyle;
+  loading?: boolean;
 };
 
 export function Button({
   onPress,
   label,
+  loading,
+  disabled,
   size = "normal",
   style,
   containerStyle,
@@ -37,12 +41,17 @@ export function Button({
 
   return (
     <PressableOpacity
+      disabled={disabled || loading}
       style={[styles.pressable, { padding }, style]}
       containerStyle={containerStyle}
       borderRadius={8}
       onPress={onPress}
     >
-      <Text style={styles.label}>{label}</Text>
+      {loading ? (
+        <ActivityIndicator color={darkTheme.text} />
+      ) : (
+        <Text style={styles.label}>{label}</Text>
+      )}
     </PressableOpacity>
   );
 }

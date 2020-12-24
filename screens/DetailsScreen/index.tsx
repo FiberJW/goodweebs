@@ -11,6 +11,7 @@ import HTMLView from "react-native-htmlview";
 import { useSafeArea } from "react-native-safe-area-context";
 import title from "title";
 
+import { Button } from "yep/components/Button";
 import { EmptyState } from "yep/components/EmptyState";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { MediaListStatusWithLabel, MediaStatusWithLabel } from "yep/constants";
@@ -40,7 +41,6 @@ import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { notEmpty } from "yep/utils";
 
-import { Button } from "./Button";
 import { ExternalLink } from "./ExternalLink";
 import { RelatedList } from "./RelatedList";
 import { Stepper } from "./Stepper";
@@ -369,6 +369,8 @@ export function DetailsScreen({ route, navigation }: Props) {
           </PosterAndInfoContainer>
           <ButtonsRow>
             <Button
+              size="small"
+              containerStyle={{ flex: 1 }}
               loading={loadingStatus}
               label={
                 MediaListStatusWithLabel.find(
