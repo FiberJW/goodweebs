@@ -38,6 +38,7 @@ export function AnimeListScreen({ navigation }: Props) {
     MediaListStatusWithLabel[0].value
   );
 
+  // TODO: combine queries
   const { loading: loadingViewer, data: viewerData } = useGetViewerQuery();
 
   const {
@@ -50,6 +51,8 @@ export function AnimeListScreen({ navigation }: Props) {
       userId: viewerData?.Viewer?.id,
       status,
     },
+    // TODO: figure out how to maintain the list position while also updating the cache
+    fetchPolicy: "no-cache",
     notifyOnNetworkStatusChange: true,
   });
 
@@ -152,13 +155,19 @@ export function AnimeListScreen({ navigation }: Props) {
                 titleColor={darkTheme.text}
               />
             }
-            keyExtractor={(item) => `${item.mediaId}`}
+            keyExtractor={(item) => `${item.id}`}
             renderItem={({ item }) => (
               <AnimeListItemContainer
                 seedData={{
                   id: item.id,
                   progress: item.progress ?? 0,
                   media: item.media ?? null,
+                }}
+                refetchList={async () => {
+                  await refetch({
+                    userId: viewerData?.Viewer?.id,
+                    status,
+                  });
                 }}
                 refetchListVariables={{
                   userId: viewerData?.Viewer?.id,
