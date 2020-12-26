@@ -33,6 +33,7 @@ import {
   UpdateProgressDocument,
   UpdateScoreDocument,
   UpdateStatusDocument,
+  refetchGetAnimeQuery,
 } from "yep/graphql/generated";
 import { useNow, useDebouncedMutation } from "yep/hooks/helpers";
 import { RootStackParamList } from "yep/navigation";
@@ -161,9 +162,7 @@ export function DetailsScreen({ route, navigation }: Props) {
       }
     },
     wait: 0,
-    refetchQueries: [
-      { query: GetAnimeDocument, variables: { id: route.params.id } },
-    ],
+    refetchQueries: [refetchGetAnimeQuery({ id: route.params.id })],
   });
 
   const updateScore = useDebouncedMutation<
@@ -193,9 +192,7 @@ export function DetailsScreen({ route, navigation }: Props) {
         },
       });
     },
-    refetchQueries: [
-      { query: GetAnimeDocument, variables: { id: route.params.id } },
-    ],
+    refetchQueries: [refetchGetAnimeQuery({ id: route.params.id })],
   });
 
   const updateProgress = useDebouncedMutation<
@@ -229,9 +226,7 @@ export function DetailsScreen({ route, navigation }: Props) {
         // TODO: show dropdown alert to notify that this anime was moved to "completed" list
       }
     },
-    refetchQueries: [
-      { query: GetAnimeDocument, variables: { id: route.params.id } },
-    ],
+    refetchQueries: [refetchGetAnimeQuery({ id: route.params.id })],
   });
 
   async function refetchFromScroll() {
