@@ -306,7 +306,7 @@ export function DetailsScreen({ route, navigation }: Props) {
                 {data?.Media?.averageScore ? (
                   <Info
                     label="Average score"
-                    value={`${data?.Media?.averageScore ?? 0 / 10} / 10`}
+                    value={`${(data?.Media?.averageScore ?? 0) / 10} / 10`}
                   />
                 ) : null}
                 <Info
