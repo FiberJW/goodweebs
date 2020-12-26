@@ -4327,6 +4327,11 @@ export type MediaExternalLinkDataFragment = (
   & Pick<MediaExternalLink, 'id' | 'url' | 'site'>
 );
 
+export type MediaTrailerDataFragment = (
+  { __typename?: 'MediaTrailer' }
+  & Pick<MediaTrailer, 'id' | 'thumbnail' | 'site'>
+);
+
 export type AnimeFragmentFragment = (
   { __typename?: 'Media' }
   & Pick<Media, 'id' | 'status' | 'genres' | 'duration' | 'episodes' | 'description' | 'averageScore'>
@@ -4344,7 +4349,7 @@ export type AnimeFragmentFragment = (
     & Pick<MediaCoverImage, 'large' | 'medium' | 'color'>
   )>, trailer?: Maybe<(
     { __typename?: 'MediaTrailer' }
-    & Pick<MediaTrailer, 'id' | 'site' | 'thumbnail'>
+    & MediaTrailerDataFragment
   )>, streamingEpisodes?: Maybe<Array<Maybe<(
     { __typename?: 'MediaStreamingEpisode' }
     & StreamingLinkDataFragment
@@ -4569,6 +4574,13 @@ export type GetViewerQuery = (
   )> }
 );
 
+export const MediaTrailerDataFragmentDoc = gql`
+    fragment MediaTrailerData on MediaTrailer {
+  id
+  thumbnail
+  site
+}
+    `;
 export const StreamingLinkDataFragmentDoc = gql`
     fragment StreamingLinkData on MediaStreamingEpisode {
   title
@@ -4631,9 +4643,7 @@ export const AnimeFragmentFragmentDoc = gql`
     color
   }
   trailer {
-    id
-    site
-    thumbnail
+    ...MediaTrailerData
   }
   streamingEpisodes {
     ...StreamingLinkData
@@ -4663,7 +4673,8 @@ export const AnimeFragmentFragmentDoc = gql`
     }
   }
 }
-    ${StreamingLinkDataFragmentDoc}
+    ${MediaTrailerDataFragmentDoc}
+${StreamingLinkDataFragmentDoc}
 ${MediaExternalLinkDataFragmentDoc}
 ${AnimeRelationFragmentFragmentDoc}`;
 export const AiringNotificationFragmentFragmentDoc = gql`

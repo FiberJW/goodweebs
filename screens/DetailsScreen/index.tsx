@@ -44,6 +44,7 @@ import { notEmpty } from "yep/utils";
 import { ExternalLink } from "./ExternalLink";
 import { RelatedList } from "./RelatedList";
 import { Stepper } from "./Stepper";
+import { Trailer } from "./Trailer";
 
 const Container = takimoto.ScrollView({
   flex: 1,
@@ -455,6 +456,9 @@ export function DetailsScreen({ route, navigation }: Props) {
             />
           ) : null}
           <DescriptionSpacer />
+          {data.Media?.trailer ? (
+            <Trailer trailer={data.Media?.trailer} />
+          ) : null}
           {/* TODO: maybe this should be a flatlist */}
           {Object.keys(mappedRelations).map((key: string) => {
             const relationType = key as MediaRelation;

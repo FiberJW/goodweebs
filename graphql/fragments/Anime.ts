@@ -32,6 +32,12 @@ export const AnimeFragment = gql`
     site
   }
 
+  fragment MediaTrailerData on MediaTrailer {
+    id
+    thumbnail
+    site
+  }
+
   fragment AnimeFragment on Media {
     id
     title {
@@ -61,9 +67,7 @@ export const AnimeFragment = gql`
       color
     }
     trailer {
-      id
-      site
-      thumbnail
+      ...MediaTrailerData
     }
     streamingEpisodes {
       ...StreamingLinkData
