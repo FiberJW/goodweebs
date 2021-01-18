@@ -14,6 +14,7 @@ import title from "title";
 import { Button } from "yep/components/Button";
 import { EmptyState } from "yep/components/EmptyState";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
+import { LikeButton } from "yep/components/PosterAndTitle/LikeButton";
 import { MediaListStatusWithLabel, MediaStatusWithLabel } from "yep/constants";
 import {
   GetAnimeQuery,
@@ -290,7 +291,23 @@ export function DetailsScreen({ route, navigation }: Props) {
               size="details"
               uri={data?.Media?.coverImage?.large ?? ""}
               style={{ marginRight: 16 }}
-            />
+            >
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "flex-end",
+                  alignItems: "flex-end",
+                  padding: 8,
+                }}
+              >
+                <LikeButton
+                  isLiked={false}
+                  onPress={() => {
+                    // TODO: hook up favorite anime mutation
+                  }}
+                />
+              </View>
+            </PosterAndTitle>
             <InfoTable>
               <InfoRow>
                 {data?.Media?.episodes ? (
