@@ -36,7 +36,7 @@ type Props = {
   navigation: StackNavigationProp<RootStackParamList>;
 };
 
-export function ProfileScreen(_: Props) {
+export function ProfileScreen({ navigation }: Props) {
   const {
     loading: loadingViewer,
     data: viewerData,
@@ -121,7 +121,9 @@ export function ProfileScreen(_: Props) {
                         size="profile"
                         uri={item?.coverImage?.large ?? ""}
                         title={getTitle(item.title)}
-                        disabled
+                        onPress={() =>
+                          navigation.navigate("Details", { id: item.id })
+                        }
                       />
                     </FavoriteContainer>
                   )}
