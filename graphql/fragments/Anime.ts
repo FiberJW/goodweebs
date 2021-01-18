@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 export const AnimeRelationFragment = gql`
   fragment AnimeRelationFragment on Media {
     id
+    isFavourite
     title {
       romaji
       native
@@ -60,6 +61,7 @@ export const AnimeFragment = gql`
     duration
     episodes
     description
+    isFavourite
     averageScore
     coverImage {
       large

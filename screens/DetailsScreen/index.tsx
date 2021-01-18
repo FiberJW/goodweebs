@@ -35,6 +35,7 @@ import {
   UpdateScoreDocument,
   UpdateStatusDocument,
   refetchGetAnimeQuery,
+  useToggleFavoriteMutation,
 } from "yep/graphql/generated";
 import { useNow, useDebouncedMutation } from "yep/hooks/helpers";
 import { RootStackParamList } from "yep/navigation";
@@ -132,6 +133,8 @@ export function DetailsScreen({ route, navigation }: Props) {
     variables: { id: route.params.id },
     notifyOnNetworkStatusChange: true,
   });
+
+  const [toggleFavorite] = useToggleFavoriteMutation();
 
   const updateStatus = useDebouncedMutation<
     UpdateStatusMutation,
@@ -301,9 +304,21 @@ export function DetailsScreen({ route, navigation }: Props) {
                 }}
               >
                 <LikeButton
-                  isLiked={false}
-                  onPress={() => {
-                    // TODO: hook up favorite anime mutation
+                  isLiked={Boolean(data?.Media?.isFavourite)}
+                  onPress={async () => {
+                    try {
+                      await toggleFavorite({
+                        variables: {
+                          animeId: data?.Media?.id,
+                        },
+                        refetchQueries: [
+                          refetchGetAnimeQuery({ id: route.params.id }),
+                        ],
+                      });
+                    } catch (error) {
+                      console.error(error);
+                      // TODO: toast this error
+                    }
                   }}
                 />
               </View>

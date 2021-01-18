@@ -4307,7 +4307,7 @@ export type UserModData = {
 
 export type AnimeRelationFragmentFragment = (
   { __typename?: 'Media' }
-  & Pick<Media, 'id' | 'type' | 'format'>
+  & Pick<Media, 'id' | 'isFavourite' | 'type' | 'format'>
   & { title?: Maybe<(
     { __typename?: 'MediaTitle' }
     & Pick<MediaTitle, 'romaji' | 'native' | 'english'>
@@ -4334,7 +4334,7 @@ export type MediaTrailerDataFragment = (
 
 export type AnimeFragmentFragment = (
   { __typename?: 'Media' }
-  & Pick<Media, 'id' | 'status' | 'genres' | 'duration' | 'episodes' | 'description' | 'averageScore'>
+  & Pick<Media, 'id' | 'status' | 'genres' | 'duration' | 'episodes' | 'description' | 'isFavourite' | 'averageScore'>
   & { title?: Maybe<(
     { __typename?: 'MediaTitle' }
     & Pick<MediaTitle, 'romaji' | 'native' | 'english'>
@@ -4372,6 +4372,49 @@ export type AnimeFragmentFragment = (
         & AnimeRelationFragmentFragment
       )> }
     )>>> }
+  )> }
+);
+
+export type CharacterDataFragment = (
+  { __typename?: 'Character' }
+  & Pick<Character, 'id' | 'isFavourite' | 'description' | 'siteUrl'>
+  & { name?: Maybe<(
+    { __typename?: 'CharacterName' }
+    & Pick<CharacterName, 'first' | 'last' | 'full' | 'native' | 'alternative'>
+  )>, image?: Maybe<(
+    { __typename?: 'CharacterImage' }
+    & Pick<CharacterImage, 'large' | 'medium'>
+  )> }
+);
+
+export type ToggleFavoriteMutationVariables = Exact<{
+  animeId?: Maybe<Scalars['Int']>;
+  characterId?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type ToggleFavoriteMutation = (
+  { __typename?: 'Mutation' }
+  & { ToggleFavourite?: Maybe<(
+    { __typename?: 'Favourites' }
+    & FavouritesDataFragment
+  )> }
+);
+
+export type FavouritesDataFragment = (
+  { __typename?: 'Favourites' }
+  & { anime?: Maybe<(
+    { __typename?: 'MediaConnection' }
+    & { pageInfo?: Maybe<(
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'total'>
+    )> }
+  )>, characters?: Maybe<(
+    { __typename?: 'CharacterConnection' }
+    & { pageInfo?: Maybe<(
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'total'>
+    )> }
   )> }
 );
 
@@ -4599,6 +4642,7 @@ export const MediaExternalLinkDataFragmentDoc = gql`
 export const AnimeRelationFragmentFragmentDoc = gql`
     fragment AnimeRelationFragment on Media {
   id
+  isFavourite
   title {
     romaji
     native
@@ -4636,6 +4680,7 @@ export const AnimeFragmentFragmentDoc = gql`
   duration
   episodes
   description
+  isFavourite
   averageScore
   coverImage {
     large
@@ -4677,6 +4722,39 @@ export const AnimeFragmentFragmentDoc = gql`
 ${StreamingLinkDataFragmentDoc}
 ${MediaExternalLinkDataFragmentDoc}
 ${AnimeRelationFragmentFragmentDoc}`;
+export const CharacterDataFragmentDoc = gql`
+    fragment CharacterData on Character {
+  id
+  isFavourite
+  name {
+    first
+    last
+    full
+    native
+    alternative
+  }
+  image {
+    large
+    medium
+  }
+  description
+  siteUrl
+}
+    `;
+export const FavouritesDataFragmentDoc = gql`
+    fragment FavouritesData on Favourites {
+  anime {
+    pageInfo {
+      total
+    }
+  }
+  characters {
+    pageInfo {
+      total
+    }
+  }
+}
+    `;
 export const AiringNotificationFragmentFragmentDoc = gql`
     fragment AiringNotificationFragment on AiringNotification {
   id
@@ -4690,6 +4768,39 @@ export const AiringNotificationFragmentFragmentDoc = gql`
   }
 }
     ${AnimeRelationFragmentFragmentDoc}`;
+export const ToggleFavoriteDocument = gql`
+    mutation ToggleFavorite($animeId: Int, $characterId: Int) {
+  ToggleFavourite(animeId: $animeId, characterId: $characterId) {
+    ...FavouritesData
+  }
+}
+    ${FavouritesDataFragmentDoc}`;
+export type ToggleFavoriteMutationFn = Apollo.MutationFunction<ToggleFavoriteMutation, ToggleFavoriteMutationVariables>;
+
+/**
+ * __useToggleFavoriteMutation__
+ *
+ * To run a mutation, you first call `useToggleFavoriteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useToggleFavoriteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [toggleFavoriteMutation, { data, loading, error }] = useToggleFavoriteMutation({
+ *   variables: {
+ *      animeId: // value for 'animeId'
+ *      characterId: // value for 'characterId'
+ *   },
+ * });
+ */
+export function useToggleFavoriteMutation(baseOptions?: Apollo.MutationHookOptions<ToggleFavoriteMutation, ToggleFavoriteMutationVariables>) {
+        return Apollo.useMutation<ToggleFavoriteMutation, ToggleFavoriteMutationVariables>(ToggleFavoriteDocument, baseOptions);
+      }
+export type ToggleFavoriteMutationHookResult = ReturnType<typeof useToggleFavoriteMutation>;
+export type ToggleFavoriteMutationResult = Apollo.MutationResult<ToggleFavoriteMutation>;
+export type ToggleFavoriteMutationOptions = Apollo.BaseMutationOptions<ToggleFavoriteMutation, ToggleFavoriteMutationVariables>;
 export const UpdateProgressDocument = gql`
     mutation UpdateProgress($id: Int, $progress: Int) {
   SaveMediaListEntry(id: $id, progress: $progress) {
