@@ -7,6 +7,7 @@ import { Image, StatusBar } from "react-native";
 import { AnimeListScreen } from "yep/screens/AnimeListScreen";
 import { AuthScreen } from "yep/screens/AuthScreen";
 import { BroadcastHistoryScreen } from "yep/screens/BroadcastHistoryScreen";
+import { CharacterScreen } from "yep/screens/CharacterScreen";
 import { DetailsScreen } from "yep/screens/DetailsScreen";
 import { DiscoverScreen } from "yep/screens/DiscoverScreen";
 import { ProfileScreen } from "yep/screens/ProfileScreen";
@@ -18,6 +19,7 @@ export type RootStackParamList = {
   Tabs: undefined;
   Auth: undefined;
   Details: { id: number };
+  Character: { id: number };
 };
 
 export type TabParamList = {
@@ -185,6 +187,7 @@ export function Navigation({ accessToken }: NavigationProps) {
           options={{ headerShown: false }}
         />
         <Stack.Screen name="Details" component={DetailsScreen} />
+        <Stack.Screen name="Character" component={CharacterScreen} />
         <Stack.Screen
           name="Auth"
           component={AuthScreen}

@@ -180,21 +180,23 @@ export function DetailsScreen({ route, navigation }: Props) {
         variables: { id: route.params.id },
       });
 
-      proxy.writeQuery<GetAnimeQuery>({
-        query: GetAnimeDocument,
-        variables: { id: route.params.id },
-        data: {
-          ...proxyData,
-          Media: {
-            ...proxyData?.Media,
-            id: proxyData?.Media?.id as number,
-            mediaListEntry: {
-              ...(proxyData?.Media?.mediaListEntry as MediaList),
-              score: (variables?.scoreRaw ?? 0) / 10,
+      if (proxyData?.Media?.mediaListEntry) {
+        proxy.writeQuery<GetAnimeQuery>({
+          query: GetAnimeDocument,
+          variables: { id: route.params.id },
+          data: {
+            ...proxyData,
+            Media: {
+              ...proxyData?.Media,
+              id: proxyData?.Media?.id as number,
+              mediaListEntry: {
+                ...(proxyData?.Media?.mediaListEntry as MediaList),
+                score: (variables?.scoreRaw ?? 0) / 10,
+              },
             },
           },
-        },
-      });
+        });
+      }
     },
     refetchQueries: [refetchGetAnimeQuery({ id: route.params.id })],
   });
@@ -210,21 +212,23 @@ export function DetailsScreen({ route, navigation }: Props) {
         variables: { id: route.params.id },
       });
 
-      proxy.writeQuery<GetAnimeQuery>({
-        query: GetAnimeDocument,
-        variables: { id: route.params.id },
-        data: {
-          ...proxyData,
-          Media: {
-            ...proxyData?.Media,
-            id: proxyData?.Media?.id as number,
-            mediaListEntry: {
-              ...(proxyData?.Media?.mediaListEntry as MediaList),
-              progress: variables?.progress,
+      if (proxyData?.Media?.mediaListEntry) {
+        proxy.writeQuery<GetAnimeQuery>({
+          query: GetAnimeDocument,
+          variables: { id: route.params.id },
+          data: {
+            ...proxyData,
+            Media: {
+              ...proxyData?.Media,
+              id: proxyData?.Media?.id as number,
+              mediaListEntry: {
+                ...(proxyData?.Media?.mediaListEntry as MediaList),
+                progress: variables?.progress,
+              },
             },
           },
-        },
-      });
+        });
+      }
 
       if (variables?.progress === proxyData?.Media?.episodes) {
         // TODO: show dropdown alert to notify that this anime was moved to "completed" list

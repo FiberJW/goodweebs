@@ -61,22 +61,24 @@ export function AnimeListItemContainer({
         variables: { id: seedData?.media?.id },
       });
 
-      // Write our data back to the cache with the new progress in it
-      proxy.writeQuery<GetAnimeQuery>({
-        query: GetAnimeDocument,
-        variables: { id: seedData?.media?.id },
-        data: {
-          ...proxyData,
-          Media: {
-            ...seedData?.media,
-            id: seedData?.media?.id as number,
-            mediaListEntry: {
-              ...(proxyData?.Media?.mediaListEntry as MediaList),
-              progress: variables?.progress,
+      if (seedData?.media) {
+        // Write our data back to the cache with the new progress in it
+        proxy.writeQuery<GetAnimeQuery>({
+          query: GetAnimeDocument,
+          variables: { id: seedData?.media?.id },
+          data: {
+            ...proxyData,
+            Media: {
+              ...seedData?.media,
+              id: seedData?.media?.id as number,
+              mediaListEntry: {
+                ...(proxyData?.Media?.mediaListEntry as MediaList),
+                progress: variables?.progress,
+              },
             },
           },
-        },
-      });
+        });
+      }
 
       if (variables?.progress === proxyData?.Media?.episodes) {
         // TODO: show dropdown alert to notify that this anime was moved to "completed" list

@@ -4564,6 +4564,19 @@ export type SearchAnimeQuery = (
   )> }
 );
 
+export type GetCharacterQueryVariables = Exact<{
+  id?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetCharacterQuery = (
+  { __typename?: 'Query' }
+  & { Character?: Maybe<(
+    { __typename?: 'Character' }
+    & CharacterDataFragment
+  )> }
+);
+
 export type GetViewerQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -5114,6 +5127,42 @@ export type SearchAnimeLazyQueryHookResult = ReturnType<typeof useSearchAnimeLaz
 export type SearchAnimeQueryResult = Apollo.QueryResult<SearchAnimeQuery, SearchAnimeQueryVariables>;
 export function refetchSearchAnimeQuery(variables?: SearchAnimeQueryVariables) {
       return { query: SearchAnimeDocument, variables: variables }
+    }
+export const GetCharacterDocument = gql`
+    query GetCharacter($id: Int) {
+  Character(id: $id) {
+    ...CharacterData
+  }
+}
+    ${CharacterDataFragmentDoc}`;
+
+/**
+ * __useGetCharacterQuery__
+ *
+ * To run a query within a React component, call `useGetCharacterQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCharacterQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCharacterQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetCharacterQuery(baseOptions?: Apollo.QueryHookOptions<GetCharacterQuery, GetCharacterQueryVariables>) {
+        return Apollo.useQuery<GetCharacterQuery, GetCharacterQueryVariables>(GetCharacterDocument, baseOptions);
+      }
+export function useGetCharacterLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCharacterQuery, GetCharacterQueryVariables>) {
+          return Apollo.useLazyQuery<GetCharacterQuery, GetCharacterQueryVariables>(GetCharacterDocument, baseOptions);
+        }
+export type GetCharacterQueryHookResult = ReturnType<typeof useGetCharacterQuery>;
+export type GetCharacterLazyQueryHookResult = ReturnType<typeof useGetCharacterLazyQuery>;
+export type GetCharacterQueryResult = Apollo.QueryResult<GetCharacterQuery, GetCharacterQueryVariables>;
+export function refetchGetCharacterQuery(variables?: GetCharacterQueryVariables) {
+      return { query: GetCharacterDocument, variables: variables }
     }
 export const GetViewerDocument = gql`
     query GetViewer {

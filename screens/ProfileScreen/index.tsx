@@ -144,10 +144,12 @@ export function ProfileScreen({ navigation }: Props) {
                   renderItem={({ item }) => (
                     <FavoriteContainer>
                       <PosterAndTitle
-                        disabled
                         size="profile"
                         uri={item?.image?.large ?? ""}
                         title={item.name?.full ?? undefined}
+                        onPress={() =>
+                          navigation.navigate("Character", { id: item.id })
+                        }
                       />
                     </FavoriteContainer>
                   )}

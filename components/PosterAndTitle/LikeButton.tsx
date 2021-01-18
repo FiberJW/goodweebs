@@ -1,11 +1,7 @@
-import React from "react";
-import { Image, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Image, StyleSheet } from "react-native";
 
-import {
-  favoritedBackground,
-  notFavoritedBackground,
-  white40,
-} from "yep/colors";
+import { favoritedBackground, notFavoritedBackground, white } from "yep/colors";
 
 import { PressableOpacity } from "../PressableOpacity";
 
@@ -14,10 +10,24 @@ const notLikedIcon = require("yep/assets/icons/favorite-border-24.png");
 
 type Props = {
   isLiked: boolean;
-  onPress: () => void;
+  onPress: () => Promise<void>;
 };
 
 export function LikeButton({ isLiked, onPress }: Props) {
+  const [loading, setLoading] = useState(false);
+
+  async function handleOnPress() {
+    setLoading(true);
+    await onPress();
+  }
+
+  useEffect(
+    function setLoadingToFalseAfterIsLikedChanges() {
+      setLoading(false);
+    },
+    [isLiked]
+  );
+
   return (
     <PressableOpacity
       borderRadius={8}
@@ -29,10 +39,17 @@ export function LikeButton({ isLiked, onPress }: Props) {
             : notFavoritedBackground,
         },
       ]}
-      onPress={onPress}
-      activeOpacity={0.8}
+      onPress={handleOnPress}
+      activeOpacity={1}
     >
-      <Image source={isLiked ? likedIcon : notLikedIcon} style={styles.icon} />
+      {loading ? (
+        <ActivityIndicator size="small" color={white} />
+      ) : (
+        <Image
+          source={isLiked ? likedIcon : notLikedIcon}
+          style={styles.icon}
+        />
+      )}
     </PressableOpacity>
   );
 }
@@ -45,5 +62,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 16,
     width: 48,
+    backgroundColor: favoritedBackground,
   },
 });
