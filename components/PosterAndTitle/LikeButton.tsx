@@ -58,10 +58,10 @@ const styles = StyleSheet.create({
   icon: { height: 24, width: 24 },
   pressable: {
     alignItems: "center",
+    backgroundColor: favoritedBackground,
     height: 48,
     justifyContent: "center",
     padding: 16,
     width: 48,
-    backgroundColor: favoritedBackground,
   },
 });

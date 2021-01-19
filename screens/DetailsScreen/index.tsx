@@ -43,8 +43,8 @@ import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { notEmpty } from "yep/utils";
-import { CharacterList } from "./CharacterList";
 
+import { CharacterList } from "./CharacterList";
 import { ExternalLink } from "./ExternalLink";
 import { RelatedAnimeList } from "./RelatedAnimeList";
 import { Stepper } from "./Stepper";
