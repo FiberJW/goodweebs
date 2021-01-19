@@ -43,9 +43,10 @@ import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { notEmpty } from "yep/utils";
+import { CharacterList } from "./CharacterList";
 
 import { ExternalLink } from "./ExternalLink";
-import { RelatedList } from "./RelatedList";
+import { RelatedAnimeList } from "./RelatedAnimeList";
 import { Stepper } from "./Stepper";
 import { Trailer } from "./Trailer";
 
@@ -490,13 +491,19 @@ export function DetailsScreen({ route, navigation }: Props) {
           {data.Media?.trailer ? (
             <Trailer trailer={data.Media?.trailer} />
           ) : null}
+          {data.Media?.characters?.nodes ? (
+            <CharacterList
+              characters={(data.Media?.characters?.nodes).filter(notEmpty)}
+              navigation={navigation}
+            />
+          ) : null}
           {/* TODO: maybe this should be a flatlist */}
           {Object.keys(mappedRelations).map((key: string) => {
             const relationType = key as MediaRelation;
             const relations = mappedRelations[relationType] ?? [];
 
             return (
-              <RelatedList
+              <RelatedAnimeList
                 key={key}
                 relationType={relationType}
                 relations={relations}

@@ -98,7 +98,20 @@ export const AnimeFragment = gql`
         }
       }
     }
+    characters {
+      edges {
+        id
+        role
+        node {
+          ...CharacterData
+        }
+      }
+      nodes {
+        ...CharacterData
+      }
+    }
   }
 
   ${AnimeRelationFragment}
+  ${CharacterData}
 `;

@@ -11,7 +11,7 @@ type RelatedItemProps = {
   navigation: StackNavigationProp<RootStackParamList>;
 };
 
-export function RelatedItem({ anime, navigation }: RelatedItemProps) {
+export function RelatedAnimeItem({ anime, navigation }: RelatedItemProps) {
   if (!anime.coverImage?.large) return null;
 
   return (

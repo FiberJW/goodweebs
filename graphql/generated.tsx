@@ -4372,6 +4372,19 @@ export type AnimeFragmentFragment = (
         & AnimeRelationFragmentFragment
       )> }
     )>>> }
+  )>, characters?: Maybe<(
+    { __typename?: 'CharacterConnection' }
+    & { edges?: Maybe<Array<Maybe<(
+      { __typename?: 'CharacterEdge' }
+      & Pick<CharacterEdge, 'id' | 'role'>
+      & { node?: Maybe<(
+        { __typename?: 'Character' }
+        & CharacterDataFragment
+      )> }
+    )>>>, nodes?: Maybe<Array<Maybe<(
+      { __typename?: 'Character' }
+      & CharacterDataFragment
+    )>>> }
   )> }
 );
 
@@ -4670,6 +4683,25 @@ export const AnimeRelationFragmentFragmentDoc = gql`
   }
 }
     `;
+export const CharacterDataFragmentDoc = gql`
+    fragment CharacterData on Character {
+  id
+  isFavourite
+  name {
+    first
+    last
+    full
+    native
+    alternative
+  }
+  image {
+    large
+    medium
+  }
+  description
+  siteUrl
+}
+    `;
 export const AnimeFragmentFragmentDoc = gql`
     fragment AnimeFragment on Media {
   id
@@ -4730,30 +4762,24 @@ export const AnimeFragmentFragmentDoc = gql`
       }
     }
   }
+  characters {
+    edges {
+      id
+      role
+      node {
+        ...CharacterData
+      }
+    }
+    nodes {
+      ...CharacterData
+    }
+  }
 }
     ${MediaTrailerDataFragmentDoc}
 ${StreamingLinkDataFragmentDoc}
 ${MediaExternalLinkDataFragmentDoc}
-${AnimeRelationFragmentFragmentDoc}`;
-export const CharacterDataFragmentDoc = gql`
-    fragment CharacterData on Character {
-  id
-  isFavourite
-  name {
-    first
-    last
-    full
-    native
-    alternative
-  }
-  image {
-    large
-    medium
-  }
-  description
-  siteUrl
-}
-    `;
+${AnimeRelationFragmentFragmentDoc}
+${CharacterDataFragmentDoc}`;
 export const FavouritesDataFragmentDoc = gql`
     fragment FavouritesData on Favourites {
   anime {

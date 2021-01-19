@@ -11,7 +11,7 @@ import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { getReadableMediaRelation } from "yep/utils";
 
-import { RelatedItem } from "./RelatedItem";
+import { RelatedAnimeItem } from "./RelatedAnimeItem";
 
 const RelatedListFlatList = takimoto.FlatList<AnimeRelationFragmentFragment>({
   width: "100%",
@@ -33,7 +33,7 @@ type RelatedListProps = {
   navigation: StackNavigationProp<RootStackParamList>;
 };
 
-export function RelatedList({
+export function RelatedAnimeList({
   relationType,
   relations,
   navigation,
@@ -63,7 +63,7 @@ export function RelatedList({
         keyExtractor={(item) => `${item.id}`}
         data={relations}
         renderItem={({ item }) => {
-          return <RelatedItem anime={item} navigation={navigation} />;
+          return <RelatedAnimeItem anime={item} navigation={navigation} />;
         }}
       />
       <RelatedListSpacer />

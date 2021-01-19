@@ -1,7 +1,7 @@
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import React, { useState } from "react";
-import { StyleSheet, RefreshControl, View } from "react-native";
+import React from "react";
+import { StyleSheet, View } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
