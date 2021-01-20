@@ -8,8 +8,8 @@ import * as Sentry from "sentry-expo";
 
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { client } from "yep/graphql/client";
-import { useFonts } from "yep/hooks/font";
 import { Navigation } from "yep/navigation";
+import { useManrope } from "yep/typefaces";
 
 enableScreens();
 
@@ -23,15 +23,7 @@ Sentry.init({
 export default function App() {
   const [checkedForToken, setCheckedForToken] = useState(false);
   const [accessToken, setAccessToken] = useState<string | null>(null);
-  const fontsLoaded = useFonts({
-    "Manrope-Bold": require("yep/assets/fonts/manrope/Manrope-Bold.otf"),
-    "Manrope-ExtraBold": require("yep/assets/fonts/manrope/Manrope-ExtraBold.otf"),
-    "Manrope-ExtraLight": require("yep/assets/fonts/manrope/Manrope-ExtraLight.otf"),
-    "Manrope-Light": require("yep/assets/fonts/manrope/Manrope-Light.otf"),
-    "Manrope-Medium": require("yep/assets/fonts/manrope/Manrope-Medium.otf"),
-    "Manrope-Regular": require("yep/assets/fonts/manrope/Manrope-Regular.otf"),
-    "Manrope-SemiBold": require("yep/assets/fonts/manrope/Manrope-SemiBold.otf"),
-  });
+  const fontsLoaded = useManrope();
 
   useEffect(function navigateIfAccessTokenExists() {
     (async () => {
