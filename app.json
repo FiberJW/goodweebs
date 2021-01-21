@@ -33,6 +33,7 @@
         "backgroundImage": "./assets/launch/android-background.png",
         "foregroundImage": "./assets/launch/android-foreground.png"
       }
-    }
+    },
+    "web": { "favicon": "./assets/favicon.png" }
   }
 }

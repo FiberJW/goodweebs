@@ -14,6 +14,8 @@ export const white = "#ffffff";
 export const goodweebsPurple = "#651FFF";
 export const badgeRed = "#EC4124";
 export const alienGreen = "#00b248";
+export const darkBlue = "#11052B";
+export const gray6 = "#F2F2F2";
 
 export const dangoPink = "#F48FB1";
 export const dangoPinkBackground = "#FFCFF1";

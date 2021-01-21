@@ -8,6 +8,7 @@ import {
 import { DocumentNode } from "graphql";
 import { debounce } from "lodash";
 import { useRef, useEffect, useState } from "react";
+import { useWindowDimensions } from "react-native";
 
 export function useDidMountEffect(func: () => void, deps: any[]) {
   const didMount = useRef(false);
@@ -106,4 +107,12 @@ export function useDebouncedMutation<
       newVariables
     );
   };
+}
+
+export function useBreakpoints() {
+  const { width } = useWindowDimensions();
+
+  const isMobile = width <= 700;
+
+  return { isMobile };
 }

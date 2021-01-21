@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 
 import { useManrope } from "yep/typefaces";
-import { Index } from "yep/website/pages";
+import { Index } from "yep/website/pages/Index";
 
 export default function Website() {
   const fontsLoaded = useManrope();
