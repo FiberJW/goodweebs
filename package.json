@@ -9,7 +9,10 @@
     "postinstall": "yarn graphql-generate",
     "graphql-generate": "graphql-codegen --config codegen.yml",
     "watch-graphql-generate": "yarn graphql-generate -w",
-    "lint": "eslint . --ext .ts,.js,.tsx --fix "
+    "lint": "eslint . --ext .ts,.js,.tsx --fix",
+    "publish:prod": "expo publish --release-channel production",
+    "build:ios:prod": "expo build:ios --release-channel production",
+    "build:android:prod": "expo build:android --release-channel production"
   },
   "dependencies": {
     "@apollo/client": "^3.1.5",
