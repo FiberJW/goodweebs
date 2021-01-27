@@ -34,7 +34,7 @@ export function DownloadSection() {
           </Text>
         </View>
         <View style={styles.downloadButtonsRow}>
-          <a href="TODO: add link">
+          <a href="https://apps.apple.com/us/app/goodweebs/id1515644560">
             <Image style={styles.appStoreButtonImage} source={appStore} />
           </a>
           <a href="https://play.google.com/store/apps/details?id=com.fiberjw.goodweebs">
