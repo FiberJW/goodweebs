@@ -266,6 +266,8 @@ export function DetailsScreen({ route, navigation }: Props) {
     {}
   );
 
+  const externalLinks = data?.Media?.externalLinks?.filter(notEmpty);
+
   return (
     <Container
       contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
@@ -512,23 +514,27 @@ export function DetailsScreen({ route, navigation }: Props) {
             );
           })}
 
-          <View style={{ height: 16 }} />
-          <Text
-            style={{
-              fontFamily: Manrope.semiBold,
-              color: darkTheme.text,
-              fontSize: 20,
-            }}
-          >
-            External / Streaming Links
-          </Text>
-          <View style={{ height: 16 }} />
-          <FlatList
-            data={data?.Media?.externalLinks?.filter(notEmpty)}
-            keyExtractor={(item) => `${item.id}`}
-            renderItem={({ item }) => <ExternalLink {...item} />}
-            ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
-          />
+          {externalLinks ? (
+            <>
+              <View style={{ height: 16 }} />
+              <Text
+                style={{
+                  fontFamily: Manrope.semiBold,
+                  color: darkTheme.text,
+                  fontSize: 20,
+                }}
+              >
+                External / Streaming Links
+              </Text>
+              <View style={{ height: 16 }} />
+              <FlatList
+                data={externalLinks}
+                keyExtractor={(item) => `${item.id}`}
+                renderItem={({ item }) => <ExternalLink {...item} />}
+                ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
+              />
+            </>
+          ) : null}
         </>
       )}
     </Container>
