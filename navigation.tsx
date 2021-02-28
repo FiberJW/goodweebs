@@ -6,7 +6,6 @@ import { Image, Platform, StatusBar } from "react-native";
 
 import { AnimeListScreen } from "yep/screens/AnimeListScreen";
 import { AuthScreen } from "yep/screens/AuthScreen";
-import { BroadcastHistoryScreen } from "yep/screens/BroadcastHistoryScreen";
 import { CharacterScreen } from "yep/screens/CharacterScreen";
 import { DetailsScreen } from "yep/screens/DetailsScreen";
 import { DiscoverScreen } from "yep/screens/DiscoverScreen";
@@ -24,7 +23,6 @@ export type RootStackParamList = {
 
 export type TabParamList = {
   Anime: undefined;
-  Airing: undefined;
   Discover: undefined;
   Profile: undefined;
 };
@@ -62,8 +60,7 @@ function Tabs() {
       />
       {/* <Tab.Screen
         name="Manga"
-        // TODO: I've got too much anime on my "planned" list,
-        // so I'll finish that before I start on manga
+        // TODO: if i ever start reading manga
         component={MangaListScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
@@ -78,22 +75,6 @@ function Tabs() {
           ),
         }}
       /> */}
-      <Tab.Screen
-        name="Airing"
-        component={BroadcastHistoryScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Image
-              style={{
-                tintColor: color,
-                height: size,
-                width: size,
-              }}
-              source={require("yep/assets/icons/navigation/airing-tab.png")}
-            />
-          ),
-        }}
-      />
       <Tab.Screen
         name="Discover"
         component={DiscoverScreen}
