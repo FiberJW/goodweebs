@@ -1,6 +1,6 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useEffect } from "react";
-import { AsyncStorage } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button } from "yep/components/Button";

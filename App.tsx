@@ -1,8 +1,8 @@
 import { ApolloProvider } from "@apollo/client";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppLoading from "expo-app-loading";
 import React, { useState, useEffect } from "react";
-import { AsyncStorage } from "react-native";
 import { enableScreens } from "react-native-screens";
 import * as Sentry from "sentry-expo";
 

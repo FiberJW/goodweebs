@@ -1,7 +1,8 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackNavigationProp } from "@react-navigation/stack";
 import * as Updates from "expo-updates";
 import React from "react";
-import { Alert, AsyncStorage, RefreshControl } from "react-native";
+import { Alert, RefreshControl } from "react-native";
 
 import { white } from "yep/colors";
 import { Button } from "yep/components/Button";
