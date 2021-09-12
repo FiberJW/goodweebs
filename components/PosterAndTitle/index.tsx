@@ -1,9 +1,16 @@
 import React, { ReactNode } from "react";
-import { StyleSheet, useWindowDimensions, ViewStyle } from "react-native";
+import {
+  StyleSheet,
+  useWindowDimensions,
+  ViewStyle,
+  ImageBackground,
+  Text,
+} from "react-native";
+
+import { darkTheme } from "yep/themes";
+import { Manrope } from "yep/typefaces";
 
 import { PressableOpacity } from "../PressableOpacity";
-
-import { Title, Image } from "./styles";
 
 type Props = {
   size: "small" | "tiny" | "large" | "profile" | "details";
@@ -53,22 +60,25 @@ export function PosterAndTitle({
       onPress={onPress}
       disabled={disabled}
     >
-      <Image
+      <ImageBackground
         resizeMode="cover"
-        style={{ width: posterWidth, height: posterHeight }}
+        style={[styles.poster, { width: posterWidth, height: posterHeight }]}
         source={{ uri }}
       >
         {children}
-      </Image>
+      </ImageBackground>
       {title ? (
-        <Title
+        <Text
           numberOfLines={2}
-          style={{
-            maxWidth: posterWidth,
-          }}
+          style={[
+            styles.title,
+            {
+              maxWidth: posterWidth,
+            },
+          ]}
         >
           {title}
-        </Title>
+        </Text>
       ) : null}
     </PressableOpacity>
   );
@@ -77,5 +87,17 @@ export function PosterAndTitle({
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
+  },
+  poster: {
+    backgroundColor: darkTheme.listItemBackground,
+    borderRadius: 4,
+    overflow: "hidden",
+  },
+  title: {
+    color: darkTheme.text,
+    fontFamily: Manrope.regular,
+    fontSize: 12.8,
+    marginTop: 8,
+    textAlign: "center",
   },
 });

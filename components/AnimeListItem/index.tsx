@@ -3,7 +3,7 @@ import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { formatDistanceToNow, add } from "date-fns";
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 
 import {
   AnimeFragmentFragment,
@@ -13,22 +13,13 @@ import {
 import { useNow } from "yep/hooks/helpers";
 import { RootStackParamList, TabParamList } from "yep/navigation";
 import { darkTheme } from "yep/themes";
+import { Manrope } from "yep/typefaces";
 
 import { PosterAndTitle } from "../PosterAndTitle";
 import { PressableOpacity } from "../PressableOpacity";
 
+import { EpisodesBehind } from "./EpisodesBehind";
 import { ProgressButton } from "./ProgressButton";
-import {
-  TitleAndBroadcastColumn,
-  Title,
-  BroadcastSchedule,
-  ProgressColumn,
-  EpisodeProgress,
-  ProgressButtonGroup,
-  Spacer,
-  ProgressButtonSpacer,
-  EpisodesBehind,
-} from "./styles";
 
 type Props = {
   onIncrement: () => void;
@@ -74,41 +65,41 @@ export function AnimeListItem({
           <EpisodesBehind count={episodesBehind} />
         ) : null}
       </PosterAndTitle>
-      <Spacer />
-      <TitleAndBroadcastColumn>
-        <Title numberOfLines={2}>
+      <View style={styles.spacer} />
+      <View style={styles.titleAndBroadcastColumn}>
+        <Text style={styles.title} numberOfLines={2}>
           {media.title?.english || media.title?.romaji || media.title?.native}
-        </Title>
+        </Text>
         {media.status === MediaStatus.Releasing ? (
-          <BroadcastSchedule numberOfLines={1}>
+          <Text style={styles.broadcastSchedule} numberOfLines={1}>
             EP {media.nextAiringEpisode?.episode} airs in{" "}
             {formatDistanceToNow(
               add(now, {
                 seconds: media.nextAiringEpisode?.timeUntilAiring ?? 0,
               })
             )}
-          </BroadcastSchedule>
+          </Text>
         ) : media.status === MediaStatus.NotYetReleased ? (
           media.startDate?.month !== null &&
           media.startDate?.month !== undefined && (
-            <BroadcastSchedule numberOfLines={1}>
+            <Text style={styles.broadcastSchedule} numberOfLines={1}>
               Starting: {media.startDate?.month}/{media.startDate?.month}/
               {media.startDate?.year}
-            </BroadcastSchedule>
+            </Text>
           )
         ) : (
-          <BroadcastSchedule numberOfLines={1}>
+          <Text style={styles.broadcastSchedule} numberOfLines={1}>
             Ended: {media.endDate?.month}/{media.endDate?.month}/
             {media.endDate?.year}
-          </BroadcastSchedule>
+          </Text>
         )}
-      </TitleAndBroadcastColumn>
-      <Spacer />
-      <ProgressColumn>
-        <EpisodeProgress>
+      </View>
+      <View style={styles.spacer} />
+      <View style={styles.progressColumn}>
+        <Text style={styles.episodeProgress}>
           {progress}/{media.episodes ?? "?"}
-        </EpisodeProgress>
-        <ProgressButtonGroup>
+        </Text>
+        <View style={styles.progressButtonGroup}>
           <ProgressButton
             disabled={
               disabled ||
@@ -120,7 +111,7 @@ export function AnimeListItem({
               onDecrement();
             }}
           />
-          <ProgressButtonSpacer />
+          <View style={styles.progressButtonSpacer} />
           <ProgressButton
             disabled={
               disabled ||
@@ -136,16 +127,46 @@ export function AnimeListItem({
               onIncrement();
             }}
           />
-        </ProgressButtonGroup>
-      </ProgressColumn>
+        </View>
+      </View>
     </PressableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
+  broadcastSchedule: {
+    color: darkTheme.footnote,
+    fontFamily: Manrope.regular,
+    fontSize: 12.8,
+  },
   container: {
     backgroundColor: darkTheme.listItemBackground,
     flexDirection: "row",
     padding: 8,
+  },
+  episodeProgress: {
+    color: darkTheme.text,
+    fontFamily: Manrope.extraLight,
+    fontSize: 20,
+    textAlign: "right",
+  },
+  progressButtonGroup: { flexDirection: "row" },
+  progressButtonSpacer: { width: 8 },
+  progressColumn: {
+    alignItems: "flex-end",
+    justifyContent: "space-between",
+  },
+  spacer: {
+    width: 8,
+  },
+  title: {
+    color: darkTheme.text,
+    fontFamily: Manrope.semiBold,
+    fontSize: 16,
+  },
+  titleAndBroadcastColumn: {
+    alignItems: "flex-start",
+    flex: 1,
+    justifyContent: "space-between",
   },
 });

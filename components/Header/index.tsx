@@ -1,12 +1,20 @@
 import Constants from "expo-constants";
 import React from "react";
-import { Platform, Animated, Easing } from "react-native";
+import {
+  Platform,
+  Animated,
+  Easing,
+  StyleSheet,
+  View,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 
 import { white } from "yep/colors";
+import { darkTheme } from "yep/themes";
+import { Manrope } from "yep/typefaces";
 
 import { PressableOpacity } from "../PressableOpacity";
-
-import { Container, Label, Spinner } from "./styles";
 
 type Props = {
   label: string;
@@ -29,16 +37,21 @@ export function Header({
   });
 
   return (
-    <Container
-      style={{
-        paddingTop:
-          Platform.OS === "ios" && statusBarPadding
-            ? 16 + Constants.statusBarHeight
-            : undefined,
-      }}
+    <View
+      style={[
+        styles.container,
+        {
+          paddingTop:
+            Platform.OS === "ios" && statusBarPadding
+              ? 16 + Constants.statusBarHeight
+              : undefined,
+        },
+      ]}
     >
-      <Label>{label}</Label>
-      {refreshing ? <Spinner color={white} size="large" /> : null}
+      <Text style={styles.label}>{label}</Text>
+      {refreshing ? (
+        <ActivityIndicator style={styles.spinner} color={white} size="large" />
+      ) : null}
       {onSyncPress && !refreshing ? (
         <PressableOpacity
           onPress={() => {
@@ -57,6 +70,26 @@ export function Header({
           />
         </PressableOpacity>
       ) : null}
-    </Container>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    backgroundColor: darkTheme.navBackground,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 16,
+    width: "100%",
+  },
+  label: {
+    color: darkTheme.text,
+    fontFamily: Manrope.extraBold,
+    fontSize: 25,
+  },
+  spinner: {
+    height: 24,
+    width: 24,
+  },
+});

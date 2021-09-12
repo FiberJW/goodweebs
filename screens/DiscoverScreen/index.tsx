@@ -1,6 +1,13 @@
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useState } from "react";
-import { RefreshControl, useWindowDimensions } from "react-native";
+import {
+  RefreshControl,
+  useWindowDimensions,
+  StyleSheet,
+  View,
+  FlatList,
+  Text,
+} from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
@@ -11,7 +18,6 @@ import {
 } from "yep/graphql/generated";
 import { RootStackParamList } from "yep/navigation";
 import { getString, StringCase } from "yep/strings";
-import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { notEmpty } from "yep/utils";
@@ -49,15 +55,12 @@ export function DiscoverScreen({ navigation }: Props) {
   const searchList = (searchData?.Page?.media ?? []).filter(notEmpty);
   const trendingList = (trendingData?.Page?.media ?? []).filter(notEmpty);
 
-  const SearchList = makeList<typeof searchList[number]>();
-  const TrendingList = makeList<typeof trendingList[number]>();
-
   async function refetchTrending() {
     await refetchTrendingOriginal();
   }
 
   return (
-    <OuterContainer>
+    <View style={styles.outerContainer}>
       <Header label={getString("discover", StringCase.TITLE)} />
       <SearchBox
         value={searchTerm}
@@ -70,12 +73,14 @@ export function DiscoverScreen({ navigation }: Props) {
           setSearchTerm("");
         }}
       />
-      <InnerContainer>
+      <View style={styles.innerContainer}>
         {showSearchResultsView ? (
           <>
-            <ListHeader>Search results for: {searchTerm}</ListHeader>
-            <SearchList
-              ItemSeparatorComponent={Divider}
+            <Text style={styles.listHeader}>
+              Search results for: {searchTerm}
+            </Text>
+            <FlatList
+              ItemSeparatorComponent={Separator}
               data={searchList}
               ListEmptyComponent={() =>
                 loadingSearchData ? null : (
@@ -105,10 +110,12 @@ export function DiscoverScreen({ navigation }: Props) {
         ) : (
           <>
             {trendingList.length ? (
-              <ListHeader>Top {trendingList.length} trending anime</ListHeader>
+              <Text style={styles.listHeader}>
+                Top {trendingList.length} trending anime
+              </Text>
             ) : null}
-            <TrendingList
-              ItemSeparatorComponent={Divider}
+            <FlatList
+              ItemSeparatorComponent={Separator}
               data={trendingList}
               numColumns={3}
               refreshControl={
@@ -131,31 +138,30 @@ export function DiscoverScreen({ navigation }: Props) {
             />
           </>
         )}
-      </InnerContainer>
-    </OuterContainer>
+      </View>
+    </View>
   );
 }
 
-const OuterContainer = takimoto.View({
-  flex: 1,
-});
-
-const InnerContainer = takimoto.View({
-  flex: 1,
-  padding: 16,
-});
-
-const Divider = takimoto.View({
-  height: 16,
-});
-
-const ListHeader = takimoto.Text({
-  fontFamily: Manrope.semiBold,
-  fontSize: 20,
-  color: darkTheme.text,
-  marginBottom: 16,
-});
-
-function makeList<T>() {
-  return takimoto.FlatList<T>({}, {});
+function Separator() {
+  return <View style={styles.separator} />;
 }
+
+const styles = StyleSheet.create({
+  innerContainer: {
+    flex: 1,
+    padding: 16,
+  },
+  listHeader: {
+    color: darkTheme.text,
+    fontFamily: Manrope.semiBold,
+    fontSize: 20,
+    marginBottom: 16,
+  },
+  outerContainer: {
+    flex: 1,
+  },
+  separator: {
+    height: 16,
+  },
+});
