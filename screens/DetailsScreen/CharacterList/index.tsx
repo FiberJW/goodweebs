@@ -34,6 +34,8 @@ export function CharacterList({
     <>
       <Header>Characters</Header>
       <FlatList
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
         style={{ width: "100%" }}
         horizontal
         ItemSeparatorComponent={RelatedListSeparator}

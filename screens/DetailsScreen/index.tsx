@@ -528,6 +528,8 @@ export function DetailsScreen({ route, navigation }: Props) {
               </Text>
               <View style={{ height: 16 }} />
               <FlatList
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
                 data={externalLinks}
                 keyExtractor={(item) => `${item.id}`}
                 renderItem={({ item }) => <ExternalLink {...item} />}
