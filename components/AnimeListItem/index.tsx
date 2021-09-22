@@ -83,13 +83,13 @@ export function AnimeListItem({
           media.startDate?.month !== null &&
           media.startDate?.month !== undefined && (
             <Text style={styles.broadcastSchedule} numberOfLines={1}>
-              Starting: {media.startDate?.month}/{media.startDate?.month}/
+              Starting: {media.startDate?.month}/{media.startDate?.day}/
               {media.startDate?.year}
             </Text>
           )
         ) : (
           <Text style={styles.broadcastSchedule} numberOfLines={1}>
-            Ended: {media.endDate?.month}/{media.endDate?.month}/
+            Ended: {media.endDate?.month}/{media.endDate?.day}/
             {media.endDate?.year}
           </Text>
         )}

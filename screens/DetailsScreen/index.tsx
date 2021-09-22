@@ -384,7 +384,7 @@ export function DetailsScreen({ route, navigation }: Props) {
                     data?.Media?.startDate?.month !== undefined && (
                       <Info
                         label="Start date"
-                        value={`${data?.Media?.startDate?.month}/${data?.Media?.startDate?.month}/${data?.Media?.startDate?.year}`}
+                        value={`${data?.Media?.startDate?.month}/${data?.Media?.startDate?.day}/${data?.Media?.startDate?.year}`}
                       />
                     )
                   : null}
@@ -395,7 +395,7 @@ export function DetailsScreen({ route, navigation }: Props) {
                     data?.Media?.endDate?.month !== undefined && (
                       <Info
                         label="End date"
-                        value={`${data?.Media?.endDate?.month}/${data?.Media?.endDate?.month}/${data?.Media?.endDate?.year}`}
+                        value={`${data?.Media?.endDate?.month}/${data?.Media?.endDate?.day}/${data?.Media?.endDate?.year}`}
                       />
                     )
                   : null}

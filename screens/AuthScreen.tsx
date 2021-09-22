@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useEffect } from "react";
+import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button } from "yep/components/Button";
@@ -8,7 +9,6 @@ import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { useAniListAuthRequest } from "yep/hooks/auth";
 import { RootStackParamList } from "yep/navigation";
 import { getString } from "yep/strings";
-import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
@@ -33,17 +33,26 @@ export function AuthScreen({ navigation }: Props) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <OuterContainer>
-        <InnerContainer
+      <View style={styles.outerContainer}>
+        <ScrollView
+          style={styles.innerContainer}
+          contentContainerStyle={{
+            flex: 1,
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
           alwaysBounceVertical={false}
           showsVerticalScrollIndicator={false}
         >
-          <BrandingGroup>
-            <Logo source={require("yep/assets/launch/logo-wrapped-dark.png")} />
-            <BrandingSpacer />
-            <Tagline>{getString("tagline")}</Tagline>
-          </BrandingGroup>
-          <ButtonGroup>
+          <View style={styles.brandingGroup}>
+            <Image
+              style={styles.logo}
+              source={require("yep/assets/launch/logo-wrapped-dark.png")}
+            />
+            <View style={styles.brandingSpacer} />
+            <Text style={styles.tagline}>{getString("tagline")}</Text>
+          </View>
+          <View style={styles.buttonGroup}>
             <Button
               label={getString("logIn")}
               onPress={async () => {
@@ -60,57 +69,45 @@ export function AuthScreen({ navigation }: Props) {
                 }
               }}
             />
-            <AniListFootnote>
+            <Text style={styles.aniListFootnote}>
               {getString("AniListAuthAttribution")}
-            </AniListFootnote>
-          </ButtonGroup>
-        </InnerContainer>
-      </OuterContainer>
+            </Text>
+          </View>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
 
-const InnerContainer = takimoto.ScrollView(
-  {
+const styles = StyleSheet.create({
+  aniListFootnote: {
+    color: darkTheme.footnote,
+    fontFamily: Manrope.regular,
+    fontSize: 12.8,
+    marginTop: 8,
+    textAlign: "center",
+  },
+  brandingGroup: { alignItems: "center" },
+  brandingSpacer: { height: 16 },
+  buttonGroup: {
+    width: "100%",
+  },
+  innerContainer: {
     paddingTop: 88,
   },
-  {
+  logo: {
+    height: 159.24,
+    width: 256,
+  },
+  outerContainer: {
     flex: 1,
-    justifyContent: "space-between",
-    alignItems: "center",
-  }
-);
-
-const OuterContainer = takimoto.View({
-  flex: 1,
-  padding: 16,
-});
-
-const Logo = takimoto.Image({
-  width: 256,
-  height: 159.24,
-});
-
-const ButtonGroup = takimoto.View({
-  width: "100%",
-});
-
-const BrandingSpacer = takimoto.View({ height: 16 });
-
-const Tagline = takimoto.Text({
-  fontFamily: Manrope.regular,
-  fontSize: 16,
-  color: darkTheme.text,
-  textAlign: "center",
-  maxWidth: 300,
-});
-
-const BrandingGroup = takimoto.View({ alignItems: "center" });
-
-const AniListFootnote = takimoto.Text({
-  fontFamily: Manrope.regular,
-  fontSize: 12.8,
-  color: darkTheme.footnote,
-  textAlign: "center",
-  marginTop: 8,
+    padding: 16,
+  },
+  tagline: {
+    color: darkTheme.text,
+    fontFamily: Manrope.regular,
+    fontSize: 16,
+    maxWidth: 300,
+    textAlign: "center",
+  },
 });

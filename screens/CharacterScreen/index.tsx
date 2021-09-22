@@ -1,7 +1,7 @@
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, ScrollView, Text } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -14,26 +14,8 @@ import {
   useGetCharacterQuery,
 } from "yep/graphql/generated";
 import { RootStackParamList } from "yep/navigation";
-import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-
-const Container = takimoto.ScrollView({
-  flex: 1,
-  padding: 16,
-});
-
-const Title = takimoto.Text({
-  color: darkTheme.text,
-  fontFamily: Manrope.extraBold,
-  fontSize: 31.25,
-  marginBottom: 16,
-});
-
-const PosterAndDescriptionContainer = takimoto.View({
-  flexDirection: "row",
-  marginBottom: 16,
-});
 
 type Props = {
   navigation: StackNavigationProp<RootStackParamList>;
@@ -53,7 +35,8 @@ export function CharacterScreen({ route }: Props) {
   const character = data?.Character;
 
   return (
-    <Container
+    <ScrollView
+      style={styles.container}
       contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
       showsVerticalScrollIndicator={false}
     >
@@ -66,8 +49,10 @@ export function CharacterScreen({ route }: Props) {
         ) : null
       ) : (
         <>
-          <Title numberOfLines={5}>{character?.name?.full}</Title>
-          <PosterAndDescriptionContainer>
+          <Text style={styles.title} numberOfLines={5}>
+            {character?.name?.full}
+          </Text>
+          <View style={styles.posterAndDescriptionContainer}>
             <PosterAndTitle
               disabled
               size="details"
@@ -102,7 +87,7 @@ export function CharacterScreen({ route }: Props) {
                 />
               </View>
             </PosterAndTitle>
-          </PosterAndDescriptionContainer>
+          </View>
           {character?.description ? (
             <HTMLView
               value={`<p>${character?.description}</p>`}
@@ -111,7 +96,7 @@ export function CharacterScreen({ route }: Props) {
           ) : null}
         </>
       )}
-    </Container>
+    </ScrollView>
   );
 }
 
@@ -127,5 +112,19 @@ const htmlViewStyle = StyleSheet.create({
     color: darkTheme.text,
     fontFamily: Manrope.regular,
     fontSize: 16,
+  },
+});
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 16 },
+  posterAndDescriptionContainer: {
+    flexDirection: "row",
+    marginBottom: 16,
+  },
+  title: {
+    color: darkTheme.text,
+    fontFamily: Manrope.extraBold,
+    fontSize: 31.25,
+    marginBottom: 16,
   },
 });
