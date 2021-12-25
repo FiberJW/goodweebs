@@ -8190,6 +8190,22 @@
             "deprecationReason": null
           },
           {
+            "name": "isFavouriteBlocked",
+            "description": "If the media is blocked from being added to favourites",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "isAdult",
             "description": "If the media is intended only for 18+ adult audiences",
             "args": [],
@@ -19127,6 +19143,18 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "isLocked",
+            "description": "If the comment tree is locked and may not receive replies or edits",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -22544,6 +22572,16 @@
                   "ofType": null
                 },
                 "defaultValue": null
+              },
+              {
+                "name": "locked",
+                "description": "If the comment tree should be locked. (Mod Only)",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": null
               }
             ],
             "type": {
@@ -23286,6 +23324,33 @@
               "ofType": {
                 "kind": "OBJECT",
                 "name": "ModAction",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "userBlockSearch",
+            "description": null,
+            "args": [
+              {
+                "name": "search",
+                "description": "Filter by search query",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "User",
                 "ofType": null
               }
             },
