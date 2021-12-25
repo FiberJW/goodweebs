@@ -33,13 +33,10 @@ const Stack = createStackNavigator<RootStackParamList>();
 function Tabs() {
   return (
     <Tab.Navigator
-      lazy={Platform.OS !== "ios"}
-      tabBarOptions={{
-        showLabel: false,
-        labelStyle: {
-          fontSize: 12.8,
-          fontFamily: Manrope.medium,
-        },
+      screenOptions={{
+        tabBarShowLabel: false,
+        lazy: Platform.OS !== "ios",
+        headerShown: false,
       }}
     >
       <Tab.Screen
