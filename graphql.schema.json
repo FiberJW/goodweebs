@@ -17644,7 +17644,7 @@
           },
           {
             "name": "total",
-            "description": "The total number of items",
+            "description": "The total number of items. Note: This value is not guaranteed to be accurate, do not rely on this for logic",
             "args": [],
             "type": {
               "kind": "SCALAR",

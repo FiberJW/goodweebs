@@ -2835,7 +2835,7 @@ export type PageInfo = {
   lastPage?: Maybe<Scalars['Int']>;
   /** The count on a page */
   perPage?: Maybe<Scalars['Int']>;
-  /** The total number of items */
+  /** The total number of items. Note: This value is not guaranteed to be accurate, do not rely on this for logic */
   total?: Maybe<Scalars['Int']>;
 };
 

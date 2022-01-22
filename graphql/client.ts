@@ -4,6 +4,7 @@ import { onError } from "@apollo/client/link/error";
 import { HttpLink } from "@apollo/client/link/http";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Updates from "expo-updates";
+import * as Sentry from "sentry-expo";
 
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 
@@ -29,6 +30,8 @@ export const client = new ApolloClient({
     onError(({ graphQLErrors, networkError }) => {
       if (graphQLErrors)
         graphQLErrors.forEach(async (e) => {
+          Sentry.Browser.captureMessage(e.message);
+
           console.error("[GraphQL error]:", e);
 
           if (e.message.toLowerCase().includes("invalid token")) {
@@ -36,7 +39,10 @@ export const client = new ApolloClient({
             await Updates.reloadAsync();
           }
         });
-      if (networkError) console.error(`[Network error]: ${networkError}`);
+      if (networkError) {
+        Sentry.Browser.captureException(networkError);
+        console.error(`[Network error]: ${networkError}`);
+      }
     }),
     authLink.concat(httpLink),
   ]),
