@@ -15,10 +15,8 @@ An <a href="https://anilist.co/user/fiberjw">AniList</a> client built with <a hr
 <div align="center">
 
 [![runs with expo](https://img.shields.io/badge/Runs%20with%20Expo-4630EB.svg?style=flat-square&logo=EXPO&labelColor=f3f3f3&logoColor=000)](https://expo.io/)
-
-<!-- [![supports iOS](https://img.shields.io/badge/iOS-4630EB.svg?style=flat-square&logo=APPLE&labelColor=999999&logoColor=fff)](https://github.com/expo/expo)
+[![supports iOS](https://img.shields.io/badge/iOS-4630EB.svg?style=flat-square&logo=APPLE&labelColor=999999&logoColor=fff)](https://github.com/expo/expo)
 [![supports Android](https://img.shields.io/badge/Android-4630EB.svg?style=flat-square&logo=ANDROID&labelColor=A4C639&logoColor=fff)](https://github.com/expo/expo)
-[![supports web](https://img.shields.io/badge/web-4630EB.svg?style=flat-square&logo=GOOGLE-CHROME&labelColor=4285F4&logoColor=fff)](https://github.com/expo/expo) -->
 
 </div>
 
@@ -26,11 +24,16 @@ An <a href="https://anilist.co/user/fiberjw">AniList</a> client built with <a hr
 
 > Make it work. **Make it right**. Make it fast.
 
-Right now I'm making it right :)
+Right now, I'm making it right :)
 
 ## 📲 Try it out!
 
+- [Website](https://goodweebs.fiberjw.com)
 
-- [Store Presence](https://goodweebs.fiberjw.com)
-- [iOS (via Testflight)](https://testflight.apple.com/join/exothjj2)
-- [Android (Early Access/Beta)](https://play.google.com/store/apps/details?id=com.fiberjw.goodweebs)
+## Releasing this app
+
+For production binary builds, run `yarn build:prod`.
+
+To push an update to those production builds using expo-updates, run `yarn publish:prod`.
+
+Make sure you always bump the native version number before starting a new build.

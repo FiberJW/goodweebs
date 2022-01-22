@@ -11,8 +11,7 @@
     "watch-graphql-generate": "yarn graphql-generate -w",
     "lint": "eslint . --ext .ts,.js,.tsx --fix",
     "publish:prod": "expo publish --release-channel production",
-    "build:ios:prod": "expo build:ios --release-channel production",
-    "build:android:prod": "expo build:android --release-channel production"
+    "build:prod": "eas build --profile production --platform all"
   },
   "dependencies": {
     "@apollo/client": "^3.1.5",
