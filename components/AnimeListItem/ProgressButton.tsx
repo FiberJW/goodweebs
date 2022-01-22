@@ -31,10 +31,11 @@ export function ProgressButton({
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    backgroundColor: darkTheme.button,
+    borderColor: darkTheme.iconFill,
+    borderWidth: 1,
     justifyContent: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
   icon: {
     height: 16,

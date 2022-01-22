@@ -42,9 +42,8 @@ export function AnimeListItemContainer({
   refetchListVariables,
 }: Props) {
   const [progressShadow, setProgressShadow] = useState(seedData.progress);
-  const [shouldShowProgressShadow, setShouldShowProgressShadow] = useState(
-    false
-  );
+  const [shouldShowProgressShadow, setShouldShowProgressShadow] =
+    useState(false);
   const { loading, data } = useGetAnimeQuery({
     variables: { id: seedData?.media?.id },
   });

@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     maxWidth: "35ch",
   },
-  downloadButton: {},
   downloadButtonsRow: {
     flexDirection: "row",
     flexWrap: "wrap",

@@ -1,5 +1,6 @@
 import React from "react";
 import { Linking, Text } from "react-native";
+import * as Sentry from "sentry-expo";
 
 import {
   crunchyrollOrange,
@@ -13,6 +14,7 @@ import {
   vizRed,
   hboMaxPink,
   tubiOrange,
+  hidiveBlue,
 } from "yep/colors";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { MediaExternalLinkDataFragment } from "yep/graphql/generated";
@@ -20,55 +22,59 @@ import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
 export function ExternalLink({ id, url, site }: MediaExternalLinkDataFragment) {
-  let backgroundColor = darkTheme.button;
-  let textColor = darkTheme.text;
+  let color = darkTheme.iconFill;
 
   switch (site) {
     case "Crunchyroll":
-      backgroundColor = crunchyrollOrange;
+      color = crunchyrollOrange;
       break;
     case "Twitter":
-      backgroundColor = twitterBlue;
+      color = twitterBlue;
       break;
     case "Funimation":
-      backgroundColor = funimationPurple;
+      color = funimationPurple;
       break;
     case "VRV":
-      backgroundColor = vrvYellow;
-      textColor = darkTheme.textInverted;
+      color = vrvYellow;
       break;
     case "Hulu":
-      backgroundColor = huluGreen;
-      textColor = darkTheme.textInverted;
+      color = huluGreen;
       break;
     case "AnimeLab":
-      backgroundColor = animeLabPurple;
+      color = animeLabPurple;
       break;
     case "Youtube":
-      backgroundColor = youtubeRed;
+      color = youtubeRed;
       break;
     case "Netflix":
-      backgroundColor = netflixRed;
+      color = netflixRed;
       break;
     case "Viz":
-      backgroundColor = vizRed;
+      color = vizRed;
       break;
     case "HBO Max":
-      backgroundColor = hboMaxPink;
+      color = hboMaxPink;
       break;
     case "Tubi TV":
-      backgroundColor = tubiOrange;
+      color = tubiOrange;
+      break;
+    case "Official Site":
+      color = darkTheme.iconFill;
+      break;
+    case "Hidive":
+      color = hidiveBlue;
       break;
     default:
-      // TODO: log what other values are being read somewhere so I can pick those off
-      backgroundColor = darkTheme.button;
+      Sentry.Browser.captureMessage(`Unknown external link site: ${site}`);
+      color = darkTheme.iconFill;
       break;
   }
 
   return (
     <PressableOpacity
       style={{
-        backgroundColor,
+        borderColor: color,
+        borderWidth: 1,
         padding: 16,
         justifyContent: "center",
         alignItems: "center",
@@ -83,7 +89,7 @@ export function ExternalLink({ id, url, site }: MediaExternalLinkDataFragment) {
         style={{
           fontFamily: Manrope.semiBold,
           fontSize: 16,
-          color: textColor,
+          color,
           textAlign: "center",
         }}
       >

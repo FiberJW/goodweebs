@@ -123,10 +123,8 @@ export function DetailsScreen({ route, navigation }: Props) {
   const { showActionSheetWithOptions } = useActionSheet();
   const insets = useSafeArea();
   const [loadingStatus, setLoadingStatus] = useState(false);
-  const [
-    isRefetchingFromScrollOrMount,
-    setIsRefetchingFromScrollOrMount,
-  ] = useState(true);
+  const [isRefetchingFromScrollOrMount, setIsRefetchingFromScrollOrMount] =
+    useState(true);
 
   const now = useNow();
 
@@ -421,9 +419,10 @@ export function DetailsScreen({ route, navigation }: Props) {
 
                 options.push("Cancel");
 
-                const destructiveButtonIndex = MediaListStatusWithLabel.findIndex(
-                  (s) => s.value === data?.Media?.mediaListEntry?.status
-                );
+                const destructiveButtonIndex =
+                  MediaListStatusWithLabel.findIndex(
+                    (s) => s.value === data?.Media?.mediaListEntry?.status
+                  );
 
                 const cancelButtonIndex = options.length - 1;
 

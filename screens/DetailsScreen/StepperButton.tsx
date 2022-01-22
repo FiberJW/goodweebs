@@ -37,8 +37,5 @@ export function StepperButton({ onPress, type, disabled }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: darkTheme.button,
-    padding: 16,
-  },
+  container: { borderColor: darkTheme.iconFill, borderWidth: 1, padding: 16 },
 });

@@ -65,7 +65,8 @@ const styles = StyleSheet.create({
   },
   pressable: {
     alignItems: "center",
-    backgroundColor: darkTheme.button,
+    borderColor: darkTheme.iconFill,
+    borderWidth: 1,
     justifyContent: "center",
     width: "100%",
   },

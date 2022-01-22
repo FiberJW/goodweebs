@@ -1,7 +1,6 @@
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { formatDistanceToNow, add } from "date-fns";
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
@@ -125,7 +124,8 @@ const styles = StyleSheet.create({
     fontSize: 12.8,
   },
   container: {
-    backgroundColor: darkTheme.listItemBackground,
+    borderColor: darkTheme.listItemBorder,
+    borderWidth: 2,
     flexDirection: "row",
     padding: 8,
   },

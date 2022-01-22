@@ -5,6 +5,7 @@ import {
   white40,
   goodweebsPurple,
   white10,
+  white20,
   white95,
   white15,
   white12_5,
@@ -12,12 +13,14 @@ import {
   darkBlue,
   white,
   gray6,
+  white30,
 } from "yep/colors";
 
 export const darkTheme = {
   background: black,
   navBackground: darkGray,
   button: white12_5,
+  buttonBorder: white30,
   text: white95,
   subText: white80,
   textInverted: black,
@@ -28,6 +31,7 @@ export const darkTheme = {
   listCount: white80,
   accent: goodweebsPurple,
   listItemBackground: white10,
+  listItemBorder: white20,
   inputPlaceholder: white40,
   success: alienGreen,
 };
