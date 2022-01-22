@@ -47,7 +47,7 @@ export function assertUnreachable(x: never): never {
 export function getReadableMediaRelation(mediaRelation: MediaRelation): string {
   switch (mediaRelation) {
     case MediaRelation.Adaptation:
-      return "Adapation";
+      return "Adaptation";
     case MediaRelation.Alternative:
       return "Alternative";
     case MediaRelation.Prequel:
@@ -105,12 +105,11 @@ export function getAiringStatusText(
   switch (media.status) {
     case MediaStatus.Releasing:
       return media.nextAiringEpisode
-        ? `EP ${media.nextAiringEpisode?.episode} airs in{" "}
-      ${formatDistanceToNow(
-        add(now, {
-          seconds: media.nextAiringEpisode?.timeUntilAiring ?? 0,
-        })
-      )}`
+        ? `EP ${media.nextAiringEpisode?.episode} airs in ${formatDistanceToNow(
+            add(now, {
+              seconds: media.nextAiringEpisode?.timeUntilAiring ?? 0,
+            })
+          )}`
         : "Releasing";
     case MediaStatus.NotYetReleased:
       return media.startDate
