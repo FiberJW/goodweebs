@@ -13,3 +13,5 @@ web-report/
 # macOS
 .DS_Store
 node_modules
+
+goodweebs-secrets

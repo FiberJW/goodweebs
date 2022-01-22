@@ -30,7 +30,13 @@ Right now, I'm making it right :)
 
 - [Website](https://goodweebs.fiberjw.com)
 
-## Releasing this app
+## Notes
+
+### Secrets
+
+Make sure to clone the `goodweebs-secrets` private repo!
+
+### Releasing this app
 
 For production binary builds, run `yarn build:prod`.
 
