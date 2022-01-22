@@ -6,24 +6,24 @@ import {
   MediaStatus,
 } from "yep/graphql/generated";
 
+// AniList Client IDs and their redirect URIs based on https://docs.expo.dev/guides/authentication/#redirect-uri-patterns
 enum AniListClientID {
-  SIMULATOR = 3549,
-  CLIENT = 3559,
-  PROD = 3568,
+  DEV = 3549, // exp://localhost:19000/--/*
+  EXPO_GO = 3559, // exp://exp.host/@fiberjw/goodweebs
+  PROD = 3568, // goodweebs://redirect
 }
 
 export const CLIENT_ID = (() => {
-  if (Constants.appOwnership === "standalone") {
+  // https://docs.expo.dev/build-reference/migrating/#constantsappownership--will-be--null-
+  if (Constants.appOwnership !== "expo") {
     return AniListClientID.PROD;
   }
 
   if (__DEV__) {
-    // if (!Constants.isDevice) return AniListClientID.SIMULATOR;
-    // return AniListClientID.CLIENT;
-    return AniListClientID.SIMULATOR;
+    return AniListClientID.DEV;
   }
 
-  return AniListClientID.CLIENT;
+  return AniListClientID.EXPO_GO;
 })();
 
 export const ANILIST_ACCESS_TOKEN_STORAGE = `com.fiberjw.goodweebs.${CLIENT_ID}.access_token`;
