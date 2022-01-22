@@ -42,7 +42,7 @@ import { RootStackParamList } from "yep/navigation";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { notEmpty } from "yep/utils";
+import { getStartOrEndDateText, notEmpty } from "yep/utils";
 
 import { CharacterList } from "./CharacterList";
 import { ExternalLink } from "./ExternalLink";
@@ -359,13 +359,20 @@ export function DetailsScreen({ route, navigation }: Props) {
               </InfoRow>
               <InfoRowSpacer />
               <InfoRow>
-                <Info
-                  label="Progress"
-                  value={`${data?.Media?.mediaListEntry?.progress ?? 0}/${
-                    data?.Media?.episodes ?? "?"
-                  } EP`}
-                />
-                {data?.Media?.status === MediaStatus.Releasing ? (
+                {data?.Media?.mediaListEntry?.progress ? (
+                  <Info
+                    label="Progress"
+                    value={
+                      data?.Media?.episodes
+                        ? `${data?.Media?.mediaListEntry?.progress}/${
+                            data?.Media?.episodes ?? "?"
+                          } EP`
+                        : `${data?.Media?.mediaListEntry?.progress}`
+                    }
+                  />
+                ) : null}
+                {data?.Media?.status === MediaStatus.Releasing &&
+                data?.Media?.nextAiringEpisode ? (
                   <Info
                     label="Next episode"
                     value={`EP ${
@@ -378,27 +385,24 @@ export function DetailsScreen({ route, navigation }: Props) {
                     )}`}
                   />
                 ) : null}
+                {data?.Media?.status === MediaStatus.NotYetReleased &&
+                data.Media.startDate &&
+                getStartOrEndDateText(data.Media.startDate) ? (
+                  <Info
+                    label="Start date"
+                    value={getStartOrEndDateText(data.Media.startDate)!}
+                  />
+                ) : null}
 
-                {data?.Media?.status === MediaStatus.NotYetReleased
-                  ? data?.Media?.startDate?.month !== null &&
-                    data?.Media?.startDate?.month !== undefined && (
-                      <Info
-                        label="Start date"
-                        value={`${data?.Media?.startDate?.month}/${data?.Media?.startDate?.day}/${data?.Media?.startDate?.year}`}
-                      />
-                    )
-                  : null}
-
-                {data?.Media?.status === MediaStatus.Finished ||
-                data?.Media?.status === MediaStatus.Cancelled
-                  ? data?.Media?.endDate?.month !== null &&
-                    data?.Media?.endDate?.month !== undefined && (
-                      <Info
-                        label="End date"
-                        value={`${data?.Media?.endDate?.month}/${data?.Media?.endDate?.day}/${data?.Media?.endDate?.year}`}
-                      />
-                    )
-                  : null}
+                {(data?.Media?.status === MediaStatus.Finished ||
+                  data?.Media?.status === MediaStatus.Cancelled) &&
+                data?.Media?.endDate &&
+                getStartOrEndDateText(data.Media.endDate) ? (
+                  <Info
+                    label="End date"
+                    value={getStartOrEndDateText(data.Media.endDate)!}
+                  />
+                ) : null}
               </InfoRow>
             </InfoTable>
           </PosterAndInfoContainer>
@@ -476,8 +480,9 @@ export function DetailsScreen({ route, navigation }: Props) {
                       id: data?.Media?.mediaListEntry?.id,
                       scoreRaw: s * 10,
                     });
-                  } catch (_e) {
+                  } catch (e) {
                     // TODO: display error
+                    console.error(e);
                   }
                 }}
               />

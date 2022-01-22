@@ -14,6 +14,7 @@ import { useNow } from "yep/hooks/helpers";
 import { RootStackParamList, TabParamList } from "yep/navigation";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
+import { getAiringStatusText, getTitle } from "yep/utils";
 
 import { PosterAndTitle } from "../PosterAndTitle";
 import { PressableOpacity } from "../PressableOpacity";
@@ -53,6 +54,8 @@ export function AnimeListItem({
       ? media.nextAiringEpisode.episode - 1 - progress
       : 0;
 
+  const airingStatus = getAiringStatusText(media, now);
+
   return (
     <PressableOpacity
       style={styles.container}
@@ -68,36 +71,18 @@ export function AnimeListItem({
       <View style={styles.spacer} />
       <View style={styles.titleAndBroadcastColumn}>
         <Text style={styles.title} numberOfLines={2}>
-          {media.title?.english || media.title?.romaji || media.title?.native}
+          {getTitle(media.title)}
         </Text>
-        {media.status === MediaStatus.Releasing ? (
+        {airingStatus ? (
           <Text style={styles.broadcastSchedule} numberOfLines={1}>
-            EP {media.nextAiringEpisode?.episode} airs in{" "}
-            {formatDistanceToNow(
-              add(now, {
-                seconds: media.nextAiringEpisode?.timeUntilAiring ?? 0,
-              })
-            )}
+            {airingStatus}
           </Text>
-        ) : media.status === MediaStatus.NotYetReleased ? (
-          media.startDate?.month !== null &&
-          media.startDate?.month !== undefined && (
-            <Text style={styles.broadcastSchedule} numberOfLines={1}>
-              Starting: {media.startDate?.month}/{media.startDate?.day}/
-              {media.startDate?.year}
-            </Text>
-          )
-        ) : (
-          <Text style={styles.broadcastSchedule} numberOfLines={1}>
-            Ended: {media.endDate?.month}/{media.endDate?.day}/
-            {media.endDate?.year}
-          </Text>
-        )}
+        ) : null}
       </View>
       <View style={styles.spacer} />
       <View style={styles.progressColumn}>
         <Text style={styles.episodeProgress}>
-          {progress}/{media.episodes ?? "?"}
+          {media.episodes ? `${progress}/${media.episodes}` : progress}
         </Text>
         <View style={styles.progressButtonGroup}>
           <ProgressButton
