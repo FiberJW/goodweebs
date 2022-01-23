@@ -42,7 +42,7 @@ import { RootStackParamList } from "yep/navigation";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { getStartOrEndDateText, notEmpty } from "yep/utils";
+import { getProgress, getStartOrEndDateText, notEmpty } from "yep/utils";
 
 import { CharacterList } from "./CharacterList";
 import { ExternalLink } from "./ExternalLink";
@@ -360,13 +360,10 @@ export function DetailsScreen({ route, navigation }: Props) {
                 {data?.Media?.mediaListEntry?.progress ? (
                   <Info
                     label="Progress"
-                    value={
-                      data?.Media?.episodes
-                        ? `${data?.Media?.mediaListEntry?.progress}/${
-                            data?.Media?.episodes ?? "?"
-                          } EP`
-                        : `${data?.Media?.mediaListEntry?.progress}`
-                    }
+                    value={getProgress(
+                      data.Media,
+                      data.Media.mediaListEntry.progress
+                    )}
                   />
                 ) : null}
                 {data?.Media?.status === MediaStatus.Releasing &&

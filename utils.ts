@@ -124,3 +124,7 @@ export function getAiringStatusText(
         : undefined;
   }
 }
+
+export function getProgress(media: AnimeFragmentFragment, progress: number) {
+  return media.episodes ? `${progress}/${media.episodes} EP` : `${progress} EP`;
+}

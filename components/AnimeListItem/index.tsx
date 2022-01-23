@@ -13,7 +13,7 @@ import { useNow } from "yep/hooks/helpers";
 import { RootStackParamList, TabParamList } from "yep/navigation";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { getAiringStatusText, getTitle } from "yep/utils";
+import { getAiringStatusText, getProgress, getTitle } from "yep/utils";
 
 import { PosterAndTitle } from "../PosterAndTitle";
 import { PressableOpacity } from "../PressableOpacity";
@@ -81,7 +81,7 @@ export function AnimeListItem({
       <View style={styles.spacer} />
       <View style={styles.progressColumn}>
         <Text style={styles.episodeProgress}>
-          {media.episodes ? `${progress}/${media.episodes}` : progress}
+          {getProgress(media, progress)}
         </Text>
         <View style={styles.progressButtonGroup}>
           <ProgressButton
