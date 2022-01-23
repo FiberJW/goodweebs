@@ -33,6 +33,7 @@ export const vizRed = "#ff0000";
 export const hboMaxPink = "#b535f6";
 export const tubiOrange = "#ff501a";
 export const hidiveBlue = "rgba(0,174,240,1)";
+export const instagramPink = "#E1306C";
 
 export const favoritedBackground = "#D6094E";
 export const notFavoritedBackground = "rgba(214, 9, 78, 0.6)";
