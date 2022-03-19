@@ -174,7 +174,8 @@ export type ActivityReplySubscribedNotification = {
 /** Activity sort enums */
 export enum ActivitySort {
   Id = 'ID',
-  IdDesc = 'ID_DESC'
+  IdDesc = 'ID_DESC',
+  Pinned = 'PINNED'
 }
 
 /** Activity type enum. */
@@ -499,6 +500,18 @@ export type Deleted = {
   deleted?: Maybe<Scalars['Boolean']>;
 };
 
+export enum ExternalLinkMediaType {
+  Anime = 'ANIME',
+  Manga = 'MANGA',
+  Staff = 'STAFF'
+}
+
+export enum ExternalLinkType {
+  Info = 'INFO',
+  Social = 'SOCIAL',
+  Streaming = 'STREAMING'
+}
+
 /** User's favourite anime, manga, characters, staff & studios */
 export type Favourites = {
   __typename?: 'Favourites';
@@ -783,6 +796,8 @@ export type InternalPageMediaArgs = {
   isLicensed?: Maybe<Scalars['Boolean']>;
   licensedBy?: Maybe<Scalars['String']>;
   licensedBy_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  licensedById?: Maybe<Scalars['Int']>;
+  licensedById_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
   minimumTagRank?: Maybe<Scalars['Int']>;
   onList?: Maybe<Scalars['Boolean']>;
   popularity?: Maybe<Scalars['Int']>;
@@ -1038,6 +1053,8 @@ export type ListActivity = {
   isLiked?: Maybe<Scalars['Boolean']>;
   /** If the activity is locked and can receive replies */
   isLocked?: Maybe<Scalars['Boolean']>;
+  /** If the activity is pinned to the top of the users activity feed */
+  isPinned?: Maybe<Scalars['Boolean']>;
   /** If the currently authenticated user is subscribed to the activity */
   isSubscribed?: Maybe<Scalars['Boolean']>;
   /** The amount of likes the activity has */
@@ -1062,6 +1079,17 @@ export type ListActivity = {
   user?: Maybe<User>;
   /** The user id of the activity's creator */
   userId?: Maybe<Scalars['Int']>;
+};
+
+export type ListActivityOption = {
+  __typename?: 'ListActivityOption';
+  disabled?: Maybe<Scalars['Boolean']>;
+  type?: Maybe<MediaListStatus>;
+};
+
+export type ListActivityOptionInput = {
+  disabled?: Maybe<Scalars['Boolean']>;
+  type?: Maybe<MediaListStatus>;
 };
 
 /** User's list score statistics */
@@ -1385,15 +1413,23 @@ export type MediaEdgeVoiceActorsArgs = {
   sort?: Maybe<Array<Maybe<StaffSort>>>;
 };
 
-/** An external link to another site related to the media */
+/** An external link to another site related to the media or staff member */
 export type MediaExternalLink = {
   __typename?: 'MediaExternalLink';
+  color?: Maybe<Scalars['String']>;
+  /** The icon image url of the site. Not available for all links. Transparent PNG 64x64 */
+  icon?: Maybe<Scalars['String']>;
   /** The id of the external link */
   id: Scalars['Int'];
-  /** The site location of the external link */
+  /** Language the site content is in. See Staff language field for values. */
+  language?: Maybe<Scalars['String']>;
+  /** The links website site name */
   site: Scalars['String'];
-  /** The url of the external link */
-  url: Scalars['String'];
+  /** The links website site id */
+  siteId?: Maybe<Scalars['Int']>;
+  type?: Maybe<ExternalLinkType>;
+  /** The url of the external link or base url of link source */
+  url?: Maybe<Scalars['String']>;
 };
 
 /** An external link to another site related to the media */
@@ -1850,7 +1886,7 @@ export type MediaSubmission = {
   changes?: Maybe<Array<Maybe<Scalars['String']>>>;
   characters?: Maybe<Array<Maybe<MediaSubmissionComparison>>>;
   createdAt?: Maybe<Scalars['Int']>;
-  externalLinks?: Maybe<Array<Maybe<MediaExternalLink>>>;
+  externalLinks?: Maybe<Array<Maybe<MediaSubmissionComparison>>>;
   /** The id of the submission */
   id: Scalars['Int'];
   /** Whether the submission is locked */
@@ -1873,6 +1909,7 @@ export type MediaSubmission = {
 export type MediaSubmissionComparison = {
   __typename?: 'MediaSubmissionComparison';
   character?: Maybe<MediaCharacter>;
+  externalLink?: Maybe<MediaExternalLink>;
   staff?: Maybe<StaffEdge>;
   studio?: Maybe<StudioEdge>;
   submission?: Maybe<MediaSubmissionEdge>;
@@ -1885,6 +1922,7 @@ export type MediaSubmissionEdge = {
   characterRole?: Maybe<CharacterRole>;
   characterSubmission?: Maybe<Character>;
   dubGroup?: Maybe<Scalars['String']>;
+  externalLink?: Maybe<MediaExternalLink>;
   /** The id of the direct submission */
   id?: Maybe<Scalars['Int']>;
   isMain?: Maybe<Scalars['Boolean']>;
@@ -2171,6 +2209,8 @@ export type Mutation = {
   SaveThread?: Maybe<Thread>;
   /** Create or update a thread comment */
   SaveThreadComment?: Maybe<ThreadComment>;
+  /** Toggle activity to be pinned to the top of the user's activity feed */
+  ToggleActivityPin?: Maybe<ActivityUnion>;
   /** Toggle the subscription of an activity item */
   ToggleActivitySubscription?: Maybe<ActivityUnion>;
   /** Favourite or unfavourite an anime, manga, character, staff member, or studio */
@@ -2326,6 +2366,12 @@ export type MutationSaveThreadCommentArgs = {
 };
 
 
+export type MutationToggleActivityPinArgs = {
+  id?: Maybe<Scalars['Int']>;
+  pinned?: Maybe<Scalars['Boolean']>;
+};
+
+
 export type MutationToggleActivitySubscriptionArgs = {
   activityId?: Maybe<Scalars['Int']>;
   subscribe?: Maybe<Scalars['Boolean']>;
@@ -2414,11 +2460,13 @@ export type MutationUpdateUserArgs = {
   activityMergeTime?: Maybe<Scalars['Int']>;
   airingNotifications?: Maybe<Scalars['Boolean']>;
   animeListOptions?: Maybe<MediaListOptionsInput>;
+  disabledListActivity?: Maybe<Array<Maybe<ListActivityOptionInput>>>;
   displayAdultContent?: Maybe<Scalars['Boolean']>;
   donatorBadge?: Maybe<Scalars['String']>;
   mangaListOptions?: Maybe<MediaListOptionsInput>;
   notificationOptions?: Maybe<Array<Maybe<NotificationOptionInput>>>;
   profileColor?: Maybe<Scalars['String']>;
+  restrictMessagesToFollowing?: Maybe<Scalars['Boolean']>;
   rowOrder?: Maybe<Scalars['String']>;
   scoreFormat?: Maybe<ScoreFormat>;
   staffNameLanguage?: Maybe<UserStaffNameLanguage>;
@@ -2645,6 +2693,8 @@ export type PageMediaArgs = {
   isLicensed?: Maybe<Scalars['Boolean']>;
   licensedBy?: Maybe<Scalars['String']>;
   licensedBy_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  licensedById?: Maybe<Scalars['Int']>;
+  licensedById_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
   minimumTagRank?: Maybe<Scalars['Int']>;
   onList?: Maybe<Scalars['Boolean']>;
   popularity?: Maybe<Scalars['Int']>;
@@ -2857,6 +2907,8 @@ export type Query = {
   AniChartUser?: Maybe<AniChartUser>;
   /** Character query */
   Character?: Maybe<Character>;
+  /** ExternalLinkSource collection query */
+  ExternalLinkSourceCollection?: Maybe<Array<Maybe<MediaExternalLink>>>;
   /** Follow query */
   Follower?: Maybe<User>;
   /** Follow query */
@@ -2972,6 +3024,13 @@ export type QueryCharacterArgs = {
 };
 
 
+export type QueryExternalLinkSourceCollectionArgs = {
+  id?: Maybe<Scalars['Int']>;
+  mediaType?: Maybe<ExternalLinkMediaType>;
+  type?: Maybe<ExternalLinkType>;
+};
+
+
 export type QueryFollowerArgs = {
   sort?: Maybe<Array<Maybe<UserSort>>>;
   userId: Scalars['Int'];
@@ -3033,6 +3092,8 @@ export type QueryMediaArgs = {
   isLicensed?: Maybe<Scalars['Boolean']>;
   licensedBy?: Maybe<Scalars['String']>;
   licensedBy_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  licensedById?: Maybe<Scalars['Int']>;
+  licensedById_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
   minimumTagRank?: Maybe<Scalars['Int']>;
   onList?: Maybe<Scalars['Boolean']>;
   popularity?: Maybe<Scalars['Int']>;
@@ -3402,6 +3463,8 @@ export type RevisionHistory = {
   character?: Maybe<Character>;
   /** When the mod feed entry was created */
   createdAt?: Maybe<Scalars['Int']>;
+  /** The external link source the mod feed entry references */
+  externalLink?: Maybe<MediaExternalLink>;
   /** The id of the media */
   id: Scalars['Int'];
   /** The media the mod feed entry references */
@@ -3570,7 +3633,7 @@ export type Staff = {
    * @deprecated Replaced with languageV2
    */
   language?: Maybe<StaffLanguage>;
-  /** The primary language of the staff member. Current values: Japanese, English, Korean, Italian, Spanish, Portuguese, French, German, Hebrew, Hungarian, Chinese, Arabic, Filipino, Catalan */
+  /** The primary language of the staff member. Current values: Japanese, English, Korean, Italian, Spanish, Portuguese, French, German, Hebrew, Hungarian, Chinese, Arabic, Filipino, Catalan, Finnish, Turkish, Dutch, Swedish, Thai, Tagalog, Malaysian, Indonesian, Vietnamese, Nepali, Hindi, Urdu */
   languageV2?: Maybe<Scalars['String']>;
   /** Notes for site moderators */
   modNotes?: Maybe<Scalars['String']>;
@@ -3887,6 +3950,8 @@ export type TextActivity = {
   isLiked?: Maybe<Scalars['Boolean']>;
   /** If the activity is locked and can receive replies */
   isLocked?: Maybe<Scalars['Boolean']>;
+  /** If the activity is pinned to the top of the users activity feed */
+  isPinned?: Maybe<Scalars['Boolean']>;
   /** If the currently authenticated user is subscribed to the activity */
   isSubscribed?: Maybe<Scalars['Boolean']>;
   /** The amount of likes the activity has */
@@ -4305,12 +4370,16 @@ export type UserOptions = {
   activityMergeTime?: Maybe<Scalars['Int']>;
   /** Whether the user receives notifications when a show they are watching aires */
   airingNotifications?: Maybe<Scalars['Boolean']>;
+  /** The list activity types the user has disabled from being created from list updates */
+  disabledListActivity?: Maybe<Array<Maybe<ListActivityOption>>>;
   /** Whether the user has enabled viewing of 18+ content */
   displayAdultContent?: Maybe<Scalars['Boolean']>;
   /** Notification options */
   notificationOptions?: Maybe<Array<Maybe<NotificationOption>>>;
   /** Profile highlight color (blue, purple, pink, orange, red, green, gray) */
   profileColor?: Maybe<Scalars['String']>;
+  /** Whether the user only allow messages from users they follow */
+  restrictMessagesToFollowing?: Maybe<Scalars['Boolean']>;
   /** The language the user wants to see staff and character names in */
   staffNameLanguage?: Maybe<UserStaffNameLanguage>;
   /** The user's timezone offset (Auth user only) */

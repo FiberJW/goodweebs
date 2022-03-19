@@ -1712,6 +1712,12 @@
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "PINNED",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "possibleTypes": null
@@ -3420,6 +3426,64 @@
         "inputFields": null,
         "interfaces": [],
         "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "ExternalLinkMediaType",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "ANIME",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "MANGA",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "STAFF",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "ExternalLinkType",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "INFO",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "SOCIAL",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "STREAMING",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
         "possibleTypes": null
       },
       {
@@ -5194,7 +5258,7 @@
               },
               {
                 "name": "licensedBy",
-                "description": "Filter media by sites with a online streaming or reading license",
+                "description": "Filter media by sites name with a online streaming or reading license",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -5204,13 +5268,37 @@
               },
               {
                 "name": "licensedBy_in",
-                "description": "Filter media by sites with a online streaming or reading license",
+                "description": "Filter media by sites name with a online streaming or reading license",
                 "type": {
                   "kind": "LIST",
                   "name": null,
                   "ofType": {
                     "kind": "SCALAR",
                     "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "licensedById",
+                "description": "Filter media by sites id with a online streaming or reading license",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "licensedById_in",
+                "description": "Filter media by sites id with a online streaming or reading license",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Int",
                     "ofType": null
                   }
                 },
@@ -7295,6 +7383,18 @@
             "deprecationReason": null
           },
           {
+            "name": "isPinned",
+            "description": "If the activity is pinned to the top of the users activity feed",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "isSubscribed",
             "description": "If the currently authenticated user is subscribed to the activity",
             "args": [],
@@ -7457,6 +7557,72 @@
         ],
         "inputFields": null,
         "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ListActivityOption",
+        "description": null,
+        "fields": [
+          {
+            "name": "disabled",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "type",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "ENUM",
+              "name": "MediaListStatus",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "ListActivityOptionInput",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "disabled",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "type",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "MediaListStatus",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },
@@ -9130,8 +9296,32 @@
       {
         "kind": "OBJECT",
         "name": "MediaExternalLink",
-        "description": "An external link to another site related to the media",
+        "description": "An external link to another site related to the media or staff member",
         "fields": [
+          {
+            "name": "color",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "icon",
+            "description": "The icon image url of the site. Not available for all links. Transparent PNG 64x64",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "id",
             "description": "The id of the external link",
@@ -9149,8 +9339,20 @@
             "deprecationReason": null
           },
           {
+            "name": "language",
+            "description": "Language the site content is in. See Staff language field for values.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "site",
-            "description": "The site location of the external link",
+            "description": "The links website site name",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -9165,17 +9367,37 @@
             "deprecationReason": null
           },
           {
-            "name": "url",
-            "description": "The url of the external link",
+            "name": "siteId",
+            "description": "The links website site id",
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "type",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "ENUM",
+              "name": "ExternalLinkType",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "url",
+            "description": "The url of the external link or base url of link source",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -11250,7 +11472,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "MediaExternalLink",
+                "name": "MediaSubmissionComparison",
                 "ofType": null
               }
             },
@@ -11441,6 +11663,18 @@
             "deprecationReason": null
           },
           {
+            "name": "externalLink",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "MediaExternalLink",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "staff",
             "description": null,
             "args": [],
@@ -11542,6 +11776,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "externalLink",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "MediaExternalLink",
               "ofType": null
             },
             "isDeprecated": false,
@@ -13687,6 +13933,39 @@
             "deprecationReason": null
           },
           {
+            "name": "ToggleActivityPin",
+            "description": "Toggle activity to be pinned to the top of the user's activity feed",
+            "args": [
+              {
+                "name": "id",
+                "description": "Toggle activity id to be pinned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "pinned",
+                "description": "If the activity should be pinned or unpinned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "UNION",
+              "name": "ActivityUnion",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "ToggleActivitySubscription",
             "description": "Toggle the subscription of an activity item",
             "args": [
@@ -14351,6 +14630,20 @@
                 "defaultValue": null
               },
               {
+                "name": "disabledListActivity",
+                "description": null,
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ListActivityOptionInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
+              {
                 "name": "displayAdultContent",
                 "description": "If the user should see media marked as adult-only",
                 "type": {
@@ -14400,6 +14693,16 @@
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "restrictMessagesToFollowing",
+                "description": "Only allow messages from other users the user follows",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
                   "ofType": null
                 },
                 "defaultValue": null
@@ -15966,7 +16269,7 @@
               },
               {
                 "name": "licensedBy",
-                "description": "Filter media by sites with a online streaming or reading license",
+                "description": "Filter media by sites name with a online streaming or reading license",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -15976,13 +16279,37 @@
               },
               {
                 "name": "licensedBy_in",
-                "description": "Filter media by sites with a online streaming or reading license",
+                "description": "Filter media by sites name with a online streaming or reading license",
                 "type": {
                   "kind": "LIST",
                   "name": null,
                   "ofType": {
                     "kind": "SCALAR",
                     "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "licensedById",
+                "description": "Filter media by sites id with a online streaming or reading license",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "licensedById_in",
+                "description": "Filter media by sites id with a online streaming or reading license",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Int",
                     "ofType": null
                   }
                 },
@@ -18387,6 +18714,53 @@
             "deprecationReason": null
           },
           {
+            "name": "ExternalLinkSourceCollection",
+            "description": "ExternalLinkSource collection query",
+            "args": [
+              {
+                "name": "id",
+                "description": "Filter by the link id",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "mediaType",
+                "description": null,
+                "type": {
+                  "kind": "ENUM",
+                  "name": "ExternalLinkMediaType",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "type",
+                "description": null,
+                "type": {
+                  "kind": "ENUM",
+                  "name": "ExternalLinkType",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MediaExternalLink",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "Follower",
             "description": "Follow query",
             "args": [
@@ -18932,7 +19306,7 @@
               },
               {
                 "name": "licensedBy",
-                "description": "Filter media by sites with a online streaming or reading license",
+                "description": "Filter media by sites name with a online streaming or reading license",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -18942,13 +19316,37 @@
               },
               {
                 "name": "licensedBy_in",
-                "description": "Filter media by sites with a online streaming or reading license",
+                "description": "Filter media by sites name with a online streaming or reading license",
                 "type": {
                   "kind": "LIST",
                   "name": null,
                   "ofType": {
                     "kind": "SCALAR",
                     "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "licensedById",
+                "description": "Filter media by sites id with a online streaming or reading license",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "licensedById_in",
+                "description": "Filter media by sites id with a online streaming or reading license",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Int",
                     "ofType": null
                   }
                 },
@@ -21695,6 +22093,18 @@
             "deprecationReason": null
           },
           {
+            "name": "externalLink",
+            "description": "The external link source the mod feed entry references",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "MediaExternalLink",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "id",
             "description": "The id of the media",
             "args": [],
@@ -22677,7 +23087,7 @@
           },
           {
             "name": "languageV2",
-            "description": "The primary language of the staff member. Current values: Japanese, English, Korean, Italian, Spanish, Portuguese, French, German, Hebrew, Hungarian, Chinese, Arabic, Filipino, Catalan",
+            "description": "The primary language of the staff member. Current values: Japanese, English, Korean, Italian, Spanish, Portuguese, French, German, Hebrew, Hungarian, Chinese, Arabic, Filipino, Catalan, Finnish, Turkish, Dutch, Swedish, Thai, Tagalog, Malaysian, Indonesian, Vietnamese, Nepali, Hindi, Urdu",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -24194,6 +24604,18 @@
           {
             "name": "isLocked",
             "description": "If the activity is locked and can receive replies",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isPinned",
+            "description": "If the activity is pinned to the top of the users activity feed",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -26664,6 +27086,22 @@
             "deprecationReason": null
           },
           {
+            "name": "disabledListActivity",
+            "description": "The list activity types the user has disabled from being created from list updates",
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ListActivityOption",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "displayAdultContent",
             "description": "Whether the user has enabled viewing of 18+ content",
             "args": [],
@@ -26698,6 +27136,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "restrictMessagesToFollowing",
+            "description": "Whether the user only allow messages from users they follow",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
               "ofType": null
             },
             "isDeprecated": false,

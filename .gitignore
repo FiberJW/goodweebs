@@ -15,3 +15,5 @@ web-report/
 node_modules
 
 goodweebs-secrets
+
+dist
