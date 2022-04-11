@@ -2,6 +2,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
+import { PressableOpacity } from "yep/components/PressableOpacity";
 import { AnimeRelationFragmentFragment } from "yep/graphql/generated";
 import { RootStackParamList } from "yep/navigation";
 import { getTitle } from "yep/utils";
@@ -15,13 +16,16 @@ export function RelatedAnimeItem({ anime, navigation }: RelatedItemProps) {
   if (!anime.coverImage?.large) return null;
 
   return (
-    <PosterAndTitle
-      size="large"
-      uri={anime.coverImage?.large}
+    <PressableOpacity
       onPress={() => {
         navigation.push("Details", { id: anime.id });
       }}
-      title={getTitle(anime.title)}
-    />
+    >
+      <PosterAndTitle
+        size="large"
+        uri={anime.coverImage?.large}
+        title={getTitle(anime.title)}
+      />
+    </PressableOpacity>
   );
 }

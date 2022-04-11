@@ -22,7 +22,7 @@ export function StepperButton({ onPress, type, disabled }: Props) {
     <PressableOpacity
       disabled={disabled}
       onPress={onPress}
-      style={[styles.container, disabled ? { opacity: 0.6 } : null]}
+      style={styles.container}
       borderRadius={32}
     >
       <StepperButtonIcon
@@ -37,5 +37,5 @@ export function StepperButton({ onPress, type, disabled }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { borderColor: darkTheme.iconFill, borderWidth: 1, padding: 16 },
+  container: { backgroundColor: darkTheme.button, padding: 16 },
 });

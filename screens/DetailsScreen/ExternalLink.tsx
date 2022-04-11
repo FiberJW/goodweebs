@@ -1,3 +1,4 @@
+import chroma from "chroma-js";
 import React from "react";
 import { Linking, Text } from "react-native";
 import * as Sentry from "sentry-expo";
@@ -47,6 +48,9 @@ export function ExternalLink({ id, url, site }: MediaExternalLinkDataFragment) {
     case "Youtube":
       color = youtubeRed;
       break;
+    case "YouTube":
+      color = youtubeRed;
+      break;
     case "Netflix":
       color = netflixRed;
       break;
@@ -77,8 +81,7 @@ export function ExternalLink({ id, url, site }: MediaExternalLinkDataFragment) {
   return (
     <PressableOpacity
       style={{
-        borderColor: color,
-        borderWidth: 1,
+        backgroundColor: chroma(color).luminance(0.25).hex(),
         padding: 16,
         justifyContent: "center",
         alignItems: "center",
@@ -87,13 +90,13 @@ export function ExternalLink({ id, url, site }: MediaExternalLinkDataFragment) {
       onPress={() => {
         if (url) Linking.openURL(url);
       }}
-      borderRadius={8}
+      borderRadius={100}
     >
       <Text
         style={{
           fontFamily: Manrope.semiBold,
           fontSize: 16,
-          color,
+          color: darkTheme.text,
           textAlign: "center",
         }}
       >

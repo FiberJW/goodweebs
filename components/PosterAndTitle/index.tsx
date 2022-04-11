@@ -5,32 +5,21 @@ import {
   ViewStyle,
   ImageBackground,
   Text,
+  View,
 } from "react-native";
 
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
-import { PressableOpacity } from "../PressableOpacity";
-
 type Props = {
   size: "small" | "tiny" | "large" | "profile" | "details";
   uri: string;
   title?: string;
-  onPress?: () => void;
-  disabled?: boolean;
   style?: ViewStyle;
   children?: ReactNode;
 };
 
-export function PosterAndTitle({
-  size,
-  uri,
-  title,
-  onPress,
-  disabled,
-  style,
-  children,
-}: Props) {
+export function PosterAndTitle({ size, uri, title, style, children }: Props) {
   const { width: windowWidth } = useWindowDimensions();
 
   let posterWidth: number;
@@ -55,11 +44,7 @@ export function PosterAndTitle({
   const posterHeight = Math.round(posterWidth * 1.4285714286);
 
   return (
-    <PressableOpacity
-      style={[styles.container, style]}
-      onPress={onPress}
-      disabled={disabled}
-    >
+    <View style={[styles.container, style]}>
       <ImageBackground
         resizeMode="cover"
         style={[styles.poster, { width: posterWidth, height: posterHeight }]}
@@ -80,7 +65,7 @@ export function PosterAndTitle({
           {title}
         </Text>
       ) : null}
-    </PressableOpacity>
+    </View>
   );
 }
 
@@ -90,7 +75,7 @@ const styles = StyleSheet.create({
   },
   poster: {
     backgroundColor: darkTheme.listItemBackground,
-    borderRadius: 4,
+    borderRadius: 8,
     overflow: "hidden",
   },
   title: {

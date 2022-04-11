@@ -295,7 +295,6 @@ export function DetailsScreen({ route, navigation }: Props) {
           </Title>
           <PosterAndInfoContainer>
             <PosterAndTitle
-              disabled
               size="details"
               uri={data?.Media?.coverImage?.large ?? ""}
               style={{ marginRight: 16 }}

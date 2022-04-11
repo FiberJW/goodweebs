@@ -44,7 +44,7 @@ export function Button({
       disabled={disabled || loading}
       style={[styles.pressable, { padding }, style]}
       containerStyle={containerStyle}
-      borderRadius={8}
+      borderRadius={100}
       onPress={onPress}
     >
       {loading ? (
@@ -65,8 +65,7 @@ const styles = StyleSheet.create({
   },
   pressable: {
     alignItems: "center",
-    borderColor: darkTheme.iconFill,
-    borderWidth: 1,
+    backgroundColor: darkTheme.button,
     justifyContent: "center",
     width: "100%",
   },

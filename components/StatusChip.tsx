@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, Text } from "react-native";
 
-import { transparent } from "yep/colors";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
@@ -26,7 +25,7 @@ export function StatusChip({ label, onPress, isSelected }: Props) {
             }
           : undefined,
       ]}
-      borderRadius={4}
+      borderRadius={16}
     >
       <Text
         style={[
@@ -42,11 +41,9 @@ export function StatusChip({ label, onPress, isSelected }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: transparent,
-    borderColor: darkTheme.chipBorder,
-    borderWidth: 1,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    backgroundColor: darkTheme.button,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
   label: {
     color: darkTheme.text,

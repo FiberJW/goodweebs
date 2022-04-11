@@ -20,7 +20,7 @@ export function ProgressButton({
     <PressableOpacity
       onPress={onPress}
       disabled={disabled}
-      style={[styles.container, disabled ? { opacity: 0.4 } : undefined]}
+      style={styles.container}
       borderRadius={8}
     >
       <Image style={styles.icon} source={icon} />
@@ -31,8 +31,7 @@ export function ProgressButton({
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    borderColor: darkTheme.iconFill,
-    borderWidth: 1,
+    backgroundColor: darkTheme.button,
     justifyContent: "center",
     paddingHorizontal: 16,
     paddingVertical: 8,

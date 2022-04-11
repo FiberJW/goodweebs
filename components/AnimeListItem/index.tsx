@@ -58,11 +58,11 @@ export function AnimeListItem({
   return (
     <PressableOpacity
       style={styles.container}
-      borderRadius={8}
+      borderRadius={16}
       activeOpacity={0.7}
       onPress={() => navigation.navigate("Details", { id: media.id })}
     >
-      <PosterAndTitle uri={media.coverImage?.large ?? ""} size="small" disabled>
+      <PosterAndTitle uri={media.coverImage?.large ?? ""} size="small">
         {isAiringAndCurrentlyWatching ? (
           <EpisodesBehind count={episodesBehind} />
         ) : null}
@@ -124,10 +124,10 @@ const styles = StyleSheet.create({
     fontSize: 12.8,
   },
   container: {
+    backgroundColor: darkTheme.listItemBackground,
     borderColor: darkTheme.listItemBorder,
-    borderWidth: 2,
     flexDirection: "row",
-    padding: 8,
+    padding: 12,
   },
   episodeProgress: {
     color: darkTheme.text,

@@ -208,7 +208,7 @@ function makeAnimeFlatList<T>() {
 
 const AnimeListDivider = takimoto.View({ height: 8 });
 
-const StatusChipListDivider = takimoto.View({ width: 4 });
+const StatusChipListDivider = takimoto.View({ width: 8 });
 
 const AnimeListContainer = takimoto.View({
   flex: 1,

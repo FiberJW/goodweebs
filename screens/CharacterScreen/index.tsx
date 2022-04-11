@@ -54,7 +54,6 @@ export function CharacterScreen({ route }: Props) {
           </Text>
           <View style={styles.posterAndDescriptionContainer}>
             <PosterAndTitle
-              disabled
               size="details"
               uri={character?.image?.large ?? ""}
               style={{ marginRight: 16 }}

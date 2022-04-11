@@ -8,6 +8,7 @@ import { white } from "yep/colors";
 import { Button } from "yep/components/Button";
 import { Header } from "yep/components/Header";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
+import { PressableOpacity } from "yep/components/PressableOpacity";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { useGetViewerQuery } from "yep/graphql/generated";
 import { RootStackParamList } from "yep/navigation";
@@ -118,14 +119,17 @@ export function ProfileScreen({ navigation }: Props) {
                   data={animeList}
                   renderItem={({ item }) => (
                     <FavoriteContainer>
-                      <PosterAndTitle
-                        size="profile"
-                        uri={item?.coverImage?.large ?? ""}
-                        title={getTitle(item.title)}
+                      <PressableOpacity
                         onPress={() =>
                           navigation.navigate("Details", { id: item.id })
                         }
-                      />
+                      >
+                        <PosterAndTitle
+                          size="profile"
+                          uri={item?.coverImage?.large ?? ""}
+                          title={getTitle(item.title)}
+                        />
+                      </PressableOpacity>
                     </FavoriteContainer>
                   )}
                 />
@@ -144,14 +148,17 @@ export function ProfileScreen({ navigation }: Props) {
                   data={characterList}
                   renderItem={({ item }) => (
                     <FavoriteContainer>
-                      <PosterAndTitle
-                        size="profile"
-                        uri={item?.image?.large ?? ""}
-                        title={item.name?.full ?? undefined}
+                      <PressableOpacity
                         onPress={() =>
                           navigation.navigate("Character", { id: item.id })
                         }
-                      />
+                      >
+                        <PosterAndTitle
+                          size="profile"
+                          uri={item?.image?.large ?? ""}
+                          title={item.name?.full ?? undefined}
+                        />
+                      </PressableOpacity>
                     </FavoriteContainer>
                   )}
                 />

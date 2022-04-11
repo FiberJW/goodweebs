@@ -1152,6 +1152,8 @@ export type Media = {
   isLocked?: Maybe<Scalars['Boolean']>;
   /** If the media is blocked from being recommended to/from */
   isRecommendationBlocked?: Maybe<Scalars['Boolean']>;
+  /** If the media is blocked from being reviewed */
+  isReviewBlocked?: Maybe<Scalars['Boolean']>;
   /** Mean score of all the user's scores of the media */
   meanScore?: Maybe<Scalars['Int']>;
   /** The authenticated user's media list entry for the media */
@@ -1421,8 +1423,10 @@ export type MediaExternalLink = {
   icon?: Maybe<Scalars['String']>;
   /** The id of the external link */
   id: Scalars['Int'];
+  isDisabled?: Maybe<Scalars['Boolean']>;
   /** Language the site content is in. See Staff language field for values. */
   language?: Maybe<Scalars['String']>;
+  notes?: Maybe<Scalars['String']>;
   /** The links website site name */
   site: Scalars['String'];
   /** The links website site id */

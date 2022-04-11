@@ -8074,6 +8074,18 @@
             "deprecationReason": null
           },
           {
+            "name": "isReviewBlocked",
+            "description": "If the media is blocked from being reviewed",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "meanScore",
             "description": "Mean score of all the user's scores of the media",
             "args": [],
@@ -9339,8 +9351,32 @@
             "deprecationReason": null
           },
           {
+            "name": "isDisabled",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "language",
             "description": "Language the site content is in. See Staff language field for values.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "notes",
+            "description": null,
             "args": [],
             "type": {
               "kind": "SCALAR",

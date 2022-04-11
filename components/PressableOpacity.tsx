@@ -19,6 +19,7 @@ export function PressableOpacity({
   activeOpacity,
   borderRadius,
   style,
+  disabled,
   containerStyle,
   ...rest
 }: Props) {
@@ -35,6 +36,7 @@ export function PressableOpacity({
           const nativeStyle = {
             opacity: pressed ? pressedOpacity : 1,
             borderRadius,
+            ...(disabled && { opacity: 0.4 }),
           };
 
           if (Array.isArray(pressedStyles)) {
@@ -42,6 +44,7 @@ export function PressableOpacity({
           }
           return [nativeStyle, pressedStyles];
         }}
+        disabled={disabled}
         android_ripple={{ color: white, borderless: false }}
         {...rest}
       />

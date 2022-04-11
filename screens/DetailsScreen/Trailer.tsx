@@ -9,7 +9,7 @@ import {
   ImageBackground,
 } from "react-native";
 
-import { black } from "yep/colors";
+import { black, white80 } from "yep/colors";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { MediaTrailerDataFragment } from "yep/graphql/generated";
 import { darkTheme } from "yep/themes";
@@ -57,10 +57,12 @@ export function Trailer({ trailer: { id, site, thumbnail } }: Props) {
             alignItems: "center",
           }}
         >
-          <Image
-            source={require("yep/assets/icons/trailer-icon.png")}
-            style={styles.playIcon}
-          />
+          <View style={styles.playButtonContainer}>
+            <Image
+              source={require("yep/assets/icons/triangle-right.png")}
+              style={styles.playIcon}
+            />
+          </View>
         </ImageBackground>
       </PressableOpacity>
     </View>
@@ -76,6 +78,14 @@ const styles = StyleSheet.create({
     fontFamily: Manrope.semiBold,
     fontSize: 16,
     marginBottom: 8,
+  },
+  playButtonContainer: {
+    alignItems: "center",
+    backgroundColor: white80,
+    borderRadius: 32,
+    height: 64,
+    justifyContent: "center",
+    width: 64,
   },
   playIcon: {
     height: 32,
