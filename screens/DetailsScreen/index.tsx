@@ -42,7 +42,7 @@ import { RootStackParamList } from "yep/navigation";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { getProgress, getStartOrEndDateText, notEmpty } from "yep/utils";
+import { getProgress, getDateText, notEmpty } from "yep/utils";
 
 import { CharacterList } from "./CharacterList";
 import { ExternalLink } from "./ExternalLink";
@@ -381,20 +381,20 @@ export function DetailsScreen({ route, navigation }: Props) {
                 ) : null}
                 {data?.Media?.status === MediaStatus.NotYetReleased &&
                 data.Media.startDate &&
-                getStartOrEndDateText(data.Media.startDate) ? (
+                getDateText(data.Media.startDate) ? (
                   <Info
                     label="Start date"
-                    value={getStartOrEndDateText(data.Media.startDate)!}
+                    value={getDateText(data.Media.startDate)!}
                   />
                 ) : null}
 
                 {(data?.Media?.status === MediaStatus.Finished ||
                   data?.Media?.status === MediaStatus.Cancelled) &&
                 data?.Media?.endDate &&
-                getStartOrEndDateText(data.Media.endDate) ? (
+                getDateText(data.Media.endDate) ? (
                   <Info
                     label="End date"
-                    value={getStartOrEndDateText(data.Media.endDate)!}
+                    value={getDateText(data.Media.endDate)!}
                   />
                 ) : null}
               </InfoRow>

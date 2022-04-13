@@ -75,11 +75,11 @@ export function getReadableMediaRelation(mediaRelation: MediaRelation): string {
   }
 }
 
-export function getStartOrEndDateText(
+export function getDateText(
   date: Maybe<
     { __typename?: "FuzzyDate" } & Pick<FuzzyDate, "year" | "month" | "day">
   >,
-  dateType?: "Starting" | "Ending"
+  dateType?: string
 ): string | undefined {
   if (!date) return undefined;
 
@@ -113,15 +113,18 @@ export function getAiringStatusText(
         : "Releasing";
     case MediaStatus.NotYetReleased:
       return media.startDate
-        ? getStartOrEndDateText(media.startDate, "Starting")
-        : undefined;
+        ? getDateText(media.startDate, "Starting")
+        : "Not yet released";
     case MediaStatus.Hiatus:
       return "On hiatus";
     case MediaStatus.Finished:
+      return media.endDate
+        ? getDateText(media.endDate, "Finished")
+        : "Finished";
     case MediaStatus.Cancelled:
-      return media.startDate
-        ? getStartOrEndDateText(media.startDate, "Ending")
-        : undefined;
+      return media.endDate
+        ? getDateText(media.endDate, "Cancelled")
+        : "Cancelled";
   }
 }
 
