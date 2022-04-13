@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { View } from "react-native";
 
 import { useDidMountEffect } from "yep/hooks/helpers";
 import { takimoto } from "yep/takimoto";
@@ -41,6 +42,7 @@ type Props = {
   upperBound?: number;
   lowerBound: number;
   onChange: (value: number) => void;
+  icon?: React.ReactNode;
 };
 
 export function Stepper({
@@ -49,6 +51,7 @@ export function Stepper({
   lowerBound,
   label,
   onChange,
+  icon,
 }: Props) {
   const [count, setCount] = useState(defaultValue);
 
@@ -68,7 +71,10 @@ export function Stepper({
 
   return (
     <StepperWithLabelContainer>
-      <StepperLabel>{label}</StepperLabel>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        {icon}
+        <StepperLabel>{label}</StepperLabel>
+      </View>
       <StepperContainer>
         <StepperButton
           type="decrement"

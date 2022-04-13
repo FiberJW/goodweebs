@@ -5,7 +5,7 @@ import { formatDistanceToNow, add } from "date-fns";
 import * as Haptics from "expo-haptics";
 import _ from "lodash";
 import React, { useState } from "react";
-import { StyleSheet, RefreshControl, Text, View } from "react-native";
+import { StyleSheet, RefreshControl, Text, View, Image } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import HTMLView from "react-native-htmlview";
 import { useSafeArea } from "react-native-safe-area-context";
@@ -446,6 +446,12 @@ export function DetailsScreen({ route, navigation }: Props) {
           {data?.Media?.mediaListEntry ? (
             <>
               <Stepper
+                icon={
+                  <Image
+                    style={{ height: 24, width: 24, marginRight: 4 }}
+                    source={require("yep/assets/icons/progress.png")}
+                  />
+                }
                 label="Progress"
                 defaultValue={data?.Media?.mediaListEntry?.progress ?? 0}
                 upperBound={data?.Media?.episodes ?? undefined}
@@ -465,6 +471,12 @@ export function DetailsScreen({ route, navigation }: Props) {
               />
               <Stepper
                 label="Score"
+                icon={
+                  <Image
+                    style={{ height: 24, width: 24, marginRight: 4 }}
+                    source={require("yep/assets/icons/star.png")}
+                  />
+                }
                 defaultValue={data?.Media?.mediaListEntry?.score ?? 5}
                 upperBound={10}
                 lowerBound={0}
