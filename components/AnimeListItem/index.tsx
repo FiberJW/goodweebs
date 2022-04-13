@@ -4,6 +4,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
+import { white12_5, white5 } from "yep/colors";
 import {
   AnimeFragmentFragment,
   MediaStatus,
@@ -80,9 +81,11 @@ export function AnimeListItem({
       </View>
       <View style={styles.spacer} />
       <View style={styles.progressColumn}>
-        <Text style={styles.episodeProgress}>
-          {getProgress(media, progress)}
-        </Text>
+        <View style={styles.episodeProgressContainer}>
+          <Text style={styles.episodeProgress}>
+            {getProgress(media, progress)}
+          </Text>
+        </View>
         <View style={styles.progressButtonGroup}>
           <ProgressButton
             disabled={
@@ -125,15 +128,22 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: darkTheme.listItemBackground,
-    borderColor: darkTheme.listItemBorder,
     flexDirection: "row",
     padding: 12,
   },
   episodeProgress: {
     color: darkTheme.text,
-    fontFamily: Manrope.extraLight,
-    fontSize: 20,
+    fontFamily: Manrope.semiBold,
+    fontSize: 16,
     textAlign: "right",
+  },
+  episodeProgressContainer: {
+    backgroundColor: white5,
+    borderColor: white12_5,
+    borderRadius: 8,
+    borderWidth: 1,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
   },
   progressButtonGroup: { flexDirection: "row" },
   progressButtonSpacer: { width: 8 },
