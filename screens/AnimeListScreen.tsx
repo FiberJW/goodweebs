@@ -6,7 +6,7 @@ import {
 import { StackNavigationProp } from "@react-navigation/stack";
 import { sortBy } from "lodash";
 import React, { useState, useMemo, useCallback } from "react";
-import { RefreshControl } from "react-native";
+import { RefreshControl, View } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
@@ -98,87 +98,92 @@ export function AnimeListScreen({ navigation }: Props) {
   return (
     <OuterContainer>
       <Header label={getString("anime", StringCase.TITLE)} />
-      <InnerContainer>
-        <StatusChipListContainer>
-          <StatusChipList
-            alwaysBounceVertical={false}
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            data={MediaListStatusWithLabel}
-            ItemSeparatorComponent={StatusChipListDivider}
-            keyExtractor={({ label }) => label}
-            renderItem={({ item: { label, value } }) => (
-              <StatusChip
-                label={label}
-                key={label}
-                onPress={() => setStatus(value)}
-                isSelected={status === value}
-              />
-            )}
-          />
-        </StatusChipListContainer>
-        <Spacer />
-        <CountAndSortRow>
-          <Count>{listCountText}</Count>
-        </CountAndSortRow>
-        <Spacer />
 
-        <AnimeListContainer>
-          <AnimeFlatList
-            showsVerticalScrollIndicator={false}
-            ItemSeparatorComponent={AnimeListDivider}
-            data={list}
-            ListEmptyComponent={() =>
-              refreshing ? null : (
-                <EmptyState
-                  title="Empty list"
-                  description="Explore the world of anime by adding some shows to your list!"
-                  cta={{
-                    label: "Discover new anime",
-                    onPress: () => {
-                      navigation.navigate("Discover");
-                    },
-                  }}
-                />
-              )
-            }
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={async () => {
-                  await refetch({
-                    userId: viewerData?.Viewer?.id,
-                    status,
-                  });
-                }}
-                tintColor={darkTheme.text}
-                titleColor={darkTheme.text}
+      {/* <AnimeListContainer> */}
+      <AnimeFlatList
+        contentContainerStyle={{ padding: 16 }}
+        ListHeaderComponent={() => (
+          <View>
+            <StatusChipListContainer>
+              <StatusChipList
+                alwaysBounceVertical={false}
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                data={MediaListStatusWithLabel}
+                ItemSeparatorComponent={StatusChipListDivider}
+                keyExtractor={({ label }) => label}
+                renderItem={({ item: { label, value } }) => (
+                  <StatusChip
+                    label={label}
+                    key={label}
+                    onPress={() => setStatus(value)}
+                    isSelected={status === value}
+                  />
+                )}
               />
-            }
-            keyExtractor={(item) => `${item.id}`}
-            renderItem={({ item }) => (
-              <AnimeListItemContainer
-                seedData={{
-                  id: item.id,
-                  progress: item.progress ?? 0,
-                  media: item.media ?? null,
-                }}
-                refetchList={async () => {
-                  await refetch({
-                    userId: viewerData?.Viewer?.id,
-                    status,
-                  });
-                }}
-                refetchListVariables={{
-                  userId: viewerData?.Viewer?.id,
-                  status,
-                }}
-                navigation={navigation}
-              />
-            )}
+            </StatusChipListContainer>
+            <Spacer />
+            <CountAndSortRow>
+              <Count>{listCountText}</Count>
+            </CountAndSortRow>
+            <Spacer />
+          </View>
+        )}
+        showsVerticalScrollIndicator={false}
+        ItemSeparatorComponent={AnimeListDivider}
+        data={list}
+        ListEmptyComponent={() =>
+          refreshing ? null : (
+            <EmptyState
+              title="Empty list"
+              description="Explore the world of anime by adding some shows to your list!"
+              cta={{
+                label: "Discover new anime",
+                onPress: () => {
+                  navigation.navigate("Discover");
+                },
+              }}
+            />
+          )
+        }
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={async () => {
+              await refetch({
+                userId: viewerData?.Viewer?.id,
+                status,
+              });
+            }}
+            tintColor={darkTheme.text}
+            titleColor={darkTheme.text}
           />
-        </AnimeListContainer>
-      </InnerContainer>
+        }
+        keyExtractor={(item) => `${item.id}`}
+        renderItem={({ item, index }) => (
+          <AnimeListItemContainer
+            seedData={{
+              id: item.id,
+              progress: item.progress ?? 0,
+              media: item.media ?? null,
+            }}
+            refetchList={async () => {
+              await refetch({
+                userId: viewerData?.Viewer?.id,
+                status,
+              });
+            }}
+            refetchListVariables={{
+              userId: viewerData?.Viewer?.id,
+              status,
+            }}
+            navigation={navigation}
+            first={index === 0}
+            last={index === list.length - 1}
+          />
+        )}
+      />
+      {/* </AnimeListContainer> */}
     </OuterContainer>
   );
 }
@@ -206,7 +211,10 @@ function makeAnimeFlatList<T>() {
   return takimoto.FlatList<T>({}, {});
 }
 
-const AnimeListDivider = takimoto.View({ height: 8 });
+const AnimeListDivider = takimoto.View({
+  height: 1,
+  backgroundColor: darkTheme.listItemBorder,
+});
 
 const StatusChipListDivider = takimoto.View({ width: 8 });
 

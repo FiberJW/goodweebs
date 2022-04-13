@@ -33,6 +33,8 @@ type Props = {
     BottomTabNavigationProp<TabParamList, "Anime">,
     StackNavigationProp<RootStackParamList>
   >;
+  first: boolean;
+  last: boolean;
 };
 
 export function AnimeListItemContainer({
@@ -40,6 +42,8 @@ export function AnimeListItemContainer({
   navigation,
   refetchList,
   refetchListVariables,
+  first,
+  last,
 }: Props) {
   const [progressShadow, setProgressShadow] = useState(seedData.progress);
   const [shouldShowProgressShadow, setShouldShowProgressShadow] =
@@ -124,6 +128,8 @@ export function AnimeListItemContainer({
       onIncrement={async () => changeProgress("inc")}
       onDecrement={async () => changeProgress("dec")}
       media={(data?.Media ?? seedData?.media) as AnimeFragmentFragment}
+      first={first}
+      last={last}
     />
   );
 }

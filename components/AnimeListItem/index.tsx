@@ -32,6 +32,8 @@ type Props = {
     BottomTabNavigationProp<TabParamList, "Anime">,
     StackNavigationProp<RootStackParamList>
   >;
+  first: boolean;
+  last: boolean;
 };
 
 export function AnimeListItem({
@@ -41,6 +43,8 @@ export function AnimeListItem({
   onIncrement,
   onDecrement,
   navigation,
+  first,
+  last,
 }: Props) {
   const now = useNow();
 
@@ -67,8 +71,17 @@ export function AnimeListItem({
 
   return (
     <PressableOpacity
-      style={styles.container}
-      borderRadius={16}
+      style={[
+        styles.container,
+        {
+          backgroundColor: darkTheme.listItemBackground,
+          padding: 12,
+          borderTopRightRadius: first ? 16 : undefined,
+          borderTopLeftRadius: first ? 16 : undefined,
+          borderBottomRightRadius: last ? 16 : undefined,
+          borderBottomLeftRadius: last ? 16 : undefined,
+        },
+      ]}
       activeOpacity={0.7}
       onPress={() => navigation.navigate("Details", { id: media.id })}
     >
@@ -141,9 +154,7 @@ const styles = StyleSheet.create({
     fontSize: 12.8,
   },
   container: {
-    backgroundColor: darkTheme.listItemBackground,
     flexDirection: "row",
-    padding: 12,
   },
   episodeProgress: {
     color: darkTheme.text,
