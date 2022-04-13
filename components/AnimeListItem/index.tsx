@@ -56,6 +56,15 @@ export function AnimeListItem({
 
   const airingStatus = getAiringStatusText(media, now);
 
+  const showRating =
+    media.mediaListEntry?.score &&
+    ((media.mediaListEntry.status &&
+      [MediaListStatus.Completed, MediaListStatus.Dropped].includes(
+        media.mediaListEntry.status
+      )) ||
+      (media.status &&
+        [MediaStatus.Finished, MediaStatus.Cancelled].includes(media.status)));
+
   return (
     <PressableOpacity
       style={styles.container}
@@ -73,7 +82,12 @@ export function AnimeListItem({
         <Text style={styles.title} numberOfLines={2}>
           {getTitle(media.title)}
         </Text>
-        {airingStatus ? (
+        {showRating ? (
+          <Text style={styles.broadcastSchedule}>
+            ★ {media.mediaListEntry?.score}/10
+          </Text>
+        ) : null}
+        {!showRating && airingStatus ? (
           <Text style={styles.broadcastSchedule} numberOfLines={1}>
             {airingStatus}
           </Text>
