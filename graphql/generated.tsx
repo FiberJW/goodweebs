@@ -4769,6 +4769,19 @@ export type CharacterDataFragment = (
   )> }
 );
 
+export type RemoveFromListMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type RemoveFromListMutation = (
+  { __typename?: 'Mutation' }
+  & { DeleteMediaListEntry?: Maybe<(
+    { __typename?: 'Deleted' }
+    & Pick<Deleted, 'deleted'>
+  )> }
+);
+
 export type ToggleFavoriteMutationVariables = Exact<{
   animeId?: Maybe<Scalars['Int']>;
   characterId?: Maybe<Scalars['Int']>;
@@ -5182,6 +5195,38 @@ export const AiringNotificationFragmentFragmentDoc = gql`
   }
 }
     ${AnimeRelationFragmentFragmentDoc}`;
+export const RemoveFromListDocument = gql`
+    mutation RemoveFromList($id: Int!) {
+  DeleteMediaListEntry(id: $id) {
+    deleted
+  }
+}
+    `;
+export type RemoveFromListMutationFn = Apollo.MutationFunction<RemoveFromListMutation, RemoveFromListMutationVariables>;
+
+/**
+ * __useRemoveFromListMutation__
+ *
+ * To run a mutation, you first call `useRemoveFromListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveFromListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeFromListMutation, { data, loading, error }] = useRemoveFromListMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveFromListMutation(baseOptions?: Apollo.MutationHookOptions<RemoveFromListMutation, RemoveFromListMutationVariables>) {
+        return Apollo.useMutation<RemoveFromListMutation, RemoveFromListMutationVariables>(RemoveFromListDocument, baseOptions);
+      }
+export type RemoveFromListMutationHookResult = ReturnType<typeof useRemoveFromListMutation>;
+export type RemoveFromListMutationResult = Apollo.MutationResult<RemoveFromListMutation>;
+export type RemoveFromListMutationOptions = Apollo.BaseMutationOptions<RemoveFromListMutation, RemoveFromListMutationVariables>;
 export const ToggleFavoriteDocument = gql`
     mutation ToggleFavorite($animeId: Int, $characterId: Int) {
   ToggleFavourite(animeId: $animeId, characterId: $characterId) {

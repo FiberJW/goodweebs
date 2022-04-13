@@ -36,13 +36,16 @@ import {
   UpdateStatusDocument,
   refetchGetAnimeQuery,
   useToggleFavoriteMutation,
+  RemoveFromListMutation,
+  RemoveFromListMutationVariables,
+  RemoveFromListDocument,
 } from "yep/graphql/generated";
 import { useNow, useDebouncedMutation } from "yep/hooks/helpers";
 import { RootStackParamList } from "yep/navigation";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { getProgress, getDateText, notEmpty } from "yep/utils";
+import { getDateText, notEmpty } from "yep/utils";
 
 import { CharacterList } from "./CharacterList";
 import { ExternalLink } from "./ExternalLink";
@@ -159,6 +162,36 @@ export function DetailsScreen({ route, navigation }: Props) {
                 ...(proxyData?.Media?.mediaListEntry as MediaList),
                 status: variables?.status,
               },
+            },
+          },
+        });
+      }
+    },
+    wait: 0,
+    refetchQueries: [refetchGetAnimeQuery({ id: route.params.id })],
+  });
+
+  const removeFromList = useDebouncedMutation<
+    RemoveFromListMutation,
+    RemoveFromListMutationVariables
+  >({
+    mutationDocument: RemoveFromListDocument,
+    makeUpdateFunction: (_variables) => (proxy) => {
+      const proxyData = proxy.readQuery<GetAnimeQuery>({
+        query: GetAnimeDocument,
+        variables: { id: route.params.id },
+      });
+
+      if (proxyData?.Media?.mediaListEntry) {
+        proxy.writeQuery<GetAnimeQuery>({
+          query: GetAnimeDocument,
+          variables: { id: route.params.id },
+          data: {
+            ...proxyData,
+            Media: {
+              ...proxyData?.Media,
+              id: proxyData?.Media?.id as number,
+              mediaListEntry: undefined,
             },
           },
         });
@@ -402,17 +435,26 @@ export function DetailsScreen({ route, navigation }: Props) {
               label={
                 MediaListStatusWithLabel.find(
                   (x) => x.value === data?.Media?.mediaListEntry?.status
-                )?.label ?? "Add to list"
+                )?.label ?? "Add to List"
               }
               onPress={() => {
-                const options = MediaListStatusWithLabel.map((s) => s.label);
+                const options = MediaListStatusWithLabel.map(
+                  (s) =>
+                    `${
+                      data?.Media?.mediaListEntry?.status === s.value
+                        ? "✔ "
+                        : ""
+                    }${s.label}`
+                );
 
+                const mediaListEntry = data?.Media?.mediaListEntry;
+
+                mediaListEntry && options.push("Remove from List");
                 options.push("Cancel");
 
-                const destructiveButtonIndex =
-                  MediaListStatusWithLabel.findIndex(
-                    (s) => s.value === data?.Media?.mediaListEntry?.status
-                  );
+                const destructiveButtonIndex = mediaListEntry
+                  ? options.length - 2
+                  : undefined;
 
                 const cancelButtonIndex = options.length - 1;
 
@@ -427,10 +469,17 @@ export function DetailsScreen({ route, navigation }: Props) {
                     if (buttonIndex === cancelButtonIndex) return;
 
                     setLoadingStatus(true);
-                    await updateStatus({
-                      mediaId: data?.Media?.id,
-                      status: MediaListStatusWithLabel[buttonIndex].value,
-                    });
+
+                    if (mediaListEntry && buttonIndex === options.length - 2) {
+                      await removeFromList({
+                        id: mediaListEntry.id,
+                      });
+                    } else {
+                      await updateStatus({
+                        mediaId: data?.Media?.id,
+                        status: MediaListStatusWithLabel[buttonIndex].value,
+                      });
+                    }
                     setLoadingStatus(false);
                   }
                 );
