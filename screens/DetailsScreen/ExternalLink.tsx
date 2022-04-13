@@ -17,6 +17,7 @@ import {
   tubiOrange,
   hidiveBlue,
   instagramPink,
+  disneyPlusBlue,
 } from "yep/colors";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { MediaExternalLinkDataFragment } from "yep/graphql/generated";
@@ -71,6 +72,9 @@ export function ExternalLink({ id, url, site }: MediaExternalLinkDataFragment) {
       break;
     case "Instagram":
       color = instagramPink;
+      break;
+    case "Disney Plus":
+      color = disneyPlusBlue;
       break;
     default:
       Sentry.Browser.captureMessage(`Unknown external link site: ${site}`);
