@@ -265,6 +265,7 @@ export function DetailsScreen({ route, navigation }: Props) {
   );
 
   const externalLinks = data?.Media?.externalLinks?.filter(notEmpty);
+  const studio = (data?.Media?.studios?.nodes ?? [])[0]?.name;
 
   return (
     <Container
@@ -356,15 +357,8 @@ export function DetailsScreen({ route, navigation }: Props) {
               </InfoRow>
               <InfoRowSpacer />
               <InfoRow>
-                {data?.Media?.mediaListEntry?.progress ? (
-                  <Info
-                    label="Progress"
-                    value={getProgress(
-                      data.Media,
-                      data.Media.mediaListEntry.progress
-                    )}
-                  />
-                ) : null}
+                {studio ? <Info label="Studio" value={studio} /> : null}
+
                 {data?.Media?.status === MediaStatus.Releasing &&
                 data?.Media?.nextAiringEpisode ? (
                   <Info

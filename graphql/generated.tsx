@@ -4707,6 +4707,12 @@ export type AnimeFragmentFragment = (
   )>, endDate?: Maybe<(
     { __typename?: 'FuzzyDate' }
     & Pick<FuzzyDate, 'year' | 'month' | 'day'>
+  )>, studios?: Maybe<(
+    { __typename?: 'StudioConnection' }
+    & { nodes?: Maybe<Array<Maybe<(
+      { __typename?: 'Studio' }
+      & Pick<Studio, 'id' | 'name'>
+    )>>> }
   )>, coverImage?: Maybe<(
     { __typename?: 'MediaCoverImage' }
     & Pick<MediaCoverImage, 'large' | 'medium' | 'color'>
@@ -5089,6 +5095,12 @@ export const AnimeFragmentFragmentDoc = gql`
   episodes
   description
   isFavourite
+  studios(isMain: true) {
+    nodes {
+      id
+      name
+    }
+  }
   averageScore
   coverImage {
     large

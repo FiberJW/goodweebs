@@ -6,9 +6,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "postinstall": "yarn graphql-generate",
-    "graphql-generate": "graphql-codegen --config codegen.yml",
-    "watch-graphql-generate": "yarn graphql-generate -w",
+    "postinstall": "yarn generate-graphql-code",
+    "generate-graphql-code": "graphql-codegen --config codegen.yml",
     "lint": "eslint . --ext .ts,.js,.tsx --fix",
     "publish:prod": "expo publish --release-channel production",
     "build:prod": "eas build --profile production --platform all"

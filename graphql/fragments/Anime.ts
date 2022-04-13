@@ -62,6 +62,12 @@ export const AnimeFragment = gql`
     episodes
     description
     isFavourite
+    studios(isMain: true) {
+      nodes {
+        id
+        name
+      }
+    }
     averageScore
     coverImage {
       large
