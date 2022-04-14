@@ -395,7 +395,6 @@ export function DetailsScreen({ route, navigation }: Props) {
               <InfoRowSpacer />
               <InfoRow>
                 {studio ? <Info label="Studio" value={studio} /> : null}
-
                 {data?.Media?.status === MediaStatus.Releasing &&
                 data?.Media?.nextAiringEpisode ? (
                   <Info
@@ -490,7 +489,8 @@ export function DetailsScreen({ route, navigation }: Props) {
               }}
             />
           </ButtonsRow>
-          {data?.Media?.mediaListEntry ? (
+          {data?.Media?.mediaListEntry &&
+          data.Media.status !== MediaStatus.NotYetReleased ? (
             <>
               <Stepper
                 icon={

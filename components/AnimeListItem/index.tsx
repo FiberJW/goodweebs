@@ -113,35 +113,29 @@ export function AnimeListItem({
             {getProgress(media, progress)}
           </Text>
         </View>
-        <View style={styles.progressButtonGroup}>
-          <ProgressButton
-            disabled={
-              Boolean(disabled) ||
-              media.status === MediaStatus.NotYetReleased ||
-              progress === 0
-            }
-            icon={require("yep/assets/icons/progress-decrement.png")}
-            onPress={() => {
-              onDecrement();
-            }}
-          />
-          <View style={styles.progressButtonSpacer} />
-          <ProgressButton
-            disabled={
-              Boolean(disabled) ||
-              media.status === MediaStatus.NotYetReleased ||
-              progress === media.episodes
-            }
-            icon={
-              progress === (media.episodes ?? 0) - 1
-                ? require("yep/assets/icons/progress-complete.png")
-                : require("yep/assets/icons/progress-increment.png")
-            }
-            onPress={() => {
-              onIncrement();
-            }}
-          />
-        </View>
+        {media.status !== MediaStatus.NotYetReleased && (
+          <View style={styles.progressButtonGroup}>
+            <ProgressButton
+              disabled={Boolean(disabled) || progress === 0}
+              icon={require("yep/assets/icons/progress-decrement.png")}
+              onPress={() => {
+                onDecrement();
+              }}
+            />
+            <View style={styles.progressButtonSpacer} />
+            <ProgressButton
+              disabled={Boolean(disabled) || progress === media.episodes}
+              icon={
+                progress === (media.episodes ?? 0) - 1
+                  ? require("yep/assets/icons/progress-complete.png")
+                  : require("yep/assets/icons/progress-increment.png")
+              }
+              onPress={() => {
+                onIncrement();
+              }}
+            />
+          </View>
+        )}
       </View>
     </PressableOpacity>
   );
