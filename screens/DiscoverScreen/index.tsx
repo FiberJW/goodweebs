@@ -43,10 +43,8 @@ export function DiscoverScreen({ navigation }: Props) {
     refetch: refetchTrendingOriginal,
   } = useGetTrendingAnimeQuery({
     variables: { perPage: 30 },
-    // notifyOnNetworkStatusChange: true,
+    notifyOnNetworkStatusChange: true,
   });
-
-  console.log({ trendingData });
 
   const { data: searchData, loading: loadingSearchData } = useSearchAnimeQuery({
     skip: searchTerm.trim().length === 0,
@@ -88,7 +86,7 @@ export function DiscoverScreen({ navigation }: Props) {
                 loadingSearchData ? null : (
                   <EmptyState
                     title="No search results"
-                    description="You may have misspelled what you were looking for, or this anime isn’t listed on AniList."
+                    description="You may have misspelled what you were looking for, or this anime isn't listed on AniList."
                   />
                 )
               }
@@ -120,6 +118,14 @@ export function DiscoverScreen({ navigation }: Props) {
               ItemSeparatorComponent={Separator}
               data={trendingList}
               numColumns={3}
+              ListEmptyComponent={() =>
+                loadingTrending ? null : (
+                  <EmptyState
+                    title="Unexpected loading error"
+                    description="Swipe down to try again"
+                  />
+                )
+              }
               refreshControl={
                 <RefreshControl
                   refreshing={loadingTrending}
