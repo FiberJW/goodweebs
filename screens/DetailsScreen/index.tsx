@@ -289,9 +289,13 @@ export function DetailsScreen({ route, navigation }: Props) {
         !(value.node.type === MediaType.Anime)
       )
         return result;
-      (result[value?.relationType] || (result[value?.relationType] = [])).push(
-        value.node
-      );
+
+      if (result[value?.relationType]) {
+        result[value?.relationType]!.push(value.node);
+      } else {
+        result[value?.relationType] = [value.node];
+      }
+
       return result;
     },
     {}
@@ -323,8 +327,8 @@ export function DetailsScreen({ route, navigation }: Props) {
       ) : (
         <>
           <Title numberOfLines={5}>
-            {data?.Media?.title?.english ||
-              data?.Media?.title?.romaji ||
+            {data?.Media?.title?.english ??
+              data?.Media?.title?.romaji ??
               data?.Media?.title?.native}
           </Title>
           <PosterAndInfoContainer>

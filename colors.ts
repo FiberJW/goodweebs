@@ -21,6 +21,7 @@ export const dangoPink = "#F48FB1";
 export const dangoPinkBackground = "#FFCFF1";
 export const dangoPinkText = "#AD2754";
 
+export const aniListBlue = "#3C6BF8";
 export const crunchyrollOrange = "#F47521";
 export const twitterBlue = "#1da1f2";
 export const funimationPurple = "#410099";

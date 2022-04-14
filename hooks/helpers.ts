@@ -78,8 +78,7 @@ export function useDebouncedMutation<
     )
   );
 
-  const abortLatest = () =>
-    abortController.current && abortController.current.abort();
+  const abortLatest = () => abortController.current?.abort();
 
   const mutationWithOptimisticUI = async ({
     variables,

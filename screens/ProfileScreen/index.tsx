@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackNavigationProp } from "@react-navigation/stack";
-import * as Updates from "expo-updates";
 import React from "react";
 import { Alert, RefreshControl } from "react-native";
 
@@ -10,9 +9,11 @@ import { Header } from "yep/components/Header";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
+import { client } from "yep/graphql/client";
 import { useGetViewerQuery } from "yep/graphql/generated";
-import { RootStackParamList } from "yep/navigation";
+import { RootStackParamList, TabParamList } from "yep/navigation";
 import { StringCase, getString } from "yep/strings";
+import { useAccessToken } from "yep/useAccessToken";
 import { notEmpty, getTitle } from "yep/utils";
 
 import {
@@ -35,7 +36,7 @@ import {
 } from "./styles";
 
 type Props = {
-  navigation: StackNavigationProp<RootStackParamList>;
+  navigation: StackNavigationProp<RootStackParamList & TabParamList>;
 };
 
 export function ProfileScreen({ navigation }: Props) {
@@ -44,7 +45,7 @@ export function ProfileScreen({ navigation }: Props) {
     data: viewerData,
     refetch,
   } = useGetViewerQuery({ notifyOnNetworkStatusChange: true });
-
+  const { setAccessToken } = useAccessToken();
   const animeList = (viewerData?.Viewer?.favourites?.anime?.nodes ?? []).filter(
     notEmpty
   );
@@ -177,7 +178,9 @@ export function ProfileScreen({ navigation }: Props) {
                 style: "destructive",
                 onPress: async () => {
                   await AsyncStorage.removeItem(ANILIST_ACCESS_TOKEN_STORAGE);
-                  await Updates.reloadAsync();
+                  setAccessToken(undefined);
+                  navigation.navigate("Anime");
+                  await client.resetStore();
                 },
               },
             ]);

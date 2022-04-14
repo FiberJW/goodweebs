@@ -20,6 +20,7 @@ import {
 import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
 import { useDebouncedMutation } from "yep/hooks/helpers";
 import { RootStackParamList, TabParamList } from "yep/navigation";
+import { useAccessToken } from "yep/useAccessToken";
 
 type Props = {
   seedData: {
@@ -45,11 +46,13 @@ export function AnimeListItemContainer({
   first,
   last,
 }: Props) {
+  const { accessToken } = useAccessToken();
   const [progressShadow, setProgressShadow] = useState(seedData.progress);
   const [shouldShowProgressShadow, setShouldShowProgressShadow] =
     useState(false);
   const { loading, data } = useGetAnimeQuery({
     variables: { id: seedData?.media?.id },
+    skip: !accessToken,
   });
 
   const updateProgressDebounced = useDebouncedMutation<

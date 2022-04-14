@@ -36,7 +36,7 @@ export function getTitle(
 ): string | undefined {
   if (!title) return undefined;
 
-  return (title.english || title.romaji || title.native) ?? undefined;
+  return title.english ?? title.romaji ?? title.native ?? undefined;
 }
 
 // for making sure TS exhaustively checks switches

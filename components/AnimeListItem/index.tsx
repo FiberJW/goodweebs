@@ -116,7 +116,7 @@ export function AnimeListItem({
         <View style={styles.progressButtonGroup}>
           <ProgressButton
             disabled={
-              disabled ||
+              Boolean(disabled) ||
               media.status === MediaStatus.NotYetReleased ||
               progress === 0
             }
@@ -128,7 +128,7 @@ export function AnimeListItem({
           <View style={styles.progressButtonSpacer} />
           <ProgressButton
             disabled={
-              disabled ||
+              Boolean(disabled) ||
               media.status === MediaStatus.NotYetReleased ||
               progress === media.episodes
             }

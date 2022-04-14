@@ -1,9 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Image, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { aniListBlue } from "yep/colors";
 import { Button } from "yep/components/Button";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { useAniListAuthRequest } from "yep/hooks/auth";
@@ -11,6 +12,7 @@ import { RootStackParamList } from "yep/navigation";
 import { getString } from "yep/strings";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
+import { useAccessToken } from "yep/useAccessToken";
 
 type Props = {
   navigation: StackNavigationProp<RootStackParamList>;
@@ -18,6 +20,7 @@ type Props = {
 
 export function AuthScreen({ navigation }: Props) {
   const [, , promptAsync] = useAniListAuthRequest();
+  const { setAccessToken } = useAccessToken();
 
   useEffect(function navigateIfAccessTokenExists() {
     (async () => {
@@ -27,7 +30,7 @@ export function AuthScreen({ navigation }: Props) {
         if (token) {
           navigation.replace("Tabs");
         }
-      } catch (_) {}
+      } catch {}
     })();
   }, []);
 
@@ -54,12 +57,14 @@ export function AuthScreen({ navigation }: Props) {
           </View>
           <View style={styles.buttonGroup}>
             <Button
-              label={getString("logIn")}
+              color={aniListBlue}
+              label="Log In With AniList"
               onPress={async () => {
                 const result = await promptAsync();
 
                 if (result.type === "error" || result.type === "success") {
                   if (result.params.access_token) {
+                    setAccessToken(result.params.access_token);
                     await AsyncStorage.setItem(
                       ANILIST_ACCESS_TOKEN_STORAGE,
                       result.params.access_token
@@ -69,9 +74,21 @@ export function AuthScreen({ navigation }: Props) {
                 }
               }}
             />
-            <Text style={styles.aniListFootnote}>
-              {getString("AniListAuthAttribution")}
-            </Text>
+
+            <Button
+              containerStyle={{ marginTop: 16 }}
+              label="Continue Without Logging In"
+              onPress={async () => {
+                Alert.alert(
+                  "",
+                  "Without an account, you will not be able to keep track of anime or manga, but you can still browse through Discover to explore new series. You can log in or register at any time to begin tracking series to your lists.",
+                  [
+                    { text: "Cancel" },
+                    { onPress: () => navigation.replace("Tabs"), text: "OK" },
+                  ]
+                );
+              }}
+            />
           </View>
         </ScrollView>
       </View>
@@ -80,13 +97,6 @@ export function AuthScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  aniListFootnote: {
-    color: darkTheme.footnote,
-    fontFamily: Manrope.regular,
-    fontSize: 12.8,
-    marginTop: 8,
-    textAlign: "center",
-  },
   brandingGroup: { alignItems: "center" },
   brandingSpacer: { height: 16 },
   buttonGroup: {

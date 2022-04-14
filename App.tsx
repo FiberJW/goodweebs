@@ -1,15 +1,15 @@
 import { ApolloProvider } from "@apollo/client";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppLoading from "expo-app-loading";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { enableScreens } from "react-native-screens";
 import * as Sentry from "sentry-expo";
 
-import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { client } from "yep/graphql/client";
 import { Navigation } from "yep/navigation";
 import { useManrope } from "yep/typefaces";
+
+import { AccessTokenProvider, useAccessToken } from "./useAccessToken";
 
 enableScreens();
 
@@ -22,23 +22,16 @@ Sentry.init({
 // TODO: implement better error handling + user-facing notifications
 
 export default function App() {
-  const [checkedForToken, setCheckedForToken] = useState(false);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-  const fontsLoaded = useManrope();
+  return (
+    <AccessTokenProvider>
+      <InnerApp />
+    </AccessTokenProvider>
+  );
+}
 
-  useEffect(function navigateIfAccessTokenExists() {
-    (async () => {
-      try {
-        const token = await AsyncStorage.getItem(ANILIST_ACCESS_TOKEN_STORAGE);
-        if (token) {
-          setAccessToken(token);
-        }
-      } catch (_) {
-      } finally {
-        setCheckedForToken(true);
-      }
-    })();
-  });
+function InnerApp() {
+  const { checkedForToken, accessToken } = useAccessToken();
+  const fontsLoaded = useManrope();
 
   return fontsLoaded && checkedForToken ? (
     <ApolloProvider client={client}>

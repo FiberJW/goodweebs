@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import {
   CompositeNavigationProp,
@@ -11,18 +12,23 @@ import { RefreshControl, View } from "react-native";
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
 import { StatusChip } from "yep/components/StatusChip";
-import { MediaListStatusWithLabel } from "yep/constants";
+import {
+  ANILIST_ACCESS_TOKEN_STORAGE,
+  MediaListStatusWithLabel,
+} from "yep/constants";
 import { AnimeListItemContainer } from "yep/containers/AnimeListItemContainer";
 import {
   MediaListStatus,
   useGetViewerQuery,
   useGetAnimeListQuery,
 } from "yep/graphql/generated";
+import { useAniListAuthRequest } from "yep/hooks/auth";
 import { RootStackParamList, TabParamList } from "yep/navigation";
 import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
+import { useAccessToken } from "yep/useAccessToken";
 import { notEmpty } from "yep/utils";
 
 type Props = {
@@ -38,15 +44,20 @@ export function AnimeListScreen({ navigation }: Props) {
     MediaListStatusWithLabel[0].value
   );
 
+  const { accessToken, setAccessToken } = useAccessToken();
+
+  const [, , promptAsync] = useAniListAuthRequest();
   // TODO: combine queries
-  const { loading: loadingViewer, data: viewerData } = useGetViewerQuery();
+  const { loading: loadingViewer, data: viewerData } = useGetViewerQuery({
+    skip: !accessToken,
+  });
 
   const {
     loading: loadingAnimeList,
     data: animeListData,
     refetch,
   } = useGetAnimeListQuery({
-    skip: !viewerData?.Viewer?.id,
+    skip: !viewerData?.Viewer?.id || !accessToken,
     variables: {
       userId: viewerData?.Viewer?.id,
       status,
@@ -99,7 +110,6 @@ export function AnimeListScreen({ navigation }: Props) {
     <OuterContainer>
       <Header label={getString("anime", StringCase.TITLE)} />
 
-      {/* <AnimeListContainer> */}
       <AnimeFlatList
         contentContainerStyle={{ padding: 16 }}
         ListHeaderComponent={() => (
@@ -135,12 +145,30 @@ export function AnimeListScreen({ navigation }: Props) {
         ListEmptyComponent={() =>
           refreshing ? null : (
             <EmptyState
-              title="Empty list"
-              description="Explore the world of anime by adding some shows to your list!"
+              title={!accessToken ? "Log In" : "Empty list"}
+              description={
+                !accessToken
+                  ? "Start tracking your anime by using an AniList account!"
+                  : "Explore the world of anime by adding some shows to your list!"
+              }
               cta={{
-                label: "Discover new anime",
-                onPress: () => {
-                  navigation.navigate("Discover");
+                label: !accessToken ? "Log In" : "Discover new anime",
+                onPress: async () => {
+                  if (!accessToken) {
+                    const result = await promptAsync();
+
+                    if (result.type === "error" || result.type === "success") {
+                      if (result.params.access_token) {
+                        setAccessToken(result.params.access_token);
+                        await AsyncStorage.setItem(
+                          ANILIST_ACCESS_TOKEN_STORAGE,
+                          result.params.access_token
+                        );
+                      }
+                    }
+                  } else {
+                    navigation.navigate("Discover");
+                  }
                 },
               }}
             />
@@ -183,17 +211,11 @@ export function AnimeListScreen({ navigation }: Props) {
           />
         )}
       />
-      {/* </AnimeListContainer> */}
     </OuterContainer>
   );
 }
 
 const OuterContainer = takimoto.View({
-  flex: 1,
-});
-
-const InnerContainer = takimoto.View({
-  padding: 16,
   flex: 1,
 });
 
@@ -217,10 +239,6 @@ const AnimeListDivider = takimoto.View({
 });
 
 const StatusChipListDivider = takimoto.View({ width: 8 });
-
-const AnimeListContainer = takimoto.View({
-  flex: 1,
-});
 
 const CountAndSortRow = takimoto.View({
   flexDirection: "row",

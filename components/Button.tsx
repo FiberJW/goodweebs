@@ -26,6 +26,7 @@ type Props = {
   style?: ViewStyle;
   containerStyle?: ViewStyle;
   loading?: boolean;
+  color?: string;
 };
 
 export function Button({
@@ -36,13 +37,21 @@ export function Button({
   size = "normal",
   style,
   containerStyle,
+  color,
 }: Props) {
   const { padding } = getDynamicButtonStyles(size);
 
   return (
     <PressableOpacity
-      disabled={disabled || loading}
-      style={[styles.pressable, { padding }, style]}
+      disabled={disabled ?? loading}
+      style={[
+        styles.pressable,
+        {
+          padding,
+          ...(color && { backgroundColor: color }),
+        },
+        style,
+      ]}
       containerStyle={containerStyle}
       borderRadius={100}
       onPress={onPress}

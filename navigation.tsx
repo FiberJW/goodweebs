@@ -13,6 +13,7 @@ import { ProfileScreen } from "yep/screens/ProfileScreen";
 import { darkTheme } from "yep/themes";
 
 import { Manrope } from "./typefaces";
+import { useAccessToken } from "./useAccessToken";
 
 export type RootStackParamList = {
   Tabs: undefined;
@@ -31,8 +32,11 @@ const Tab = createBottomTabNavigator<TabParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
 function Tabs() {
+  const { accessToken } = useAccessToken();
+
   return (
     <Tab.Navigator
+      initialRouteName={accessToken ? "Anime" : "Discover"}
       screenOptions={{
         tabBarShowLabel: false,
         lazy: Platform.OS !== "ios",
@@ -88,22 +92,24 @@ function Tabs() {
           ),
         }}
       />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Image
-              style={{
-                tintColor: color,
-                height: size,
-                width: size,
-              }}
-              source={require("yep/assets/icons/navigation/profile-tab.png")}
-            />
-          ),
-        }}
-      />
+      {accessToken && (
+        <Tab.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Image
+                style={{
+                  tintColor: color,
+                  height: size,
+                  width: size,
+                }}
+                source={require("yep/assets/icons/navigation/profile-tab.png")}
+              />
+            ),
+          }}
+        />
+      )}
       {/* <Tab.Screen
         name="Settings"
         // TODO: there is currently only one "setting",
@@ -141,7 +147,7 @@ export const theme: typeof DefaultTheme = {
 };
 
 type NavigationProps = {
-  accessToken: string | null;
+  accessToken?: string;
 };
 
 export function Navigation({ accessToken }: NavigationProps) {

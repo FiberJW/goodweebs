@@ -43,8 +43,10 @@ export function DiscoverScreen({ navigation }: Props) {
     refetch: refetchTrendingOriginal,
   } = useGetTrendingAnimeQuery({
     variables: { perPage: 30 },
-    notifyOnNetworkStatusChange: true,
+    // notifyOnNetworkStatusChange: true,
   });
+
+  console.log({ trendingData });
 
   const { data: searchData, loading: loadingSearchData } = useSearchAnimeQuery({
     skip: searchTerm.trim().length === 0,
