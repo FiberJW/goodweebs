@@ -96,9 +96,10 @@ const styles = StyleSheet.create({
   searchInputContainer: {
     alignItems: "center",
     backgroundColor: darkTheme.background,
-    borderRadius: 8,
+    borderRadius: 50,
     flexDirection: "row",
     flex: 1,
-    padding: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
 });

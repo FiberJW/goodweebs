@@ -15,7 +15,7 @@ export const InnerContainer = takimoto.ScrollView(
 
 export const UserInfoAndStatsContainer = takimoto.View({
   padding: 16,
-  borderRadius: 8,
+  borderRadius: 16,
   backgroundColor: darkTheme.listItemBackground,
 });
 
