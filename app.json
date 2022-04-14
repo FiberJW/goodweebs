@@ -3,7 +3,7 @@
     "name": "Goodweebs",
     "slug": "goodweebs",
     "platforms": ["ios", "android", "web"],
-    "version": "0.0.11",
+    "version": "0.0.12",
     "orientation": "portrait",
     "icon": "./assets/launch/icon.png",
     "scheme": "goodweebs",
@@ -14,12 +14,13 @@
       "backgroundColor": "#010209"
     },
     "updates": {
-      "fallbackToCacheTimeout": 30000
+      "fallbackToCacheTimeout": 30000,
+      "url": "https://u.expo.dev/21cb2a71-d249-4289-abb6-3b9b39e3b0a3"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "0.0.11",
+      "buildNumber": "0.0.12",
       "bundleIdentifier": "com.fiberjw.goodweebs",
       "config": {
         "usesNonExemptEncryption": false
@@ -28,7 +29,7 @@
     },
     "android": {
       "package": "com.fiberjw.goodweebs",
-      "versionCode": 11,
+      "versionCode": 12,
       "permissions": [],
       "adaptiveIcon": {
         "backgroundColor": "#651FFF",
@@ -39,6 +40,9 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["sentry-expo"]
+    "plugins": ["sentry-expo"],
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    }
   }
 }
