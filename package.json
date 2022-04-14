@@ -80,14 +80,31 @@
   },
   "eslintConfig": {
     "ignorePatterns": [
-      "graphql/generated.tsx"
+      "graphql/generated.tsx",
+      "dist/*",
+      "web-build"
     ],
+    "parser": "@typescript-eslint/parser",
     "plugins": [
-      "react-native"
+      "react-native",
+      "@typescript-eslint"
     ],
     "extends": [
+      "plugin:react-native/all",
       "universe/native",
-      "plugin:react-native/all"
+      "universe/shared/typescript-analysis"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "*.ts",
+          "*.tsx",
+          "*.d.ts"
+        ],
+        "parserOptions": {
+          "project": "./tsconfig.json"
+        }
+      }
     ],
     "rules": {
       "react-native/no-inline-styles": 0,
