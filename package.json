@@ -10,7 +10,7 @@
     "generate-graphql-code": "graphql-codegen --config codegen.yml",
     "lint": "eslint . --ext .ts,.js,.tsx --fix",
     "publish:prod": "eas update --branch production",
-    "build:prod": "eas build --profile production --platform all"
+    "build:prod": "eas build --profile production --platform all --auto-submit"
   },
   "dependencies": {
     "@apollo/client": "^3.1.5",
