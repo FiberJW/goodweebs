@@ -9,7 +9,7 @@
     "postinstall": "yarn generate-graphql-code",
     "generate-graphql-code": "graphql-codegen --config codegen.yml",
     "lint": "eslint . --ext .ts,.js,.tsx --fix",
-    "update:prod": "eas update --branch production",
+    "update:prod": "eas update --branch production --auto",
     "build:prod": "eas build --profile production --platform all --auto-submit"
   },
   "dependencies": {
