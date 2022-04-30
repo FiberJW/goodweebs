@@ -79,17 +79,7 @@ export function AnimeListItem({
       <View>
         <PosterAndTitle uri={media.coverImage?.large ?? ""} size="small">
           {media.mediaListEntry?.score ? (
-            <View
-              style={{
-                backgroundColor: black75,
-                position: "absolute",
-                bottom: 4,
-                right: 4,
-                paddingHorizontal: 4,
-                paddingVertical: 2,
-                borderRadius: 4,
-              }}
-            >
+            <View style={styles.scoreContainer}>
               <Text style={styles.scoreText}>
                 ★ {media.mediaListEntry.score}
               </Text>
@@ -175,6 +165,15 @@ const styles = StyleSheet.create({
   progressColumn: {
     alignItems: "flex-end",
     justifyContent: "space-between",
+  },
+  scoreContainer: {
+    backgroundColor: black75,
+    borderRadius: 8,
+    bottom: 4,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    position: "absolute",
+    right: 4,
   },
   scoreText: {
     color: darkTheme.text,
