@@ -30,6 +30,9 @@ export const GetTrendingTVAnime = gql`
       pageInfo {
         hasNextPage
         total
+        currentPage
+        perPage
+        lastPage
       }
       media(format: TV, isAdult: false, type: ANIME, sort: [TRENDING_DESC]) {
         ...AnimeFragment

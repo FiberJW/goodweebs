@@ -8,6 +8,7 @@
     "icon": "./assets/launch/icon.png",
     "scheme": "goodweebs",
     "privacy": "unlisted",
+    "backgroundColor": "#010209",
     "splash": {
       "image": "./assets/launch/splash.png",
       "resizeMode": "cover",

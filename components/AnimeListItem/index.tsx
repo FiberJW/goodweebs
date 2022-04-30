@@ -4,7 +4,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
-import { white12_5, white5 } from "yep/colors";
+import { black75, white12_5, white5 } from "yep/colors";
 import {
   AnimeFragmentFragment,
   MediaStatus,
@@ -60,15 +60,6 @@ export function AnimeListItem({
 
   const airingStatus = getAiringStatusText(media, now);
 
-  const showRating =
-    media.mediaListEntry?.score &&
-    ((media.mediaListEntry.status &&
-      [MediaListStatus.Completed, MediaListStatus.Dropped].includes(
-        media.mediaListEntry.status
-      )) ||
-      (media.status &&
-        [MediaStatus.Finished, MediaStatus.Cancelled].includes(media.status)));
-
   return (
     <PressableOpacity
       style={[
@@ -85,22 +76,37 @@ export function AnimeListItem({
       activeOpacity={0.7}
       onPress={() => navigation.navigate("Details", { id: media.id })}
     >
-      <PosterAndTitle uri={media.coverImage?.large ?? ""} size="small">
+      <View>
+        <PosterAndTitle uri={media.coverImage?.large ?? ""} size="small">
+          {media.mediaListEntry?.score ? (
+            <View
+              style={{
+                backgroundColor: black75,
+                position: "absolute",
+                bottom: 4,
+                right: 4,
+                paddingHorizontal: 4,
+                paddingVertical: 2,
+                borderRadius: 4,
+              }}
+            >
+              <Text style={styles.scoreText}>
+                ★ {media.mediaListEntry.score}
+              </Text>
+            </View>
+          ) : null}
+        </PosterAndTitle>
         {isAiringAndCurrentlyWatching ? (
           <EpisodesBehind count={episodesBehind} />
         ) : null}
-      </PosterAndTitle>
+      </View>
       <View style={styles.spacer} />
       <View style={styles.titleAndBroadcastColumn}>
         <Text style={styles.title} numberOfLines={2}>
           {getTitle(media.title)}
         </Text>
-        {showRating ? (
-          <Text style={styles.broadcastSchedule}>
-            ★ {media.mediaListEntry?.score}/10
-          </Text>
-        ) : null}
-        {!showRating && airingStatus ? (
+
+        {airingStatus ? (
           <Text style={styles.broadcastSchedule} numberOfLines={1}>
             {airingStatus}
           </Text>
@@ -169,6 +175,11 @@ const styles = StyleSheet.create({
   progressColumn: {
     alignItems: "flex-end",
     justifyContent: "space-between",
+  },
+  scoreText: {
+    color: darkTheme.text,
+    fontFamily: Manrope.semiBold,
+    fontSize: 12.8,
   },
   spacer: {
     width: 8,

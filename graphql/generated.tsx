@@ -4932,7 +4932,7 @@ export type GetTrendingAnimeQuery = (
     { __typename?: 'Page' }
     & { pageInfo?: Maybe<(
       { __typename?: 'PageInfo' }
-      & Pick<PageInfo, 'hasNextPage' | 'total'>
+      & Pick<PageInfo, 'hasNextPage' | 'total' | 'currentPage' | 'perPage' | 'lastPage'>
     )>, media?: Maybe<Array<Maybe<(
       { __typename?: 'Media' }
       & AnimeFragmentFragment
@@ -5495,6 +5495,9 @@ export const GetTrendingAnimeDocument = gql`
     pageInfo {
       hasNextPage
       total
+      currentPage
+      perPage
+      lastPage
     }
     media(format: TV, isAdult: false, type: ANIME, sort: [TRENDING_DESC]) {
       ...AnimeFragment

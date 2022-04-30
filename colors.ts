@@ -9,6 +9,7 @@ export const white30 = "rgba(255,255,255,0.30)";
 export const white40 = "rgba(255,255,255,0.40)";
 export const white80 = "rgba(255,255,255,0.80)";
 export const white95 = "rgba(255,255,255,0.95)";
+export const black75 = "rgba(0,0,0,0.75)";
 export const darkGray = "#15161D";
 export const white = "#ffffff";
 export const goodweebsPurple = "#651FFF";
