@@ -21,7 +21,7 @@ export function ProgressButton({
       onPress={onPress}
       disabled={disabled}
       style={styles.container}
-      borderRadius={8}
+      borderRadius={100}
     >
       <Image style={styles.icon} source={icon} />
     </PressableOpacity>
