@@ -4,7 +4,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
-import { black75, white12_5, white5 } from "yep/colors";
+import { black15, white12_5, white5, white95 } from "yep/colors";
 import {
   AnimeFragmentFragment,
   MediaStatus,
@@ -79,17 +79,7 @@ export function AnimeListItem({
       <View>
         <PosterAndTitle uri={media.coverImage?.large ?? ""} size="small">
           {media.mediaListEntry?.score ? (
-            <View
-              style={{
-                backgroundColor: black75,
-                position: "absolute",
-                bottom: 4,
-                right: 4,
-                paddingHorizontal: 4,
-                paddingVertical: 2,
-                borderRadius: 4,
-              }}
-            >
+            <View style={styles.scoreContainer}>
               <Text style={styles.scoreText}>
                 ★ {media.mediaListEntry.score}
               </Text>
@@ -176,8 +166,19 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     justifyContent: "space-between",
   },
+  scoreContainer: {
+    backgroundColor: white95,
+    borderColor: black15,
+    borderRadius: 4,
+    borderWidth: 1,
+    bottom: 4,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    position: "absolute",
+    right: 4,
+  },
   scoreText: {
-    color: darkTheme.text,
+    color: darkTheme.textInverted,
     fontFamily: Manrope.semiBold,
     fontSize: 12.8,
   },
