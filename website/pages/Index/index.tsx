@@ -7,6 +7,8 @@ import { DownloadSection } from "./DownloadSection";
 import { Footer } from "./Footer";
 import { Navbar } from "./Navbar";
 
+// Vercel only deploys when website/** is changed
+
 export function Index() {
   return (
     <View style={styles.root}>
