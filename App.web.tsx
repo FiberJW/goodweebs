@@ -13,6 +13,8 @@ import { Index } from "yep/website/pages/Index";
 export default function Website() {
   const fontsLoaded = useManrope();
 
+  // Vercel only deploys when website/** is changed
+
   return fontsLoaded ? (
     <Router>
       <div>
