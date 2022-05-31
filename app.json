@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/launch/icon.png",
-    "scheme": "goodweebs-issue",
+    "scheme": "goodweebs-issude",
     "privacy": "unlisted",
     "splash": {
       "image": "./assets/launch/splash.png",
