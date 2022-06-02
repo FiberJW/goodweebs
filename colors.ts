@@ -20,6 +20,7 @@ export const darkBlue = "#11052B";
 export const gray6 = "#F2F2F2";
 
 export const dangoPink = "#F48FB1";
+export const dangoPink2 = "#F48FB1";
 export const dangoPinkBackground = "#FFCFF1";
 export const dangoPinkText = "#AD2754";
 
