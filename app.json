@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Goodweebs 2.0",
+    "name": "Goodweebs 2.1",
     "slug": "goodweebs",
     "platforms": ["ios", "android", "web"],
     "version": "0.0.12",
