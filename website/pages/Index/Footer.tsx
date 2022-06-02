@@ -15,7 +15,7 @@ export function Footer() {
     <View style={[styles.background, { height: isMobile ? 80 : 128 }]}>
       <View style={styles.container}>
         <a href="https://github.com/fiberjw/goodweebs" style={linkInlineStyle}>
-          <Text style={[styles.link, { marginRight: 24 }]}>Source</Text>
+          <Text style={[styles.link, { marginRight: 24 }]}>Source ?</Text>
         </a>
         <Image source={favicon} style={styles.favicon} />
         <a href="https://anilist.co/terms" style={linkInlineStyle}>
