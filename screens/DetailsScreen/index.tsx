@@ -5,14 +5,14 @@ import { formatDistanceToNow, add } from "date-fns";
 import * as Haptics from "expo-haptics";
 import _ from "lodash";
 import React, { useState } from "react";
-import { StyleSheet, RefreshControl, Text, View, Image } from "react-native";
+import { RefreshControl, Text, View, Image } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import HTMLView from "react-native-htmlview";
 import { useSafeArea } from "react-native-safe-area-context";
 import title from "title";
 
 import { Button } from "yep/components/Button";
 import { EmptyState } from "yep/components/EmptyState";
+import { DescriptionRenderer } from "yep/components/DescriptionRenderer";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { LikeButton } from "yep/components/PosterAndTitle/LikeButton";
 import { MediaListStatusWithLabel, MediaStatusWithLabel } from "yep/constants";
@@ -543,10 +543,7 @@ export function DetailsScreen({ route, navigation }: Props) {
             </>
           ) : null}
           {data?.Media?.description ? (
-            <HTMLView
-              value={`<p>${data?.Media?.description}</p>`}
-              stylesheet={htmlViewStyle}
-            />
+            <DescriptionRenderer description={data.Media.description} />
           ) : null}
           <DescriptionSpacer />
           {data.Media?.trailer ? (
@@ -604,19 +601,4 @@ export function DetailsScreen({ route, navigation }: Props) {
 
 const DescriptionSpacer = takimoto.View({
   height: 16,
-});
-
-const htmlViewStyle = StyleSheet.create({
-  // eslint-disable-next-line
-  p: {
-    color: darkTheme.text,
-    fontFamily: Manrope.regular,
-    fontSize: 16,
-  },
-  // eslint-disable-next-line
-  i: {
-    color: darkTheme.text,
-    fontFamily: Manrope.regular,
-    fontSize: 16,
-  },
 });

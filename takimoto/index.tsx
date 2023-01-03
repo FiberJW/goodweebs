@@ -1,4 +1,3 @@
-import { LinearGradient, LinearGradientProps } from "expo-linear-gradient";
 import React, { useMemo, forwardRef, FC, Ref } from "react";
 import {
   ViewStyle,
@@ -190,16 +189,7 @@ export const takimoto = {
       );
     });
   },
-  LinearGradient(style: DynamicKeys<ViewStyle>): FC<LinearGradientProps> {
-    return forwardRef(function WrappedLinearGradient(
-      { style: styleProp, ...rest }: LinearGradientProps,
-      ref: Ref<LinearGradient>
-    ) {
-      const styles = useTakimoto(style);
 
-      return <LinearGradient {...rest} style={[styles, styleProp]} ref={ref} />;
-    });
-  },
   ImageBackground(style: DynamicKeys<ViewStyle>): FC<ImageBackgroundProps> {
     return forwardRef(function WrappedImageBackground(
       { style: styleProp, ...rest }: ImageBackgroundProps,

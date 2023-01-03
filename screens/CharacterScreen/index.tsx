@@ -2,9 +2,9 @@ import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { StyleSheet, View, ScrollView, Text } from "react-native";
-import HTMLView from "react-native-htmlview";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { DescriptionRenderer } from "yep/components/DescriptionRenderer";
 import { EmptyState } from "yep/components/EmptyState";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { LikeButton } from "yep/components/PosterAndTitle/LikeButton";
@@ -88,31 +88,13 @@ export function CharacterScreen({ route }: Props) {
             </PosterAndTitle>
           </View>
           {character?.description ? (
-            <HTMLView
-              value={`<p>${character?.description}</p>`}
-              stylesheet={htmlViewStyle}
-            />
+            <DescriptionRenderer description={character.description} />
           ) : null}
         </>
       )}
     </ScrollView>
   );
 }
-
-const htmlViewStyle = StyleSheet.create({
-  // eslint-disable-next-line
-  p: {
-    color: darkTheme.text,
-    fontFamily: Manrope.regular,
-    fontSize: 16,
-  },
-  // eslint-disable-next-line
-  i: {
-    color: darkTheme.text,
-    fontFamily: Manrope.regular,
-    fontSize: 16,
-  },
-});
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },

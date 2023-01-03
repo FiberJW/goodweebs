@@ -2,9 +2,9 @@ import AppLoading from "expo-app-loading";
 import React from "react";
 import {
   BrowserRouter as Router,
-  Switch,
   Route,
-  Redirect,
+  Navigate,
+  Routes,
 } from "react-router-dom";
 
 import { useManrope } from "yep/typefaces";
@@ -16,13 +16,10 @@ export default function Website() {
   return fontsLoaded ? (
     <Router>
       <div>
-        <Switch>
-          <Route exact path="/">
-            <Index />
-          </Route>
-
-          <Redirect to="/" />
-        </Switch>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="*" element={<Navigate replace to="/" />} />
+        </Routes>
       </div>
     </Router>
   ) : (
