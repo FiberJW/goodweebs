@@ -1,3 +1,4 @@
+import { useApolloClient } from "@apollo/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
@@ -9,7 +10,6 @@ import { Header } from "yep/components/Header";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
-import { client } from "yep/graphql/client";
 import { useGetViewerQuery } from "yep/graphql/generated";
 import { RootStackParamList, TabParamList } from "yep/navigation";
 import { StringCase, getString } from "yep/strings";
@@ -52,6 +52,7 @@ export function ProfileScreen({ navigation }: Props) {
   const characterList = (
     viewerData?.Viewer?.favourites?.characters?.nodes ?? []
   ).filter(notEmpty);
+  const client = useApolloClient();
 
   type AnimeItem = typeof animeList[number];
   type CharacterItem = typeof characterList[number];

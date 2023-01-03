@@ -1,12 +1,16 @@
-import { ApolloProvider } from "@apollo/client";
+import {
+  ApolloClient,
+  ApolloProvider,
+  NormalizedCacheObject,
+} from "@apollo/client";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import * as SplashScreen from "expo-splash-screen";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { enableScreens } from "react-native-screens";
 import * as Sentry from "sentry-expo";
 
-import { client } from "yep/graphql/client";
+import { createClient } from "yep/graphql/client";
 import { Navigation } from "yep/navigation";
 import { useManrope } from "yep/typefaces";
 
@@ -36,7 +40,18 @@ function InnerApp() {
   const { checkedForToken, accessToken } = useAccessToken();
   const fontsLoaded = useManrope();
 
-  const appIsReady = fontsLoaded && checkedForToken;
+  // create client async in effect
+  const [client, setClient] =
+    React.useState<ApolloClient<NormalizedCacheObject> | null>(null);
+
+  useEffect(function createClientWithPersistedCache() {
+    (async () => {
+      const client = await createClient();
+      setClient(client);
+    })();
+  }, []);
+
+  const appIsReady = fontsLoaded && checkedForToken && !!client;
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
