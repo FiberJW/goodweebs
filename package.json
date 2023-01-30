@@ -6,8 +6,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "postinstall": "yarn generate-graphql-code",
-    "generate-graphql-code": "graphql-codegen --config codegen.yml",
+    "gql": "graphql-codegen --config codegen.yml",
     "lint": "eslint . --ext .ts,.js,.tsx --fix",
     "update:prod": "eas update --branch production --auto",
     "build:prod": "eas build --profile production --platform all --auto-submit"
@@ -50,6 +49,10 @@
     "showdown": "^2.1.0",
     "title": "^3.4.2"
   },
+  "resolutions": {
+    "@types/react": "~18.0.24",
+    "@types/react-native": "^0.71.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.19.3",
     "@expo/cli": "^0.4.10",
@@ -62,7 +65,7 @@
     "@types/chroma-js": "^2.1.3",
     "@types/lodash": "^4.14.165",
     "@types/react": "~18.0.24",
-    "@types/react-native": "~0.70.6",
+    "@types/react-native": "^0.71.0",
     "@types/react-router-dom": "^5.3.3",
     "@types/showdown": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^4.11.0",
@@ -73,7 +76,7 @@
     "eslint-config-universe": "^6.0.1",
     "eslint-plugin-react-native": "^3.10.0",
     "prettier": "^2.5.1",
-    "typescript": "^4.6.3"
+    "typescript": "^4.9.4"
   },
   "eslintConfig": {
     "ignorePatterns": [
