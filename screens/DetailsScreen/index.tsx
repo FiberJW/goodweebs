@@ -469,7 +469,11 @@ export function DetailsScreen({ route, navigation }: Props) {
                     destructiveColor: darkTheme.accent,
                   },
                   async (buttonIndex) => {
-                    if (buttonIndex === cancelButtonIndex) return;
+                    if (
+                      buttonIndex === undefined ||
+                      buttonIndex === cancelButtonIndex
+                    )
+                      return;
 
                     setLoadingStatus(true);
 
@@ -493,30 +497,6 @@ export function DetailsScreen({ route, navigation }: Props) {
           data.Media.status !== MediaStatus.NotYetReleased ? (
             <>
               <Stepper
-                icon={
-                  <Image
-                    style={{ height: 24, width: 24, marginRight: 4 }}
-                    source={require("yep/assets/icons/progress.png")}
-                  />
-                }
-                label="Progress"
-                defaultValue={data?.Media?.mediaListEntry?.progress ?? 0}
-                upperBound={data?.Media?.episodes ?? undefined}
-                lowerBound={0}
-                onChange={async (progress) => {
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                  try {
-                    await updateProgress({
-                      id: data?.Media?.mediaListEntry?.id,
-                      progress,
-                    });
-                  } catch (e) {
-                    // TODO: display error
-                    console.error(e);
-                  }
-                }}
-              />
-              <Stepper
                 label="Score"
                 icon={
                   <Image
@@ -533,6 +513,30 @@ export function DetailsScreen({ route, navigation }: Props) {
                     await updateScore({
                       id: data?.Media?.mediaListEntry?.id,
                       scoreRaw: s * 10,
+                    });
+                  } catch (e) {
+                    // TODO: display error
+                    console.error(e);
+                  }
+                }}
+              />
+              <Stepper
+                icon={
+                  <Image
+                    style={{ height: 24, width: 24, marginRight: 4 }}
+                    source={require("yep/assets/icons/progress.png")}
+                  />
+                }
+                label="Progress"
+                defaultValue={data?.Media?.mediaListEntry?.progress ?? 0}
+                upperBound={data?.Media?.episodes ?? undefined}
+                lowerBound={0}
+                onChange={async (progress) => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  try {
+                    await updateProgress({
+                      id: data?.Media?.mediaListEntry?.id,
+                      progress,
                     });
                   } catch (e) {
                     // TODO: display error
