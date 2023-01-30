@@ -1,4 +1,3 @@
-import AppLoading from "expo-app-loading";
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -11,9 +10,9 @@ import { useManrope } from "yep/typefaces";
 import { Index } from "yep/website/pages/Index";
 
 export default function Website() {
-  const fontsLoaded = useManrope();
+  useManrope();
 
-  return fontsLoaded ? (
+  return (
     <Router>
       <div>
         <Routes>
@@ -22,7 +21,5 @@ export default function Website() {
         </Routes>
       </div>
     </Router>
-  ) : (
-    <AppLoading />
   );
 }
