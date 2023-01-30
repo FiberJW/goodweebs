@@ -9,7 +9,7 @@
     "lint": "eslint . --ext .ts,.js,.tsx --fix",
     "update:prod": "eas update --branch production --auto",
     "build:prod": "eas build --profile production --platform all --auto-submit",
-    "export:web": "NODE_OPTIONS=--openssl-legacy-provider npx expo export:web"
+    "export:web": "npx expo export:web"
   },
   "dependencies": {
     "@apollo/client": "^3.1.5",
