@@ -1,19 +1,20 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "eject": "expo eject",
+    "start": "npx expo start",
+    "android": "npx expo start --android",
+    "ios": "npx expo start --ios",
+    "web": "npx expo start --web",
     "gql": "graphql-codegen --config codegen.yml",
     "lint": "eslint . --ext .ts,.js,.tsx --fix",
     "update:prod": "eas update --branch production --auto",
-    "build:prod": "eas build --profile production --platform all --auto-submit"
+    "build:prod": "eas build --profile production --platform all --auto-submit",
+    "export:web": "NODE_OPTIONS=--openssl-legacy-provider npx expo export:web"
   },
   "dependencies": {
     "@apollo/client": "^3.1.5",
     "@expo/react-native-action-sheet": "^4.0.1",
+    "@expo/webpack-config": "^0.17.2",
     "@radix-ui/colors": "^0.1.8",
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-navigation/bottom-tabs": "^6.5.2",
@@ -55,7 +56,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
-    "@expo/cli": "^0.4.10",
+    "@expo/cli": "^0.4.11",
     "@graphql-codegen/cli": "^2.3.0",
     "@graphql-codegen/fragment-matcher": "1.17.8",
     "@graphql-codegen/introspection": "1.17.8",
