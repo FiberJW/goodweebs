@@ -4882,6 +4882,7 @@ export type GetAnimeListQuery = (
     & Pick<MediaListCollection, 'hasNextChunk'>
     & { lists?: Maybe<Array<Maybe<(
       { __typename?: 'MediaListGroup' }
+      & Pick<MediaListGroup, 'status' | 'name'>
       & { entries?: Maybe<Array<Maybe<(
         { __typename?: 'MediaList' }
         & Pick<MediaList, 'id' | 'mediaId' | 'score' | 'progress'>
@@ -5399,6 +5400,8 @@ export const GetAnimeListDocument = gql`
     query GetAnimeList($userId: Int, $status: MediaListStatus, $sort: [MediaListSort]) {
   MediaListCollection(userId: $userId, type: ANIME, status: $status, sort: $sort) {
     lists {
+      status
+      name
       entries {
         id
         mediaId

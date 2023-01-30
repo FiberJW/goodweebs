@@ -15,6 +15,8 @@ export const GetAnimeList = gql`
       sort: $sort
     ) {
       lists {
+        status
+        name
         entries {
           id
           mediaId
