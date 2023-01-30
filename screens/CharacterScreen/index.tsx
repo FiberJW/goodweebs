@@ -19,7 +19,7 @@ import { Manrope } from "yep/typefaces";
 
 type Props = {
   navigation: StackNavigationProp<RootStackParamList>;
-  route: RouteProp<RootStackParamList, "Details">;
+  route: RouteProp<RootStackParamList, "Character">;
 };
 
 export function CharacterScreen({ route }: Props) {
