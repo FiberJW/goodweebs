@@ -2,11 +2,7 @@
   "expo": {
     "name": "Goodweebs",
     "slug": "goodweebs",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "version": "0.0.12",
     "orientation": "portrait",
     "icon": "./assets/launch/icon.png",
@@ -22,9 +18,7 @@
       "fallbackToCacheTimeout": 30000,
       "url": "https://u.expo.dev/21cb2a71-d249-4289-abb6-3b9b39e3b0a3"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "buildNumber": "0.0.12",
@@ -47,15 +41,14 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "sentry-expo"
-    ],
+    "plugins": ["sentry-expo"],
     "runtimeVersion": {
       "policy": "sdkVersion"
     },
     "extra": {
       "eas": {
-        "projectId": "21cb2a71-d249-4289-abb6-3b9b39e3b0a3"
+        "projectId": "4678c342-b7f2-4911-ae87-0c5c0de6c188" // staging
+        // "projectId": "21cb2a71-d249-4289-abb6-3b9b39e3b0a3" production
       }
     }
   }
