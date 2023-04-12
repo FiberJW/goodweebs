@@ -58,7 +58,7 @@ export function AuthScreen({ navigation }: Props) {
           <View style={styles.buttonGroup}>
             <Button
               color={aniListBlue}
-              label="Log In With AniList!"
+              label="Log In With AniList!!!!"
               onPress={async () => {
                 const result = await promptAsync();
 
