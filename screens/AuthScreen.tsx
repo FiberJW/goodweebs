@@ -77,7 +77,7 @@ export function AuthScreen({ navigation }: Props) {
 
             <Button
               containerStyle={{ marginTop: 16 }}
-              label="Continue Without Logging In"
+              label="Continue Without Logging In!"
               onPress={async () => {
                 Alert.alert(
                   "",
