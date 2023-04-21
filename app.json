@@ -14,6 +14,7 @@
       "resizeMode": "cover",
       "backgroundColor": "#010209"
     },
+    "owner": "fiberjw",
     "updates": {
       "fallbackToCacheTimeout": 30000,
       "url": "https://u.expo.dev/21cb2a71-d249-4289-abb6-3b9b39e3b0a3"
