@@ -152,7 +152,7 @@ export function AnimeListScreen({ navigation }: Props) {
                   : "Explore the world of anime by adding some shows to your list!"
               }
               cta={{
-                label: !accessToken ? "Log In" : "Discover new anime",
+                label: !accessToken ? "Log In!" : "Discover new anime",
                 onPress: async () => {
                   if (!accessToken) {
                     const result = await promptAsync();
