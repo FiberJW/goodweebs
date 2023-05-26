@@ -13,13 +13,15 @@ export default function Website() {
   useManrope();
 
   return (
-    <Router>
-      <div>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="*" element={<Navigate replace to="/" />} />
-        </Routes>
-      </div>
-    </Router>
+    <div style={{ flex: 1 }}>
+      <Router>
+        <div>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="*" element={<Navigate replace to="/" />} />
+          </Routes>
+        </div>
+      </Router>
+    </div>
   );
 }
