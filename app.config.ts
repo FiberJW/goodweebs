@@ -5,7 +5,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   name: "Goodweebs",
   slug: "goodweebs",
   platforms: ["ios", "android", "web"],
-  version: "0.0.12",
+  version: "0.0.13",
   orientation: "portrait",
   icon: "./assets/launch/icon.png",
   scheme: "goodweebs",
@@ -24,7 +24,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   assetBundlePatterns: ["**/*"],
   ios: {
     supportsTablet: true,
-    buildNumber: "0.0.12",
+    buildNumber: "0.0.13",
     bundleIdentifier: "com.fiberjw.goodweebs",
     config: {
       usesNonExemptEncryption: false,
@@ -33,7 +33,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   android: {
     package: "com.fiberjw.goodweebs",
-    versionCode: 12,
+    versionCode: 13,
     permissions: [],
     adaptiveIcon: {
       backgroundColor: "#651FFF",
