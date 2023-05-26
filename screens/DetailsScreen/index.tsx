@@ -6,13 +6,12 @@ import * as Haptics from "expo-haptics";
 import _ from "lodash";
 import React, { useState } from "react";
 import { RefreshControl, Text, View, Image } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
-import { useSafeArea } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import title from "title";
 
 import { Button } from "yep/components/Button";
-import { EmptyState } from "yep/components/EmptyState";
 import { DescriptionRenderer } from "yep/components/DescriptionRenderer";
+import { EmptyState } from "yep/components/EmptyState";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { LikeButton } from "yep/components/PosterAndTitle/LikeButton";
 import { MediaListStatusWithLabel, MediaStatusWithLabel } from "yep/constants";
@@ -124,7 +123,7 @@ type Props = {
 
 export function DetailsScreen({ route, navigation }: Props) {
   const { showActionSheetWithOptions } = useActionSheet();
-  const insets = useSafeArea();
+  const insets = useSafeAreaInsets();
   const [loadingStatus, setLoadingStatus] = useState(false);
   const [isRefetchingFromScrollOrMount, setIsRefetchingFromScrollOrMount] =
     useState(true);
@@ -574,7 +573,7 @@ export function DetailsScreen({ route, navigation }: Props) {
             );
           })}
 
-          {externalLinks ? (
+          {externalLinks?.length ? (
             <>
               <View style={{ height: 16 }} />
               <Text
@@ -584,17 +583,14 @@ export function DetailsScreen({ route, navigation }: Props) {
                   fontSize: 20,
                 }}
               >
-                External / Streaming Links
+                External Links
               </Text>
               <View style={{ height: 16 }} />
-              <FlatList
-                showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}
-                data={externalLinks}
-                keyExtractor={(item) => `${item.id}`}
-                renderItem={({ item }) => <ExternalLink {...item} />}
-                ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
-              />
+              <View style={{ gap: 8 }}>
+                {externalLinks.map((link) => (
+                  <ExternalLink {...link} key={link.id} />
+                ))}
+              </View>
             </>
           ) : null}
         </>

@@ -38,6 +38,12 @@ export const tubiOrange = "#ff501a";
 export const hidiveBlue = "rgba(0,174,240,1)";
 export const instagramPink = "#E1306C";
 export const disneyPlusBlue = "#1451AC";
+export const tiktokPink = "#ff0050";
+export const maxBlue = "#0233FD";
+export const bilibiliBlue = "#00A1D6";
+export const iqGreen = "#5CD15A";
+export const starPlusOrange = "#EA6F23";
+export const amazonPrimeBlue = "#1997FE";
 
 export const favoritedBackground = "#D6094E";
 export const notFavoritedBackground = "rgba(214, 9, 78, 0.6)";
