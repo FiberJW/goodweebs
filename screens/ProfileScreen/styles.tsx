@@ -10,13 +10,14 @@ export const OuterContainer = takimoto.View({
 
 export const InnerContainer = takimoto.ScrollView(
   {},
-  { padding: 16, justifyContent: "space-between" }
+  { padding: 16, justifyContent: "space-between", gap: 16 }
 );
 
 export const UserInfoAndStatsContainer = takimoto.View({
   padding: 16,
   borderRadius: 16,
   backgroundColor: darkTheme.listItemBackground,
+  gap: 16,
 });
 
 export const Avatar = takimoto.Image({
@@ -25,13 +26,10 @@ export const Avatar = takimoto.Image({
   borderRadius: 20,
 });
 
-export const AvatarSpacer = takimoto.View({
-  width: 8,
-});
-
 export const UserInfoRow = takimoto.View({
   flexDirection: "row",
   alignItems: "center",
+  gap: 8,
 });
 
 export const Username = takimoto.Text({
@@ -44,12 +42,9 @@ export const StatsRow = takimoto.View({
   flexDirection: "row",
 });
 
-export const StatsRowSpacer = takimoto.View({
-  height: 8,
-});
-
 const StatContainer = takimoto.View({
   flex: 1,
+  gap: 4,
 });
 
 const StatLabel = takimoto.Text({
@@ -57,8 +52,6 @@ const StatLabel = takimoto.Text({
   fontSize: 12.8,
   color: darkTheme.text,
 });
-
-const StatSpacer = takimoto.View({ height: 4 });
 
 const StatValue = takimoto.Text({
   fontFamily: Manrope.semiBold,
@@ -72,7 +65,6 @@ export function Stat({ label, value }: StatProps) {
   return (
     <StatContainer>
       <StatLabel numberOfLines={1}>{label}</StatLabel>
-      <StatSpacer />
       <StatValue numberOfLines={1}>{value}</StatValue>
     </StatContainer>
   );
@@ -82,9 +74,8 @@ export const ListHeader = takimoto.Text({
   fontFamily: Manrope.semiBold,
   fontSize: 25,
   color: darkTheme.text,
+  marginBottom: 8,
 });
-
-export const ListHeaderSpacer = takimoto.View({ height: 8 });
 
 export function makeListWithType<T>() {
   return takimoto.FlatList<T>(
@@ -94,8 +85,6 @@ export function makeListWithType<T>() {
     }
   );
 }
-
-export const ListItemSpacer = takimoto.View({ width: 8 });
 
 export const FavoriteContainer = takimoto.View({
   alignItems: "center",
@@ -109,6 +98,4 @@ export const Person = takimoto.Image({
   backgroundColor: darkTheme.listItemBackground,
 });
 
-export const EverythingButTheCTA = takimoto.View({ flex: 1 });
-
-export const VerticalSpacer = takimoto.View({ height: 16 });
+export const EverythingButTheCTA = takimoto.View({ flex: 1, gap: 16 });

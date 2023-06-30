@@ -80,7 +80,7 @@ export function DiscoverScreen({ navigation }: Props) {
               Search results for: {searchTerm}
             </Text>
             <FlatList
-              ItemSeparatorComponent={Separator}
+              contentContainerStyle={{ gap: 16 }}
               data={searchList}
               ListEmptyComponent={() =>
                 loadingSearchData ? null : (
@@ -115,7 +115,7 @@ export function DiscoverScreen({ navigation }: Props) {
               </Text>
             ) : null}
             <FlatList
-              ItemSeparatorComponent={Separator}
+              contentContainerStyle={{ gap: 16 }}
               data={trendingList}
               numColumns={3}
               ListEmptyComponent={() =>
@@ -151,10 +151,6 @@ export function DiscoverScreen({ navigation }: Props) {
   );
 }
 
-function Separator() {
-  return <View style={styles.separator} />;
-}
-
 const styles = StyleSheet.create({
   innerContainer: {
     flex: 1,
@@ -168,8 +164,5 @@ const styles = StyleSheet.create({
   },
   outerContainer: {
     flex: 1,
-  },
-  separator: {
-    height: 16,
   },
 });

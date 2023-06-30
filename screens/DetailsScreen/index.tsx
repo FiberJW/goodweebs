@@ -68,12 +68,9 @@ const InfoRow = takimoto.View({
   flexDirection: "row",
 });
 
-const InfoRowSpacer = takimoto.View({
-  height: 8,
-});
-
 const InfoTable = takimoto.View({
   flex: 1,
+  gap: 8,
 });
 
 const InfoContainer = takimoto.View({
@@ -374,7 +371,6 @@ export function DetailsScreen({ route, navigation }: Props) {
                   value={data?.Media?.genres?.join(", ") ?? ""}
                 />
               </InfoRow>
-              <InfoRowSpacer />
               <InfoRow>
                 {data?.Media?.averageScore ? (
                   <Info
@@ -391,7 +387,6 @@ export function DetailsScreen({ route, navigation }: Props) {
                   )}
                 />
               </InfoRow>
-              <InfoRowSpacer />
               <InfoRow>
                 {studio ? <Info label="Studio" value={studio} /> : null}
                 {data?.Media?.status === MediaStatus.Releasing &&
@@ -548,7 +543,7 @@ export function DetailsScreen({ route, navigation }: Props) {
           {data?.Media?.description ? (
             <DescriptionRenderer description={data.Media.description} />
           ) : null}
-          <DescriptionSpacer />
+
           {data.Media?.trailer ? (
             <Trailer trailer={data.Media?.trailer} />
           ) : null}
@@ -598,7 +593,3 @@ export function DetailsScreen({ route, navigation }: Props) {
     </Container>
   );
 }
-
-const DescriptionSpacer = takimoto.View({
-  height: 16,
-});
