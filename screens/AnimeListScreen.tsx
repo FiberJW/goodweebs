@@ -113,14 +113,13 @@ export function AnimeListScreen({ navigation }: Props) {
       <AnimeFlatList
         contentContainerStyle={{ padding: 16 }}
         ListHeaderComponent={() => (
-          <View>
+          <View style={{ gap: 16, paddingBottom: 16 }}>
             <StatusChipListContainer>
               <StatusChipList
                 alwaysBounceVertical={false}
                 showsHorizontalScrollIndicator={false}
                 horizontal
                 data={MediaListStatusWithLabel}
-                ItemSeparatorComponent={StatusChipListDivider}
                 keyExtractor={({ label }) => label}
                 renderItem={({ item: { label, value } }) => (
                   <StatusChip
@@ -132,11 +131,9 @@ export function AnimeListScreen({ navigation }: Props) {
                 )}
               />
             </StatusChipListContainer>
-            <Spacer />
             <CountAndSortRow>
               <Count>{listCountText}</Count>
             </CountAndSortRow>
-            <Spacer />
           </View>
         )}
         showsVerticalScrollIndicator={false}
@@ -219,15 +216,11 @@ const OuterContainer = takimoto.View({
   flex: 1,
 });
 
-const Spacer = takimoto.View({
-  height: 16,
-});
-
 const StatusChipListContainer = takimoto.View({});
 const StatusChipList = takimoto.FlatList<{
   label: string;
   value: MediaListStatus;
-}>({}, {});
+}>({}, { gap: 8 });
 
 function makeAnimeFlatList<T>() {
   return takimoto.FlatList<T>({}, {});
@@ -237,8 +230,6 @@ const AnimeListDivider = takimoto.View({
   height: 1,
   backgroundColor: darkTheme.listItemBorder,
 });
-
-const StatusChipListDivider = takimoto.View({ width: 8 });
 
 const CountAndSortRow = takimoto.View({
   flexDirection: "row",

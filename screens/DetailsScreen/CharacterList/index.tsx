@@ -10,9 +10,6 @@ import { Manrope } from "yep/typefaces";
 
 import { CharacterItem } from "./CharacterItem";
 
-const RelatedListSeparator = takimoto.View({ width: 8 });
-const RelatedListSpacer = takimoto.View({ height: 16 });
-
 const Header = takimoto.Text({
   fontFamily: Manrope.semiBold,
   color: darkTheme.text,
@@ -36,16 +33,15 @@ export function CharacterList({
       <FlatList
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        style={{ width: "100%" }}
+        style={{ width: "100%", marginBottom: 16 }}
+        contentContainerStyle={{ gap: 8 }}
         horizontal
-        ItemSeparatorComponent={RelatedListSeparator}
         keyExtractor={(item) => `${item.id}`}
         data={characters}
         renderItem={({ item }) => {
           return <CharacterItem character={item} navigation={navigation} />;
         }}
       />
-      <RelatedListSpacer />
     </>
   );
 }

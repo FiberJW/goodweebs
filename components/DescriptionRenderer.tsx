@@ -36,7 +36,7 @@ export function DescriptionRenderer({ description }: Props) {
     );
 
   return (
-    <View>
+    <View style={{ marginBottom: 16 }}>
       {hasSpoilers && !showSpoilers ? (
         <Button
           label="Show Spoilers"

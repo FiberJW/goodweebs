@@ -90,7 +90,6 @@ export function AnimeListItem({
           <EpisodesBehind count={episodesBehind} />
         ) : null}
       </View>
-      <View style={styles.spacer} />
       <View style={styles.titleAndBroadcastColumn}>
         <Text style={styles.title} numberOfLines={2}>
           {getTitle(media.title)}
@@ -102,7 +101,6 @@ export function AnimeListItem({
           </Text>
         ) : null}
       </View>
-      <View style={styles.spacer} />
       <View style={styles.progressColumn}>
         <View style={styles.episodeProgressContainer}>
           <Text style={styles.episodeProgress}>
@@ -118,7 +116,6 @@ export function AnimeListItem({
                 onDecrement();
               }}
             />
-            <View style={styles.progressButtonSpacer} />
             <ProgressButton
               disabled={Boolean(disabled) || progress === media.episodes}
               icon={
@@ -145,6 +142,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flexDirection: "row",
+    gap: 8,
   },
   episodeProgress: {
     color: darkTheme.text,
@@ -160,8 +158,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
-  progressButtonGroup: { flexDirection: "row" },
-  progressButtonSpacer: { width: 8 },
+  progressButtonGroup: { flexDirection: "row", gap: 8 },
   progressColumn: {
     alignItems: "flex-end",
     justifyContent: "space-between",
@@ -181,9 +178,6 @@ const styles = StyleSheet.create({
     color: darkTheme.textInverted,
     fontFamily: Manrope.semiBold,
     fontSize: 12.8,
-  },
-  spacer: {
-    width: 8,
   },
   title: {
     color: darkTheme.text,

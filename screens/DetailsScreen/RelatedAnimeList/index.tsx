@@ -13,12 +13,13 @@ import { getReadableMediaRelation } from "yep/utils";
 
 import { RelatedAnimeItem } from "./RelatedAnimeItem";
 
-const RelatedListFlatList = takimoto.FlatList<AnimeRelationFragmentFragment>({
-  width: "100%",
-});
-
-const RelatedListSeparator = takimoto.View({ width: 8 });
-const RelatedListSpacer = takimoto.View({ height: 16 });
+const RelatedListFlatList = takimoto.FlatList<AnimeRelationFragmentFragment>(
+  {
+    width: "100%",
+    marginBottom: 16,
+  },
+  { gap: 8 }
+);
 
 const RelatedListHeader = takimoto.Text({
   fontFamily: Manrope.semiBold,
@@ -59,14 +60,12 @@ export function RelatedAnimeList({
       </RelatedListHeader>
       <RelatedListFlatList
         horizontal
-        ItemSeparatorComponent={RelatedListSeparator}
         keyExtractor={(item) => `${item.id}`}
         data={relations}
         renderItem={({ item }) => {
           return <RelatedAnimeItem anime={item} navigation={navigation} />;
         }}
       />
-      <RelatedListSpacer />
     </>
   );
 }

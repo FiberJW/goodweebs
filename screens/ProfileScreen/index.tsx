@@ -2,7 +2,7 @@ import { useApolloClient } from "@apollo/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
-import { Alert, RefreshControl } from "react-native";
+import { Alert, RefreshControl, View } from "react-native";
 
 import { white } from "yep/colors";
 import { Button } from "yep/components/Button";
@@ -22,17 +22,13 @@ import {
   UserInfoAndStatsContainer,
   Avatar,
   UserInfoRow,
-  ListItemSpacer,
   Username,
-  ListHeaderSpacer,
   StatsRow,
   Stat,
   ListHeader,
   makeListWithType,
-  AvatarSpacer,
   FavoriteContainer,
   EverythingButTheCTA,
-  VerticalSpacer,
 } from "./styles";
 
 type Props = {
@@ -89,10 +85,8 @@ export function ProfileScreen({ navigation }: Props) {
                       : require("yep/assets/icons/avatar-placeholder.png")
                   }
                 />
-                <AvatarSpacer />
                 <Username numberOfLines={1}>{viewerData.Viewer.name}</Username>
               </UserInfoRow>
-              <VerticalSpacer />
               <StatsRow>
                 <Stat
                   label="Total Anime"
@@ -109,14 +103,12 @@ export function ProfileScreen({ navigation }: Props) {
               </StatsRow>
             </UserInfoAndStatsContainer>
             {animeList.length ? (
-              <>
-                <VerticalSpacer />
+              <View>
                 <ListHeader>Favorite Anime</ListHeader>
-                <ListHeaderSpacer />
                 <FavoriteAnimeList
+                  contentContainerStyle={{ gap: 8 }}
                   horizontal
                   showsHorizontalScrollIndicator={false}
-                  ItemSeparatorComponent={ListItemSpacer}
                   keyExtractor={(item) => `${item.id}`}
                   data={animeList}
                   renderItem={({ item }) => (
@@ -135,17 +127,15 @@ export function ProfileScreen({ navigation }: Props) {
                     </FavoriteContainer>
                   )}
                 />
-              </>
+              </View>
             ) : null}
             {characterList.length ? (
-              <>
-                <VerticalSpacer />
+              <View>
                 <ListHeader>Favorite Characters</ListHeader>
-                <ListHeaderSpacer />
                 <FavoriteCharacterList
                   horizontal
                   showsHorizontalScrollIndicator={false}
-                  ItemSeparatorComponent={ListItemSpacer}
+                  contentContainerStyle={{ gap: 8 }}
                   keyExtractor={(item) => `${item.id}`}
                   data={characterList}
                   renderItem={({ item }) => (
@@ -164,11 +154,11 @@ export function ProfileScreen({ navigation }: Props) {
                     </FavoriteContainer>
                   )}
                 />
-              </>
+              </View>
             ) : null}
           </EverythingButTheCTA>
         ) : null}
-        <VerticalSpacer />
+
         <Button
           label="Log out"
           onPress={async () => {

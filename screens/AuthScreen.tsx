@@ -52,7 +52,6 @@ export function AuthScreen({ navigation }: Props) {
               style={styles.logo}
               source={require("yep/assets/launch/logo-wrapped-dark.png")}
             />
-            <View style={styles.brandingSpacer} />
             <Text style={styles.tagline}>{getString("tagline")}</Text>
           </View>
           <View style={styles.buttonGroup}>
@@ -76,7 +75,6 @@ export function AuthScreen({ navigation }: Props) {
             />
 
             <Button
-              containerStyle={{ marginTop: 16 }}
               label="Continue Without Logging In"
               onPress={async () => {
                 Alert.alert(
@@ -97,9 +95,9 @@ export function AuthScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  brandingGroup: { alignItems: "center" },
-  brandingSpacer: { height: 16 },
+  brandingGroup: { alignItems: "center", gap: 16 },
   buttonGroup: {
+    gap: 16,
     width: "100%",
   },
   innerContainer: {
