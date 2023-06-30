@@ -97,8 +97,8 @@ export function AuthScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   brandingGroup: { alignItems: "center", gap: 16 },
   buttonGroup: {
-    width: "100%",
     gap: 16,
+    width: "100%",
   },
   innerContainer: {
     paddingTop: 88,
