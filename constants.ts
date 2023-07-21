@@ -6,7 +6,7 @@ import {
   MediaStatus,
 } from "yep/graphql/generated";
 
-// AniList Client IDeez and their redirect URIs based on https://docs.expo.dev/guides/authentication/#redirect-uri-patterns
+// AniList Client IDez and their redirect URIs based on https://docs.expo.dev/guides/authentication/#redirect-uri-patterns
 enum AniListClientID {
   DEV = 3549, // exp://localhost:19000/--/*
   EXPO_GO = 3559, // exp://exp.host/@fiberjw/goodweebs
