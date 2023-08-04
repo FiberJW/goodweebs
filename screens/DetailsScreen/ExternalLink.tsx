@@ -32,7 +32,7 @@ import { Manrope } from "yep/typefaces";
 
 export function ExternalLink({ id, url, site }: MediaExternalLinkDataFragment) {
   let color = darkTheme.iconFill;
-
+// hi
   switch (site.toUpperCase()) {
     case "CRUNCHYROLL":
       color = crunchyrollOrange;
