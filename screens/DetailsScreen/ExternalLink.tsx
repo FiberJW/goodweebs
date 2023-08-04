@@ -30,7 +30,7 @@ import { MediaExternalLinkDataFragment } from "yep/graphql/generated";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
-export function ExternalLink({ id, url, site }: MediaExternalLinkDataFragment) {
+export function ExternalLink({ url, site }: MediaExternalLinkDataFragment) {
   let color = darkTheme.iconFill;
 
   switch (site.toUpperCase()) {
