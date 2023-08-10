@@ -113,7 +113,7 @@ export function ExternalLink({ id, url, site }: MediaExternalLinkDataFragment) {
   return (
     <PressableOpacity
       style={{
-        borderWidth: 12,
+        borderWidth: 2,
         borderColor: chroma(color).luminance(0.2).hex(),
         backgroundColor: chroma(color).darken(0.75).hex(),
         paddingVertical: 16,
