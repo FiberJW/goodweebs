@@ -118,7 +118,7 @@ export function ExternalLink({ id, url, site }: MediaExternalLinkDataFragment) {
         backgroundColor: chroma(color).darken(0.75).hex(),
         paddingVertical: 16,
         paddingHorizontal: 24,
-        width: "100%",
+        width: "101%",
       }}
       onPress={() => {
         if (url) Linking.openURL(url);
