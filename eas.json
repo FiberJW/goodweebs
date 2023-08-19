@@ -8,20 +8,20 @@
       "distribution": "internal",
       "channel": "development",
       "ios": {
-        "resourceClass": "m-medium"
+        "resourceClass": "medium"
       }
     },
     "preview": {
       "distribution": "internal",
       "channel": "preview",
       "ios": {
-        "resourceClass": "m-medium"
+        "resourceClass": "medium"
       }
     },
     "production": {
       "channel": "production",
       "ios": {
-        "resourceClass": "m-medium"
+        "resourceClass": "medium"
       }
     }
   },

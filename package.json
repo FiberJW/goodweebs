@@ -15,13 +15,13 @@
     "@apollo/client": "^3.1.5",
     "@expo/config-plugins": "^6.0.1",
     "@expo/react-native-action-sheet": "^4.0.1",
-    "@expo/webpack-config": "^18.0.4",
+    "@expo/webpack-config": "^18.1.2",
     "@radix-ui/colors": "^0.1.8",
     "@react-native-async-storage/async-storage": "1.17.11",
     "@react-navigation/bottom-tabs": "^6.5.2",
     "@react-navigation/native": "^6.1.1",
     "@react-navigation/stack": "^6.3.10",
-    "@sentry/react-native": "4.13.0",
+    "@sentry/react-native": "4.15.2",
     "apollo3-cache-persist": "^0.14.1",
     "chroma-js": "^2.4.2",
     "date-fns": "^2.29.3",
@@ -48,13 +48,9 @@
     "react-native-screens": "~3.20.0",
     "react-native-web": "~0.18.11",
     "react-router-dom": "^6.6.1",
-    "sentry-expo": "~6.1.0",
+    "sentry-expo": "~6.2.0",
     "showdown": "^2.1.0",
     "title": "^3.4.2"
-  },
-  "resolutions": {
-    "@types/react": "~18.0.24",
-    "@types/react-native": "^0.71.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
