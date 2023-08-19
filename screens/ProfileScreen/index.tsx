@@ -1,10 +1,10 @@
 import { useApolloClient } from "@apollo/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackNavigationProp } from "@react-navigation/stack";
-import React from "react";
-import { Alert, RefreshControl, View } from "react-native";
+import React, { PropsWithChildren } from "react";
+import { Alert, ImageBackground, RefreshControl, View } from "react-native";
 
-import { white } from "yep/colors";
+import { black50, white } from "yep/colors";
 import { Button } from "yep/components/Button";
 import { Header } from "yep/components/Header";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
@@ -13,6 +13,7 @@ import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { useGetViewerQuery } from "yep/graphql/generated";
 import { RootStackParamList, TabParamList } from "yep/navigation";
 import { StringCase, getString } from "yep/strings";
+import { darkTheme } from "yep/themes";
 import { useAccessToken } from "yep/useAccessToken";
 import { notEmpty, getTitle } from "yep/utils";
 
@@ -56,6 +57,19 @@ export function ProfileScreen({ navigation }: Props) {
   const FavoriteAnimeList = makeListWithType<AnimeItem>();
   const FavoriteCharacterList = makeListWithType<CharacterItem>();
 
+  function OptionalBackgroundImage({ children }: PropsWithChildren) {
+    return viewerData?.Viewer?.bannerImage ? (
+      <ImageBackground
+        source={{ uri: viewerData.Viewer.bannerImage }}
+        style={{ borderRadius: 8, overflow: "hidden" }}
+      >
+        {children}
+      </ImageBackground>
+    ) : (
+      <>{children}</>
+    );
+  }
+
   return (
     <OuterContainer>
       <Header label={getString("profile", StringCase.TITLE)} />
@@ -72,36 +86,47 @@ export function ProfileScreen({ navigation }: Props) {
       >
         {viewerData?.Viewer ? (
           <EverythingButTheCTA>
-            <UserInfoAndStatsContainer>
-              <UserInfoRow>
-                <Avatar
-                  source={
-                    viewerData?.Viewer?.avatar
-                      ? {
-                          uri:
-                            viewerData?.Viewer?.avatar?.large ??
-                            viewerData?.Viewer?.avatar?.medium,
-                        }
-                      : require("yep/assets/icons/avatar-placeholder.png")
-                  }
-                />
-                <Username numberOfLines={1}>{viewerData.Viewer.name}</Username>
-              </UserInfoRow>
-              <StatsRow>
-                <Stat
-                  label="Total Anime"
-                  value={viewerData.Viewer.statistics?.anime?.count ?? 0}
-                />
-                <Stat
-                  label="Days Watched"
-                  value={Math.round(
-                    (viewerData.Viewer.statistics?.anime?.minutesWatched ?? 0) /
-                      60 /
-                      24
-                  )}
-                />
-              </StatsRow>
-            </UserInfoAndStatsContainer>
+            <OptionalBackgroundImage>
+              <UserInfoAndStatsContainer
+                style={{
+                  backgroundColor: viewerData?.Viewer?.bannerImage
+                    ? black50
+                    : darkTheme.listItemBackground,
+                }}
+              >
+                <UserInfoRow>
+                  <Avatar
+                    source={
+                      viewerData?.Viewer?.avatar
+                        ? {
+                            uri:
+                              viewerData?.Viewer?.avatar?.large ??
+                              viewerData?.Viewer?.avatar?.medium,
+                          }
+                        : require("yep/assets/icons/avatar-placeholder.png")
+                    }
+                  />
+                  <Username numberOfLines={1}>
+                    {viewerData.Viewer.name}
+                  </Username>
+                </UserInfoRow>
+                <StatsRow>
+                  <Stat
+                    label="Total Anime"
+                    value={viewerData.Viewer.statistics?.anime?.count ?? 0}
+                  />
+                  <Stat
+                    label="Days Watched"
+                    value={Math.round(
+                      (viewerData.Viewer.statistics?.anime?.minutesWatched ??
+                        0) /
+                        60 /
+                        24
+                    )}
+                  />
+                </StatsRow>
+              </UserInfoAndStatsContainer>
+            </OptionalBackgroundImage>
             {animeList.length ? (
               <View>
                 <ListHeader>Favorite Anime</ListHeader>

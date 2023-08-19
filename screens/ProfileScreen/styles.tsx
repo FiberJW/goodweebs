@@ -15,9 +15,10 @@ export const InnerContainer = takimoto.ScrollView(
 
 export const UserInfoAndStatsContainer = takimoto.View({
   padding: 16,
-  borderRadius: 16,
-  backgroundColor: darkTheme.listItemBackground,
+  borderRadius: 8,
   gap: 16,
+  overflow: "hidden",
+  flex: 1,
 });
 
 export const Avatar = takimoto.Image({

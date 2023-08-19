@@ -4980,7 +4980,7 @@ export type GetViewerQuery = (
   { __typename?: 'Query' }
   & { Viewer?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
+    & Pick<User, 'id' | 'name' | 'bannerImage'>
     & { avatar?: Maybe<(
       { __typename?: 'UserAvatar' }
       & Pick<UserAvatar, 'large' | 'medium'>
@@ -5625,6 +5625,7 @@ export const GetViewerDocument = gql`
       large
       medium
     }
+    bannerImage
     favourites {
       anime {
         nodes {

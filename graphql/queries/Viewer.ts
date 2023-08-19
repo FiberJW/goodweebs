@@ -9,6 +9,7 @@ export const GetViewer = gql`
         large
         medium
       }
+      bannerImage
       favourites {
         anime {
           nodes {
