@@ -40,7 +40,6 @@ function InnerApp() {
   const { checkedForToken, accessToken } = useAccessToken();
   const fontsLoaded = useManrope();
 
-  // create client async in effect
   const [client, setClient] =
     React.useState<ApolloClient<NormalizedCacheObject> | null>(null);
 
