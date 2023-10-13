@@ -51,7 +51,7 @@ export function AnimeListScreen({ navigation }: Props) {
   const { loading: loadingViewer, data: viewerData } = useGetViewerQuery({
     skip: !accessToken,
   });
-  // hiiieeeeede
+  // hiiieeeeedew
 
   const {
     loading: loadingAnimeList,
