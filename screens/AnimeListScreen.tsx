@@ -31,6 +31,8 @@ import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
 import { notEmpty } from "yep/utils";
 
+// e
+
 type Props = {
   navigation: CompositeNavigationProp<
     BottomTabNavigationProp<TabParamList, "Anime">,
