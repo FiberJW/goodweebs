@@ -47,7 +47,7 @@ export function AnimeListScreen({ navigation }: Props) {
   const { accessToken, setAccessToken } = useAccessToken();
 
   const [, , promptAsync] = useAniListAuthRequest();
-  // TODO: savesse userId to AsyncStorage instead of fetching
+  // TODO: savsesse userId to AsyncStorage instead of fetching
   const { loading: loadingViewer, data: viewerData } = useGetViewerQuery({
     skip: !accessToken,
   });
