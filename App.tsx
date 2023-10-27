@@ -26,7 +26,7 @@ Sentry.init({
 
 SplashScreen.preventAutoHideAsync();
 
-// TODOODOO: implement better error handling + user-facing notifications
+// TODOOOO: implement better error handling + user-facing notifications
 
 export default function App() {
   return (
