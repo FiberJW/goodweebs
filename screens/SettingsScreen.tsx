@@ -21,9 +21,11 @@ type Props = {
 
 export function SettingsScreen({ navigation }: Props) {
   // TODO: move to user preferences/settings that persist across installations
-  const [hideScores, setHideScores] = usePersistedState(
+  const [hideScores, setHideScores] = usePersistedState<boolean>(
     StorageKeys.HIDE_SCORES_GLOBAL
   );
+  const [shouldPersistScoreVisibility, setShouldPersistScoreVisibility] =
+    usePersistedState<boolean>(StorageKeys.SHOULD_PERSIST_SCORE_VISIBILITY);
 
   const client = useApolloClient();
   const { setAccessToken } = useAccessToken();
@@ -50,24 +52,46 @@ export function SettingsScreen({ navigation }: Props) {
             >
               Display settings
             </Text>
-            <BouncyCheckbox
-              disableBuiltInState
-              isChecked={hideScores}
-              size={24}
-              fillColor={darkTheme.button}
-              unfillColor="black"
-              text="Hide scores by default"
-              innerIconStyle={{ borderWidth: 2, backgroundColor: black }}
-              textStyle={{
-                color: darkTheme.subText,
-                fontFamily: Manrope.regular,
-                textDecorationLine: "none",
-                fontSize: 16,
-              }}
-              onPress={() => {
-                setHideScores(!hideScores);
-              }}
-            />
+            <View style={{ flexDirection: "column", gap: 16 }}>
+              <BouncyCheckbox
+                disableBuiltInState
+                isChecked={hideScores}
+                size={24}
+                fillColor={darkTheme.button}
+                unfillColor="black"
+                text="Hide scores by default"
+                innerIconStyle={{ borderWidth: 2, backgroundColor: black }}
+                textStyle={{
+                  color: darkTheme.subText,
+                  fontFamily: Manrope.regular,
+                  textDecorationLine: "none",
+                  fontSize: 16,
+                }}
+                onPress={() => {
+                  setHideScores(!hideScores);
+                }}
+              />
+              <BouncyCheckbox
+                disableBuiltInState
+                isChecked={shouldPersistScoreVisibility}
+                size={24}
+                fillColor={darkTheme.button}
+                unfillColor="black"
+                text="Should persist score visibility per anime"
+                innerIconStyle={{ borderWidth: 2, backgroundColor: black }}
+                textStyle={{
+                  color: darkTheme.subText,
+                  fontFamily: Manrope.regular,
+                  textDecorationLine: "none",
+                  fontSize: 16,
+                }}
+                onPress={() => {
+                  setShouldPersistScoreVisibility(
+                    !shouldPersistScoreVisibility
+                  );
+                }}
+              />
+            </View>
           </View>
         </View>
 
