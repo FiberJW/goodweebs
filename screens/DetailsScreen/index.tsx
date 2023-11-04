@@ -132,15 +132,23 @@ export function DetailsScreen({ route, navigation }: Props) {
   const { showActionSheetWithOptions } = useActionSheet();
   const insets = useSafeAreaInsets();
   const [loadingStatus, setLoadingStatus] = useState(false);
-  const [shouldShowScoreToggleUI] = usePersistedState(
+  const [shouldShowScoreToggleUI] = usePersistedState<boolean>(
     StorageKeys.HIDE_SCORES_GLOBAL
   );
-  const [showScore, setShowScore] = useState(!shouldShowScoreToggleUI);
+  const [shouldPersistScoreVisibility] = usePersistedState<boolean>(
+    StorageKeys.SHOULD_PERSIST_SCORE_VISIBILITY
+  );
+  const [showScore, setShowScore] = usePersistedState<boolean>(
+    StorageKeys.SHOW_SCORE_FOR_MEDIA,
+    { id: String(route.params.id), doNotPersist: !shouldPersistScoreVisibility }
+  );
 
   // sync shouldShowScoreToggleUI with showScore in useeffect because the default value can be
   // different from the persisted value
   useEffect(() => {
-    setShowScore(!shouldShowScoreToggleUI);
+    if (!showScore) {
+      setShowScore(!shouldShowScoreToggleUI);
+    }
   }, [shouldShowScoreToggleUI]);
 
   const [isRefetchingFromScrollOrMount, setIsRefetchingFromScrollOrMount] =
@@ -398,7 +406,7 @@ export function DetailsScreen({ route, navigation }: Props) {
                     useDisabledOpacity={false}
                     style={{ flexDirection: "row", gap: 8, flex: 1 }}
                     disabled={!shouldShowScoreToggleUI || showScore}
-                    onPress={() => setShowScore((s) => !s)}
+                    onPress={() => setShowScore(!showScore)}
                   >
                     <Info
                       label="Average score"

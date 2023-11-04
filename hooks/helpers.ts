@@ -119,17 +119,30 @@ export function useBreakpoints() {
 
 export enum StorageKeys {
   HIDE_SCORES_GLOBAL = "HIDE_SCORES_GLOBAL",
+  SHOW_SCORE_FOR_MEDIA = "SHOW_SCORE_FOR_MEDIA",
+  SHOULD_PERSIST_SCORE_VISIBILITY = "SHOULD_PERSIST_SCORE_VISIBILITY",
 }
 
 const defaultValues: { [key in StorageKeys]: any } = {
   [StorageKeys.HIDE_SCORES_GLOBAL]: true,
+  [StorageKeys.SHOW_SCORE_FOR_MEDIA]: false,
+  [StorageKeys.SHOULD_PERSIST_SCORE_VISIBILITY]: true,
 };
 
-export function usePersistedState<T>(key: StorageKeys): [T, (data: T) => T] {
+export function usePersistedState<T>(
+  key: StorageKeys,
+  options?: { id?: string; doNotPersist?: boolean }
+): [T, (data: T) => T] {
   const [storageItem, setStorageItem] = useState<T>(defaultValues[key]);
 
+  const { id, doNotPersist } = options ?? {};
+
+  const storageKey = id ? `${key}:${id}` : key;
+
   async function getStorageItem() {
-    const data = await AsyncStorage.getItem(key);
+    if (doNotPersist) return storageItem;
+
+    const data = await AsyncStorage.getItem(storageKey);
 
     if (data) {
       const parsedData = JSON.parse(data);
@@ -139,15 +152,15 @@ export function usePersistedState<T>(key: StorageKeys): [T, (data: T) => T] {
   }
 
   function updateStorageItem(data: T) {
-    AsyncStorage.setItem(key, JSON.stringify(data));
+    if (!doNotPersist) AsyncStorage.setItem(storageKey, JSON.stringify(data));
     setStorageItem(data);
 
     return data;
   }
 
   useEffect(() => {
-    getStorageItem();
-  }, []);
+    if (!doNotPersist) getStorageItem();
+  }, [doNotPersist]);
 
   return [storageItem, updateStorageItem];
 }
