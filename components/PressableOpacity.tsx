@@ -13,6 +13,7 @@ type Props = PressableProps & {
   activeOpacity?: number;
   borderRadius?: number;
   containerStyle?: ViewStyle;
+  useDisabledOpacity?: boolean;
 };
 
 export function PressableOpacity({
@@ -21,6 +22,7 @@ export function PressableOpacity({
   style,
   disabled,
   containerStyle,
+  useDisabledOpacity,
   ...rest
 }: Props) {
   return (
@@ -36,7 +38,7 @@ export function PressableOpacity({
           const nativeStyle = {
             opacity: pressed ? pressedOpacity : 1,
             borderRadius,
-            ...(disabled && { opacity: 0.4 }),
+            ...(disabled && useDisabledOpacity && { opacity: 0.4 }),
           };
 
           if (Array.isArray(pressedStyles)) {

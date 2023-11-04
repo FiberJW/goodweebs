@@ -1,23 +1,5 @@
 import toTitleCase from "title";
 
-type StringNames =
-  | "AniListAuthAttribution"
-  | "tagline"
-  | "logIn"
-  | "signUp"
-  | "anime"
-  | "airing"
-  | "history"
-  | "broadcastHistory"
-  | "discover"
-  | "profile"
-  | "details"
-  | "goodweebs";
-
-type StringDefinitions = {
-  [p in StringNames]: string;
-};
-
 export enum StringCase {
   TITLE,
   UPPER,
@@ -25,7 +7,7 @@ export enum StringCase {
   SOURCE,
 }
 
-export const en_us: StringDefinitions = {
+const _en_us = {
   AniListAuthAttribution: "via AniList",
   tagline: "An anime tracking app powered by AniList and Expo.",
   logIn: "Log in",
@@ -37,8 +19,17 @@ export const en_us: StringDefinitions = {
   discover: "discover",
   profile: "profile",
   details: "details",
+  settings: "settings",
   goodweebs: "Goodweebs",
 };
+
+type StringNames = keyof typeof _en_us;
+
+type StringDefinitions = {
+  [p in StringNames]: string;
+};
+
+export const en_us: StringDefinitions = _en_us;
 
 export function getString(
   stringName: StringNames,

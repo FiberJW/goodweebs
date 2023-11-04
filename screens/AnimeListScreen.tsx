@@ -70,11 +70,9 @@ export function AnimeListScreen({ navigation }: Props) {
   const list = useMemo(
     () =>
       sortBy(
-        (
-          (animeListData?.MediaListCollection?.lists &&
-            animeListData?.MediaListCollection?.lists[0]?.entries) ??
-          []
-        ).filter(notEmpty),
+        (animeListData?.MediaListCollection?.lists?.[0]?.entries ?? []).filter(
+          notEmpty
+        ),
         (m) => m.media?.title?.english
       ),
     [animeListData]

@@ -5,6 +5,7 @@ import {
   MutationUpdaterFn,
   PureQueryOptions,
 } from "@apollo/client";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DocumentNode } from "graphql";
 import { debounce } from "lodash";
 import { useRef, useEffect, useState } from "react";
@@ -114,4 +115,52 @@ export function useBreakpoints() {
   const isMobile = width <= 700;
 
   return { isMobile };
+}
+
+export enum StorageKeys {
+  HIDE_SCORES_GLOBAL = "HIDE_SCORES_GLOBAL",
+  SHOW_SCORE_FOR_MEDIA = "SHOW_SCORE_FOR_MEDIA",
+  SHOULD_PERSIST_SCORE_VISIBILITY = "SHOULD_PERSIST_SCORE_VISIBILITY",
+}
+
+const defaultValues: { [key in StorageKeys]: any } = {
+  [StorageKeys.HIDE_SCORES_GLOBAL]: true,
+  [StorageKeys.SHOW_SCORE_FOR_MEDIA]: false,
+  [StorageKeys.SHOULD_PERSIST_SCORE_VISIBILITY]: true,
+};
+
+export function usePersistedState<T>(
+  key: StorageKeys,
+  options?: { id?: string; doNotPersist?: boolean }
+): [T, (data: T) => T] {
+  const [storageItem, setStorageItem] = useState<T>(defaultValues[key]);
+
+  const { id, doNotPersist } = options ?? {};
+
+  const storageKey = id ? `${key}:${id}` : key;
+
+  async function getStorageItem() {
+    if (doNotPersist) return storageItem;
+
+    const data = await AsyncStorage.getItem(storageKey);
+
+    if (data) {
+      const parsedData = JSON.parse(data);
+
+      setStorageItem(parsedData);
+    }
+  }
+
+  function updateStorageItem(data: T) {
+    if (!doNotPersist) AsyncStorage.setItem(storageKey, JSON.stringify(data));
+    setStorageItem(data);
+
+    return data;
+  }
+
+  useEffect(() => {
+    if (!doNotPersist) getStorageItem();
+  }, [doNotPersist]);
+
+  return [storageItem, updateStorageItem];
 }
