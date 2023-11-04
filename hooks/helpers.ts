@@ -5,6 +5,7 @@ import {
   MutationUpdaterFn,
   PureQueryOptions,
 } from "@apollo/client";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DocumentNode } from "graphql";
 import { debounce } from "lodash";
 import { useRef, useEffect, useState } from "react";
@@ -114,4 +115,38 @@ export function useBreakpoints() {
   const isMobile = width <= 700;
 
   return { isMobile };
+}
+
+export enum StorageKeys {
+  HIDE_SCORES_GLOBAL = "HIDE_SCORES_GLOBAL",
+}
+
+export function usePersistedState<T>(
+  key: StorageKeys,
+  defaultValue: T
+): [T, (data: T) => T] {
+  const [storageItem, setStorageItem] = useState<T>(defaultValue);
+
+  async function getStorageItem() {
+    const data = await AsyncStorage.getItem(key);
+
+    if (data) {
+      const parsedData = JSON.parse(data);
+
+      setStorageItem(parsedData);
+    }
+  }
+
+  function updateStorageItem(data: T) {
+    AsyncStorage.setItem(key, JSON.stringify(data));
+    setStorageItem(data);
+
+    return data;
+  }
+
+  useEffect(() => {
+    getStorageItem();
+  }, []);
+
+  return [storageItem, updateStorageItem];
 }

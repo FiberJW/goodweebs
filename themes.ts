@@ -14,6 +14,7 @@ import {
   white,
   gray6,
   white30,
+  white60,
 } from "yep/colors";
 
 export const darkTheme = {
@@ -23,6 +24,7 @@ export const darkTheme = {
   buttonBorder: white30,
   text: white95,
   subText: white80,
+  subHeader: white60,
   textInverted: black,
   iconFill: white95,
   footnote: white80,

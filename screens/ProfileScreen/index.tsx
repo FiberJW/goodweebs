@@ -1,20 +1,15 @@
-import { useApolloClient } from "@apollo/client";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { PropsWithChildren } from "react";
-import { Alert, ImageBackground, RefreshControl, View } from "react-native";
+import { ImageBackground, RefreshControl, View, Image } from "react-native";
 
 import { black50, white } from "yep/colors";
-import { Button } from "yep/components/Button";
 import { Header } from "yep/components/Header";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { useGetViewerQuery } from "yep/graphql/generated";
 import { RootStackParamList, TabParamList } from "yep/navigation";
 import { StringCase, getString } from "yep/strings";
 import { darkTheme } from "yep/themes";
-import { useAccessToken } from "yep/useAccessToken";
 import { notEmpty, getTitle } from "yep/utils";
 
 import {
@@ -42,14 +37,12 @@ export function ProfileScreen({ navigation }: Props) {
     data: viewerData,
     refetch,
   } = useGetViewerQuery({ notifyOnNetworkStatusChange: true });
-  const { setAccessToken } = useAccessToken();
   const animeList = (viewerData?.Viewer?.favourites?.anime?.nodes ?? []).filter(
     notEmpty
   );
   const characterList = (
     viewerData?.Viewer?.favourites?.characters?.nodes ?? []
   ).filter(notEmpty);
-  const client = useApolloClient();
 
   type AnimeItem = typeof animeList[number];
   type CharacterItem = typeof characterList[number];
@@ -72,7 +65,21 @@ export function ProfileScreen({ navigation }: Props) {
 
   return (
     <OuterContainer>
-      <Header label={getString("profile", StringCase.TITLE)} />
+      <Header
+        label={getString("profile", StringCase.TITLE)}
+        rightSlot={
+          <PressableOpacity onPress={() => navigation.navigate("Settings")}>
+            <Image
+              style={{
+                tintColor: white,
+                height: 24,
+                width: 24,
+              }}
+              source={require("yep/assets/icons/navigation/settings-gear.png")}
+            />
+          </PressableOpacity>
+        }
+      />
       <InnerContainer
         refreshControl={
           <RefreshControl
@@ -183,25 +190,6 @@ export function ProfileScreen({ navigation }: Props) {
             ) : null}
           </EverythingButTheCTA>
         ) : null}
-
-        <Button
-          label="Log out"
-          onPress={async () => {
-            Alert.alert("Are you sure that you want to log out?", undefined, [
-              { style: "cancel", text: "Cancel" },
-              {
-                text: "Log out",
-                style: "destructive",
-                onPress: async () => {
-                  await AsyncStorage.removeItem(ANILIST_ACCESS_TOKEN_STORAGE);
-                  setAccessToken(undefined);
-                  navigation.navigate("Anime");
-                  await client.resetStore();
-                },
-              },
-            ]);
-          }}
-        />
       </InnerContainer>
     </OuterContainer>
   );

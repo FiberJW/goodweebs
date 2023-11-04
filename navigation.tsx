@@ -10,16 +10,18 @@ import { CharacterScreen } from "yep/screens/CharacterScreen";
 import { DetailsScreen } from "yep/screens/DetailsScreen";
 import { DiscoverScreen } from "yep/screens/DiscoverScreen";
 import { ProfileScreen } from "yep/screens/ProfileScreen";
+import { SettingsScreen } from "yep/screens/SettingsScreen";
+import { StringCase, getString } from "yep/strings";
 import { darkTheme } from "yep/themes";
-
-import { Manrope } from "./typefaces";
-import { useAccessToken } from "./useAccessToken";
+import { Manrope } from "yep/typefaces";
+import { useAccessToken } from "yep/useAccessToken";
 
 export type RootStackParamList = {
   Tabs: undefined;
   Auth: undefined;
   Details: { id: number };
   Character: { id: number };
+  Settings: undefined;
 };
 
 export type TabParamList = {
@@ -173,6 +175,11 @@ export function Navigation({ accessToken }: NavigationProps) {
         />
         <Stack.Screen name="Details" component={DetailsScreen} />
         <Stack.Screen name="Character" component={CharacterScreen} />
+        <Stack.Screen
+          name="Settings"
+          options={{ title: getString("settings", StringCase.TITLE) }}
+          component={SettingsScreen}
+        />
         <Stack.Screen
           name="Auth"
           component={AuthScreen}
