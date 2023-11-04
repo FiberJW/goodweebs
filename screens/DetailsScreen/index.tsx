@@ -4,7 +4,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { formatDistanceToNow, add } from "date-fns";
 import * as Haptics from "expo-haptics";
 import _ from "lodash";
-import React, { useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { RefreshControl, Text, View, Image } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import title from "title";
@@ -14,6 +14,7 @@ import { DescriptionRenderer } from "yep/components/DescriptionRenderer";
 import { EmptyState } from "yep/components/EmptyState";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { LikeButton } from "yep/components/PosterAndTitle/LikeButton";
+import { PressableOpacity } from "yep/components/PressableOpacity";
 import { MediaListStatusWithLabel, MediaStatusWithLabel } from "yep/constants";
 import {
   GetAnimeQuery,
@@ -39,7 +40,12 @@ import {
   RemoveFromListMutationVariables,
   RemoveFromListDocument,
 } from "yep/graphql/generated";
-import { useNow, useDebouncedMutation } from "yep/hooks/helpers";
+import {
+  useNow,
+  useDebouncedMutation,
+  usePersistedState,
+  StorageKeys,
+} from "yep/hooks/helpers";
 import { RootStackParamList } from "yep/navigation";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
@@ -95,13 +101,17 @@ const PosterAndInfoContainer = takimoto.View({
   marginBottom: 16,
 });
 
-type InfoProps = { label: string; value: string };
+type InfoProps = { label: string; value: ReactNode };
 
 function Info({ label, value }: InfoProps) {
   return (
     <InfoContainer>
       <InfoLabel numberOfLines={1}>{label}</InfoLabel>
-      <InfoValue numberOfLines={2}>{value}</InfoValue>
+      {typeof value === "string" ? (
+        <InfoValue numberOfLines={2}>{value}</InfoValue>
+      ) : (
+        value
+      )}
     </InfoContainer>
   );
 }
@@ -122,6 +132,17 @@ export function DetailsScreen({ route, navigation }: Props) {
   const { showActionSheetWithOptions } = useActionSheet();
   const insets = useSafeAreaInsets();
   const [loadingStatus, setLoadingStatus] = useState(false);
+  const [shouldShowScoreToggleUI] = usePersistedState(
+    StorageKeys.HIDE_SCORES_GLOBAL
+  );
+  const [showScore, setShowScore] = useState(!shouldShowScoreToggleUI);
+
+  // sync shouldShowScoreToggleUI with showScore in useeffect because the default value can be
+  // different from the persisted value
+  useEffect(() => {
+    setShowScore(!shouldShowScoreToggleUI);
+  }, [shouldShowScoreToggleUI]);
+
   const [isRefetchingFromScrollOrMount, setIsRefetchingFromScrollOrMount] =
     useState(true);
 
@@ -373,10 +394,28 @@ export function DetailsScreen({ route, navigation }: Props) {
               </InfoRow>
               <InfoRow>
                 {data?.Media?.averageScore ? (
-                  <Info
-                    label="Average score"
-                    value={`${(data?.Media?.averageScore ?? 0) / 10} / 10`}
-                  />
+                  <PressableOpacity
+                    useDisabledOpacity={false}
+                    style={{ flexDirection: "row", gap: 8, flex: 1 }}
+                    disabled={!shouldShowScoreToggleUI || showScore}
+                    onPress={() => setShowScore((s) => !s)}
+                  >
+                    <Info
+                      label="Average score"
+                      value={
+                        showScore ? (
+                          `${(data?.Media?.averageScore ?? 0) / 10} / 10`
+                        ) : (
+                          <InfoValue
+                            numberOfLines={2}
+                            style={{ textDecorationLine: "underline" }}
+                          >
+                            Tap to show
+                          </InfoValue>
+                        )
+                      }
+                    />
+                  </PressableOpacity>
                 ) : null}
                 <Info
                   label="Status"

@@ -22,8 +22,7 @@ type Props = {
 export function SettingsScreen({ navigation }: Props) {
   // TODO: move to user preferences/settings that persist across installations
   const [hideScores, setHideScores] = usePersistedState(
-    StorageKeys.HIDE_SCORES_GLOBAL,
-    true
+    StorageKeys.HIDE_SCORES_GLOBAL
   );
 
   const client = useApolloClient();

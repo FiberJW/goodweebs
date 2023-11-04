@@ -121,11 +121,12 @@ export enum StorageKeys {
   HIDE_SCORES_GLOBAL = "HIDE_SCORES_GLOBAL",
 }
 
-export function usePersistedState<T>(
-  key: StorageKeys,
-  defaultValue: T
-): [T, (data: T) => T] {
-  const [storageItem, setStorageItem] = useState<T>(defaultValue);
+const defaultValues: { [key in StorageKeys]: any } = {
+  [StorageKeys.HIDE_SCORES_GLOBAL]: true,
+};
+
+export function usePersistedState<T>(key: StorageKeys): [T, (data: T) => T] {
+  const [storageItem, setStorageItem] = useState<T>(defaultValues[key]);
 
   async function getStorageItem() {
     const data = await AsyncStorage.getItem(key);
