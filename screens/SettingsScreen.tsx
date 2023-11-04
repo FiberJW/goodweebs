@@ -63,10 +63,10 @@ export function SettingsScreen({ navigation }: Props) {
                 color: darkTheme.subText,
                 fontFamily: Manrope.regular,
                 textDecorationLine: "none",
-                fontSize: 20,
+                fontSize: 16,
               }}
-              onPress={(isChecked: boolean) => {
-                setHideScores(isChecked);
+              onPress={() => {
+                setHideScores(!hideScores);
               }}
             />
           </View>
