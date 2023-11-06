@@ -7,6 +7,7 @@ export enum StringCase {
   SOURCE,
 }
 
+// hi chat
 const _en_us = {
   AniListAuthAttribution: "via AniList",
   tagline: "An anime tracking app powered by AniList and Expo.",
