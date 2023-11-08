@@ -7,13 +7,13 @@ export enum StringCase {
   SOURCE,
 }
 
-// hello world -> Hello World
+// hello world -> Hel0lo World
 const _en_us = {
   AniListAuthAttribution: "via AniList",
   tagline: "An anime tracking app powered by AniList and Expo.",
   logIn: "Log in",
   signUp: "Sign up",
-  anime: "anime",
+  anime: "ganime",
   airing: "airing",
   history: "history",
   broadcastHistory: "Broadcast history",
