@@ -116,6 +116,8 @@ export function AnimeListScreen({ navigation }: Props) {
     )
   );
 
+  // test
+
   return (
     <OuterContainer>
       <Header label={getString("anime", StringCase.TITLE)} />
