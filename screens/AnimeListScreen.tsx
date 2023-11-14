@@ -1,3 +1,4 @@
+import { useActionSheet } from "@expo/react-native-action-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import {
@@ -11,16 +12,19 @@ import { RefreshControl, View } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
+import { PressableOpacity } from "yep/components/PressableOpacity";
 import { StatusChip } from "yep/components/StatusChip";
 import {
   ANILIST_ACCESS_TOKEN_STORAGE,
   MediaListStatusWithLabel,
+  Sorts,
 } from "yep/constants";
 import { AnimeListItemContainer } from "yep/containers/AnimeListItemContainer";
 import {
   MediaListStatus,
   useGetViewerQuery,
   useGetAnimeListQuery,
+  MediaListSort,
 } from "yep/graphql/generated";
 import { useAniListAuthRequest } from "yep/hooks/auth";
 import { RootStackParamList, TabParamList } from "yep/navigation";
@@ -44,6 +48,12 @@ export function AnimeListScreen({ navigation }: Props) {
     MediaListStatusWithLabel[0].value
   );
 
+  const [sort, setSort] = useState<{ label: string; value: MediaListSort }>(
+    Sorts[0]
+  );
+
+  const { showActionSheetWithOptions } = useActionSheet();
+
   const { accessToken, setAccessToken } = useAccessToken();
 
   const [, , promptAsync] = useAniListAuthRequest();
@@ -61,6 +71,7 @@ export function AnimeListScreen({ navigation }: Props) {
     variables: {
       userId: viewerData?.Viewer?.id,
       status,
+      sort: [sort.value],
     },
     // TODO: figure out how to maintain the list position while also updating the cache
     fetchPolicy: "no-cache",
@@ -78,6 +89,7 @@ export function AnimeListScreen({ navigation }: Props) {
     [animeListData]
   );
 
+  const sortText = `Sort: ${sort.label}`;
   const listCountText = `${list.length} title${list.length !== 1 ? "s" : ""}`;
 
   // TODO: maybe make this better? feels a little dank
@@ -131,6 +143,32 @@ export function AnimeListScreen({ navigation }: Props) {
             </StatusChipListContainer>
             <CountAndSortRow>
               <Count>{listCountText}</Count>
+              <PressableOpacity
+                style={{ flexDirection: "row", alignItems: "center" }}
+                onPress={() => {
+                  const options = Sorts.map((s) => s.label);
+
+                  const destructiveButtonIndex = Sorts.findIndex(
+                    (s) => s.value === sort.value
+                  );
+
+                  showActionSheetWithOptions(
+                    {
+                      options,
+                      destructiveButtonIndex,
+                      destructiveColor: darkTheme.accent,
+                    },
+                    (buttonIndex) => {
+                      if (buttonIndex) {
+                        setSort(Sorts[buttonIndex]);
+                      }
+                    }
+                  );
+                }}
+              >
+                <SortLabel>{sortText}</SortLabel>
+                <SortIcon source={require("yep/assets/icons/sort.png")} />
+              </PressableOpacity>
             </CountAndSortRow>
           </View>
         )}
@@ -242,4 +280,16 @@ const Count = takimoto.Text({
 
 export const Spinner = takimoto.ActivityIndicator({
   paddingBottom: 16,
+});
+
+const SortLabel = takimoto.Text({
+  fontFamily: "Manrope-Regular",
+  fontSize: 12.8,
+  color: darkTheme.text,
+  marginRight: 4,
+});
+
+const SortIcon = takimoto.Image({
+  height: 16,
+  width: 16,
 });

@@ -50,7 +50,12 @@ export const MediaStatusWithLabel: {
 ];
 
 export const Sorts: { label: string; value: MediaListSort }[] = [
-  // { label: "Title", value: MediaListSort.MediaTitleEnglish }, // Currently Bugged https://github.com/AniList/ApiV2-GraphQL-Docs/issues/94
+  // { label: "Title (English) A-Z", value: MediaListSort.MediaTitleEnglish }, // Currently Bugged https://github.com/AniList/ApiV2-GraphQL-Docs/issues/94
+  // { label: "Title (Romaji) A-Z", value: MediaListSort.MediaTitleRomaji },
+  // { label: "Title (Native) A-Z", value: MediaListSort.MediaTitleNative },
+  // { label: "Title (English) Z-A", value: MediaListSort.MediaTitleEnglish }, // Currently Bugged https://github.com/AniList/ApiV2-GraphQL-Docs/issues/94
+  // { label: "Title (Romaji) Z-A", value: MediaListSort.MediaTitleRomaji },
+  // { label: "Title (Native) Z-A", value: MediaListSort.MediaTitleNative },
   { label: "Last Updated", value: MediaListSort.UpdatedTimeDesc },
   { label: "Highest Rated", value: MediaListSort.ScoreDesc },
   { label: "Lowest Rated", value: MediaListSort.Score },
