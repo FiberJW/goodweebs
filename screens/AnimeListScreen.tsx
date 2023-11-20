@@ -116,7 +116,7 @@ export function AnimeListScreen({ navigation }: Props) {
     )
   );
 
-  // testeee
+  // testeeed
 
   return (
     <OuterContainer>
