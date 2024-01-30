@@ -9,15 +9,15 @@
     "lint": "eslint . --ext .ts,.js,.tsx --fix",
     "update:prod": "eas update --branch production --auto",
     "build:prod": "eas build --profile production --platform all --auto-submit",
-    "export:web": "npx expo export:web"
+    "export:web": "npx expo export --platform web"
   },
   "dependencies": {
     "@apollo/client": "^3.1.5",
     "@expo/config-plugins": "^7.8.4",
     "@expo/metro-config": "^0.17.3",
+    "@expo/metro-runtime": "~3.1.1",
     "@expo/ngrok": "^4.1.0",
     "@expo/react-native-action-sheet": "^4.0.1",
-    "@expo/webpack-config": "~19.0.1",
     "@radix-ui/colors": "^0.1.8",
     "@react-native-async-storage/async-storage": "1.21.0",
     "@react-navigation/bottom-tabs": "^6.5.2",

@@ -43,6 +43,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   web: {
     favicon: "./assets/favicon.png",
+    output: "single",
+    bundler: "metro",
   },
   plugins: [
     "expo-font",
