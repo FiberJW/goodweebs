@@ -1,7 +1,7 @@
+import * as Sentry from "@sentry/react-native";
 import chroma from "chroma-js";
 import React from "react";
 import { Linking, Text } from "react-native";
-import * as Sentry from "sentry-expo";
 
 import {
   crunchyrollOrange,
@@ -105,7 +105,7 @@ export function ExternalLink({ url, site }: MediaExternalLinkDataFragment) {
       color = amazonPrimeBlue;
       break;
     default:
-      Sentry.Browser.captureMessage(`Unknown external link site: ${site}`);
+      Sentry.captureMessage(`Unknown external link site: ${site}`);
       color = "gray";
       break;
   }

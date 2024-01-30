@@ -4,11 +4,11 @@ import {
   NormalizedCacheObject,
 } from "@apollo/client";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
+import * as Sentry from "@sentry/react-native";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useCallback, useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { enableScreens } from "react-native-screens";
-import * as Sentry from "sentry-expo";
 
 import { createClient } from "yep/graphql/client";
 import { Navigation } from "yep/navigation";
@@ -20,7 +20,6 @@ enableScreens();
 
 Sentry.init({
   dsn: "https://b2756b0df548451d98707d024aff00d1@o58038.ingest.sentry.io/5248224",
-  enableInExpoDevelopment: true,
   debug: __DEV__, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
 });
 

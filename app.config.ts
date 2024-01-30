@@ -44,7 +44,18 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   web: {
     favicon: "./assets/favicon.png",
   },
-  plugins: ["sentry-expo"],
+  plugins: [
+    "expo-font",
+    [
+      "@sentry/react-native/expo",
+      {
+        url: "https://sentry.io/",
+        authToken: process.env.SENTRY_AUTH_TOKEN, // located in EAS Secrets
+        project: "goodweebs",
+        organization: "juwan-wheatley",
+      },
+    ],
+  ],
   runtimeVersion: {
     policy: "sdkVersion",
   },

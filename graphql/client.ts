@@ -3,8 +3,8 @@ import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { HttpLink } from "@apollo/client/link/http";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Sentry from "@sentry/react-native";
 import { persistCache, AsyncStorageWrapper } from "apollo3-cache-persist";
-import * as Sentry from "sentry-expo";
 
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 
@@ -44,7 +44,7 @@ export async function createClient() {
       onError(({ graphQLErrors, networkError }) => {
         if (graphQLErrors)
           graphQLErrors.forEach(async (e) => {
-            Sentry.Browser.captureMessage(e.message);
+            Sentry.captureMessage(e.message);
 
             console.error("[GraphQL error]:", e);
 
@@ -53,7 +53,7 @@ export async function createClient() {
             }
           });
         if (networkError) {
-          Sentry.Browser.captureException(networkError);
+          Sentry.captureException(networkError);
           console.error(`[Network error]: ${networkError}`);
         }
       }),
