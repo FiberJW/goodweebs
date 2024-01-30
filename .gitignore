@@ -17,3 +17,4 @@ node_modules
 goodweebs-secrets
 
 dist
+.vercel
