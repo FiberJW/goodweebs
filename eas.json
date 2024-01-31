@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": ">= 0.43.0"
+    "version": ">=0.54.1"
   },
   "build": {
     "development": {
@@ -8,20 +8,35 @@
       "distribution": "internal",
       "channel": "development",
       "ios": {
-        "resourceClass": "medium"
+        "resourceClass": "medium",
+        "image": "default"
+      },
+      "android": {
+        "resourceClass": "medium",
+        "image": "default"
       }
     },
     "preview": {
       "distribution": "internal",
       "channel": "preview",
       "ios": {
-        "resourceClass": "medium"
+        "resourceClass": "medium",
+        "image": "default"
+      },
+      "android": {
+        "resourceClass": "medium",
+        "image": "default"
       }
     },
     "production": {
       "channel": "production",
       "ios": {
-        "resourceClass": "medium"
+        "resourceClass": "medium",
+        "image": "default"
+      },
+      "android": {
+        "resourceClass": "medium",
+        "image": "default"
       }
     }
   },
