@@ -57,6 +57,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         organization: "juwan-wheatley",
       },
     ],
+    [
+      "expo-updates",
+      {
+        username: "fiberjw",
+      },
+    ],
   ],
   runtimeVersion: {
     policy: "sdkVersion",
