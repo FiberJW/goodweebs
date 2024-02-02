@@ -27,7 +27,7 @@
     "apollo3-cache-persist": "^0.14.1",
     "chroma-js": "^2.4.2",
     "date-fns": "^2.29.3",
-    "expo": "~50.0.4",
+    "expo": "~50.0.5",
     "expo-application": "~5.8.3",
     "expo-auth-session": "~5.4.0",
     "expo-constants": "~15.4.5",
