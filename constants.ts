@@ -13,6 +13,8 @@ enum AniListClientID {
   PROD = 3568, // goodweebs://redirect
 }
 
+// hello
+
 export const CLIENT_ID = (() => {
   // https://docs.expo.dev/build-reference/migrating/#constantsappownership--will-be--null-
   if (Constants.appOwnership !== "expo") {
