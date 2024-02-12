@@ -20,7 +20,7 @@ enableScreens();
 
 Sentry.init({
   dsn: "https://b2756b0df548451d98707d024aff00d1@o58038.ingest.sentry.io/5248224",
-  debug: __DEV__, // If `byebye`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
+  debug: __DEV__, // If `e`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
 });
 
 SplashScreen.preventAutoHideAsync();
