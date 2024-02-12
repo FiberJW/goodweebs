@@ -1,5 +1,7 @@
 import { ExpoConfig, ConfigContext } from "expo/config";
 
+// hi
+
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "Goodweebs",
