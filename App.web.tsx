@@ -9,6 +9,8 @@ import {
 import { useManrope } from "yep/typefaces";
 import { Index } from "yep/website/pages/Index";
 
+// chat, is this real?
+
 export default function Website() {
   useManrope();
 
