@@ -8,29 +8,35 @@
       "distribution": "internal",
       "channel": "development",
       "ios": {
-        "resourceClass": "medium"
+        "resourceClass": "medium",
+        "image": "latest"
       },
       "android": {
-        "resourceClass": "medium"
+        "resourceClass": "medium",
+        "image": "latest"
       }
     },
     "preview": {
       "distribution": "internal",
       "channel": "preview",
       "ios": {
-        "resourceClass": "medium"
+        "resourceClass": "medium",
+        "image": "latest"
       },
       "android": {
-        "resourceClass": "medium"
+        "resourceClass": "medium",
+        "image": "latest"
       }
     },
     "production": {
       "channel": "production",
       "ios": {
-        "resourceClass": "medium"
+        "resourceClass": "medium",
+        "image": "latest"
       },
       "android": {
-        "resourceClass": "medium"
+        "resourceClass": "medium",
+        "image": "latest"
       }
     }
   },
