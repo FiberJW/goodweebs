@@ -51,8 +51,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       "@sentry/react-native/expo",
       {
-        url: "https://sentry.io/",
-        authToken: process.env.SENTRY_AUTH_TOKEN, // located in EAS Secrets
         project: "goodweebs",
         organization: "juwan-wheatley",
       },
