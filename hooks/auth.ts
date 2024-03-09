@@ -8,8 +8,10 @@ import { useEffect, useState, useCallback } from "react";
 
 import { CLIENT_ID } from "yep/constants";
 
+const IS_DEV = process.env.APP_VARIANT === "development";
+
 const redirectUri = makeRedirectUri({
-  scheme: "goodweebs",
+  scheme: IS_DEV ? "goodweebs-dev" : "goodweebs",
   path: "redirect",
 });
 

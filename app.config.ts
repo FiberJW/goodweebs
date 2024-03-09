@@ -1,5 +1,7 @@
 import { ExpoConfig, ConfigContext } from "expo/config";
 
+const IS_DEV = process.env.APP_VARIANT === "development";
+
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "Goodweebs",
@@ -8,7 +10,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   version: "0.0.15",
   orientation: "portrait",
   icon: "./assets/launch/icon.png",
-  scheme: "goodweebs",
+  scheme: IS_DEV ? "goodweebs-dev" : "goodweebs",
   privacy: "unlisted",
   backgroundColor: "#010209",
   splash: {
@@ -25,14 +27,16 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: true,
     buildNumber: "0.0.15",
-    bundleIdentifier: "com.fiberjw.goodweebs",
+    bundleIdentifier: IS_DEV
+      ? "com.fiberjw.goodweebs.dev"
+      : "com.fiberjw.goodweebs",
     config: {
       usesNonExemptEncryption: false,
     },
     requireFullScreen: false,
   },
   android: {
-    package: "com.fiberjw.goodweebs",
+    package: IS_DEV ? "com.fiberjw.goodweebs.dev" : "com.fiberjw.goodweebs",
     versionCode: 15,
     permissions: [],
     adaptiveIcon: {
