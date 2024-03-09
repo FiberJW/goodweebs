@@ -41,13 +41,6 @@ type DeclarativeWindowSizeStyles<StyleT> = {
 };
 
 type DynamicKeys<StyleT> = StyleT & {
-  //   hover?: StyleT; // TODO
-  //   active?: StyleT; // TODO
-  //   focused?: StyleT; // TODO
-  //   darkTheme?: StyleT; // TODO
-  //   lightTheme?: StyleT; // TODO
-  //   portrait?: StyleT; // TODO
-  //   landscape?: StyleT; // TODO
   whenWidth?: DeclarativeWindowSizeStyles<StyleT>;
   whenHeight?: DeclarativeWindowSizeStyles<StyleT>;
 };
