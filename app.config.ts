@@ -4,12 +4,12 @@ const IS_DEV = process.env.APP_VARIANT === "development";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "Goodweebs",
+  name: IS_DEV ? "Goodweebs (Dev)" : "Goodweebs",
   slug: "goodweebs",
   platforms: ["ios", "android", "web"],
   version: "0.0.15",
   orientation: "portrait",
-  icon: "./assets/launch/icon.png",
+  icon: IS_DEV ? "./assets/launch/icon-dev.png" : "./assets/launch/icon.png",
   scheme: IS_DEV ? "goodweebs-dev" : "goodweebs",
   privacy: "unlisted",
   backgroundColor: "#010209",
@@ -42,7 +42,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     adaptiveIcon: {
       backgroundColor: "#651FFF",
       backgroundImage: "./assets/launch/android-background.png",
-      foregroundImage: "./assets/launch/android-foreground.png",
+      foregroundImage: IS_DEV
+        ? "./assets/launch/android-foreground-dev.png"
+        : "./assets/launch/android-foreground.png",
     },
   },
   web: {
