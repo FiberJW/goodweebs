@@ -34,12 +34,12 @@
     "production": {
       "channel": "production",
       "ios": {
-        "resourceClass": "medium",
-        "image": "latest"
+        "resourceClass": "medium"
+        // "image": "latest"
       },
       "android": {
-        "resourceClass": "medium",
-        "image": "latest"
+        "resourceClass": "medium"
+        // "image": "latest"
       }
     }
   },
