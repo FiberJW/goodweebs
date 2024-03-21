@@ -36,6 +36,7 @@
       "ios": {
         "resourceClass": "medium"
         // "image": "latest"
+        //hi
       },
       "android": {
         "resourceClass": "medium"
