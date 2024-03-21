@@ -36,11 +36,10 @@
       "ios": {
         "resourceClass": "medium"
         // "image": "latest"
-        //hi
       },
       "android": {
-        "resourceClass": "medium"
-        // "image": "latest"
+        "resourceClass": "medium",
+        "image": "latest"
       }
     }
   },
