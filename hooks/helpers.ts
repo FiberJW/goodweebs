@@ -46,7 +46,7 @@ export function useDebouncedMutation<
 }: {
   mutationDocument: DocumentNode;
   makeUpdateFunction?: (
-    variables?: MutationVariables
+    variables: MutationVariables
   ) => MutationUpdaterFn<MutationData>;
   wait?: number;
   refetchQueries?: PureQueryOptions[];
@@ -88,7 +88,7 @@ export function useDebouncedMutation<
     let update = undefined;
 
     if (makeUpdateFunction) {
-      update = makeUpdateFunction(variables);
+      update = makeUpdateFunction(variables!); // TODO: this assertion doesn't feel optimal
     }
 
     return await originalMutation({

@@ -2153,6 +2153,8 @@ export enum ModRole {
   Admin = 'ADMIN',
   /** An anime data moderator */
   AnimeData = 'ANIME_DATA',
+  /** A character data moderator */
+  CharacterData = 'CHARACTER_DATA',
   /** A community moderator */
   Community = 'COMMUNITY',
   /** An AniList developer */
@@ -2174,7 +2176,9 @@ export enum ModRole {
   /** A retired moderator */
   Retired = 'RETIRED',
   /** A social media moderator */
-  SocialMedia = 'SOCIAL_MEDIA'
+  SocialMedia = 'SOCIAL_MEDIA',
+  /** A staff data moderator */
+  StaffData = 'STAFF_DATA'
 }
 
 export type Mutation = {
@@ -4814,8 +4818,8 @@ export type FavouritesDataFragment = (
 );
 
 export type UpdateProgressMutationVariables = Exact<{
-  id?: Maybe<Scalars['Int']>;
-  progress?: Maybe<Scalars['Int']>;
+  id: Scalars['Int'];
+  progress: Scalars['Int'];
 }>;
 
 
@@ -4852,6 +4856,45 @@ export type UpdateStatusMutation = (
   & { SaveMediaListEntry?: Maybe<(
     { __typename?: 'MediaList' }
     & Pick<MediaList, 'id'>
+  )> }
+);
+
+export type GetTrendingAnimeQueryVariables = Exact<{
+  page?: Maybe<Scalars['Int']>;
+  perPage?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetTrendingAnimeQuery = (
+  { __typename?: 'Query' }
+  & { Page?: Maybe<(
+    { __typename?: 'Page' }
+    & { pageInfo?: Maybe<(
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'hasNextPage' | 'total' | 'currentPage' | 'perPage' | 'lastPage'>
+    )>, media?: Maybe<Array<Maybe<(
+      { __typename?: 'Media' }
+      & AnimeFragmentFragment
+    )>>> }
+  )> }
+);
+
+export type SearchAnimeQueryVariables = Exact<{
+  search?: Maybe<Scalars['String']>;
+}>;
+
+
+export type SearchAnimeQuery = (
+  { __typename?: 'Query' }
+  & { Page?: Maybe<(
+    { __typename?: 'Page' }
+    & { pageInfo?: Maybe<(
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'hasNextPage' | 'total'>
+    )>, media?: Maybe<Array<Maybe<(
+      { __typename?: 'Media' }
+      & AnimeFragmentFragment
+    )>>> }
   )> }
 );
 
@@ -4918,45 +4961,6 @@ export type GetAnimeNotificationsQuery = (
       { __typename: 'AiringNotification' }
       & AiringNotificationFragmentFragment
     ) | { __typename: 'FollowingNotification' } | { __typename: 'MediaDataChangeNotification' } | { __typename: 'MediaDeletionNotification' } | { __typename: 'MediaMergeNotification' } | { __typename: 'RelatedMediaAdditionNotification' } | { __typename: 'ThreadCommentLikeNotification' } | { __typename: 'ThreadCommentMentionNotification' } | { __typename: 'ThreadCommentReplyNotification' } | { __typename: 'ThreadCommentSubscribedNotification' } | { __typename: 'ThreadLikeNotification' }>>> }
-  )> }
-);
-
-export type GetTrendingAnimeQueryVariables = Exact<{
-  page?: Maybe<Scalars['Int']>;
-  perPage?: Maybe<Scalars['Int']>;
-}>;
-
-
-export type GetTrendingAnimeQuery = (
-  { __typename?: 'Query' }
-  & { Page?: Maybe<(
-    { __typename?: 'Page' }
-    & { pageInfo?: Maybe<(
-      { __typename?: 'PageInfo' }
-      & Pick<PageInfo, 'hasNextPage' | 'total' | 'currentPage' | 'perPage' | 'lastPage'>
-    )>, media?: Maybe<Array<Maybe<(
-      { __typename?: 'Media' }
-      & AnimeFragmentFragment
-    )>>> }
-  )> }
-);
-
-export type SearchAnimeQueryVariables = Exact<{
-  search?: Maybe<Scalars['String']>;
-}>;
-
-
-export type SearchAnimeQuery = (
-  { __typename?: 'Query' }
-  & { Page?: Maybe<(
-    { __typename?: 'Page' }
-    & { pageInfo?: Maybe<(
-      { __typename?: 'PageInfo' }
-      & Pick<PageInfo, 'hasNextPage' | 'total'>
-    )>, media?: Maybe<Array<Maybe<(
-      { __typename?: 'Media' }
-      & AnimeFragmentFragment
-    )>>> }
   )> }
 );
 
@@ -5262,7 +5266,7 @@ export type ToggleFavoriteMutationHookResult = ReturnType<typeof useToggleFavori
 export type ToggleFavoriteMutationResult = Apollo.MutationResult<ToggleFavoriteMutation>;
 export type ToggleFavoriteMutationOptions = Apollo.BaseMutationOptions<ToggleFavoriteMutation, ToggleFavoriteMutationVariables>;
 export const UpdateProgressDocument = gql`
-    mutation UpdateProgress($id: Int, $progress: Int) {
+    mutation UpdateProgress($id: Int!, $progress: Int!) {
   SaveMediaListEntry(id: $id, progress: $progress) {
     id
   }
@@ -5360,6 +5364,94 @@ export function useUpdateStatusMutation(baseOptions?: Apollo.MutationHookOptions
 export type UpdateStatusMutationHookResult = ReturnType<typeof useUpdateStatusMutation>;
 export type UpdateStatusMutationResult = Apollo.MutationResult<UpdateStatusMutation>;
 export type UpdateStatusMutationOptions = Apollo.BaseMutationOptions<UpdateStatusMutation, UpdateStatusMutationVariables>;
+export const GetTrendingAnimeDocument = gql`
+    query GetTrendingAnime($page: Int = 1, $perPage: Int = 20) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+      total
+      currentPage
+      perPage
+      lastPage
+    }
+    media(format: TV, isAdult: false, type: ANIME, sort: [TRENDING_DESC]) {
+      ...AnimeFragment
+    }
+  }
+}
+    ${AnimeFragmentFragmentDoc}`;
+
+/**
+ * __useGetTrendingAnimeQuery__
+ *
+ * To run a query within a React component, call `useGetTrendingAnimeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTrendingAnimeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTrendingAnimeQuery({
+ *   variables: {
+ *      page: // value for 'page'
+ *      perPage: // value for 'perPage'
+ *   },
+ * });
+ */
+export function useGetTrendingAnimeQuery(baseOptions?: Apollo.QueryHookOptions<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>) {
+        return Apollo.useQuery<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>(GetTrendingAnimeDocument, baseOptions);
+      }
+export function useGetTrendingAnimeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>) {
+          return Apollo.useLazyQuery<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>(GetTrendingAnimeDocument, baseOptions);
+        }
+export type GetTrendingAnimeQueryHookResult = ReturnType<typeof useGetTrendingAnimeQuery>;
+export type GetTrendingAnimeLazyQueryHookResult = ReturnType<typeof useGetTrendingAnimeLazyQuery>;
+export type GetTrendingAnimeQueryResult = Apollo.QueryResult<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>;
+export function refetchGetTrendingAnimeQuery(variables?: GetTrendingAnimeQueryVariables) {
+      return { query: GetTrendingAnimeDocument, variables: variables }
+    }
+export const SearchAnimeDocument = gql`
+    query SearchAnime($search: String) {
+  Page {
+    pageInfo {
+      hasNextPage
+      total
+    }
+    media(search: $search, format_not_in: [MANGA, MUSIC, NOVEL, ONE_SHOT], isAdult: false, type: ANIME) {
+      ...AnimeFragment
+    }
+  }
+}
+    ${AnimeFragmentFragmentDoc}`;
+
+/**
+ * __useSearchAnimeQuery__
+ *
+ * To run a query within a React component, call `useSearchAnimeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchAnimeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchAnimeQuery({
+ *   variables: {
+ *      search: // value for 'search'
+ *   },
+ * });
+ */
+export function useSearchAnimeQuery(baseOptions?: Apollo.QueryHookOptions<SearchAnimeQuery, SearchAnimeQueryVariables>) {
+        return Apollo.useQuery<SearchAnimeQuery, SearchAnimeQueryVariables>(SearchAnimeDocument, baseOptions);
+      }
+export function useSearchAnimeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchAnimeQuery, SearchAnimeQueryVariables>) {
+          return Apollo.useLazyQuery<SearchAnimeQuery, SearchAnimeQueryVariables>(SearchAnimeDocument, baseOptions);
+        }
+export type SearchAnimeQueryHookResult = ReturnType<typeof useSearchAnimeQuery>;
+export type SearchAnimeLazyQueryHookResult = ReturnType<typeof useSearchAnimeLazyQuery>;
+export type SearchAnimeQueryResult = Apollo.QueryResult<SearchAnimeQuery, SearchAnimeQueryVariables>;
+export function refetchSearchAnimeQuery(variables?: SearchAnimeQueryVariables) {
+      return { query: SearchAnimeDocument, variables: variables }
+    }
 export const GetAnimeDocument = gql`
     query GetAnime($id: Int) {
   Media(id: $id) {
@@ -5491,94 +5583,6 @@ export type GetAnimeNotificationsLazyQueryHookResult = ReturnType<typeof useGetA
 export type GetAnimeNotificationsQueryResult = Apollo.QueryResult<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>;
 export function refetchGetAnimeNotificationsQuery(variables?: GetAnimeNotificationsQueryVariables) {
       return { query: GetAnimeNotificationsDocument, variables: variables }
-    }
-export const GetTrendingAnimeDocument = gql`
-    query GetTrendingAnime($page: Int = 1, $perPage: Int = 20) {
-  Page(page: $page, perPage: $perPage) {
-    pageInfo {
-      hasNextPage
-      total
-      currentPage
-      perPage
-      lastPage
-    }
-    media(format: TV, isAdult: false, type: ANIME, sort: [TRENDING_DESC]) {
-      ...AnimeFragment
-    }
-  }
-}
-    ${AnimeFragmentFragmentDoc}`;
-
-/**
- * __useGetTrendingAnimeQuery__
- *
- * To run a query within a React component, call `useGetTrendingAnimeQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTrendingAnimeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetTrendingAnimeQuery({
- *   variables: {
- *      page: // value for 'page'
- *      perPage: // value for 'perPage'
- *   },
- * });
- */
-export function useGetTrendingAnimeQuery(baseOptions?: Apollo.QueryHookOptions<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>) {
-        return Apollo.useQuery<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>(GetTrendingAnimeDocument, baseOptions);
-      }
-export function useGetTrendingAnimeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>) {
-          return Apollo.useLazyQuery<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>(GetTrendingAnimeDocument, baseOptions);
-        }
-export type GetTrendingAnimeQueryHookResult = ReturnType<typeof useGetTrendingAnimeQuery>;
-export type GetTrendingAnimeLazyQueryHookResult = ReturnType<typeof useGetTrendingAnimeLazyQuery>;
-export type GetTrendingAnimeQueryResult = Apollo.QueryResult<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>;
-export function refetchGetTrendingAnimeQuery(variables?: GetTrendingAnimeQueryVariables) {
-      return { query: GetTrendingAnimeDocument, variables: variables }
-    }
-export const SearchAnimeDocument = gql`
-    query SearchAnime($search: String) {
-  Page {
-    pageInfo {
-      hasNextPage
-      total
-    }
-    media(search: $search, format_not_in: [MANGA, MUSIC, NOVEL, ONE_SHOT], isAdult: false, type: ANIME) {
-      ...AnimeFragment
-    }
-  }
-}
-    ${AnimeFragmentFragmentDoc}`;
-
-/**
- * __useSearchAnimeQuery__
- *
- * To run a query within a React component, call `useSearchAnimeQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchAnimeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSearchAnimeQuery({
- *   variables: {
- *      search: // value for 'search'
- *   },
- * });
- */
-export function useSearchAnimeQuery(baseOptions?: Apollo.QueryHookOptions<SearchAnimeQuery, SearchAnimeQueryVariables>) {
-        return Apollo.useQuery<SearchAnimeQuery, SearchAnimeQueryVariables>(SearchAnimeDocument, baseOptions);
-      }
-export function useSearchAnimeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchAnimeQuery, SearchAnimeQueryVariables>) {
-          return Apollo.useLazyQuery<SearchAnimeQuery, SearchAnimeQueryVariables>(SearchAnimeDocument, baseOptions);
-        }
-export type SearchAnimeQueryHookResult = ReturnType<typeof useSearchAnimeQuery>;
-export type SearchAnimeLazyQueryHookResult = ReturnType<typeof useSearchAnimeLazyQuery>;
-export type SearchAnimeQueryResult = Apollo.QueryResult<SearchAnimeQuery, SearchAnimeQueryVariables>;
-export function refetchSearchAnimeQuery(variables?: SearchAnimeQueryVariables) {
-      return { query: SearchAnimeDocument, variables: variables }
     }
 export const GetCharacterDocument = gql`
     query GetCharacter($id: Int) {
