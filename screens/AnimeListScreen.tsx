@@ -63,7 +63,6 @@ export function AnimeListScreen({ navigation }: Props) {
       status,
     },
     // TODO: figure out how to maintain the list position while also updating the cache
-    fetchPolicy: "no-cache",
     notifyOnNetworkStatusChange: true,
   });
 
@@ -185,11 +184,7 @@ export function AnimeListScreen({ navigation }: Props) {
         keyExtractor={(item) => `${item.id}`}
         renderItem={({ item, index }) => (
           <AnimeListItemContainer
-            seedData={{
-              id: item.id,
-              progress: item.progress ?? 0,
-              media: item.media ?? null,
-            }}
+            animeListEntry={item}
             refetchList={async () => {
               await refetch({
                 userId: viewerData?.Viewer?.id,

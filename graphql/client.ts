@@ -31,7 +31,17 @@ const httpLink = new HttpLink({
   uri: "https://graphql.anilist.co",
 });
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  typePolicies: {
+    Media: {
+      fields: {
+        coverImage: {
+          merge: false,
+        },
+      },
+    },
+  },
+});
 
 export async function createClient() {
   await persistCache({

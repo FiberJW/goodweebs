@@ -6,28 +6,31 @@ import React, { useState, useEffect } from "react";
 
 import { AnimeListItem } from "yep/components/AnimeListItem";
 import {
-  AnimeFragmentFragment,
   UpdateProgressMutation,
   UpdateProgressMutationVariables,
-  GetAnimeQuery,
-  MediaList,
-  useGetAnimeQuery,
-  GetAnimeDocument,
   MediaListStatus,
-  refetchGetAnimeQuery,
   refetchGetAnimeListQuery,
+  GetAnimeListDocument,
+  GetAnimeListQuery,
+  GetAnimeQuery,
+  GetAnimeDocument,
 } from "yep/graphql/generated";
 import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
 import { useDebouncedMutation } from "yep/hooks/helpers";
 import { RootStackParamList, TabParamList } from "yep/navigation";
-import { useAccessToken } from "yep/useAccessToken";
+
+type AnimeListEntry = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<
+        NonNullable<GetAnimeListQuery["MediaListCollection"]>["lists"]
+      >[number]
+    >["entries"]
+  >[number]
+>;
 
 type Props = {
-  seedData: {
-    id: number;
-    progress: number;
-    media: AnimeFragmentFragment | null;
-  };
+  animeListEntry: AnimeListEntry;
   refetchList: () => Promise<void>;
   refetchListVariables: { userId?: number; status?: MediaListStatus | null };
   navigation: CompositeNavigationProp<
@@ -39,21 +42,18 @@ type Props = {
 };
 
 export function AnimeListItemContainer({
-  seedData,
+  animeListEntry,
   navigation,
   refetchList,
   refetchListVariables,
   first,
   last,
 }: Props) {
-  const { accessToken } = useAccessToken();
-  const [progressShadow, setProgressShadow] = useState(seedData.progress);
+  const [progressShadow, setProgressShadow] = useState(
+    animeListEntry.progress ?? 0
+  );
   const [shouldShowProgressShadow, setShouldShowProgressShadow] =
     useState(false);
-  const { loading, data } = useGetAnimeQuery({
-    variables: { id: seedData?.media?.id },
-    skip: !accessToken,
-  });
 
   const updateProgressDebounced = useDebouncedMutation<
     UpdateProgressMutation,
@@ -61,55 +61,72 @@ export function AnimeListItemContainer({
   >({
     mutationDocument: UpdateProgress,
     makeUpdateFunction: (variables) => (proxy) => {
-      // Read the data from our cache for this query.
-      const proxyData = proxy.readQuery<GetAnimeQuery>({
-        query: GetAnimeDocument,
-        variables: { id: seedData?.media?.id },
+      const existingList = proxy.readQuery<GetAnimeListQuery>({
+        query: GetAnimeListDocument,
+        variables: refetchListVariables,
       });
 
-      if (seedData?.media) {
-        // Write our data back to the cache with the new progress in it
-        proxy.writeQuery<GetAnimeQuery>({
-          query: GetAnimeDocument,
-          variables: { id: seedData?.media?.id },
-          data: {
-            ...proxyData,
-            Media: {
-              ...seedData?.media,
-              id: seedData?.media?.id as number,
-              mediaListEntry: {
-                ...(proxyData?.Media?.mediaListEntry as MediaList),
-                progress: variables?.progress,
-              },
-            },
-          },
-        });
-      }
+      existingList?.MediaListCollection?.lists?.map((list) => {
+        if (list?.status === refetchListVariables.status) {
+          return list?.entries?.map((entry) => {
+            if (entry && entry?.media?.id === animeListEntry.media?.id) {
+              // TODO: show dropdown alert to notify that this anime was moved to "completed" list
+              if (variables.progress === entry.media?.episodes) refetchList();
 
-      if (variables?.progress === proxyData?.Media?.episodes) {
-        // TODO: show dropdown alert to notify that this anime was moved to "completed" list
-        refetchList();
-      }
+              return {
+                ...entry,
+                media: {
+                  ...entry?.media,
+                  progress: variables.progress,
+                },
+              };
+            }
+
+            return entry;
+          });
+        }
+
+        return list;
+      });
+
+      // TODO: it's this details cache write that makes the list jump
+
+      // const animeMediaDetails = proxy.readQuery<GetAnimeQuery>({
+      //   query: GetAnimeDocument,
+      //   variables: { id: animeListEntry.media?.id },
+      // });
+
+      // if (animeMediaDetails?.Media?.mediaListEntry) {
+      //   proxy.writeQuery<GetAnimeQuery>({
+      //     query: GetAnimeDocument,
+      //     variables: { id: animeListEntry.media?.id },
+      //     data: {
+      //       ...animeMediaDetails,
+      //       Media: {
+      //         ...animeMediaDetails?.Media,
+      //         id: animeMediaDetails?.Media?.id as number,
+      //         mediaListEntry: {
+      //           ...animeMediaDetails?.Media?.mediaListEntry,
+      //           progress: variables.progress,
+      //         },
+      //       },
+      //     },
+      //   });
+      // }
     },
-    refetchQueries: [
-      refetchGetAnimeQuery({ id: seedData?.media?.id }),
-      refetchGetAnimeListQuery(refetchListVariables),
-    ],
   });
 
   const progress =
     (shouldShowProgressShadow ? progressShadow : null) ??
-    data?.Media?.mediaListEntry?.progress ??
-    seedData?.progress ??
+    animeListEntry.progress ??
     0;
 
   useEffect(() => {
-    // show live query
+    // show data from apollo when cache is updated
     setShouldShowProgressShadow(false);
-  }, [data?.Media?.mediaListEntry?.progress]);
+  }, [animeListEntry.progress]);
 
   async function changeProgress(type: "inc" | "dec", increment = 1) {
-    if (!data || loading) return;
     // optimistic UI updates aren't fast enough
     setProgressShadow((p) => (type === "inc" ? p + increment : p - increment));
     setShouldShowProgressShadow(true);
@@ -119,9 +136,14 @@ export function AnimeListItemContainer({
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     await updateProgressDebounced({
-      id: data?.Media?.mediaListEntry?.id,
+      id: animeListEntry.id,
       progress: newProgress,
     });
+  }
+
+  if (!animeListEntry.media) {
+    console.error("animeListEntry.media is null. this should never happen");
+    return null;
   }
 
   return (
@@ -130,7 +152,7 @@ export function AnimeListItemContainer({
       progress={progress}
       onIncrement={async () => changeProgress("inc")}
       onDecrement={async () => changeProgress("dec")}
-      media={(data?.Media ?? seedData?.media) as AnimeFragmentFragment}
+      media={animeListEntry.media}
       first={first}
       last={last}
     />
