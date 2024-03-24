@@ -9,11 +9,8 @@ import {
   UpdateProgressMutation,
   UpdateProgressMutationVariables,
   MediaListStatus,
-  refetchGetAnimeListQuery,
   GetAnimeListDocument,
   GetAnimeListQuery,
-  GetAnimeQuery,
-  GetAnimeDocument,
 } from "yep/graphql/generated";
 import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
 import { useDebouncedMutation } from "yep/hooks/helpers";
@@ -88,31 +85,6 @@ export function AnimeListItemContainer({
 
         return list;
       });
-
-      // TODO: it's this details cache write that makes the list jump
-
-      // const animeMediaDetails = proxy.readQuery<GetAnimeQuery>({
-      //   query: GetAnimeDocument,
-      //   variables: { id: animeListEntry.media?.id },
-      // });
-
-      // if (animeMediaDetails?.Media?.mediaListEntry) {
-      //   proxy.writeQuery<GetAnimeQuery>({
-      //     query: GetAnimeDocument,
-      //     variables: { id: animeListEntry.media?.id },
-      //     data: {
-      //       ...animeMediaDetails,
-      //       Media: {
-      //         ...animeMediaDetails?.Media,
-      //         id: animeMediaDetails?.Media?.id as number,
-      //         mediaListEntry: {
-      //           ...animeMediaDetails?.Media?.mediaListEntry,
-      //           progress: variables.progress,
-      //         },
-      //       },
-      //     },
-      //   });
-      // }
     },
   });
 
