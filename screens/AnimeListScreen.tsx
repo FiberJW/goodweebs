@@ -48,6 +48,7 @@ export function AnimeListScreen({ navigation }: Props) {
 
   const [, , promptAsync] = useAniListAuthRequest();
   // TODO: save userId to AsyncStorage instead of fetching
+  // can also move this up to a higher component level
   const { loading: loadingViewer, data: viewerData } = useGetViewerQuery({
     skip: !accessToken,
   });
@@ -59,10 +60,9 @@ export function AnimeListScreen({ navigation }: Props) {
   } = useGetAnimeListQuery({
     skip: !viewerData?.Viewer?.id || !accessToken,
     variables: {
-      userId: viewerData?.Viewer?.id,
+      userId: viewerData!.Viewer!.id,
       status,
     },
-    // TODO: figure out how to maintain the list position while also updating the cache
     notifyOnNetworkStatusChange: true,
   });
 

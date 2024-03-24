@@ -4,7 +4,7 @@ import { AnimeFragment } from "yep/graphql/fragments/Anime";
 
 export const GetAnimeList = gql`
   query GetAnimeList(
-    $userId: Int
+    $userId: Int!
     $status: MediaListStatus
     $sort: [MediaListSort]
   ) {

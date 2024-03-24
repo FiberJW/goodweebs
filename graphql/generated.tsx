@@ -4899,7 +4899,7 @@ export type SearchAnimeQuery = (
 );
 
 export type GetAnimeQueryVariables = Exact<{
-  id?: Maybe<Scalars['Int']>;
+  id: Scalars['Int'];
 }>;
 
 
@@ -4912,7 +4912,7 @@ export type GetAnimeQuery = (
 );
 
 export type GetAnimeListQueryVariables = Exact<{
-  userId?: Maybe<Scalars['Int']>;
+  userId: Scalars['Int'];
   status?: Maybe<MediaListStatus>;
   sort?: Maybe<Array<Maybe<MediaListSort>>>;
 }>;
@@ -5453,7 +5453,7 @@ export function refetchSearchAnimeQuery(variables?: SearchAnimeQueryVariables) {
       return { query: SearchAnimeDocument, variables: variables }
     }
 export const GetAnimeDocument = gql`
-    query GetAnime($id: Int) {
+    query GetAnime($id: Int!) {
   Media(id: $id) {
     ...AnimeFragment
   }
@@ -5489,7 +5489,7 @@ export function refetchGetAnimeQuery(variables?: GetAnimeQueryVariables) {
       return { query: GetAnimeDocument, variables: variables }
     }
 export const GetAnimeListDocument = gql`
-    query GetAnimeList($userId: Int, $status: MediaListStatus, $sort: [MediaListSort]) {
+    query GetAnimeList($userId: Int!, $status: MediaListStatus, $sort: [MediaListSort]) {
   MediaListCollection(userId: $userId, type: ANIME, status: $status, sort: $sort) {
     lists {
       status
