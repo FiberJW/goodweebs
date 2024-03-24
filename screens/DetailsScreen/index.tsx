@@ -159,6 +159,7 @@ export function DetailsScreen({ route, navigation }: Props) {
   const { loading, data, refetch, error } = useGetAnimeQuery({
     variables: { id: route.params.id },
     notifyOnNetworkStatusChange: true,
+    fetchPolicy: "cache-and-network",
   });
 
   const [toggleFavorite] = useToggleFavoriteMutation();
@@ -352,14 +353,14 @@ export function DetailsScreen({ route, navigation }: Props) {
       ) : (
         <>
           <Title numberOfLines={5}>
-            {data?.Media?.title?.english ??
-              data?.Media?.title?.romaji ??
-              data?.Media?.title?.native}
+            {data.Media?.title?.english ??
+              data.Media?.title?.romaji ??
+              data.Media?.title?.native}
           </Title>
           <PosterAndInfoContainer>
             <PosterAndTitle
               size="details"
-              uri={data?.Media?.coverImage?.large ?? ""}
+              uri={data.Media?.coverImage?.large ?? ""}
               style={{ marginRight: 16 }}
             >
               <View
@@ -371,12 +372,12 @@ export function DetailsScreen({ route, navigation }: Props) {
                 }}
               >
                 <LikeButton
-                  isLiked={Boolean(data?.Media?.isFavourite)}
+                  isLiked={Boolean(data.Media?.isFavourite)}
                   onPress={async () => {
                     try {
                       await toggleFavorite({
                         variables: {
-                          animeId: data?.Media?.id,
+                          animeId: data.Media?.id,
                         },
                         refetchQueries: [
                           refetchGetAnimeQuery({ id: route.params.id }),
@@ -392,16 +393,16 @@ export function DetailsScreen({ route, navigation }: Props) {
             </PosterAndTitle>
             <InfoTable>
               <InfoRow>
-                {data?.Media?.episodes ? (
-                  <Info label="Episodes" value={`${data?.Media?.episodes}`} />
+                {data.Media?.episodes ? (
+                  <Info label="Episodes" value={`${data.Media?.episodes}`} />
                 ) : null}
                 <Info
                   label="Genre"
-                  value={data?.Media?.genres?.join(", ") ?? ""}
+                  value={data.Media?.genres?.join(", ") ?? ""}
                 />
               </InfoRow>
               <InfoRow>
-                {data?.Media?.averageScore ? (
+                {data.Media?.averageScore ? (
                   <PressableOpacity
                     useDisabledOpacity={false}
                     style={{ flexDirection: "row", gap: 8, flex: 1 }}
@@ -412,7 +413,7 @@ export function DetailsScreen({ route, navigation }: Props) {
                       label="Average score"
                       value={
                         showScore ? (
-                          `${(data?.Media?.averageScore ?? 0) / 10} / 10`
+                          `${(data.Media?.averageScore ?? 0) / 10} / 10`
                         ) : (
                           <InfoValue
                             numberOfLines={2}
@@ -429,28 +430,28 @@ export function DetailsScreen({ route, navigation }: Props) {
                   label="Status"
                   value={title(
                     MediaStatusWithLabel.find(
-                      (m) => m.value === data?.Media?.status
+                      (m) => m.value === data.Media?.status
                     )?.label ?? ""
                   )}
                 />
               </InfoRow>
               <InfoRow>
                 {studio ? <Info label="Studio" value={studio} /> : null}
-                {data?.Media?.status === MediaStatus.Releasing &&
-                data?.Media?.nextAiringEpisode ? (
+                {data.Media?.status === MediaStatus.Releasing &&
+                data.Media?.nextAiringEpisode ? (
                   <Info
                     label="Next episode"
                     value={`EP ${
-                      data?.Media?.nextAiringEpisode?.episode
+                      data.Media?.nextAiringEpisode?.episode
                     } airs in ${formatDistanceToNow(
                       add(now, {
                         seconds:
-                          data?.Media?.nextAiringEpisode?.timeUntilAiring ?? 0,
+                          data.Media?.nextAiringEpisode?.timeUntilAiring ?? 0,
                       })
                     )}`}
                   />
                 ) : null}
-                {data?.Media?.status === MediaStatus.NotYetReleased &&
+                {data.Media?.status === MediaStatus.NotYetReleased &&
                 data.Media.startDate &&
                 getDateText(data.Media.startDate) ? (
                   <Info
@@ -459,9 +460,9 @@ export function DetailsScreen({ route, navigation }: Props) {
                   />
                 ) : null}
 
-                {(data?.Media?.status === MediaStatus.Finished ||
-                  data?.Media?.status === MediaStatus.Cancelled) &&
-                data?.Media?.endDate &&
+                {(data.Media?.status === MediaStatus.Finished ||
+                  data.Media?.status === MediaStatus.Cancelled) &&
+                data.Media?.endDate &&
                 getDateText(data.Media.endDate) ? (
                   <Info
                     label="End date"
@@ -478,20 +479,18 @@ export function DetailsScreen({ route, navigation }: Props) {
               loading={loadingStatus}
               label={
                 MediaListStatusWithLabel.find(
-                  (x) => x.value === data?.Media?.mediaListEntry?.status
+                  (x) => x.value === data.Media?.mediaListEntry?.status
                 )?.label ?? "Add to List"
               }
               onPress={() => {
                 const options = MediaListStatusWithLabel.map(
                   (s) =>
                     `${
-                      data?.Media?.mediaListEntry?.status === s.value
-                        ? "✔ "
-                        : ""
+                      data.Media?.mediaListEntry?.status === s.value ? "✔ " : ""
                     }${s.label}`
                 );
 
-                const mediaListEntry = data?.Media?.mediaListEntry;
+                const mediaListEntry = data.Media?.mediaListEntry;
 
                 mediaListEntry && options.push("Remove from List");
                 options.push("Cancel");
@@ -524,7 +523,7 @@ export function DetailsScreen({ route, navigation }: Props) {
                       });
                     } else {
                       await updateStatus({
-                        mediaId: data?.Media?.id,
+                        mediaId: data.Media?.id,
                         status: MediaListStatusWithLabel[buttonIndex].value,
                       });
                     }
@@ -534,7 +533,7 @@ export function DetailsScreen({ route, navigation }: Props) {
               }}
             />
           </ButtonsRow>
-          {data?.Media?.mediaListEntry &&
+          {data.Media?.mediaListEntry &&
           data.Media.status !== MediaStatus.NotYetReleased ? (
             <>
               <Stepper
@@ -545,14 +544,14 @@ export function DetailsScreen({ route, navigation }: Props) {
                     source={require("yep/assets/icons/star.png")}
                   />
                 }
-                defaultValue={data?.Media?.mediaListEntry?.score ?? 5}
+                defaultValue={data.Media?.mediaListEntry?.score ?? 5}
                 upperBound={10}
                 lowerBound={0}
                 onChange={async (s) => {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                   try {
                     await updateScore({
-                      id: data?.Media?.mediaListEntry?.id,
+                      id: data.Media?.mediaListEntry?.id,
                       scoreRaw: s * 10,
                     });
                   } catch (e) {
@@ -569,14 +568,19 @@ export function DetailsScreen({ route, navigation }: Props) {
                   />
                 }
                 label="Progress"
-                defaultValue={data?.Media?.mediaListEntry?.progress ?? 0}
-                upperBound={data?.Media?.episodes ?? undefined}
+                defaultValue={data.Media.mediaListEntry.progress ?? 0}
+                upperBound={data.Media?.episodes ?? undefined}
                 lowerBound={0}
                 onChange={async (progress) => {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                   try {
+                    if (!data.Media?.mediaListEntry)
+                      throw new Error(
+                        "no mediaListEntry during progress update user interaction. this should never happen"
+                      );
+
                     await updateProgress({
-                      id: data?.Media?.mediaListEntry?.id,
+                      id: data.Media.mediaListEntry.id,
                       progress,
                     });
                   } catch (e) {
@@ -587,7 +591,7 @@ export function DetailsScreen({ route, navigation }: Props) {
               />
             </>
           ) : null}
-          {data?.Media?.description ? (
+          {data.Media?.description ? (
             <DescriptionRenderer description={data.Media.description} />
           ) : null}
 

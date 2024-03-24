@@ -30,5 +30,9 @@ const styles = StyleSheet.create({
     padding: 16,
     width: "100%",
   },
-  root: { flex: 1, minHeight: "100vh" },
+  root: {
+    flex: 1,
+    // @ts-expect-error 100vh is recognized on the web
+    minHeight: "100vh",
+  },
 });
