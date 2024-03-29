@@ -63,8 +63,11 @@ export function AnimeListScreen({ navigation }: Props) {
       userId: viewerData!.Viewer!.id,
       status,
     },
+    fetchPolicy: "no-cache",
     notifyOnNetworkStatusChange: true,
   });
+
+  console.log({ animeListData });
 
   const list = useMemo(
     () =>
