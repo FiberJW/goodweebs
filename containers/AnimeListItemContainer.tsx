@@ -2,6 +2,7 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import * as Haptics from "expo-haptics";
+import { cloneDeep } from "lodash";
 import React, { useState, useEffect } from "react";
 
 import { AnimeListItem } from "yep/components/AnimeListItem";
@@ -46,62 +47,86 @@ export function AnimeListItemContainer({
   first,
   last,
 }: Props) {
-  const [progressShadow, setProgressShadow] = useState(
-    animeListEntry.progress ?? 0
-  );
-  const [shouldShowProgressShadow, setShouldShowProgressShadow] =
-    useState(false);
+  // const [progressShadow, setProgressShadow] = useState(
+  //   animeListEntry.progress ?? 0
+  // );
+  // const [shouldShowProgressShadow, setShouldShowProgressShadow] =
+  //   useState(false);
 
   const updateProgressDebounced = useDebouncedMutation<
     UpdateProgressMutation,
     UpdateProgressMutationVariables
   >({
     mutationDocument: UpdateProgress,
-    makeUpdateFunction: (variables) => (proxy) => {
-      const existingList = proxy.readQuery<GetAnimeListQuery>({
-        query: GetAnimeListDocument,
-        variables: refetchListVariables,
-      });
+    makeUpdateFunction: (variables) => (cache) => {
+      const existingList = cloneDeep(
+        cache.readQuery<GetAnimeListQuery>({
+          query: GetAnimeListDocument,
+          variables: refetchListVariables,
+        })
+      );
 
-      existingList?.MediaListCollection?.lists?.map((list) => {
-        if (list?.status === refetchListVariables.status) {
-          return list?.entries?.map((entry) => {
-            if (entry && entry?.media?.id === animeListEntry.media?.id) {
-              // TODO: show dropdown alert to notify that this anime was moved to "completed" list
-              if (variables.progress === entry.media?.episodes) refetchList();
+      console.log({ variables });
 
-              return {
-                ...entry,
-                media: {
-                  ...entry?.media,
-                  progress: variables.progress,
-                },
-              };
-            }
+      if (existingList) {
+        // TODO: this isn't updating the related list query.only updating the individual media
+        // entry does
+        cache.writeQuery<GetAnimeListQuery>({
+          query: GetAnimeListDocument,
+          variables: refetchListVariables,
+          data: {
+            ...existingList,
+            MediaListCollection: {
+              ...existingList.MediaListCollection,
+              lists: existingList.MediaListCollection?.lists?.map((list) => {
+                if (list?.status === refetchListVariables.status) {
+                  return {
+                    ...list,
+                    entries: list?.entries?.map((entry) => {
+                      if (
+                        entry?.media?.id &&
+                        entry.media.id === animeListEntry.media?.id
+                      ) {
+                        // TODO: show dropdown alert to notify that this anime was moved to "completed" list
+                        if (variables.progress === entry.media?.episodes)
+                          refetchList();
 
-            return entry;
-          });
-        }
+                        return {
+                          ...entry,
+                          media: {
+                            ...entry.media,
+                            progress: variables.progress,
+                          },
+                        };
+                      }
 
-        return list;
-      });
+                      return entry;
+                    }),
+                  };
+                }
+
+                return list;
+              }),
+            },
+          },
+        });
+      }
     },
   });
 
   const progress =
-    (shouldShowProgressShadow ? progressShadow : null) ??
-    animeListEntry.progress ??
-    0;
+    // (shouldShowProgressShadow ? progressShadow : null) ??
+    animeListEntry.progress ?? 0;
 
   useEffect(() => {
     // show data from apollo when cache is updated
-    setShouldShowProgressShadow(false);
+    // setShouldShowProgressShadow(false);
   }, [animeListEntry.progress]);
 
   async function changeProgress(type: "inc" | "dec", increment = 1) {
     // optimistic UI updates aren't fast enough
-    setProgressShadow((p) => (type === "inc" ? p + increment : p - increment));
-    setShouldShowProgressShadow(true);
+    // setProgressShadow((p) => (type === "inc" ? p + increment : p - increment));
+    // setShouldShowProgressShadow(true);
     const newProgress =
       type === "inc" ? progress + increment : progress - increment;
 
