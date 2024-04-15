@@ -87,6 +87,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             organization: "juwan-wheatley",
           },
         ],
+    "expo-router",
     [
       "expo-updates",
       {
