@@ -22,7 +22,7 @@ export function PressableOpacity({
   style,
   disabled,
   containerStyle,
-  useDisabledOpacity,
+  useDisabledOpacity = true,
   ...rest
 }: Props) {
   return (
