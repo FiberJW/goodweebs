@@ -58,7 +58,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "@expo/cli": "0.17.9",
     "@graphql-codegen/cli": "^2.3.0",
     "@graphql-codegen/fragment-matcher": "1.17.8",
     "@graphql-codegen/introspection": "1.17.8",
