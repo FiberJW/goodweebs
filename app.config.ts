@@ -48,6 +48,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       usesNonExemptEncryption: false,
     },
     requireFullScreen: false,
+    privacyManifests: {
+      NSPrivacyAccessedAPITypes: [
+        {
+          NSPrivacyAccessedAPIType: "NSPrivacyAccessedAPICategoryUserDefaults",
+          NSPrivacyAccessedAPITypeReasons: ["CA92.1"],
+        },
+      ],
+    },
   },
   android: {
     package: IS_DEV ? "com.fiberjw.goodweebs.dev" : "com.fiberjw.goodweebs",
@@ -83,7 +91,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ],
   ],
   runtimeVersion: {
-    policy: "sdkVersion",
+    policy: "fingerprint",
   },
   extra: {
     eas: {
