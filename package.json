@@ -7,7 +7,9 @@
     "lint": "eslint . --ext .ts,.js,.tsx --fix",
     "update:prod": "eas update --branch production --auto",
     "build:prod": "eas build --profile production --platform all --auto-submit",
-    "export:web": "APP_VARIANT=development npx expo export --platform web"
+    "export:web": "APP_VARIANT=development npx expo export --platform web",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "dependencies": {
     "@apollo/client": "^3.1.5",
@@ -36,6 +38,7 @@
     "expo-insights": "~0.7.0",
     "expo-random": "~14.0.1",
     "expo-splash-screen": "~0.27.2",
+    "expo-system-ui": "~3.0.2",
     "expo-updates": "~0.25.5",
     "expo-web-browser": "~13.0.3",
     "graphql": "^15.0.0",
@@ -131,5 +134,7 @@
       ]
     }
   },
-  "private": true
+  "private": true,
+  "name": "goodweebs",
+  "version": "1.0.0"
 }
