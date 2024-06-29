@@ -19,6 +19,8 @@ export const badgeRed = "#EC4124";
 export const alienGreen = "#00b248";
 export const darkBlue = "#11052B";
 export const gray6 = "#F2F2F2";
+export const favoritedBackground = "#D6094E";
+export const notFavoritedBackground = "rgba(214, 9, 78, 0.6)";
 
 export const dangoPink = "#F48FB1";
 export const dangoPinkBackground = "#FFCFF1";
@@ -45,6 +47,5 @@ export const bilibiliBlue = "#00A1D6";
 export const iqGreen = "#5CD15A";
 export const starPlusOrange = "#EA6F23";
 export const amazonPrimeBlue = "#1997FE";
-
-export const favoritedBackground = "#D6094E";
-export const notFavoritedBackground = "rgba(214, 9, 78, 0.6)";
+export const facebookBlue = "#0766fe";
+export const officialSiteFallback = "#FFC700";

@@ -24,6 +24,8 @@ import {
   iqGreen,
   starPlusOrange,
   amazonPrimeBlue,
+  facebookBlue,
+  officialSiteFallback,
 } from "yep/colors";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { MediaExternalLinkDataFragment } from "yep/graphql/generated";
@@ -75,7 +77,7 @@ export function ExternalLink({ url, site }: MediaExternalLinkDataFragment) {
       color = tubiOrange;
       break;
     case "OFFICIAL SITE":
-      color = "#FFC700";
+      color = officialSiteFallback;
       break;
     case "HIDIVE":
       color = hidiveBlue;
@@ -103,6 +105,9 @@ export function ExternalLink({ url, site }: MediaExternalLinkDataFragment) {
     case "AMAZON PRIME":
     case "AMAZON PRIME VIDEO":
       color = amazonPrimeBlue;
+      break;
+    case "FACEBOOK":
+      color = facebookBlue;
       break;
     default:
       Sentry.captureMessage(`Unknown external link site: ${site}`);
