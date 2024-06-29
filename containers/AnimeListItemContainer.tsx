@@ -105,6 +105,8 @@ export function AnimeListItemContainer({
 
   useEffect(() => {
     // TODO: remove this
+    // TODO: remove this
+
     // show live query
     setShouldShowProgressShadow(false);
   }, [data?.Media?.mediaListEntry?.progress]);
