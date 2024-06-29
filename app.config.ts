@@ -78,13 +78,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     "expo-font",
-    [
-      "@sentry/react-native/expo",
-      {
-        project: "goodweebs",
-        organization: "juwan-wheatley",
-      },
-    ],
+    process.env.EXPO_STAGING
+      ? []
+      : [
+          "@sentry/react-native/expo",
+          {
+            project: "goodweebs",
+            organization: "juwan-wheatley",
+          },
+        ],
     [
       "expo-updates",
       {
