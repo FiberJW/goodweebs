@@ -79,7 +79,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   plugins: [
     "expo-font",
     process.env.EXPO_STAGING
-      ? []
+      ? undefined
       : [
           "@sentry/react-native/expo",
           {
@@ -93,7 +93,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         username: "fiberjw",
       },
     ],
-  ],
+    // remove sentry plugin if staging
+  ].filter(Boolean) as ExpoConfig["plugins"],
   runtimeVersion: {
     policy: "fingerprint",
   },
