@@ -4,6 +4,8 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import * as Haptics from "expo-haptics";
 import React, { useState, useEffect } from "react";
 
+// hi
+
 import { AnimeListItem } from "yep/components/AnimeListItem";
 import {
   AnimeFragmentFragment,
