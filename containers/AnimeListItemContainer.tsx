@@ -4,6 +4,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import * as Haptics from "expo-haptics";
 import React, { useState, useEffect } from "react";
 
+import { RootStackParamList, TabParamList } from "yep/_navigation";
 import { AnimeListItem } from "yep/components/AnimeListItem";
 import {
   AnimeFragmentFragment,
@@ -19,8 +20,7 @@ import {
 } from "yep/graphql/generated";
 import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
 import { useDebouncedMutation } from "yep/hooks/helpers";
-import { RootStackParamList, TabParamList } from "yep/navigation";
-import { useAccessToken } from "yep/useAccessToken";
+import { useAccessToken } from "yep/hooks/useAccessToken";
 
 type Props = {
   seedData: {

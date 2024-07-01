@@ -4,6 +4,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
+import { RootStackParamList, TabParamList } from "yep/_navigation";
 import { black15, white12_5, white5, white95 } from "yep/colors";
 import {
   AnimeFragmentFragment,
@@ -11,7 +12,6 @@ import {
   MediaListStatus,
 } from "yep/graphql/generated";
 import { useNow } from "yep/hooks/helpers";
-import { RootStackParamList, TabParamList } from "yep/navigation";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { getAiringStatusText, getProgress, getTitle } from "yep/utils";

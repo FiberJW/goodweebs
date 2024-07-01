@@ -4,17 +4,17 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { Image, Platform, StatusBar } from "react-native";
 
-import { AnimeListScreen } from "yep/screens/AnimeListScreen";
-import { AuthScreen } from "yep/screens/AuthScreen";
+import { AnimeListScreen } from "yep/app/(tabs)/anime";
+import { DiscoverScreen } from "yep/app/(tabs)/discover";
+import { ProfileScreen } from "yep/app/(tabs)/profile";
+import { AuthScreen } from "yep/app/auth";
+import { DetailsScreen } from "yep/app/details/[id]";
+import { SettingsScreen } from "yep/app/settings";
+import { useAccessToken } from "yep/hooks/useAccessToken";
 import { CharacterScreen } from "yep/screens/CharacterScreen";
-import { DetailsScreen } from "yep/screens/DetailsScreen";
-import { DiscoverScreen } from "yep/screens/DiscoverScreen";
-import { ProfileScreen } from "yep/screens/ProfileScreen";
-import { SettingsScreen } from "yep/screens/SettingsScreen";
 import { StringCase, getString } from "yep/strings";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { useAccessToken } from "yep/useAccessToken";
 
 export type RootStackParamList = {
   Tabs: undefined;

@@ -1,41 +1,38 @@
 import {
-  ApolloClient,
   ApolloProvider,
+  ApolloClient,
   NormalizedCacheObject,
 } from "@apollo/client";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import * as Sentry from "@sentry/react-native";
+import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useCallback, useEffect } from "react";
+import { StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { enableScreens } from "react-native-screens";
 
 import { createClient } from "yep/graphql/client";
-import { Navigation } from "yep/navigation";
-import { useManrope } from "yep/typefaces";
-
-import { AccessTokenProvider, useAccessToken } from "./useAccessToken";
+import { AccessTokenProvider, useAccessToken } from "yep/hooks/useAccessToken";
+import { darkTheme } from "yep/themes";
+import { Manrope, useManrope } from "yep/typefaces";
 
 enableScreens();
+
+SplashScreen.preventAutoHideAsync();
 
 Sentry.init({
   dsn: "https://b2756b0df548451d98707d024aff00d1@o58038.ingest.sentry.io/5248224",
   debug: __DEV__, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
+  enabled: !__DEV__,
 });
 
-SplashScreen.preventAutoHideAsync();
+export const unstable_settings = {
+  // Ensure any route can link back to `/`
+  initialRouteName: "(tabs)",
+};
 
-// TODO: implement better error handling + user-facing notifications
-
-export default function App() {
-  return (
-    <AccessTokenProvider>
-      <InnerApp />
-    </AccessTokenProvider>
-  );
-}
-
-function InnerApp() {
+function InnerRoot() {
   const { checkedForToken, accessToken } = useAccessToken();
   const fontsLoaded = useManrope();
 
@@ -69,10 +66,37 @@ function InnerApp() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
       <ApolloProvider client={client}>
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor={darkTheme.navBackground}
+        />
         <ActionSheetProvider>
-          <Navigation accessToken={accessToken} />
+          <Stack
+            initialRouteName={accessToken ? "(tabs)/anime" : "auth"}
+            screenOptions={{
+              title: "",
+              headerTitleStyle: {
+                fontFamily: Manrope.semiBold,
+              },
+            }}
+          >
+            <Stack.Screen name="(tabs)" options={{}} />
+            <Stack.Screen name="auth" options={{}} />
+            <Stack.Screen name="character/[id]" options={{}} />
+            <Stack.Screen name="details/[id]" options={{}} />
+            {/* <Stack.Screen name="index" options={{}} /> */}
+            <Stack.Screen name="settings" options={{}} />
+          </Stack>
         </ActionSheetProvider>
       </ApolloProvider>
     </GestureHandlerRootView>
+  );
+}
+
+export default function Root() {
+  return (
+    <AccessTokenProvider>
+      <InnerRoot />
+    </AccessTokenProvider>
   );
 }

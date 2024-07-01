@@ -1,5 +1,4 @@
-import { RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { StyleSheet, View, ScrollView, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -13,20 +12,16 @@ import {
   useToggleFavoriteMutation,
   useGetCharacterQuery,
 } from "yep/graphql/generated";
-import { RootStackParamList } from "yep/navigation";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
-type Props = {
-  navigation: StackNavigationProp<RootStackParamList>;
-  route: RouteProp<RootStackParamList, "Character">;
-};
+export function CharacterScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
 
-export function CharacterScreen({ route }: Props) {
   const insets = useSafeAreaInsets();
 
   const { loading, data, error } = useGetCharacterQuery({
-    variables: { id: route.params.id },
+    variables: { id: Number(id) },
     notifyOnNetworkStatusChange: true,
   });
 
@@ -75,7 +70,7 @@ export function CharacterScreen({ route }: Props) {
                           characterId: character?.id,
                         },
                         refetchQueries: [
-                          refetchGetCharacterQuery({ id: route.params.id }),
+                          refetchGetCharacterQuery({ id: Number(id) }),
                         ],
                       });
                     } catch (error) {

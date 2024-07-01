@@ -6,14 +6,14 @@ import { Alert, View, ScrollView, StyleSheet, Text } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { RootStackParamList, TabParamList } from "yep/_navigation";
 import { black } from "yep/colors";
 import { Button } from "yep/components/Button";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { StorageKeys, usePersistedState } from "yep/hooks/helpers";
-import { RootStackParamList, TabParamList } from "yep/navigation";
+import { useAccessToken } from "yep/hooks/useAccessToken";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { useAccessToken } from "yep/useAccessToken";
 
 type Props = {
   navigation: StackNavigationProp<RootStackParamList & TabParamList>;

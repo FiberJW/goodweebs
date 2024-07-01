@@ -1,8 +1,7 @@
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { formatDistanceToNow, add } from "date-fns";
 import * as Haptics from "expo-haptics";
+import { useLocalSearchParams } from "expo-router";
 import _ from "lodash";
 import React, { ReactNode, useEffect, useState } from "react";
 import { RefreshControl, Text, View, Image } from "react-native";
@@ -46,17 +45,16 @@ import {
   usePersistedState,
   StorageKeys,
 } from "yep/hooks/helpers";
-import { RootStackParamList } from "yep/navigation";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { getDateText, notEmpty } from "yep/utils";
 
-import { CharacterList } from "./CharacterList";
-import { ExternalLink } from "./ExternalLink";
-import { RelatedAnimeList } from "./RelatedAnimeList";
-import { Stepper } from "./Stepper";
-import { Trailer } from "./Trailer";
+import { CharacterList } from "../../components/DetailsScreen/CharacterList";
+import { ExternalLink } from "../../components/DetailsScreen/ExternalLink";
+import { RelatedAnimeList } from "../../components/DetailsScreen/RelatedAnimeList";
+import { Stepper } from "../../components/DetailsScreen/Stepper";
+import { Trailer } from "../../components/DetailsScreen/Trailer";
 
 const Container = takimoto.ScrollView({
   flex: 1,
@@ -123,12 +121,9 @@ const ButtonsRow = takimoto.View({
   marginBottom: 16,
 });
 
-type Props = {
-  navigation: StackNavigationProp<RootStackParamList>;
-  route: RouteProp<RootStackParamList, "Details">;
-};
+export function DetailsScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
 
-export function DetailsScreen({ route, navigation }: Props) {
   const { showActionSheetWithOptions } = useActionSheet();
   const insets = useSafeAreaInsets();
   const [loadingStatus, setLoadingStatus] = useState(false);
@@ -140,7 +135,7 @@ export function DetailsScreen({ route, navigation }: Props) {
   );
   const [showScore, setShowScore] = usePersistedState<boolean>(
     StorageKeys.SHOW_SCORE_FOR_MEDIA,
-    { id: String(route.params.id), doNotPersist: !shouldPersistScoreVisibility }
+    { id, doNotPersist: !shouldPersistScoreVisibility }
   );
 
   // sync shouldShowScoreToggleUI with showScore in useeffect because the default value can be
@@ -157,7 +152,7 @@ export function DetailsScreen({ route, navigation }: Props) {
   const now = useNow();
 
   const { loading, data, refetch, error } = useGetAnimeQuery({
-    variables: { id: route.params.id },
+    variables: { id: Number(id) },
     notifyOnNetworkStatusChange: true,
   });
 
@@ -171,13 +166,13 @@ export function DetailsScreen({ route, navigation }: Props) {
     makeUpdateFunction: (variables) => (proxy) => {
       const proxyData = proxy.readQuery<GetAnimeQuery>({
         query: GetAnimeDocument,
-        variables: { id: route.params.id },
+        variables: { id: Number(id) },
       });
 
       if (proxyData?.Media?.mediaListEntry) {
         proxy.writeQuery<GetAnimeQuery>({
           query: GetAnimeDocument,
-          variables: { id: route.params.id },
+          variables: { id: Number(id) },
           data: {
             ...proxyData,
             Media: {
@@ -193,7 +188,7 @@ export function DetailsScreen({ route, navigation }: Props) {
       }
     },
     wait: 0,
-    refetchQueries: [refetchGetAnimeQuery({ id: route.params.id })],
+    refetchQueries: [refetchGetAnimeQuery({ id: Number(id) })],
   });
 
   const removeFromList = useDebouncedMutation<
@@ -204,13 +199,13 @@ export function DetailsScreen({ route, navigation }: Props) {
     makeUpdateFunction: (_variables) => (proxy) => {
       const proxyData = proxy.readQuery<GetAnimeQuery>({
         query: GetAnimeDocument,
-        variables: { id: route.params.id },
+        variables: { id: Number(id) },
       });
 
       if (proxyData?.Media?.mediaListEntry) {
         proxy.writeQuery<GetAnimeQuery>({
           query: GetAnimeDocument,
-          variables: { id: route.params.id },
+          variables: { id: Number(id) },
           data: {
             ...proxyData,
             Media: {
@@ -223,7 +218,7 @@ export function DetailsScreen({ route, navigation }: Props) {
       }
     },
     wait: 0,
-    refetchQueries: [refetchGetAnimeQuery({ id: route.params.id })],
+    refetchQueries: [refetchGetAnimeQuery({ id: Number(id) })],
   });
 
   const updateScore = useDebouncedMutation<
@@ -234,13 +229,13 @@ export function DetailsScreen({ route, navigation }: Props) {
     makeUpdateFunction: (variables) => (proxy) => {
       const proxyData = proxy.readQuery<GetAnimeQuery>({
         query: GetAnimeDocument,
-        variables: { id: route.params.id },
+        variables: { id: Number(id) },
       });
 
       if (proxyData?.Media?.mediaListEntry) {
         proxy.writeQuery<GetAnimeQuery>({
           query: GetAnimeDocument,
-          variables: { id: route.params.id },
+          variables: { id: Number(id) },
           data: {
             ...proxyData,
             Media: {
@@ -255,7 +250,7 @@ export function DetailsScreen({ route, navigation }: Props) {
         });
       }
     },
-    refetchQueries: [refetchGetAnimeQuery({ id: route.params.id })],
+    refetchQueries: [refetchGetAnimeQuery({ id: Number(id) })],
   });
 
   const updateProgress = useDebouncedMutation<
@@ -266,13 +261,13 @@ export function DetailsScreen({ route, navigation }: Props) {
     makeUpdateFunction: (variables) => (proxy) => {
       const proxyData = proxy.readQuery<GetAnimeQuery>({
         query: GetAnimeDocument,
-        variables: { id: route.params.id },
+        variables: { id: Number(id) },
       });
 
       if (proxyData?.Media?.mediaListEntry) {
         proxy.writeQuery<GetAnimeQuery>({
           query: GetAnimeDocument,
-          variables: { id: route.params.id },
+          variables: { id: Number(id) },
           data: {
             ...proxyData,
             Media: {
@@ -291,12 +286,12 @@ export function DetailsScreen({ route, navigation }: Props) {
         // TODO: show dropdown alert to notify that this anime was moved to "completed" list
       }
     },
-    refetchQueries: [refetchGetAnimeQuery({ id: route.params.id })],
+    refetchQueries: [refetchGetAnimeQuery({ id: Number(id) })],
   });
 
   async function refetchFromScroll() {
     setIsRefetchingFromScrollOrMount(true);
-    await refetch({ id: route.params.id });
+    await refetch({ id: Number(id) });
     setIsRefetchingFromScrollOrMount(false);
   }
 
@@ -379,7 +374,7 @@ export function DetailsScreen({ route, navigation }: Props) {
                           animeId: data?.Media?.id,
                         },
                         refetchQueries: [
-                          refetchGetAnimeQuery({ id: route.params.id }),
+                          refetchGetAnimeQuery({ id: Number(id) }),
                         ],
                       });
                     } catch (error) {
@@ -597,7 +592,6 @@ export function DetailsScreen({ route, navigation }: Props) {
           {data.Media?.characters?.nodes ? (
             <CharacterList
               characters={(data.Media?.characters?.nodes).filter(notEmpty)}
-              navigation={navigation}
             />
           ) : null}
           {/* TODO: maybe this should be a flatlist */}
@@ -610,7 +604,6 @@ export function DetailsScreen({ route, navigation }: Props) {
                 key={key}
                 relationType={relationType}
                 relations={relations}
-                navigation={navigation}
               />
             );
           })}

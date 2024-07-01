@@ -1,10 +1,10 @@
 import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 
+import { RootStackParamList } from "yep/_navigation";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { AnimeRelationFragmentFragment } from "yep/graphql/generated";
-import { RootStackParamList } from "yep/navigation";
 import { getTitle } from "yep/utils";
 
 type RelatedItemProps = {

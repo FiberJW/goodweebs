@@ -4,15 +4,15 @@ import React, { useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, Image, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { RootStackParamList } from "yep/_navigation";
 import { aniListBlue } from "yep/colors";
 import { Button } from "yep/components/Button";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { useAniListAuthRequest } from "yep/hooks/auth";
-import { RootStackParamList } from "yep/navigation";
+import { useAccessToken } from "yep/hooks/useAccessToken";
 import { getString } from "yep/strings";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { useAccessToken } from "yep/useAccessToken";
 
 type Props = {
   navigation: StackNavigationProp<RootStackParamList>;

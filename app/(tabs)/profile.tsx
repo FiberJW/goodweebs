@@ -1,4 +1,3 @@
-import { StackNavigationProp } from "@react-navigation/stack";
 import React, { PropsWithChildren } from "react";
 import { ImageBackground, RefreshControl, View, Image } from "react-native";
 
@@ -7,7 +6,6 @@ import { Header } from "yep/components/Header";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { useGetViewerQuery } from "yep/graphql/generated";
-import { RootStackParamList, TabParamList } from "yep/navigation";
 import { StringCase, getString } from "yep/strings";
 import { darkTheme } from "yep/themes";
 import { notEmpty, getTitle } from "yep/utils";
@@ -25,13 +23,9 @@ import {
   makeListWithType,
   FavoriteContainer,
   EverythingButTheCTA,
-} from "./styles";
+} from "../../components/ProfileScreen/styles";
 
-type Props = {
-  navigation: StackNavigationProp<RootStackParamList & TabParamList>;
-};
-
-export function ProfileScreen({ navigation }: Props) {
+export function ProfileScreen() {
   const {
     loading: loadingViewer,
     data: viewerData,

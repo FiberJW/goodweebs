@@ -2,8 +2,8 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { FlatList } from "react-native-gesture-handler";
 
+import { RootStackParamList } from "yep/_navigation";
 import { CharacterDataFragment } from "yep/graphql/generated";
-import { RootStackParamList } from "yep/navigation";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
