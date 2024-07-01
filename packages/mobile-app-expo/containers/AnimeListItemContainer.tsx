@@ -4,7 +4,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import * as Haptics from "expo-haptics";
 import React, { useState, useEffect } from "react";
 
-// hi
+// hie
 
 import { AnimeListItem } from "yep/components/AnimeListItem";
 import {
