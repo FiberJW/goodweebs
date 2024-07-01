@@ -42,6 +42,8 @@ export function useAniListAuthRequest(): [
     [request?.url, AniListURL]
   );
 
+  // hi
+
   useEffect(() => {
     if (AniListURL) {
       const request = new AuthRequest({
