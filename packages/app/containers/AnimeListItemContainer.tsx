@@ -88,6 +88,7 @@ export function AnimeListItemContainer({
 
       if (variables?.progress === proxyData?.Media?.episodes) {
         // TODO: show dropdown alert to notify that this anime was moved to "completed" list
+        // e
         refetchList();
       }
     },
