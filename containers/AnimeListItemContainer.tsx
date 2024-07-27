@@ -2,7 +2,7 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import * as Haptics from "expo-haptics";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { AnimeListItem } from "yep/components/AnimeListItem";
 import {
@@ -54,6 +54,14 @@ export function AnimeListItemContainer({
     variables: { id: seedData?.media?.id },
     skip: !accessToken,
   });
+
+  // for FlashList item recycling
+  const lastItemId = useRef(seedData?.media?.id);
+  if (seedData?.media?.id !== lastItemId.current) {
+    lastItemId.current = seedData?.media?.id;
+    setShouldShowProgressShadow(false);
+    setProgressShadow(seedData.progress);
+  }
 
   const updateProgressDebounced = useDebouncedMutation<
     UpdateProgressMutation,

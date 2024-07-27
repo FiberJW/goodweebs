@@ -7,6 +7,7 @@
     "lint": "eslint . --ext .ts,.js,.tsx --fix",
     "update:prod": "eas update --branch production --auto",
     "build:prod": "eas build --profile production --platform all --auto-submit",
+    "build:dev": "eas build --profile development --platform all",
     "export:web": "APP_VARIANT=development npx expo export --platform web",
     "android": "expo run:android",
     "ios": "expo run:ios"

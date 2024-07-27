@@ -5,6 +5,7 @@ import {
   useFocusEffect,
 } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { FlashList } from "@shopify/flash-list";
 import { sortBy } from "lodash";
 import React, { useState, useMemo, useCallback } from "react";
 import { RefreshControl, View } from "react-native";
@@ -80,9 +81,6 @@ export function AnimeListScreen({ navigation }: Props) {
 
   const listCountText = `${list.length} title${list.length !== 1 ? "s" : ""}`;
 
-  // TODO: maybe make this better? feels a little dank
-  const AnimeFlatList = makeAnimeFlatList<typeof list[number]>();
-
   const refreshing = loadingViewer || loadingAnimeList;
 
   useFocusEffect(
@@ -107,8 +105,7 @@ export function AnimeListScreen({ navigation }: Props) {
   return (
     <OuterContainer>
       <Header label={getString("anime", StringCase.TITLE)} />
-
-      <AnimeFlatList
+      <FlashList
         contentContainerStyle={{ padding: 16 }}
         ListHeaderComponent={() => (
           <View style={{ gap: 16, paddingBottom: 16 }}>
@@ -183,6 +180,7 @@ export function AnimeListScreen({ navigation }: Props) {
           />
         }
         keyExtractor={(item) => `${item.id}`}
+        estimatedItemSize={100}
         renderItem={({ item, index }) => (
           <AnimeListItemContainer
             seedData={{
@@ -219,10 +217,6 @@ const StatusChipList = takimoto.FlatList<{
   label: string;
   value: MediaListStatus;
 }>({}, { gap: 8 });
-
-function makeAnimeFlatList<T>() {
-  return takimoto.FlatList<T>({}, {});
-}
 
 const AnimeListDivider = takimoto.View({
   height: 1,
