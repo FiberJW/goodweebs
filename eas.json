@@ -14,9 +14,6 @@
       "android": {
         "resourceClass": "medium",
         "image": "latest"
-      },
-      "env": {
-        "APP_VARIANT": "development"
       }
     },
     "preview": {
