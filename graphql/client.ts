@@ -5,6 +5,7 @@ import { HttpLink } from "@apollo/client/link/http";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Sentry from "@sentry/react-native";
 import { persistCache, AsyncStorageWrapper } from "apollo3-cache-persist";
+import * as Updates from "expo-updates";
 
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 
@@ -50,6 +51,7 @@ export async function createClient() {
 
             if (e.message.toLowerCase().includes("invalid token")) {
               await AsyncStorage.removeItem(ANILIST_ACCESS_TOKEN_STORAGE);
+              await Updates.reloadAsync();
             }
           });
         if (networkError) {
