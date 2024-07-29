@@ -22,23 +22,13 @@ import {
   useWindowDimensions,
 } from "react-native";
 
-type DeclarativeWindowSizeStyles<StyleT> = {
-  "<"?: {
-    [value: number]: StyleT;
-  };
-  "<="?: {
-    [value: number]: StyleT;
-  };
-  ">"?: {
-    [value: number]: StyleT;
-  };
-  ">="?: {
-    [value: number]: StyleT;
-  };
-  "="?: {
-    [value: number]: StyleT;
-  };
-};
+interface DeclarativeWindowSizeStyles<StyleT> {
+  "<"?: Record<number, StyleT>;
+  "<="?: Record<number, StyleT>;
+  ">"?: Record<number, StyleT>;
+  ">="?: Record<number, StyleT>;
+  "="?: Record<number, StyleT>;
+}
 
 type DynamicKeys<StyleT> = StyleT & {
   whenWidth?: DeclarativeWindowSizeStyles<StyleT>;
@@ -70,26 +60,31 @@ function useTakimoto<StyleT>(style: DynamicKeys<StyleT>) {
             const castedBreakpoint =
               breakpoint as unknown as keyof typeof breakpointBasedStyles;
             switch (castedOperator) {
-              case "<":
+              case "<": {
                 if (windowHeight < castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
-              case "<=":
+              }
+              case "<=": {
                 if (windowHeight <= castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
-              case "=":
+              }
+              case "=": {
                 if (windowHeight === castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
-              case ">":
+              }
+              case ">": {
                 if (windowHeight > castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
-              case ">=":
+              }
+              case ">=": {
                 if (windowHeight >= castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
+              }
             }
           }
         }
@@ -107,26 +102,31 @@ function useTakimoto<StyleT>(style: DynamicKeys<StyleT>) {
             const castedBreakpoint =
               breakpoint as unknown as keyof typeof breakpointBasedStyles;
             switch (castedOperator) {
-              case "<":
+              case "<": {
                 if (windowWidth < castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
-              case "<=":
+              }
+              case "<=": {
                 if (windowWidth <= castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
-              case "=":
+              }
+              case "=": {
                 if (windowWidth === castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
-              case ">":
+              }
+              case ">": {
                 if (windowWidth > castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
-              case ">=":
+              }
+              case ">=": {
                 if (windowWidth >= castedBreakpoint)
                   stylesArray.push(breakpointBasedStyles[castedBreakpoint]);
                 break;
+              }
             }
           }
         }
@@ -142,56 +142,56 @@ function useTakimoto<StyleT>(style: DynamicKeys<StyleT>) {
 export const takimoto = {
   View(style: DynamicKeys<ViewStyle>): FC<ViewProps> {
     return forwardRef(function WrappedView(
-      { style: styleProp, ...rest }: ViewProps,
-      ref: Ref<View>
+      { style: styleProperty, ...rest }: ViewProps,
+      reference: Ref<View>
     ) {
       const styles = useTakimoto(style);
 
-      return <View {...rest} style={[styles, styleProp]} ref={ref} />;
+      return <View {...rest} style={[styles, styleProperty]} ref={reference} />;
     });
   },
   Text(style: DynamicKeys<TextStyle>): FC<TextProps> {
     return forwardRef(function WrappedText(
-      { style: styleProp, ...rest }: TextProps,
-      ref: Ref<Text>
+      { style: styleProperty, ...rest }: TextProps,
+      reference: Ref<Text>
     ) {
       const styles = useTakimoto(style);
 
-      return <Text {...rest} style={[styles, styleProp]} ref={ref} />;
+      return <Text {...rest} style={[styles, styleProperty]} ref={reference} />;
     });
   },
   Image(style: DynamicKeys<ImageStyle>): FC<ImageProps> {
     return forwardRef(function WrappedImage(
-      { style: styleProp, ...rest }: ImageProps,
-      ref: Ref<Image>
+      { style: styleProperty, ...rest }: ImageProps,
+      reference: Ref<Image>
     ) {
       const styles = useTakimoto(style);
 
-      return <Image {...rest} style={[styles, styleProp]} ref={ref} />;
+      return <Image {...rest} style={[styles, styleProperty]} ref={reference} />;
     });
   },
   ActivityIndicator(style: DynamicKeys<ViewStyle>): FC<ActivityIndicatorProps> {
     return forwardRef(function WrappedActivityIndicator(
-      { style: styleProp, ...rest }: ActivityIndicatorProps,
-      ref: Ref<ActivityIndicator>
+      { style: styleProperty, ...rest }: ActivityIndicatorProps,
+      reference: Ref<ActivityIndicator>
     ) {
       const styles = useTakimoto(style);
 
       return (
-        <ActivityIndicator {...rest} style={[styles, styleProp]} ref={ref} />
+        <ActivityIndicator {...rest} style={[styles, styleProperty]} ref={reference} />
       );
     });
   },
 
   ImageBackground(style: DynamicKeys<ViewStyle>): FC<ImageBackgroundProps> {
     return forwardRef(function WrappedImageBackground(
-      { style: styleProp, ...rest }: ImageBackgroundProps,
-      ref: Ref<ImageBackground>
+      { style: styleProperty, ...rest }: ImageBackgroundProps,
+      reference: Ref<ImageBackground>
     ) {
       const styles = useTakimoto(style);
 
       return (
-        <ImageBackground {...rest} style={[styles, styleProp]} ref={ref} />
+        <ImageBackground {...rest} style={[styles, styleProperty]} ref={reference} />
       );
     });
   },
@@ -201,11 +201,11 @@ export const takimoto = {
   ): FC<ScrollViewProps> {
     return forwardRef(function WrappedScrollView(
       {
-        style: styleProp,
-        contentContainerStyle: contentContainerStyleProp,
+        style: styleProperty,
+        contentContainerStyle: contentContainerStyleProperty,
         ...rest
       }: ScrollViewProps,
-      ref: Ref<ScrollView>
+      reference: Ref<ScrollView>
     ) {
       const styles = useTakimoto(style);
       const contentContainerStyles = useTakimoto(contentContainerStyle);
@@ -213,12 +213,12 @@ export const takimoto = {
       return (
         <ScrollView
           {...rest}
-          style={[styles, styleProp]}
+          style={[styles, styleProperty]}
           contentContainerStyle={[
             contentContainerStyles,
-            contentContainerStyleProp,
+            contentContainerStyleProperty,
           ]}
-          ref={ref}
+          ref={reference}
         />
       );
     });
@@ -229,11 +229,11 @@ export const takimoto = {
   ): FC<FlatListProps<ItemT>> {
     return forwardRef(function WrappedFlatList(
       {
-        style: styleProp,
-        contentContainerStyle: contentContainerStyleProp,
+        style: styleProperty,
+        contentContainerStyle: contentContainerStyleProperty,
         ...rest
       }: FlatListProps<ItemT>,
-      ref: Ref<FlatList>
+      reference: Ref<FlatList>
     ) {
       const styles = useTakimoto(style);
       const contentContainerStyles = useTakimoto(contentContainerStyle);
@@ -241,24 +241,24 @@ export const takimoto = {
       return (
         <FlatList
           {...rest}
-          style={[styles, styleProp]}
+          style={[styles, styleProperty]}
           contentContainerStyle={[
             contentContainerStyles,
-            contentContainerStyleProp,
+            contentContainerStyleProperty,
           ]}
-          ref={ref}
+          ref={reference}
         />
       );
     });
   },
   TextInput(style: DynamicKeys<TextStyle>): FC<TextInputProps> {
     return forwardRef(function WrappedTextInput(
-      { style: styleProp, ...rest }: TextInputProps,
-      ref: Ref<TextInput>
+      { style: styleProperty, ...rest }: TextInputProps,
+      reference: Ref<TextInput>
     ) {
       const styles = useTakimoto(style);
 
-      return <TextInput {...rest} style={[styles, styleProp]} ref={ref} />;
+      return <TextInput {...rest} style={[styles, styleProperty]} ref={reference} />;
     });
   },
 };

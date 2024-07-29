@@ -22,7 +22,7 @@ import { PressableOpacity } from "../PressableOpacity";
 import { EpisodesBehind } from "./EpisodesBehind";
 import { ProgressButton } from "./ProgressButton";
 
-type Props = {
+interface Properties {
   onIncrement: () => void;
   onDecrement: () => void;
   progress: number;
@@ -34,7 +34,7 @@ type Props = {
   >;
   first: boolean;
   last: boolean;
-};
+}
 
 export function AnimeListItem({
   progress,
@@ -45,7 +45,7 @@ export function AnimeListItem({
   navigation,
   first,
   last,
-}: Props) {
+}: Properties) {
   const now = useNow();
 
   const isAiringAndCurrentlyWatching =

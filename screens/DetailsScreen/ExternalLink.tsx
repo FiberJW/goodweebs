@@ -36,83 +36,107 @@ export function ExternalLink({ url, site }: MediaExternalLinkDataFragment) {
   let color = darkTheme.iconFill;
 
   switch (site.toUpperCase()) {
-    case "CRUNCHYROLL":
+    case "CRUNCHYROLL": {
       color = crunchyrollOrange;
       break;
-    case "TWITTER":
+    }
+    case "TWITTER": {
       color = twitterBlue;
       break;
-    case "FUNIMATION":
+    }
+    case "FUNIMATION": {
       color = funimationPurple;
       break;
-    case "VRV":
+    }
+    case "VRV": {
       color = vrvYellow;
       break;
-    case "HULU":
+    }
+    case "HULU": {
       color = huluGreen;
       break;
-    case "ANIMELAB":
+    }
+    case "ANIMELAB": {
       color = animeLabPurple;
       break;
-    case "YOUTUBE":
+    }
+    case "YOUTUBE": {
       color = youtubeRed;
       break;
-    case "NETFLIX":
+    }
+    case "NETFLIX": {
       color = netflixRed;
       break;
-    case "VIZ":
+    }
+    case "VIZ": {
       color = vizRed;
       break;
-    case "HBO MAX":
+    }
+    case "HBO MAX": {
       color = hboMaxPink;
       break;
-    case "MAX":
+    }
+    case "MAX": {
       color = maxBlue;
       break;
-    case "TIKTOK":
+    }
+    case "TIKTOK": {
       color = tiktokPink;
       break;
+    }
     case "TUBI TV":
-    case "TUBI":
+    case "TUBI": {
       color = tubiOrange;
       break;
-    case "OFFICIAL SITE":
+    }
+    case "OFFICIAL SITE": {
       color = officialSiteFallback;
       break;
-    case "HIDIVE":
+    }
+    case "HIDIVE": {
       color = hidiveBlue;
       break;
-    case "INSTAGRAM":
+    }
+    case "INSTAGRAM": {
       color = instagramPink;
       break;
-    case "DISNEY PLUS":
+    }
+    case "DISNEY PLUS": {
       color = disneyPlusBlue;
       break;
+    }
     case "BILIBILI TV":
-    case "BILIBILI":
+    case "BILIBILI": {
       color = bilibiliBlue;
       break;
-    case "IQ":
+    }
+    case "IQ": {
       color = iqGreen;
       break;
-    case "STAR+":
+    }
+    case "STAR+": {
       color = starPlusOrange;
       break;
-    case "ADULT SWIM":
+    }
+    case "ADULT SWIM": {
       color = "black";
       break;
+    }
     case "AMAZON":
     case "AMAZON PRIME":
-    case "AMAZON PRIME VIDEO":
+    case "AMAZON PRIME VIDEO": {
       color = amazonPrimeBlue;
       break;
-    case "FACEBOOK":
+    }
+    case "FACEBOOK": {
       color = facebookBlue;
       break;
-    default:
+    }
+    default: {
       Sentry.captureMessage(`Unknown external link site: ${site}`);
       color = "gray";
       break;
+    }
   }
 
   return (

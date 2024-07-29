@@ -3,11 +3,11 @@ import React, { useState, createContext, useContext, useEffect } from "react";
 
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 
-type AccessTokenContextValue = {
+interface AccessTokenContextValue {
   accessToken?: string;
   checkedForToken: boolean;
   setAccessToken: (accountName?: string) => void;
-};
+}
 
 const AccessTokenContext = createContext<AccessTokenContextValue | null>(null);
 

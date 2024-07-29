@@ -5,17 +5,17 @@ import { darkTheme } from "yep/themes";
 
 import { PressableOpacity } from "../PressableOpacity";
 
-type ProgressButtonProps = {
+interface ProgressButtonProperties {
   onPress: () => void;
   icon: ImageSourcePropType;
   disabled?: boolean;
-};
+}
 
 export function ProgressButton({
   onPress,
   icon,
   disabled,
-}: ProgressButtonProps) {
+}: ProgressButtonProperties) {
   return (
     <PressableOpacity
       onPress={onPress}

@@ -31,14 +31,14 @@ import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
 import { notEmpty } from "yep/utils";
 
-type Props = {
+interface Properties {
   navigation: CompositeNavigationProp<
     BottomTabNavigationProp<TabParamList, "Anime">,
     StackNavigationProp<RootStackParamList>
   >;
-};
+}
 
-export function AnimeListScreen({ navigation }: Props) {
+export function AnimeListScreen({ navigation }: Properties) {
   const [isFirstFocus, setIsFirstFocus] = useState(true);
   const [status, setStatus] = useState<MediaListStatus>(
     MediaListStatusWithLabel[0].value
@@ -46,7 +46,7 @@ export function AnimeListScreen({ navigation }: Props) {
 
   const { accessToken, setAccessToken } = useAccessToken();
 
-  const [, , promptAsync] = useAniListAuthRequest();
+  const promptAsync = useAniListAuthRequest()[2];
   // TODO: save userId to AsyncStorage instead of fetching
   const { loading: loadingViewer, data: viewerData } = useGetViewerQuery({
     skip: !accessToken,
@@ -78,7 +78,7 @@ export function AnimeListScreen({ navigation }: Props) {
     [animeListData]
   );
 
-  const listCountText = `${list.length} title${list.length !== 1 ? "s" : ""}`;
+  const listCountText = `${list.length} title${list.length === 1 ? "" : "s"}`;
 
   // TODO: maybe make this better? feels a little dank
   const AnimeFlatList = makeAnimeFlatList<typeof list[number]>();
@@ -140,29 +140,27 @@ export function AnimeListScreen({ navigation }: Props) {
         ListEmptyComponent={() =>
           refreshing ? null : (
             <EmptyState
-              title={!accessToken ? "Log In" : "Empty list"}
+              title={accessToken ? "Empty list" : "Log In"}
               description={
-                !accessToken
-                  ? "Start tracking your anime by using an AniList account!"
-                  : "Explore the world of anime by adding some shows to your list!"
+                accessToken
+                  ? "Explore the world of anime by adding some shows to your list!"
+                  : "Start tracking your anime by using an AniList account!"
               }
               cta={{
-                label: !accessToken ? "Log In" : "Discover new anime",
+                label: accessToken ? "Discover new anime" : "Log In",
                 onPress: async () => {
-                  if (!accessToken) {
+                  if (accessToken) {
+                    navigation.navigate("Discover");
+                  } else {
                     const result = await promptAsync();
 
-                    if (result.type === "error" || result.type === "success") {
-                      if (result.params.access_token) {
+                    if ((result.type === "error" || result.type === "success") && result.params.access_token) {
                         setAccessToken(result.params.access_token);
                         await AsyncStorage.setItem(
                           ANILIST_ACCESS_TOKEN_STORAGE,
                           result.params.access_token
                         );
                       }
-                    }
-                  } else {
-                    navigation.navigate("Discover");
                   }
                 },
               }}

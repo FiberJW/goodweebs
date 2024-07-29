@@ -24,7 +24,7 @@ export function DiscoverPoster({
         uri={item.coverImage?.large ?? item.coverImage?.medium ?? ""}
         size="large"
         title={getTitle(item.title ?? undefined)}
-        style={(index + 1) % 3 !== 0 ? { marginRight: 16 } : undefined}
+        style={(index + 1) % 3 === 0 ? undefined : { marginRight: 16 }}
       />
     </PressableOpacity>
   );

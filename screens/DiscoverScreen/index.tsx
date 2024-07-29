@@ -24,16 +24,16 @@ import { notEmpty } from "yep/utils";
 
 import { DiscoverPoster } from "./DiscoverPoster";
 
-type Props = {
+interface Properties {
   navigation: StackNavigationProp<RootStackParamList>;
-};
+}
 
-export function DiscoverScreen({ navigation }: Props) {
+export function DiscoverScreen({ navigation }: Properties) {
   const [searchTerm, setSearchTerm] = useState("");
   const { width: windowWidth } = useWindowDimensions();
 
   const posterWidth = (windowWidth - 16 * 4) / 3;
-  const posterHeight = posterWidth * 1.4285714286;
+  const posterHeight = posterWidth * 1.428_571_428_6;
 
   const showSearchResultsView = searchTerm.length > 0;
 
@@ -109,7 +109,7 @@ export function DiscoverScreen({ navigation }: Props) {
           </>
         ) : (
           <>
-            {trendingList.length ? (
+            {trendingList.length > 0 ? (
               <Text style={styles.listHeader}>
                 Top {trendingList.length} trending anime
               </Text>

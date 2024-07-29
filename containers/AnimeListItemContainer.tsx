@@ -22,7 +22,7 @@ import { useDebouncedMutation } from "yep/hooks/helpers";
 import { RootStackParamList, TabParamList } from "yep/navigation";
 import { useAccessToken } from "yep/useAccessToken";
 
-type Props = {
+interface Properties {
   seedData: {
     id: number;
     progress: number;
@@ -36,7 +36,7 @@ type Props = {
   >;
   first: boolean;
   last: boolean;
-};
+}
 
 export function AnimeListItemContainer({
   seedData,
@@ -45,7 +45,7 @@ export function AnimeListItemContainer({
   refetchListVariables,
   first,
   last,
-}: Props) {
+}: Properties) {
   const { accessToken } = useAccessToken();
   const [progressShadow, setProgressShadow] = useState(seedData.progress);
   const [shouldShowProgressShadow, setShouldShowProgressShadow] =

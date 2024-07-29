@@ -6,12 +6,12 @@ import { PressableOpacity } from "yep/components/PressableOpacity";
 import { CharacterDataFragment } from "yep/graphql/generated";
 import { RootStackParamList } from "yep/navigation";
 
-type Props = {
+interface Properties {
   character: CharacterDataFragment;
   navigation: StackNavigationProp<RootStackParamList>;
-};
+}
 
-export function CharacterItem({ character, navigation }: Props) {
+export function CharacterItem({ character, navigation }: Properties) {
   if (!character.image?.large) return null;
 
   return (

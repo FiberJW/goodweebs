@@ -5,11 +5,11 @@ import { StyleSheet, Platform, View, Text } from "react-native";
 import { black } from "yep/colors";
 import { Manrope } from "yep/typefaces";
 
-type EpisodesBehindProps = {
+interface EpisodesBehindProperties {
   count: number;
-};
+}
 
-export function EpisodesBehind({ count }: EpisodesBehindProps) {
+export function EpisodesBehind({ count }: EpisodesBehindProperties) {
   if (count <= 0) return null;
 
   return (

@@ -11,37 +11,42 @@ import {
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
-type Props = {
+interface Properties {
   size: "small" | "tiny" | "large" | "profile" | "details";
   uri: string;
   title?: string;
   style?: ViewStyle;
   children?: ReactNode;
-};
+}
 
-export function PosterAndTitle({ size, uri, title, style, children }: Props) {
+export function PosterAndTitle({ size, uri, title, style, children }: Properties) {
   const { width: windowWidth } = useWindowDimensions();
 
   let posterWidth: number;
   switch (size) {
-    case "large":
+    case "large": {
       posterWidth = (windowWidth - 16 * 4) / 3;
       break;
-    case "details":
+    }
+    case "details": {
       posterWidth = 128;
       break;
-    case "profile":
+    }
+    case "profile": {
       posterWidth = 89.6;
       break;
-    case "small":
+    }
+    case "small": {
       posterWidth = 56;
       break;
-    case "tiny":
+    }
+    case "tiny": {
       posterWidth = 48;
       break;
+    }
   }
 
-  const posterHeight = Math.round(posterWidth * 1.4285714286);
+  const posterHeight = Math.round(posterWidth * 1.428_571_428_6);
 
   return (
     <View style={[styles.container, style]}>

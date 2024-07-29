@@ -11,13 +11,13 @@ const StepperButtonIcon = takimoto.Image({
   tintColor: darkTheme.text,
 });
 
-type Props = {
+interface Properties {
   onPress: () => void;
   disabled?: boolean;
   type: "increment" | "decrement";
-};
+}
 
-export function StepperButton({ onPress, type, disabled }: Props) {
+export function StepperButton({ onPress, type, disabled }: Properties) {
   return (
     <PressableOpacity
       disabled={disabled}

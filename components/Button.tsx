@@ -9,16 +9,19 @@ type ButtonSize = "normal" | "large" | "small";
 
 function getDynamicButtonStyles(size: ButtonSize): ViewStyle {
   switch (size) {
-    case "large":
+    case "large": {
       return { padding: 24 };
-    case "normal":
+    }
+    case "normal": {
       return { padding: 16 };
-    case "small":
+    }
+    case "small": {
       return { padding: 8 };
+    }
   }
 }
 
-type Props = {
+interface Properties {
   label: string;
   onPress: () => void;
   size?: ButtonSize;
@@ -27,7 +30,7 @@ type Props = {
   containerStyle?: ViewStyle;
   loading?: boolean;
   color?: string;
-};
+}
 
 export function Button({
   onPress,
@@ -38,7 +41,7 @@ export function Button({
   style,
   containerStyle,
   color,
-}: Props) {
+}: Properties) {
   const { padding } = getDynamicButtonStyles(size);
 
   return (

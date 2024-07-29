@@ -8,12 +8,12 @@ import { PressableOpacity } from "../PressableOpacity";
 const likedIcon = require("yep/assets/icons/favorite-24.png");
 const notLikedIcon = require("yep/assets/icons/favorite-border-24.png");
 
-type Props = {
+interface Properties {
   isLiked: boolean;
   onPress: () => Promise<void>;
-};
+}
 
-export function LikeButton({ isLiked, onPress }: Props) {
+export function LikeButton({ isLiked, onPress }: Properties) {
   const [loading, setLoading] = useState(false);
 
   async function handleOnPress() {

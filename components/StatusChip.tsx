@@ -6,13 +6,13 @@ import { Manrope } from "yep/typefaces";
 
 import { PressableOpacity } from "./PressableOpacity";
 
-type Props = {
+interface Properties {
   label: string;
   onPress: () => void;
   isSelected?: boolean;
-};
+}
 
-export function StatusChip({ label, onPress, isSelected }: Props) {
+export function StatusChip({ label, onPress, isSelected }: Properties) {
   return (
     <PressableOpacity
       onPress={onPress}

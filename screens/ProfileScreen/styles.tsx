@@ -60,9 +60,9 @@ const StatValue = takimoto.Text({
   color: darkTheme.text,
 });
 
-type StatProps = { label: string; value: number };
+interface StatProperties { label: string; value: number }
 
-export function Stat({ label, value }: StatProps) {
+export function Stat({ label, value }: StatProperties) {
   return (
     <StatContainer>
       <StatLabel numberOfLines={1}>{label}</StatLabel>

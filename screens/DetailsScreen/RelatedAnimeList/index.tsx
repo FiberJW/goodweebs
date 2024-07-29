@@ -28,17 +28,17 @@ const RelatedListHeader = takimoto.Text({
   marginBottom: 8,
 });
 
-type RelatedListProps = {
+interface RelatedListProperties {
   relations: AnimeRelationFragmentFragment[];
   relationType: MediaRelation;
   navigation: StackNavigationProp<RootStackParamList>;
-};
+}
 
 export function RelatedAnimeList({
   relationType,
   relations,
   navigation,
-}: RelatedListProps) {
+}: RelatedListProperties) {
   if (
     // filter out non-anime relations
     // TODO: add back in when DetailScreen can support Characters/People, Manga, and Studios

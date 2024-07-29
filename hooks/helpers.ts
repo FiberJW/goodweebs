@@ -11,11 +11,11 @@ import { debounce } from "lodash";
 import { useRef, useEffect, useState } from "react";
 import { useWindowDimensions } from "react-native";
 
-export function useDidMountEffect(func: () => void, deps: any[]) {
+export function useDidMountEffect(function_: () => void, deps: any[]) {
   const didMount = useRef(false);
 
   useEffect(() => {
-    if (didMount.current) func();
+    if (didMount.current) function_();
     else didMount.current = true;
   }, deps);
 }
@@ -59,18 +59,18 @@ export function useDebouncedMutation<
   const debouncedMutation = useRef(
     debounce(
       async (
-        mutationFunc: ({
+        mutationFunction: ({
           variables,
         }: MutationFunctionOptions<MutationData, MutationVariables>) => Promise<
           FetchResult<MutationData>
         >,
         variables?: MutationVariables
       ) => {
-        // eslint-disable-next-line
+         
         const controller = new AbortController();
         abortController.current = controller;
 
-        await mutationFunc({
+        await mutationFunction({
           variables,
           context: { fetchOptions: { signal: controller.signal } },
         });
@@ -85,7 +85,7 @@ export function useDebouncedMutation<
     variables,
     context,
   }: MutationFunctionOptions<MutationData, MutationVariables>) => {
-    let update = undefined;
+    let update;
 
     if (makeUpdateFunction) {
       update = makeUpdateFunction(variables);

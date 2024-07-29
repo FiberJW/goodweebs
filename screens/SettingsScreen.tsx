@@ -15,11 +15,11 @@ import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
 
-type Props = {
+interface Properties {
   navigation: StackNavigationProp<RootStackParamList & TabParamList>;
-};
+}
 
-export function SettingsScreen({ navigation }: Props) {
+export function SettingsScreen({ navigation }: Properties) {
   // TODO: move to user preferences/settings that persist across installations
   const [hideScores, setHideScores] = usePersistedState<boolean>(
     StorageKeys.HIDE_SCORES_GLOBAL

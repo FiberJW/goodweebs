@@ -17,12 +17,12 @@ import { RootStackParamList } from "yep/navigation";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
-type Props = {
+interface Properties {
   navigation: StackNavigationProp<RootStackParamList>;
   route: RouteProp<RootStackParamList, "Character">;
-};
+}
 
-export function CharacterScreen({ route }: Props) {
+export function CharacterScreen({ route }: Properties) {
   const insets = useSafeAreaInsets();
 
   const { loading, data, error } = useGetCharacterQuery({
@@ -40,14 +40,7 @@ export function CharacterScreen({ route }: Props) {
       contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
       showsVerticalScrollIndicator={false}
     >
-      {!data ? (
-        !loading && error ? (
-          <EmptyState
-            title="Could not find character"
-            description={`We ran into an unexpected error loading the requested character: ${error?.message}`}
-          />
-        ) : null
-      ) : (
+      {data ? (
         <>
           <Text style={styles.title} numberOfLines={5}>
             {character?.name?.full}
@@ -91,6 +84,13 @@ export function CharacterScreen({ route }: Props) {
             <DescriptionRenderer description={character.description} />
           ) : null}
         </>
+      ) : (
+        !loading && error ? (
+          <EmptyState
+            title="Could not find character"
+            description={`We ran into an unexpected error loading the requested character: ${error?.message}`}
+          />
+        ) : null
       )}
     </ScrollView>
   );

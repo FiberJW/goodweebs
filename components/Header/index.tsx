@@ -5,12 +5,12 @@ import { StyleSheet, View, Text } from "react-native";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
-type Props = {
+interface Properties {
   label: string;
   rightSlot?: React.ReactNode;
-};
+}
 
-export function Header({ label, rightSlot }: Props) {
+export function Header({ label, rightSlot }: Properties) {
   return (
     <View
       style={[

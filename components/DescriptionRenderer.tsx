@@ -9,13 +9,13 @@ import { Manrope } from "yep/typefaces";
 
 import { Button } from "./Button";
 
-type Props = {
+interface Properties {
   description: string;
-};
+}
 
 const markdownToHtmlConverter = new showdown.Converter();
 
-export function DescriptionRenderer({ description }: Props) {
+export function DescriptionRenderer({ description }: Properties) {
   const { width } = useWindowDimensions();
 
   const spoilerRegex = /~!(.*?)!~/gi;
@@ -28,7 +28,7 @@ export function DescriptionRenderer({ description }: Props) {
     .makeHtml(description)
     .replace("<p>~!", "~!")
     .replace("!~</p>", "!~")
-    .replace(
+    .replaceAll(
       spoilerRegex,
       showSpoilers
         ? `<p><strong style="color:${yellowDarkA.yellowA9}">Spoiler:</strong> $1</p>`

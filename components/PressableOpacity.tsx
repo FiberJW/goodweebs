@@ -9,7 +9,7 @@ import {
 
 import { white } from "yep/colors";
 
-type Props = PressableProps & {
+type Properties = PressableProps & {
   activeOpacity?: number;
   borderRadius?: number;
   containerStyle?: ViewStyle;
@@ -24,7 +24,7 @@ export function PressableOpacity({
   containerStyle,
   useDisabledOpacity,
   ...rest
-}: Props) {
+}: Properties) {
   return (
     <BorderRadiusContainer borderRadius={borderRadius} style={containerStyle}>
       <Pressable
@@ -33,7 +33,7 @@ export function PressableOpacity({
             typeof style === "function" ? style({ pressed }) : style;
 
           const pressedOpacity =
-            Platform.OS !== "android" ? activeOpacity ?? 0.2 : 1;
+            Platform.OS === "android" ? 1 : activeOpacity ?? 0.2;
 
           const nativeStyle = {
             opacity: pressed ? pressedOpacity : 1,
@@ -54,7 +54,7 @@ export function PressableOpacity({
   );
 }
 
-type BorderRadiusContainerProps = PropsWithChildren<{
+type BorderRadiusContainerProperties = PropsWithChildren<{
   borderRadius?: number;
   style?: ViewStyle;
 }>;
@@ -63,7 +63,7 @@ function BorderRadiusContainer({
   borderRadius,
   style,
   children,
-}: BorderRadiusContainerProps) {
+}: BorderRadiusContainerProperties) {
   if (!borderRadius) return <>{children}</>;
 
   return (

@@ -5,14 +5,14 @@ import { Button } from "yep/components/Button";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
-type Props = {
+interface Properties {
   style?: ViewStyle;
   title: string;
   description: string;
   cta?: { label: string; onPress: () => void };
-};
+}
 
-export function EmptyState({ title, description, style, cta }: Props) {
+export function EmptyState({ title, description, style, cta }: Properties) {
   return (
     <View style={[styles.container, style]}>
       <Image

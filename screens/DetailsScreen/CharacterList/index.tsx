@@ -17,16 +17,16 @@ const Header = takimoto.Text({
   marginBottom: 8,
 });
 
-type Props = {
+interface Properties {
   characters: CharacterDataFragment[];
   navigation: StackNavigationProp<RootStackParamList>;
-};
+}
 
 export function CharacterList({
   characters,
 
   navigation,
-}: Props) {
+}: Properties) {
   return (
     <>
       <Header>Characters</Header>

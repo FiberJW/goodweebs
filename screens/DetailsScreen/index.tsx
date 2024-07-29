@@ -101,9 +101,9 @@ const PosterAndInfoContainer = takimoto.View({
   marginBottom: 16,
 });
 
-type InfoProps = { label: string; value: ReactNode };
+interface InfoProperties { label: string; value: ReactNode }
 
-function Info({ label, value }: InfoProps) {
+function Info({ label, value }: InfoProperties) {
   return (
     <InfoContainer>
       <InfoLabel numberOfLines={1}>{label}</InfoLabel>
@@ -123,12 +123,12 @@ const ButtonsRow = takimoto.View({
   marginBottom: 16,
 });
 
-type Props = {
+interface Properties {
   navigation: StackNavigationProp<RootStackParamList>;
   route: RouteProp<RootStackParamList, "Details">;
-};
+}
 
-export function DetailsScreen({ route, navigation }: Props) {
+export function DetailsScreen({ route, navigation }: Properties) {
   const { showActionSheetWithOptions } = useActionSheet();
   const insets = useSafeAreaInsets();
   const [loadingStatus, setLoadingStatus] = useState(false);
@@ -342,14 +342,7 @@ export function DetailsScreen({ route, navigation }: Props) {
         />
       }
     >
-      {!data ? (
-        !loading && error ? (
-          <EmptyState
-            title="Could not find anime"
-            description={`We ran into an unexpected error loading the requested anime: ${error?.message}`}
-          />
-        ) : null
-      ) : (
+      {data ? (
         <>
           <Title numberOfLines={5}>
             {data?.Media?.title?.english ??
@@ -518,16 +511,12 @@ export function DetailsScreen({ route, navigation }: Props) {
 
                     setLoadingStatus(true);
 
-                    if (mediaListEntry && buttonIndex === options.length - 2) {
-                      await removeFromList({
+                    await (mediaListEntry && buttonIndex === options.length - 2 ? removeFromList({
                         id: mediaListEntry.id,
-                      });
-                    } else {
-                      await updateStatus({
+                      }) : updateStatus({
                         mediaId: data?.Media?.id,
                         status: MediaListStatusWithLabel[buttonIndex].value,
-                      });
-                    }
+                      }));
                     setLoadingStatus(false);
                   }
                 );
@@ -555,9 +544,9 @@ export function DetailsScreen({ route, navigation }: Props) {
                       id: data?.Media?.mediaListEntry?.id,
                       scoreRaw: s * 10,
                     });
-                  } catch (e) {
+                  } catch (error_) {
                     // TODO: display error
-                    console.error(e);
+                    console.error(error_);
                   }
                 }}
               />
@@ -579,9 +568,9 @@ export function DetailsScreen({ route, navigation }: Props) {
                       id: data?.Media?.mediaListEntry?.id,
                       progress,
                     });
-                  } catch (e) {
+                  } catch (error_) {
                     // TODO: display error
-                    console.error(e);
+                    console.error(error_);
                   }
                 }}
               />
@@ -636,6 +625,13 @@ export function DetailsScreen({ route, navigation }: Props) {
             </>
           ) : null}
         </>
+      ) : (
+        !loading && error ? (
+          <EmptyState
+            title="Could not find anime"
+            description={`We ran into an unexpected error loading the requested anime: ${error?.message}`}
+          />
+        ) : null
       )}
     </Container>
   );

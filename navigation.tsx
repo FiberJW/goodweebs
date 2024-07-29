@@ -16,22 +16,22 @@ import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
 
-export type RootStackParamList = {
+export interface RootStackParameterList {
   Tabs: undefined;
   Auth: undefined;
   Details: { id: number };
   Character: { id: number };
   Settings: undefined;
-};
+}
 
-export type TabParamList = {
+export interface TabParameterList {
   Anime: undefined;
   Discover: undefined;
   Profile: undefined;
-};
+}
 
-const Tab = createBottomTabNavigator<TabParamList>();
-const Stack = createStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<TabParameterList>();
+const Stack = createStackNavigator<RootStackParameterList>();
 
 function Tabs() {
   const { accessToken } = useAccessToken();
@@ -148,11 +148,11 @@ export const theme: typeof DefaultTheme = {
   },
 };
 
-type NavigationProps = {
+interface NavigationProperties {
   accessToken?: string;
-};
+}
 
-export function Navigation({ accessToken }: NavigationProps) {
+export function Navigation({ accessToken }: NavigationProperties) {
   return (
     <NavigationContainer theme={theme}>
       <StatusBar

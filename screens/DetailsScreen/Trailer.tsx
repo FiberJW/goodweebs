@@ -15,20 +15,22 @@ import { MediaTrailerDataFragment } from "yep/graphql/generated";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
-type Props = {
+interface Properties {
   trailer: MediaTrailerDataFragment;
-};
+}
 
 function getVideoURL(site: string, id: string): string | undefined {
   switch (site) {
-    case "youtube":
+    case "youtube": {
       return `https://www.youtube.com/watch?v=${id}`;
-    case "dailymotion":
+    }
+    case "dailymotion": {
       return `https://www.dailymotion.com/video/${id}`;
+    }
   }
 }
 
-export function Trailer({ trailer: { id, site, thumbnail } }: Props) {
+export function Trailer({ trailer: { id, site, thumbnail } }: Properties) {
   const { width: windowWidth } = useWindowDimensions();
 
   const width = windowWidth - 32;

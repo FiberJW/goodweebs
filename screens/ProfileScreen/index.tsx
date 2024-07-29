@@ -27,11 +27,11 @@ import {
   EverythingButTheCTA,
 } from "./styles";
 
-type Props = {
+interface Properties {
   navigation: StackNavigationProp<RootStackParamList & TabParamList>;
-};
+}
 
-export function ProfileScreen({ navigation }: Props) {
+export function ProfileScreen({ navigation }: Properties) {
   const {
     loading: loadingViewer,
     data: viewerData,
@@ -134,7 +134,7 @@ export function ProfileScreen({ navigation }: Props) {
                 </StatsRow>
               </UserInfoAndStatsContainer>
             </OptionalBackgroundImage>
-            {animeList.length ? (
+            {animeList.length > 0 ? (
               <View>
                 <ListHeader>Favorite Anime</ListHeader>
                 <FavoriteAnimeList
@@ -161,7 +161,7 @@ export function ProfileScreen({ navigation }: Props) {
                 />
               </View>
             ) : null}
-            {characterList.length ? (
+            {characterList.length > 0 ? (
               <View>
                 <ListHeader>Favorite Characters</ListHeader>
                 <FavoriteCharacterList

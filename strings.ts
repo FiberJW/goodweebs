@@ -38,13 +38,17 @@ export function getString(
   const stringText = en_us[stringName];
 
   switch (stringCase) {
-    case StringCase.UPPER:
+    case StringCase.UPPER: {
       return stringText.toLocaleUpperCase();
-    case StringCase.LOWER:
+    }
+    case StringCase.LOWER: {
       return stringText.toLocaleLowerCase();
-    case StringCase.TITLE:
+    }
+    case StringCase.TITLE: {
       return toTitleCase(stringText);
-    default:
+    }
+    default: {
       return stringText;
+    }
   }
 }

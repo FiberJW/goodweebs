@@ -16,7 +16,7 @@ export function notEmpty<TValue>(
   return value !== null && value !== undefined;
 }
 
-const monthMap: { [n: number]: string } = {
+const monthMap: Record<number, string> = {
   1: "January",
   2: "February",
   3: "March",
@@ -46,32 +46,45 @@ export function assertUnreachable(x: never): never {
 
 export function getReadableMediaRelation(mediaRelation: MediaRelation): string {
   switch (mediaRelation) {
-    case MediaRelation.Adaptation:
+    case MediaRelation.Adaptation: {
       return "Adaptation";
-    case MediaRelation.Alternative:
+    }
+    case MediaRelation.Alternative: {
       return "Alternative";
-    case MediaRelation.Prequel:
+    }
+    case MediaRelation.Prequel: {
       return "Prequel";
-    case MediaRelation.Parent:
+    }
+    case MediaRelation.Parent: {
       return "Parent";
-    case MediaRelation.Sequel:
+    }
+    case MediaRelation.Sequel: {
       return "Sequel";
-    case MediaRelation.Character:
+    }
+    case MediaRelation.Character: {
       return "Character";
-    case MediaRelation.SideStory:
+    }
+    case MediaRelation.SideStory: {
       return "Side story";
-    case MediaRelation.Summary:
+    }
+    case MediaRelation.Summary: {
       return "Summary";
-    case MediaRelation.SpinOff:
+    }
+    case MediaRelation.SpinOff: {
       return "Spin off";
-    case MediaRelation.Other:
+    }
+    case MediaRelation.Other: {
       return "Other";
-    case MediaRelation.Source:
+    }
+    case MediaRelation.Source: {
       return "Source";
-    case MediaRelation.Compilation:
+    }
+    case MediaRelation.Compilation: {
       return "Compilation";
-    case MediaRelation.Contains:
+    }
+    case MediaRelation.Contains: {
       return "Contains";
+    }
   }
 }
 
@@ -103,7 +116,7 @@ export function getAiringStatusText(
   now: Date
 ): string | undefined {
   switch (media.status) {
-    case MediaStatus.Releasing:
+    case MediaStatus.Releasing: {
       return media.nextAiringEpisode
         ? `EP ${media.nextAiringEpisode?.episode} airs in ${formatDistanceToNow(
             add(now, {
@@ -111,20 +124,25 @@ export function getAiringStatusText(
             })
           )}`
         : "Releasing";
-    case MediaStatus.NotYetReleased:
+    }
+    case MediaStatus.NotYetReleased: {
       return media.startDate
         ? getDateText(media.startDate, "Starting")
         : "Not yet released";
-    case MediaStatus.Hiatus:
+    }
+    case MediaStatus.Hiatus: {
       return "On hiatus";
-    case MediaStatus.Finished:
+    }
+    case MediaStatus.Finished: {
       return media.endDate
         ? getDateText(media.endDate, "Finished")
         : "Finished";
-    case MediaStatus.Cancelled:
+    }
+    case MediaStatus.Cancelled: {
       return media.endDate
         ? getDateText(media.endDate, "Cancelled")
         : "Cancelled";
+    }
   }
 }
 

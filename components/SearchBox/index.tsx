@@ -13,7 +13,7 @@ import { Manrope } from "yep/typefaces";
 
 import { PressableOpacity } from "../PressableOpacity";
 
-type Props = TextInputProps & {
+type Properties = TextInputProps & {
   onCancelPress: () => void;
   onClearPress: () => void;
 };
@@ -21,10 +21,10 @@ type Props = TextInputProps & {
 export function SearchBox({
   onClearPress,
   onCancelPress,
-  ...textInputProps
-}: Props) {
+  ...textInputProperties
+}: Properties) {
   const [isCancelButtonVisible, setIsCancelButtonVisible] = useState(false);
-  const inputRef = useRef<TextInput>(null);
+  const inputReference = useRef<TextInput>(null);
 
   return (
     <View style={styles.container}>
@@ -35,12 +35,12 @@ export function SearchBox({
         />
         <TextInput
           style={styles.searchInput}
-          {...textInputProps}
-          ref={inputRef}
+          {...textInputProperties}
+          ref={inputReference}
           onFocus={() => setIsCancelButtonVisible(true)}
           placeholderTextColor={darkTheme.inputPlaceholder}
         />
-        {(textInputProps.value?.length ?? 0) > 0 && (
+        {(textInputProperties.value?.length ?? 0) > 0 && (
           <PressableOpacity onPress={onClearPress}>
             <Image
               style={styles.clearIcon}
@@ -54,7 +54,7 @@ export function SearchBox({
           onPress={() => {
             setIsCancelButtonVisible(false);
             // eslint doesn't understand optional chaining
-            inputRef.current?.blur(); // eslint-disable-line
+            inputReference.current?.blur();  
             onCancelPress();
           }}
           style={{ marginLeft: 8 }}

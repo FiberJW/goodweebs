@@ -36,14 +36,14 @@ const StepperCount = takimoto.Text({
   width: 48,
 });
 
-type Props = {
+interface Properties {
   defaultValue: number;
   label: string;
   upperBound?: number;
   lowerBound: number;
   onChange: (value: number) => void;
   icon?: React.ReactNode;
-};
+}
 
 export function Stepper({
   defaultValue,
@@ -52,7 +52,7 @@ export function Stepper({
   label,
   onChange,
   icon,
-}: Props) {
+}: Properties) {
   const [count, setCount] = useState(defaultValue);
 
   useDidMountEffect(

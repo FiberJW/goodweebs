@@ -14,12 +14,12 @@ import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
 
-type Props = {
+interface Properties {
   navigation: StackNavigationProp<RootStackParamList>;
-};
+}
 
-export function AuthScreen({ navigation }: Props) {
-  const [, , promptAsync] = useAniListAuthRequest();
+export function AuthScreen({ navigation }: Properties) {
+  const promptAsync = useAniListAuthRequest()[2];
   const { setAccessToken } = useAccessToken();
 
   useEffect(function navigateIfAccessTokenExists() {
@@ -61,8 +61,7 @@ export function AuthScreen({ navigation }: Props) {
               onPress={async () => {
                 const result = await promptAsync();
 
-                if (result.type === "error" || result.type === "success") {
-                  if (result.params.access_token) {
+                if ((result.type === "error" || result.type === "success") && result.params.access_token) {
                     setAccessToken(result.params.access_token);
                     await AsyncStorage.setItem(
                       ANILIST_ACCESS_TOKEN_STORAGE,
@@ -70,7 +69,6 @@ export function AuthScreen({ navigation }: Props) {
                     );
                     navigation.replace("Tabs");
                   }
-                }
               }}
             />
 

@@ -7,12 +7,12 @@ import { AnimeRelationFragmentFragment } from "yep/graphql/generated";
 import { RootStackParamList } from "yep/navigation";
 import { getTitle } from "yep/utils";
 
-type RelatedItemProps = {
+interface RelatedItemProperties {
   anime: AnimeRelationFragmentFragment;
   navigation: StackNavigationProp<RootStackParamList>;
-};
+}
 
-export function RelatedAnimeItem({ anime, navigation }: RelatedItemProps) {
+export function RelatedAnimeItem({ anime, navigation }: RelatedItemProperties) {
   if (!anime.coverImage?.large) return null;
 
   return (
