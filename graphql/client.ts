@@ -5,6 +5,7 @@ import { HttpLink } from "@apollo/client/link/http";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Sentry from "@sentry/react-native";
 import { persistCache, AsyncStorageWrapper } from "apollo3-cache-persist";
+import Toast from "react-native-root-toast";
 
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 
@@ -50,6 +51,23 @@ export async function createClient() {
 
             if (e.message.toLowerCase().includes("invalid token")) {
               await AsyncStorage.removeItem(ANILIST_ACCESS_TOKEN_STORAGE);
+              Toast.show("You've been logged out. Please log in again.", {
+                duration: Toast.durations.LONG,
+                position: Toast.positions.TOP,
+                shadow: true,
+                animation: true,
+                hideOnPress: true,
+                delay: 0,
+              });
+            } else {
+              Toast.show(e.message, {
+                duration: Toast.durations.LONG,
+                position: Toast.positions.TOP,
+                shadow: true,
+                animation: true,
+                hideOnPress: true,
+                delay: 0,
+              });
             }
           });
         if (networkError) {

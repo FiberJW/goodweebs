@@ -8,6 +8,7 @@ import * as Sentry from "@sentry/react-native";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useCallback, useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { RootSiblingParent } from "react-native-root-siblings";
 import { enableScreens } from "react-native-screens";
 
 import { createClient } from "yep/graphql/client";
@@ -29,9 +30,11 @@ SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   return (
-    <AccessTokenProvider>
-      <InnerApp />
-    </AccessTokenProvider>
+    <RootSiblingParent>
+      <AccessTokenProvider>
+        <InnerApp />
+      </AccessTokenProvider>
+    </RootSiblingParent>
   );
 }
 
