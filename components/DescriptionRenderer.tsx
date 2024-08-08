@@ -1,8 +1,8 @@
 import { yellowDarkA } from "@radix-ui/colors";
-import React from "react";
+import React, { useState } from "react";
 import { useWindowDimensions, View } from "react-native";
 import RenderHtml from "react-native-render-html";
-import showdown from "showdown";
+import { Converter } from "showdown";
 
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
@@ -13,7 +13,7 @@ type Props = {
   description: string;
 };
 
-const markdownToHtmlConverter = new showdown.Converter();
+const markdownToHtmlConverter = new Converter();
 
 export function DescriptionRenderer({ description }: Props) {
   const { width } = useWindowDimensions();
@@ -22,7 +22,7 @@ export function DescriptionRenderer({ description }: Props) {
 
   const hasSpoilers = spoilerRegex.test(description);
 
-  const [showSpoilers, setShowSpoilers] = React.useState(false);
+  const [showSpoilers, setShowSpoilers] = useState(false);
 
   const html = markdownToHtmlConverter
     .makeHtml(description)

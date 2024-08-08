@@ -22,17 +22,22 @@ export function AuthScreen({ navigation }: Props) {
   const [, , promptAsync] = useAniListAuthRequest();
   const { setAccessToken } = useAccessToken();
 
-  useEffect(function navigateIfAccessTokenExists() {
-    (async () => {
-      try {
-        const token = await AsyncStorage.getItem(ANILIST_ACCESS_TOKEN_STORAGE);
+  useEffect(
+    function navigateIfAccessTokenExists() {
+      (async () => {
+        try {
+          const token = await AsyncStorage.getItem(
+            ANILIST_ACCESS_TOKEN_STORAGE
+          );
 
-        if (token) {
-          navigation.replace("Tabs");
-        }
-      } catch {}
-    })();
-  }, []);
+          if (token) {
+            navigation.replace("Tabs");
+          }
+        } catch {}
+      })();
+    },
+    [navigation]
+  );
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

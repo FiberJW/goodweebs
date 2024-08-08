@@ -149,7 +149,7 @@ export function DetailsScreen({ route, navigation }: Props) {
     if (!showScore) {
       setShowScore(!shouldShowScoreToggleUI);
     }
-  }, [shouldShowScoreToggleUI]);
+  }, [shouldShowScoreToggleUI, showScore, setShowScore]);
 
   const [isRefetchingFromScrollOrMount, setIsRefetchingFromScrollOrMount] =
     useState(true);

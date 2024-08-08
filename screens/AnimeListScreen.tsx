@@ -100,7 +100,7 @@ export function AnimeListScreen({ navigation }: Props) {
           });
         }
       },
-      [isFirstFocus, viewerData, status]
+      [isFirstFocus, viewerData, status, refetch]
     )
   );
 
