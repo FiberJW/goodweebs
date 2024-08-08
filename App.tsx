@@ -6,7 +6,7 @@ import {
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import * as Sentry from "@sentry/react-native";
 import * as SplashScreen from "expo-splash-screen";
-import React, { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { enableScreens } from "react-native-screens";
 
@@ -40,7 +40,7 @@ function InnerApp() {
   const fontsLoaded = useManrope();
 
   const [client, setClient] =
-    React.useState<ApolloClient<NormalizedCacheObject> | null>(null);
+    useState<ApolloClient<NormalizedCacheObject> | null>(null);
 
   useEffect(function createClientWithPersistedCache() {
     (async () => {

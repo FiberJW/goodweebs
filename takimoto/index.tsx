@@ -134,7 +134,7 @@ function useTakimoto<StyleT>(style: DynamicKeys<StyleT>) {
     }
 
     return stylesArray;
-  }, [windowHeight, windowWidth]);
+  }, [windowHeight, windowWidth, style]);
 
   return styles;
 }

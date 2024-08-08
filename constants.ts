@@ -1,3 +1,5 @@
+// `Constants` is also an exported type name
+// eslint-disable-next-line import/no-named-as-default
 import Constants from "expo-constants";
 
 import {

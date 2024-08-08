@@ -39,7 +39,7 @@ export function useAniListAuthRequest(): [
       setResult(result);
       return result;
     },
-    [request?.url, AniListURL]
+    [request, AniListURL]
   );
 
   useEffect(() => {

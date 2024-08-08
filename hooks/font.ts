@@ -10,10 +10,12 @@ export function useFonts(map: FontMap): boolean {
 
   useEffect(() => {
     (async () => {
-      await loadAsync(map);
-      setLoaded(true);
+      if (!loaded) {
+        await loadAsync(map);
+        setLoaded(true);
+      }
     })();
-  }, []);
+  }, [map, loaded]);
 
   return loaded;
 }
