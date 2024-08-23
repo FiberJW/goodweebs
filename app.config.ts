@@ -14,14 +14,12 @@ const scheme = (() => {
   return "goodweebs";
 })();
 
-const buildNumber = 16;
-
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name,
+  version: "0.0.16",
   slug: "goodweebs",
   platforms: ["ios", "android", "web"],
-  version: `0.0.${buildNumber}`,
   orientation: "portrait",
   icon: IS_DEV ? "./assets/launch/icon-dev.png" : "./assets/launch/icon.png",
   scheme,
@@ -42,7 +40,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   assetBundlePatterns: ["**/*"],
   ios: {
     supportsTablet: true,
-    buildNumber: `0.0.${buildNumber}`,
     bundleIdentifier: IS_DEV
       ? "com.fiberjw.goodweebs.dev"
       : "com.fiberjw.goodweebs",
@@ -61,7 +58,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   android: {
     package: IS_DEV ? "com.fiberjw.goodweebs.dev" : "com.fiberjw.goodweebs",
-    versionCode: buildNumber,
     permissions: [],
     adaptiveIcon: {
       backgroundColor: "#651FFF",
