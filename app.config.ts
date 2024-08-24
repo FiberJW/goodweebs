@@ -39,6 +39,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   assetBundlePatterns: ["**/*"],
   ios: {
+    entitlements: {
+      "aps-environment": "development",
+    },
     supportsTablet: true,
     bundleIdentifier: IS_DEV
       ? "com.fiberjw.goodweebs.dev"
