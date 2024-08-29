@@ -37,6 +37,7 @@ export function SearchBox({
           style={styles.searchInput}
           {...textInputProps}
           ref={inputRef}
+          keyboardAppearance="dark"
           onFocus={() => setIsCancelButtonVisible(true)}
           placeholderTextColor={darkTheme.inputPlaceholder}
         />

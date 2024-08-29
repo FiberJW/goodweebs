@@ -258,7 +258,14 @@ export const takimoto = {
     ) {
       const styles = useTakimoto(style);
 
-      return <TextInput {...rest} style={[styles, styleProp]} ref={ref} />;
+      return (
+        <TextInput
+          {...rest}
+          style={[styles, styleProp]}
+          ref={ref}
+          keyboardAppearance="dark"
+        />
+      );
     });
   },
 };
