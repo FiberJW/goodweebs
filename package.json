@@ -4,12 +4,10 @@
     "start": "APP_VARIANT=development npx expo start --tunnel",
     "web": "APP_VARIANT=development npx expo start --web",
     "gql": "graphql-codegen --config codegen.yml",
-    "lint": "eslint . --ext .ts,.js,.tsx --fix",
+    "lint": "npx expo lint",
     "update:prod": "eas update --channel production --auto",
     "build:prod": "eas build --profile production --platform all --auto-submit",
-    "export:web": "APP_VARIANT=development npx expo export --platform web",
-    "android": "expo run:android",
-    "ios": "expo run:ios"
+    "export:web": "APP_VARIANT=development npx expo export --platform web"
   },
   "dependencies": {
     "@apollo/client": "^3.1.5",
@@ -73,67 +71,13 @@
     "@types/react": "~18.2.79",
     "@types/react-router-dom": "^5.3.3",
     "@types/showdown": "^2.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.9.1",
-    "@typescript-eslint/parser": "^6.9.1",
     "babel-plugin-module-resolver": "^4.1.0",
     "babel-preset-expo": "~11.0.0",
-    "eslint": "^7.16.0",
-    "eslint-config-universe": "^6.0.1",
-    "eslint-plugin-react-native": "^3.10.0",
+    "eslint": "^8.57.0",
+    "eslint-config-expo": "^7.0.0",
+    "eslint-plugin-import": "^2.29.1",
     "prettier": "^2.5.1",
     "typescript": "~5.3.3"
-  },
-  "eslintConfig": {
-    "ignorePatterns": [
-      "graphql/generated.tsx",
-      "dist/*",
-      "web-build"
-    ],
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-      "react-native",
-      "@typescript-eslint"
-    ],
-    "extends": [
-      "plugin:react-native/all",
-      "universe/native",
-      "universe/shared/typescript-analysis"
-    ],
-    "overrides": [
-      {
-        "files": [
-          "*.ts",
-          "*.tsx",
-          "*.d.ts"
-        ],
-        "parserOptions": {
-          "project": "./tsconfig.json"
-        }
-      }
-    ],
-    "rules": {
-      "react-native/no-inline-styles": 0,
-      "react-native/no-raw-text": 0,
-      "import/order": [
-        "error",
-        {
-          "newlines-between": "always",
-          "alphabetize": {
-            "order": "asc"
-          },
-          "pathGroups": [
-            {
-              "pattern": "yep/**",
-              "group": "external",
-              "position": "after"
-            }
-          ],
-          "pathGroupsExcludedImportTypes": [
-            "builtin"
-          ]
-        }
-      ]
-    }
   },
   "private": true,
   "name": "goodweebs"
