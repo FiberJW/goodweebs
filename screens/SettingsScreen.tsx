@@ -60,7 +60,10 @@ export function SettingsScreen({ navigation }: Props) {
                 fillColor={darkTheme.button}
                 unfillColor="black"
                 text="Hide scores by default"
-                innerIconStyle={{ borderWidth: 2, backgroundColor: black }}
+                innerIconStyle={{
+                  borderWidth: StyleSheet.hairlineWidth,
+                  backgroundColor: black,
+                }}
                 textStyle={{
                   color: darkTheme.subText,
                   fontFamily: Manrope.regular,
@@ -78,7 +81,10 @@ export function SettingsScreen({ navigation }: Props) {
                 fillColor={darkTheme.button}
                 unfillColor="black"
                 text="Should persist score visibility per anime"
-                innerIconStyle={{ borderWidth: 2, backgroundColor: black }}
+                innerIconStyle={{
+                  borderWidth: StyleSheet.hairlineWidth,
+                  backgroundColor: black,
+                }}
                 textStyle={{
                   color: darkTheme.subText,
                   fontFamily: Manrope.regular,
