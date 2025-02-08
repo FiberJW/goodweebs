@@ -7,7 +7,7 @@ import {
 import { StackNavigationProp } from "@react-navigation/stack";
 import { sortBy } from "lodash";
 import React, { useState, useMemo, useCallback } from "react";
-import { RefreshControl, View } from "react-native";
+import { RefreshControl, View, StyleSheet } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
@@ -225,7 +225,7 @@ function makeAnimeFlatList<T>() {
 }
 
 const AnimeListDivider = takimoto.View({
-  height: 1,
+  height: StyleSheet.hairlineWidth,
   backgroundColor: darkTheme.listItemBorder,
 });
 
