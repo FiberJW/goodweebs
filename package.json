@@ -1,13 +1,14 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "APP_VARIANT=development npx expo start --tunnel",
-    "web": "APP_VARIANT=development npx expo start --web",
+    "start": "npx expo start --tunnel",
+    "web": "npx expo start --web",
     "gql": "graphql-codegen --config codegen.yml",
     "lint": "eslint . --ext .ts,.js,.tsx --fix",
     "update:prod": "eas update --channel production --auto",
     "build:prod": "eas build --profile production --platform all --auto-submit",
-    "export:web": "APP_VARIANT=development npx expo export --platform web",
+    "build:dev": "eas build --profile development --platform all",
+    "export:web": "npx expo export --platform web",
     "android": "expo run:android",
     "ios": "expo run:ios"
   },

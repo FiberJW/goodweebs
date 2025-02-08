@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Sentry from "@sentry/react-native";
 import { persistCache, AsyncStorageWrapper } from "apollo3-cache-persist";
 import Toast from "react-native-root-toast";
+import * as Updates from "expo-updates";
 
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 
@@ -59,6 +60,7 @@ export async function createClient() {
                 hideOnPress: true,
                 delay: 0,
               });
+              await Updates.reloadAsync();
             } else {
               Toast.show(e.message, {
                 duration: Toast.durations.LONG,

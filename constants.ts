@@ -19,7 +19,7 @@ export const CLIENT_ID = (() => {
     return AniListClientID.PROD;
   }
 
-  if (__DEV__) {
+  if (process.env.EXPO_PUBLIC_APP_VARIANT === "development" || __DEV__) {
     return AniListClientID.DEV;
   }
 
