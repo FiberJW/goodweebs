@@ -35,7 +35,7 @@ export function Navbar() {
               style={{ height: 24, width: 24, marginRight: 24 }}
             />
           </a>
-          <a href="https://twitter.com/fiberjw">
+          <a href="https://x.com/juwwwan">
             <Image
               source={twitterIcon}
               style={{ height: 24, width: 24, marginRight: 24 }}
