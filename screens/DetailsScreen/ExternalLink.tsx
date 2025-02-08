@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/react-native";
 import chroma from "chroma-js";
 import React from "react";
-import { Linking, Text } from "react-native";
+import { Linking, StyleSheet, Text } from "react-native";
 
 import {
   crunchyrollOrange,
@@ -118,7 +118,7 @@ export function ExternalLink({ url, site }: MediaExternalLinkDataFragment) {
   return (
     <PressableOpacity
       style={{
-        borderWidth: 1,
+        borderWidth: StyleSheet.hairlineWidth,
         borderColor: chroma(color).luminance(0.2).hex(),
         backgroundColor: chroma(color).darken(0.75).hex(),
         paddingVertical: 16,
