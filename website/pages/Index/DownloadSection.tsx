@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, ImageStyle } from "react-native";
 
 import { useBreakpoints } from "yep/hooks/helpers";
 import { websiteTheme } from "yep/themes";
@@ -35,16 +35,25 @@ export function DownloadSection() {
         </View>
         <View style={styles.downloadButtonsRow}>
           <a href="https://apps.apple.com/us/app/goodweebs/id1515644560">
-            <Image style={styles.appStoreButtonImage} source={appStore} />
+            <Image
+              style={styles.appStoreButtonImage as ImageStyle}
+              source={appStore}
+            />
           </a>
           <a href="https://play.google.com/store/apps/details?id=com.fiberjw.goodweebs">
-            <Image style={styles.playStoreButtonImage} source={playStore} />
+            <Image
+              style={styles.playStoreButtonImage as ImageStyle}
+              source={playStore}
+            />
           </a>
         </View>
       </View>
       <Image
         source={screenshotSource}
-        style={[styles.screenshot, isMobile ? { display: "none" } : null]}
+        style={[
+          styles.screenshot as ImageStyle,
+          isMobile ? { display: "none" } : null,
+        ]}
       />
     </View>
   );
@@ -70,6 +79,7 @@ const styles = StyleSheet.create({
     fontFamily: Manrope.light,
     fontSize: 16,
     marginBottom: 16,
+    // @ts-expect-error 35ch is recognized on the web
     maxWidth: "35ch",
   },
   downloadButtonsRow: {
