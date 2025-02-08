@@ -27,6 +27,8 @@ export function SettingsScreen({ navigation }: Props) {
   const [shouldPersistScoreVisibility, setShouldPersistScoreVisibility] =
     usePersistedState<boolean>(StorageKeys.SHOULD_PERSIST_SCORE_VISIBILITY);
 
+  // TODO: wait until persisted settings are loaded before rendering
+
   const client = useApolloClient();
   const { setAccessToken } = useAccessToken();
   const insets = useSafeAreaInsets();
@@ -53,12 +55,12 @@ export function SettingsScreen({ navigation }: Props) {
               Display settings
             </Text>
             <View style={{ flexDirection: "column", gap: 16 }}>
-              <BouncyCheckbox
-                disableBuiltInState
+              <BouncyCheckbox // TODO: make these feel less laggy
+                useBuiltInState={false}
                 isChecked={hideScores}
                 size={24}
                 fillColor={darkTheme.button}
-                unfillColor="black"
+                unFillColor="black"
                 text="Hide scores by default"
                 innerIconStyle={{
                   borderWidth: StyleSheet.hairlineWidth,
@@ -75,11 +77,11 @@ export function SettingsScreen({ navigation }: Props) {
                 }}
               />
               <BouncyCheckbox
-                disableBuiltInState
+                useBuiltInState={false}
                 isChecked={shouldPersistScoreVisibility}
                 size={24}
                 fillColor={darkTheme.button}
-                unfillColor="black"
+                unFillColor="black"
                 text="Should persist score visibility per anime"
                 innerIconStyle={{
                   borderWidth: StyleSheet.hairlineWidth,
