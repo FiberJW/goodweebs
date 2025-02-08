@@ -1,9 +1,6 @@
 import { ExpoConfig, ConfigContext } from "expo/config";
 
-const IS_DEV = [
-  process.env.EXPO_PUBLIC_APP_VARIANT,
-  process.env.APP_VARIANT,
-].includes("development");
+const IS_DEV = [process.env.APP_VARIANT].includes("development");
 
 const name = (() => {
   if (IS_DEV) return "Goodweebs (Dev)";
@@ -19,6 +16,7 @@ const scheme = (() => {
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
+  newArchEnabled: true,
   name,
   version: "0.0.16",
   slug: "goodweebs",

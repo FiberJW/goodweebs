@@ -1,4 +1,4 @@
-import Constants from "expo-constants";
+import Constants, { ExecutionEnvironment } from "expo-constants";
 
 import {
   MediaListStatus,
@@ -14,16 +14,15 @@ enum AniListClientID {
 }
 
 export const CLIENT_ID = (() => {
-  // https://docs.expo.dev/build-reference/migrating/#constantsappownership--will-be--null-
-  if (Constants.appOwnership !== "expo") {
-    return AniListClientID.PROD;
+  if (Constants.executionEnvironment === ExecutionEnvironment.StoreClient) {
+    return AniListClientID.EXPO_GO;
   }
 
-  if (process.env.EXPO_PUBLIC_APP_VARIANT === "development" || __DEV__) {
+  if (__DEV__) {
     return AniListClientID.DEV;
   }
 
-  return AniListClientID.EXPO_GO;
+  return AniListClientID.PROD;
 })();
 
 export const ANILIST_ACCESS_TOKEN_STORAGE = `com.fiberjw.goodweebs.${CLIENT_ID}.access_token`;
