@@ -32,14 +32,8 @@ Right now, I'm making it right :)
 
 ## Notes
 
-### Secrets
-
-Make sure to clone the `goodweebs-secrets` private repo!
-
 ### Releasing this app
 
-For production binary builds, run `yarn build:prod`.
+To create a production build with [EAS Build](https://docs.expo.dev/build/introduction/), run `yarn build:prod`.
 
-To push an update to those production builds using expo-updates, run `yarn publish:prod`.
-
-Make sure you always bump the native version number before starting a new build.
+To push an update to those production builds using [EAS Update](https://docs.expo.dev/eas-update/introduction/), run `yarn publish:prod`.
