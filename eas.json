@@ -1,47 +1,44 @@
 {
   "cli": {
-    "version": ">=7.1.2",
+    "version": ">=15.0.9",
     "appVersionSource": "remote"
   },
   "build": {
     "development": {
+      "node": "20.11.0",
       "developmentClient": true,
       "distribution": "internal",
       "channel": "development",
       "ios": {
-        "resourceClass": "medium",
-        "image": "latest"
+        "resourceClass": "medium"
       },
       "android": {
-        "resourceClass": "medium",
-        "image": "latest"
+        "resourceClass": "medium"
       },
       "env": {
         "APP_VARIANT": "development"
       }
     },
     "preview": {
+      "node": "20.11.0",
       "distribution": "internal",
       "channel": "preview",
       "ios": {
-        "resourceClass": "medium",
-        "image": "latest"
+        "resourceClass": "medium"
       },
       "android": {
-        "resourceClass": "medium",
-        "image": "latest"
+        "resourceClass": "medium"
       }
     },
     "production": {
+      "node": "20.11.0",
       "autoIncrement": true,
       "channel": "production",
       "ios": {
-        "resourceClass": "medium",
-        "image": "latest"
+        "resourceClass": "medium"
       },
       "android": {
-        "resourceClass": "medium",
-        "image": "latest"
+        "resourceClass": "medium"
       }
     }
   },
