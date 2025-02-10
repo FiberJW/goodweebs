@@ -1,5 +1,5 @@
-import add from "date-fns/add";
-import formatDistanceToNow from "date-fns/formatDistanceToNow";
+import { add } from "date-fns/add";
+import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 
 import {
   MediaTitle,

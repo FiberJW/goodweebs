@@ -24,7 +24,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   orientation: "portrait",
   icon: IS_DEV ? "./assets/launch/icon-dev.png" : "./assets/launch/icon.png",
   scheme,
-  privacy: "unlisted",
   backgroundColor: "#010209",
   splash: {
     image: "./assets/launch/splash.png",
