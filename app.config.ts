@@ -104,7 +104,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ],
   ].filter(Boolean) as ExpoConfig["plugins"],
   runtimeVersion: {
-    policy: "fingerprint",
+    policy: "appVersion",
   },
   extra: {
     eas: {
