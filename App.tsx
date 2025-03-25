@@ -10,10 +10,12 @@ import React, { useCallback, useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { enableScreens } from "react-native-screens";
+import * as Updates from "expo-updates";
 
 import { createClient } from "yep/graphql/client";
 import { Navigation } from "yep/navigation";
 import { useManrope } from "yep/typefaces";
+import LogRocket from "@logrocket/react-native";
 
 import { AccessTokenProvider, useAccessToken } from "./useAccessToken";
 
@@ -51,6 +53,13 @@ function InnerApp() {
       const client = await createClient();
       setClient(client);
     })();
+  }, []);
+
+  useEffect(function initializeLogRocket() {
+    LogRocket.init("iltgzt/goodweebs", {
+      updateId: Updates.isEmbeddedLaunch ? null : Updates.updateId,
+      expoChannel: Updates.channel,
+    });
   }, []);
 
   const appIsReady = fontsLoaded && checkedForToken && !!client;

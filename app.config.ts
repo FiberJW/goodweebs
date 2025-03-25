@@ -77,6 +77,16 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     "expo-font",
+    "@logrocket/react-native",
+    [
+      "expo-build-properties",
+      {
+        android: {
+          minSdkVersion: 25,
+        },
+      },
+    ],
+    // remove sentry plugin if staging
     process.env.EXPO_STAGING
       ? undefined
       : [
@@ -92,7 +102,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         username: "fiberjw",
       },
     ],
-    // remove sentry plugin if staging
   ].filter(Boolean) as ExpoConfig["plugins"],
   runtimeVersion: {
     policy: "fingerprint",
