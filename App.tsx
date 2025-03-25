@@ -57,12 +57,18 @@ function InnerApp() {
   }, []);
 
   const version = Application.nativeApplicationVersion ?? "unknown-version";
+  const runtimeVersion = Updates.runtimeVersion ?? "unknown-runtime-version";
+
+  // TODO: remove these logs
+  console.log("version", version);
+  console.log("runtimeVersion", runtimeVersion);
+
   const updateId = Updates.isEmbeddedLaunch ? null : Updates.updateId;
   const channel = Updates.channel || "development";
 
   const release = updateId
-    ? `${version}#${channel}:${updateId}`
-    : `${version}#${channel}`;
+    ? `${runtimeVersion}#${channel}:${updateId}`
+    : `${runtimeVersion}#${channel}`;
 
   useEffect(function initializeLogRocket() {
     LogRocket.init("iltgzt/goodweebs", {
