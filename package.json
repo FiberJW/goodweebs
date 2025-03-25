@@ -5,9 +5,9 @@
     "web": "APP_VARIANT=development npx expo start --web -c",
     "gql": "graphql-codegen --config codegen.yml",
     "lint": "eslint . --ext .ts,.js,.tsx --fix",
-    "update:prod": "eas update --channel production --auto",
-    "build:prod": "eas build --profile production --platform all --auto-submit",
-    "build:dev": "eas build --profile development --platform all",
+    "update:production": "eas update --channel production --auto",
+    "build:production": "eas build --profile production --platform all --auto-submit",
+    "build:development": "eas build --profile development --platform all",
     "export:web": "npx expo export --platform web",
     "android": "expo run:android",
     "ios": "expo run:ios"
