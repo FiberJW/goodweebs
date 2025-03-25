@@ -11,6 +11,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { enableScreens } from "react-native-screens";
 import * as Updates from "expo-updates";
+import * as Application from "expo-application";
 
 import { createClient } from "yep/graphql/client";
 import { Navigation } from "yep/navigation";
@@ -55,10 +56,20 @@ function InnerApp() {
     })();
   }, []);
 
+  const version = Application.nativeApplicationVersion ?? "unknown-version";
+  const updateId = Updates.isEmbeddedLaunch ? null : Updates.updateId;
+  const channel = Updates.channel || "development";
+
+  const release = updateId
+    ? `${version}#${channel}:${updateId}`
+    : `${version}#${channel}`;
+
   useEffect(function initializeLogRocket() {
     LogRocket.init("iltgzt/goodweebs", {
-      updateId: Updates.isEmbeddedLaunch ? null : Updates.updateId,
+      updateId,
       expoChannel: Updates.channel,
+      // @ts-expect-error LogRocket's docs say `release` is optional https://docs.logrocket.com/reference/release
+      release,
     });
   }, []);
 
