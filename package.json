@@ -52,6 +52,7 @@
     "react-native-bouncy-checkbox": "^4.1.2",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-render-html": "^6.3.4",
+    "react-native-root-siblings": "^5.0.1",
     "react-native-root-toast": "^3.6.0",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.10.0",
@@ -61,7 +62,7 @@
     "title": "^3.4.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.25.2",
+    "@babel/core": "^7.27.1",
     "@graphql-codegen/cli": "^2.3.0",
     "@graphql-codegen/fragment-matcher": "1.17.8",
     "@graphql-codegen/introspection": "1.17.8",
