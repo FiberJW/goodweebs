@@ -28,6 +28,7 @@ export type TabParamList = {
   Anime: undefined;
   Discover: undefined;
   Profile: undefined;
+  Settings: undefined;
 };
 
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -112,25 +113,25 @@ function Tabs() {
           }}
         />
       )}
-      {/* <Tab.Screen
-        name="Settings"
-        // TODO: there is currently only one "setting",
-        // and that is being logged in or not,
-        // so I'll put that on the profile and save this for later
-        component={SettingsScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Image
-              style={{
-                tintColor: color,
-                height: size,
-                width: size,
-              }}
-              source={require("yep/assets/icons/navigation/settings-tab.png")}
-            />
-          ),
-        }}
-      /> */}
+      {!accessToken && (
+        <Tab.Screen
+          name="Settings"
+          component={SettingsScreen}
+          options={{
+            title: getString("settings", StringCase.TITLE),
+            tabBarIcon: ({ color, size }) => (
+              <Image
+                style={{
+                  tintColor: color,
+                  height: size,
+                  width: size,
+                }}
+                source={require("yep/assets/icons/navigation/settings-tab.png")}
+              />
+            ),
+          }}
+        />
+      )}
     </Tab.Navigator>
   );
 }

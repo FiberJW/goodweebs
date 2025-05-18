@@ -18,14 +18,10 @@ import { useManrope } from "yep/typefaces";
 import LogRocket from "@logrocket/react-native";
 
 import { AccessTokenProvider, useAccessToken } from "./useAccessToken";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StorageKeys } from "./hooks/helpers";
 
 enableScreens();
-
-Sentry.init({
-  dsn: "https://b2756b0df548451d98707d024aff00d1@o58038.ingest.sentry.io/5248224",
-  debug: __DEV__, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
-  enabled: !__DEV__,
-});
 
 SplashScreen.preventAutoHideAsync();
 
@@ -55,11 +51,31 @@ function InnerApp() {
     })();
   }, []);
 
-  useEffect(function initializeLogRocket() {
-    LogRocket.init("iltgzt/goodweebs", {
-      updateId: Updates.isEmbeddedLaunch ? null : Updates.updateId,
-      expoChannel: Updates.channel,
-    });
+  useEffect(function initializeAnalytics() {
+    (async () => {
+      const sentryOptOut = await AsyncStorage.getItem(
+        StorageKeys.OPT_OUT_CRASH_REPORTING
+      );
+
+      if (!(sentryOptOut && JSON.parse(sentryOptOut) === true)) {
+        Sentry.init({
+          dsn: "https://b2756b0df548451d98707d024aff00d1@o58038.ingest.sentry.io/5248224",
+          debug: __DEV__, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
+          enabled: !__DEV__,
+        });
+      }
+
+      const logRocketOptOut = await AsyncStorage.getItem(
+        StorageKeys.OPT_OUT_ANALYTICS
+      );
+
+      if (!(logRocketOptOut && JSON.parse(logRocketOptOut) === true)) {
+        LogRocket.init("iltgzt/goodweebs", {
+          updateId: Updates.isEmbeddedLaunch ? null : Updates.updateId,
+          expoChannel: Updates.channel,
+        });
+      }
+    })();
   }, []);
 
   const appIsReady = fontsLoaded && checkedForToken && !!client;
