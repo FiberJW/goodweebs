@@ -77,6 +77,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     "expo-font",
+    "expo-web-browser",
     "@logrocket/react-native",
     [
       "expo-build-properties",
