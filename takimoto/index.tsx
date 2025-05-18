@@ -1,4 +1,4 @@
-import React, { useMemo, forwardRef, FC, Ref } from "react";
+import React, { useMemo, FC } from "react";
 import {
   ViewStyle,
   ViewProps,
@@ -141,72 +141,56 @@ function useTakimoto<StyleT>(style: DynamicKeys<StyleT>) {
 
 export const takimoto = {
   View(style: DynamicKeys<ViewStyle>): FC<ViewProps> {
-    return forwardRef(function WrappedView(
-      { style: styleProp, ...rest }: ViewProps,
-      ref: Ref<View>
-    ) {
+    return function WrappedView({ style: styleProp, ...rest }: ViewProps) {
       const styles = useTakimoto(style);
 
-      return <View {...rest} style={[styles, styleProp]} ref={ref} />;
-    });
+      return <View {...rest} style={[styles, styleProp]} />;
+    };
   },
   Text(style: DynamicKeys<TextStyle>): FC<TextProps> {
-    return forwardRef(function WrappedText(
-      { style: styleProp, ...rest }: TextProps,
-      ref: Ref<Text>
-    ) {
+    return function WrappedText({ style: styleProp, ...rest }: TextProps) {
       const styles = useTakimoto(style);
 
-      return <Text {...rest} style={[styles, styleProp]} ref={ref} />;
-    });
+      return <Text {...rest} style={[styles, styleProp]} />;
+    };
   },
   Image(style: DynamicKeys<ImageStyle>): FC<ImageProps> {
-    return forwardRef(function WrappedImage(
-      { style: styleProp, ...rest }: ImageProps,
-      ref: Ref<Image>
-    ) {
+    return function WrappedImage({ style: styleProp, ...rest }: ImageProps) {
       const styles = useTakimoto(style);
 
-      return <Image {...rest} style={[styles, styleProp]} ref={ref} />;
-    });
+      return <Image {...rest} style={[styles, styleProp]} />;
+    };
   },
   ActivityIndicator(style: DynamicKeys<ViewStyle>): FC<ActivityIndicatorProps> {
-    return forwardRef(function WrappedActivityIndicator(
-      { style: styleProp, ...rest }: ActivityIndicatorProps,
-      ref: Ref<ActivityIndicator>
-    ) {
+    return function WrappedActivityIndicator({
+      style: styleProp,
+      ...rest
+    }: ActivityIndicatorProps) {
       const styles = useTakimoto(style);
 
-      return (
-        <ActivityIndicator {...rest} style={[styles, styleProp]} ref={ref} />
-      );
-    });
+      return <ActivityIndicator {...rest} style={[styles, styleProp]} />;
+    };
   },
 
   ImageBackground(style: DynamicKeys<ViewStyle>): FC<ImageBackgroundProps> {
-    return forwardRef(function WrappedImageBackground(
-      { style: styleProp, ...rest }: ImageBackgroundProps,
-      ref: Ref<ImageBackground>
-    ) {
+    return function WrappedImageBackground({
+      style: styleProp,
+      ...rest
+    }: ImageBackgroundProps) {
       const styles = useTakimoto(style);
 
-      return (
-        <ImageBackground {...rest} style={[styles, styleProp]} ref={ref} />
-      );
-    });
+      return <ImageBackground {...rest} style={[styles, styleProp]} />;
+    };
   },
   ScrollView(
     style: DynamicKeys<ViewStyle>,
     contentContainerStyle: DynamicKeys<ViewStyle> = {}
   ): FC<ScrollViewProps> {
-    return forwardRef(function WrappedScrollView(
-      {
-        style: styleProp,
-        contentContainerStyle: contentContainerStyleProp,
-        ...rest
-      }: ScrollViewProps,
-      ref: Ref<ScrollView>
-    ) {
+    return function WrappedScrollView({
+      style: styleProp,
+      contentContainerStyle: contentContainerStyleProp,
+      ...rest
+    }: ScrollViewProps) {
       const styles = useTakimoto(style);
       const contentContainerStyles = useTakimoto(contentContainerStyle);
 
@@ -218,23 +202,19 @@ export const takimoto = {
             contentContainerStyles,
             contentContainerStyleProp,
           ]}
-          ref={ref}
         />
       );
-    });
+    };
   },
   FlatList<ItemT>(
     style: DynamicKeys<ViewStyle>,
     contentContainerStyle: DynamicKeys<ViewStyle> = {}
   ): FC<FlatListProps<ItemT>> {
-    return forwardRef(function WrappedFlatList(
-      {
-        style: styleProp,
-        contentContainerStyle: contentContainerStyleProp,
-        ...rest
-      }: FlatListProps<ItemT>,
-      ref: Ref<FlatList>
-    ) {
+    return function WrappedFlatList({
+      style: styleProp,
+      contentContainerStyle: contentContainerStyleProp,
+      ...rest
+    }: FlatListProps<ItemT>) {
       const styles = useTakimoto(style);
       const contentContainerStyles = useTakimoto(contentContainerStyle);
 
@@ -246,26 +226,24 @@ export const takimoto = {
             contentContainerStyles,
             contentContainerStyleProp,
           ]}
-          ref={ref}
         />
       );
-    });
+    };
   },
   TextInput(style: DynamicKeys<TextStyle>): FC<TextInputProps> {
-    return forwardRef(function WrappedTextInput(
-      { style: styleProp, ...rest }: TextInputProps,
-      ref: Ref<TextInput>
-    ) {
+    return function WrappedTextInput({
+      style: styleProp,
+      ...rest
+    }: TextInputProps) {
       const styles = useTakimoto(style);
 
       return (
         <TextInput
           {...rest}
           style={[styles, styleProp]}
-          ref={ref}
           keyboardAppearance="dark"
         />
       );
-    });
+    };
   },
 };

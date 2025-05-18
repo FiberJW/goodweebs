@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useState, createContext, useContext, useEffect } from "react";
+import React, { useState, createContext, use, useEffect } from "react";
 
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 
@@ -12,7 +12,7 @@ type AccessTokenContextValue = {
 const AccessTokenContext = createContext<AccessTokenContextValue | null>(null);
 
 export function useAccessToken() {
-  const context = useContext(AccessTokenContext);
+  const context = use(AccessTokenContext);
 
   if (context === null) {
     throw new Error("useAccessToken must be used within a AccessTokenProvider");
@@ -43,10 +43,10 @@ export function AccessTokenProvider({
   });
 
   return (
-    <AccessTokenContext.Provider
+    <AccessTokenContext
       value={{ accessToken, setAccessToken, checkedForToken }}
     >
       {children}
-    </AccessTokenContext.Provider>
+    </AccessTokenContext>
   );
 }
