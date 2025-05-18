@@ -37,7 +37,7 @@ export function useNow(interval: "second" | "minute" = "minute") {
 
 export function useDebouncedMutation<
   MutationData = any,
-  MutationVariables = any
+  MutationVariables = any,
 >({
   mutationDocument,
   makeUpdateFunction,
@@ -121,12 +121,16 @@ export enum StorageKeys {
   HIDE_SCORES_GLOBAL = "HIDE_SCORES_GLOBAL",
   SHOW_SCORE_FOR_MEDIA = "SHOW_SCORE_FOR_MEDIA",
   SHOULD_PERSIST_SCORE_VISIBILITY = "SHOULD_PERSIST_SCORE_VISIBILITY",
+  OPT_OUT_CRASH_REPORTING = "OPT_OUT_CRASH_REPORTING",
+  OPT_OUT_ANALYTICS = "OPT_OUT_ANALYTICS",
 }
 
 const defaultValues: { [key in StorageKeys]: any } = {
   [StorageKeys.HIDE_SCORES_GLOBAL]: true,
   [StorageKeys.SHOW_SCORE_FOR_MEDIA]: false,
   [StorageKeys.SHOULD_PERSIST_SCORE_VISIBILITY]: true,
+  [StorageKeys.OPT_OUT_CRASH_REPORTING]: false,
+  [StorageKeys.OPT_OUT_ANALYTICS]: false,
 };
 
 export function usePersistedState<T>(
