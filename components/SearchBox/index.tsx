@@ -55,7 +55,7 @@ export function SearchBox({
           onPress={() => {
             setIsCancelButtonVisible(false);
             // eslint doesn't understand optional chaining
-            inputRef.current?.blur(); // eslint-disable-line
+            inputRef.current?.blur();  
             onCancelPress();
           }}
           style={{ marginLeft: 8 }}

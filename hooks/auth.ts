@@ -16,7 +16,7 @@ const redirectUri = makeRedirectUri({
 export function useAniListAuthRequest(): [
   AuthRequest | null,
   AuthSessionResult | null,
-  (options?: AuthRequestPromptOptions) => Promise<AuthSessionResult>
+  (options?: AuthRequestPromptOptions) => Promise<AuthSessionResult>,
 ] {
   const [request, setRequest] = useState<AuthRequest | null>(null);
   const [result, setResult] = useState<AuthSessionResult | null>(null);
@@ -37,7 +37,7 @@ export function useAniListAuthRequest(): [
       setResult(result);
       return result;
     },
-    [request?.url, AniListURL]
+    [request, AniListURL]
   );
 
   useEffect(() => {

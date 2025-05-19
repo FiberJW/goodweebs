@@ -5,8 +5,8 @@ import { HttpLink } from "@apollo/client/link/http";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Sentry from "@sentry/react-native";
 import { persistCache, AsyncStorageWrapper } from "apollo3-cache-persist";
-import Toast from "react-native-root-toast";
 import * as Updates from "expo-updates";
+import Toast from "react-native-root-toast";
 
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 

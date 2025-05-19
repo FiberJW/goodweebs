@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import { gql } from "graphql-tag";
 
 import { AnimeFragment } from "yep/graphql/fragments/Anime";
 

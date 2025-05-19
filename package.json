@@ -27,8 +27,11 @@
     "@react-navigation/stack": "^7.1.1",
     "@sentry/react-native": "~6.10.0",
     "apollo3-cache-persist": "^0.15.0",
+    "babel-plugin-react-compiler": "^19.0.0-beta-af1b7da-20250417",
     "chroma-js": "^3.1.2",
     "date-fns": "^4.1.0",
+    "eslint-config-expo": "~9.2.0",
+    "eslint-plugin-react-compiler": "^19.1.0-rc.2",
     "expo": "^53.0.0",
     "expo-application": "~6.1.4",
     "expo-auth-session": "~6.1.5",
@@ -74,67 +77,14 @@
     "@types/react": "~19.0.10",
     "@types/react-router-dom": "^5.3.3",
     "@types/showdown": "^2.0.6",
-    "@typescript-eslint/eslint-plugin": "^6.9.1",
-    "@typescript-eslint/parser": "^6.9.1",
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-preset-expo": "~13.0.0",
-    "eslint": "^7.16.0",
+    "eslint": "^9.27.0",
     "eslint-config-universe": "^6.0.1",
     "eslint-plugin-react-native": "^3.10.0",
     "prettier": "^3.5.0",
+    "react-compiler-runtime": "^19.1.0-rc.2",
     "typescript": "~5.8.3"
-  },
-  "eslintConfig": {
-    "ignorePatterns": [
-      "graphql/generated.tsx",
-      "dist/*",
-      "web-build"
-    ],
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-      "react-native",
-      "@typescript-eslint"
-    ],
-    "extends": [
-      "plugin:react-native/all",
-      "universe/native",
-      "universe/shared/typescript-analysis"
-    ],
-    "overrides": [
-      {
-        "files": [
-          "*.ts",
-          "*.tsx",
-          "*.d.ts"
-        ],
-        "parserOptions": {
-          "project": "./tsconfig.json"
-        }
-      }
-    ],
-    "rules": {
-      "react-native/no-inline-styles": 0,
-      "react-native/no-raw-text": 0,
-      "import/order": [
-        "error",
-        {
-          "newlines-between": "always",
-          "alphabetize": {
-            "order": "asc"
-          },
-          "pathGroups": [
-            {
-              "pattern": "yep/**",
-              "group": "external",
-              "position": "after"
-            }
-          ],
-          "pathGroupsExcludedImportTypes": [
-            "builtin"
-          ]
-        }
-      ]
-    }
   },
   "private": true,
   "name": "goodweebs",

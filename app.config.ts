@@ -114,4 +114,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         : "21cb2a71-d249-4289-abb6-3b9b39e3b0a3",
     },
   },
+  experiments: {
+    reactCompiler: true,
+  },
 });

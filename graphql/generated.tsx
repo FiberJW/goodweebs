@@ -93,7 +93,7 @@ export type ActivityReply = {
   /** The amount of likes the reply has */
   likeCount: Scalars['Int'];
   /** The users who liked the reply */
-  likes?: Maybe<Array<Maybe<User>>>;
+  likes?: Maybe<Maybe<User>[]>;
   /** The reply text */
   text?: Maybe<Scalars['String']>;
   /** The user who created reply */
@@ -201,7 +201,7 @@ export type AiringNotification = {
   /** The id of the aired anime */
   animeId: Scalars['Int'];
   /** The notification context text */
-  contexts?: Maybe<Array<Maybe<Scalars['String']>>>;
+  contexts?: Maybe<Maybe<Scalars['String']>[]>;
   /** The time the notification was created at */
   createdAt?: Maybe<Scalars['Int']>;
   /** The episode number that just aired */
@@ -244,8 +244,8 @@ export type AiringSchedule = {
 
 export type AiringScheduleConnection = {
   __typename?: 'AiringScheduleConnection';
-  edges?: Maybe<Array<Maybe<AiringScheduleEdge>>>;
-  nodes?: Maybe<Array<Maybe<AiringSchedule>>>;
+  edges?: Maybe<Maybe<AiringScheduleEdge>[]>;
+  nodes?: Maybe<Maybe<AiringSchedule>[]>;
   /** The pagination information */
   pageInfo?: Maybe<PageInfo>;
 };
@@ -335,14 +335,14 @@ export type CharacterMediaArgs = {
   onList?: Maybe<Scalars['Boolean']>;
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<MediaSort>>>;
+  sort?: Maybe<Maybe<MediaSort>[]>;
   type?: Maybe<MediaType>;
 };
 
 export type CharacterConnection = {
   __typename?: 'CharacterConnection';
-  edges?: Maybe<Array<Maybe<CharacterEdge>>>;
-  nodes?: Maybe<Array<Maybe<Character>>>;
+  edges?: Maybe<Maybe<CharacterEdge>[]>;
+  nodes?: Maybe<Maybe<Character>[]>;
   /** The pagination information */
   pageInfo?: Maybe<PageInfo>;
 };
@@ -355,30 +355,30 @@ export type CharacterEdge = {
   /** The id of the connection */
   id?: Maybe<Scalars['Int']>;
   /** The media the character is in */
-  media?: Maybe<Array<Maybe<Media>>>;
+  media?: Maybe<Maybe<Media>[]>;
   /** Media specific character name */
   name?: Maybe<Scalars['String']>;
   node?: Maybe<Character>;
   /** The characters role in the media */
   role?: Maybe<CharacterRole>;
   /** The voice actors of the character with role date */
-  voiceActorRoles?: Maybe<Array<Maybe<StaffRoleType>>>;
+  voiceActorRoles?: Maybe<Maybe<StaffRoleType>[]>;
   /** The voice actors of the character */
-  voiceActors?: Maybe<Array<Maybe<Staff>>>;
+  voiceActors?: Maybe<Maybe<Staff>[]>;
 };
 
 
 /** Character connection edge */
 export type CharacterEdgeVoiceActorRolesArgs = {
   language?: Maybe<StaffLanguage>;
-  sort?: Maybe<Array<Maybe<StaffSort>>>;
+  sort?: Maybe<Maybe<StaffSort>[]>;
 };
 
 
 /** Character connection edge */
 export type CharacterEdgeVoiceActorsArgs = {
   language?: Maybe<StaffLanguage>;
-  sort?: Maybe<Array<Maybe<StaffSort>>>;
+  sort?: Maybe<Maybe<StaffSort>[]>;
 };
 
 export type CharacterImage = {
@@ -393,9 +393,9 @@ export type CharacterImage = {
 export type CharacterName = {
   __typename?: 'CharacterName';
   /** Other names the character might be referred to as */
-  alternative?: Maybe<Array<Maybe<Scalars['String']>>>;
+  alternative?: Maybe<Maybe<Scalars['String']>[]>;
   /** Other names the character might be referred to as but are spoilers */
-  alternativeSpoiler?: Maybe<Array<Maybe<Scalars['String']>>>;
+  alternativeSpoiler?: Maybe<Maybe<Scalars['String']>[]>;
   /** The character's given name */
   first?: Maybe<Scalars['String']>;
   /** The character's first and last name */
@@ -413,9 +413,9 @@ export type CharacterName = {
 /** The names of the character */
 export type CharacterNameInput = {
   /** Other names the character might be referred by */
-  alternative?: Maybe<Array<Maybe<Scalars['String']>>>;
+  alternative?: Maybe<Maybe<Scalars['String']>[]>;
   /** Other names the character might be referred to as but are spoilers */
-  alternativeSpoiler?: Maybe<Array<Maybe<Scalars['String']>>>;
+  alternativeSpoiler?: Maybe<Maybe<Scalars['String']>[]>;
   /** The character's given name */
   first?: Maybe<Scalars['String']>;
   /** The character's surname */
@@ -474,8 +474,8 @@ export type CharacterSubmission = {
 
 export type CharacterSubmissionConnection = {
   __typename?: 'CharacterSubmissionConnection';
-  edges?: Maybe<Array<Maybe<CharacterSubmissionEdge>>>;
-  nodes?: Maybe<Array<Maybe<CharacterSubmission>>>;
+  edges?: Maybe<Maybe<CharacterSubmissionEdge>[]>;
+  nodes?: Maybe<Maybe<CharacterSubmission>[]>;
   /** The pagination information */
   pageInfo?: Maybe<PageInfo>;
 };
@@ -487,9 +487,9 @@ export type CharacterSubmissionEdge = {
   /** The characters role in the media */
   role?: Maybe<CharacterRole>;
   /** The submitted voice actors of the character */
-  submittedVoiceActors?: Maybe<Array<Maybe<StaffSubmission>>>;
+  submittedVoiceActors?: Maybe<Maybe<StaffSubmission>[]>;
   /** The voice actors of the character */
-  voiceActors?: Maybe<Array<Maybe<Staff>>>;
+  voiceActors?: Maybe<Maybe<Staff>[]>;
 };
 
 
@@ -621,33 +621,33 @@ export type GenreStats = {
 /** Page of data (Used for internal use only) */
 export type InternalPage = {
   __typename?: 'InternalPage';
-  activities?: Maybe<Array<Maybe<ActivityUnion>>>;
-  activityReplies?: Maybe<Array<Maybe<ActivityReply>>>;
-  airingSchedules?: Maybe<Array<Maybe<AiringSchedule>>>;
-  characters?: Maybe<Array<Maybe<Character>>>;
-  characterSubmissions?: Maybe<Array<Maybe<CharacterSubmission>>>;
-  followers?: Maybe<Array<Maybe<User>>>;
-  following?: Maybe<Array<Maybe<User>>>;
-  likes?: Maybe<Array<Maybe<User>>>;
-  media?: Maybe<Array<Maybe<Media>>>;
-  mediaList?: Maybe<Array<Maybe<MediaList>>>;
-  mediaSubmissions?: Maybe<Array<Maybe<MediaSubmission>>>;
-  mediaTrends?: Maybe<Array<Maybe<MediaTrend>>>;
-  modActions?: Maybe<Array<Maybe<ModAction>>>;
-  notifications?: Maybe<Array<Maybe<NotificationUnion>>>;
+  activities?: Maybe<Maybe<ActivityUnion>[]>;
+  activityReplies?: Maybe<Maybe<ActivityReply>[]>;
+  airingSchedules?: Maybe<Maybe<AiringSchedule>[]>;
+  characters?: Maybe<Maybe<Character>[]>;
+  characterSubmissions?: Maybe<Maybe<CharacterSubmission>[]>;
+  followers?: Maybe<Maybe<User>[]>;
+  following?: Maybe<Maybe<User>[]>;
+  likes?: Maybe<Maybe<User>[]>;
+  media?: Maybe<Maybe<Media>[]>;
+  mediaList?: Maybe<Maybe<MediaList>[]>;
+  mediaSubmissions?: Maybe<Maybe<MediaSubmission>[]>;
+  mediaTrends?: Maybe<Maybe<MediaTrend>[]>;
+  modActions?: Maybe<Maybe<ModAction>[]>;
+  notifications?: Maybe<Maybe<NotificationUnion>[]>;
   /** The pagination information */
   pageInfo?: Maybe<PageInfo>;
-  recommendations?: Maybe<Array<Maybe<Recommendation>>>;
-  reports?: Maybe<Array<Maybe<Report>>>;
-  reviews?: Maybe<Array<Maybe<Review>>>;
-  revisionHistory?: Maybe<Array<Maybe<RevisionHistory>>>;
-  staff?: Maybe<Array<Maybe<Staff>>>;
-  staffSubmissions?: Maybe<Array<Maybe<StaffSubmission>>>;
-  studios?: Maybe<Array<Maybe<Studio>>>;
-  threadComments?: Maybe<Array<Maybe<ThreadComment>>>;
-  threads?: Maybe<Array<Maybe<Thread>>>;
-  userBlockSearch?: Maybe<Array<Maybe<User>>>;
-  users?: Maybe<Array<Maybe<User>>>;
+  recommendations?: Maybe<Maybe<Recommendation>[]>;
+  reports?: Maybe<Maybe<Report>[]>;
+  reviews?: Maybe<Maybe<Review>[]>;
+  revisionHistory?: Maybe<Maybe<RevisionHistory>[]>;
+  staff?: Maybe<Maybe<Staff>[]>;
+  staffSubmissions?: Maybe<Maybe<StaffSubmission>[]>;
+  studios?: Maybe<Maybe<Studio>[]>;
+  threadComments?: Maybe<Maybe<ThreadComment>[]>;
+  threads?: Maybe<Maybe<Thread>[]>;
+  userBlockSearch?: Maybe<Maybe<User>[]>;
+  users?: Maybe<Maybe<User>[]>;
 };
 
 
@@ -659,27 +659,27 @@ export type InternalPageActivitiesArgs = {
   hasReplies?: Maybe<Scalars['Boolean']>;
   hasRepliesOrTypeText?: Maybe<Scalars['Boolean']>;
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id_not?: Maybe<Scalars['Int']>;
-  id_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   isFollowing?: Maybe<Scalars['Boolean']>;
   mediaId?: Maybe<Scalars['Int']>;
-  mediaId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_in?: Maybe<Maybe<Scalars['Int']>[]>;
   mediaId_not?: Maybe<Scalars['Int']>;
-  mediaId_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   messengerId?: Maybe<Scalars['Int']>;
-  messengerId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  messengerId_in?: Maybe<Maybe<Scalars['Int']>[]>;
   messengerId_not?: Maybe<Scalars['Int']>;
-  messengerId_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  sort?: Maybe<Array<Maybe<ActivitySort>>>;
+  messengerId_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
+  sort?: Maybe<Maybe<ActivitySort>[]>;
   type?: Maybe<ActivityType>;
-  type_in?: Maybe<Array<Maybe<ActivityType>>>;
+  type_in?: Maybe<Maybe<ActivityType>[]>;
   type_not?: Maybe<ActivityType>;
-  type_not_in?: Maybe<Array<Maybe<ActivityType>>>;
+  type_not_in?: Maybe<Maybe<ActivityType>[]>;
   userId?: Maybe<Scalars['Int']>;
-  userId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  userId_in?: Maybe<Maybe<Scalars['Int']>[]>;
   userId_not?: Maybe<Scalars['Int']>;
-  userId_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  userId_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
 };
 
 
@@ -697,32 +697,32 @@ export type InternalPageAiringSchedulesArgs = {
   airingAt_lesser?: Maybe<Scalars['Int']>;
   episode?: Maybe<Scalars['Int']>;
   episode_greater?: Maybe<Scalars['Int']>;
-  episode_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  episode_in?: Maybe<Maybe<Scalars['Int']>[]>;
   episode_lesser?: Maybe<Scalars['Int']>;
   episode_not?: Maybe<Scalars['Int']>;
-  episode_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  episode_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id_not?: Maybe<Scalars['Int']>;
-  id_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   mediaId?: Maybe<Scalars['Int']>;
-  mediaId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_in?: Maybe<Maybe<Scalars['Int']>[]>;
   mediaId_not?: Maybe<Scalars['Int']>;
-  mediaId_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   notYetAired?: Maybe<Scalars['Boolean']>;
-  sort?: Maybe<Array<Maybe<AiringSort>>>;
+  sort?: Maybe<Maybe<AiringSort>[]>;
 };
 
 
 /** Page of data (Used for internal use only) */
 export type InternalPageCharactersArgs = {
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id_not?: Maybe<Scalars['Int']>;
-  id_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   isBirthday?: Maybe<Scalars['Boolean']>;
   search?: Maybe<Scalars['String']>;
-  sort?: Maybe<Array<Maybe<CharacterSort>>>;
+  sort?: Maybe<Maybe<CharacterSort>[]>;
 };
 
 
@@ -730,7 +730,7 @@ export type InternalPageCharactersArgs = {
 export type InternalPageCharacterSubmissionsArgs = {
   assigneeId?: Maybe<Scalars['Int']>;
   characterId?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<SubmissionSort>>>;
+  sort?: Maybe<Maybe<SubmissionSort>[]>;
   status?: Maybe<SubmissionStatus>;
   userId?: Maybe<Scalars['Int']>;
 };
@@ -738,14 +738,14 @@ export type InternalPageCharacterSubmissionsArgs = {
 
 /** Page of data (Used for internal use only) */
 export type InternalPageFollowersArgs = {
-  sort?: Maybe<Array<Maybe<UserSort>>>;
+  sort?: Maybe<Maybe<UserSort>[]>;
   userId: Scalars['Int'];
 };
 
 
 /** Page of data (Used for internal use only) */
 export type InternalPageFollowingArgs = {
-  sort?: Maybe<Array<Maybe<UserSort>>>;
+  sort?: Maybe<Maybe<UserSort>[]>;
   userId: Scalars['Int'];
 };
 
@@ -778,26 +778,26 @@ export type InternalPageMediaArgs = {
   episodes_greater?: Maybe<Scalars['Int']>;
   episodes_lesser?: Maybe<Scalars['Int']>;
   format?: Maybe<MediaFormat>;
-  format_in?: Maybe<Array<Maybe<MediaFormat>>>;
+  format_in?: Maybe<Maybe<MediaFormat>[]>;
   format_not?: Maybe<MediaFormat>;
-  format_not_in?: Maybe<Array<Maybe<MediaFormat>>>;
+  format_not_in?: Maybe<Maybe<MediaFormat>[]>;
   genre?: Maybe<Scalars['String']>;
-  genre_in?: Maybe<Array<Maybe<Scalars['String']>>>;
-  genre_not_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  genre_in?: Maybe<Maybe<Scalars['String']>[]>;
+  genre_not_in?: Maybe<Maybe<Scalars['String']>[]>;
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id_not?: Maybe<Scalars['Int']>;
-  id_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   idMal?: Maybe<Scalars['Int']>;
-  idMal_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  idMal_in?: Maybe<Maybe<Scalars['Int']>[]>;
   idMal_not?: Maybe<Scalars['Int']>;
-  idMal_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  idMal_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   isAdult?: Maybe<Scalars['Boolean']>;
   isLicensed?: Maybe<Scalars['Boolean']>;
   licensedBy?: Maybe<Scalars['String']>;
-  licensedBy_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  licensedBy_in?: Maybe<Maybe<Scalars['String']>[]>;
   licensedById?: Maybe<Scalars['Int']>;
-  licensedById_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  licensedById_in?: Maybe<Maybe<Scalars['Int']>[]>;
   minimumTagRank?: Maybe<Scalars['Int']>;
   onList?: Maybe<Scalars['Boolean']>;
   popularity?: Maybe<Scalars['Int']>;
@@ -807,23 +807,23 @@ export type InternalPageMediaArgs = {
   search?: Maybe<Scalars['String']>;
   season?: Maybe<MediaSeason>;
   seasonYear?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<MediaSort>>>;
+  sort?: Maybe<Maybe<MediaSort>[]>;
   source?: Maybe<MediaSource>;
-  source_in?: Maybe<Array<Maybe<MediaSource>>>;
+  source_in?: Maybe<Maybe<MediaSource>[]>;
   startDate?: Maybe<Scalars['FuzzyDateInt']>;
   startDate_greater?: Maybe<Scalars['FuzzyDateInt']>;
   startDate_lesser?: Maybe<Scalars['FuzzyDateInt']>;
   startDate_like?: Maybe<Scalars['String']>;
   status?: Maybe<MediaStatus>;
-  status_in?: Maybe<Array<Maybe<MediaStatus>>>;
+  status_in?: Maybe<Maybe<MediaStatus>[]>;
   status_not?: Maybe<MediaStatus>;
-  status_not_in?: Maybe<Array<Maybe<MediaStatus>>>;
+  status_not_in?: Maybe<Maybe<MediaStatus>[]>;
   tag?: Maybe<Scalars['String']>;
-  tag_in?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tag_not_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tag_in?: Maybe<Maybe<Scalars['String']>[]>;
+  tag_not_in?: Maybe<Maybe<Scalars['String']>[]>;
   tagCategory?: Maybe<Scalars['String']>;
-  tagCategory_in?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tagCategory_not_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tagCategory_in?: Maybe<Maybe<Scalars['String']>[]>;
+  tagCategory_not_in?: Maybe<Maybe<Scalars['String']>[]>;
   type?: Maybe<MediaType>;
   volumes?: Maybe<Scalars['Int']>;
   volumes_greater?: Maybe<Scalars['Int']>;
@@ -841,22 +841,22 @@ export type InternalPageMediaListArgs = {
   id?: Maybe<Scalars['Int']>;
   isFollowing?: Maybe<Scalars['Boolean']>;
   mediaId?: Maybe<Scalars['Int']>;
-  mediaId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  mediaId_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_in?: Maybe<Maybe<Scalars['Int']>[]>;
+  mediaId_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   notes?: Maybe<Scalars['String']>;
   notes_like?: Maybe<Scalars['String']>;
-  sort?: Maybe<Array<Maybe<MediaListSort>>>;
+  sort?: Maybe<Maybe<MediaListSort>[]>;
   startedAt?: Maybe<Scalars['FuzzyDateInt']>;
   startedAt_greater?: Maybe<Scalars['FuzzyDateInt']>;
   startedAt_lesser?: Maybe<Scalars['FuzzyDateInt']>;
   startedAt_like?: Maybe<Scalars['String']>;
   status?: Maybe<MediaListStatus>;
-  status_in?: Maybe<Array<Maybe<MediaListStatus>>>;
+  status_in?: Maybe<Maybe<MediaListStatus>[]>;
   status_not?: Maybe<MediaListStatus>;
-  status_not_in?: Maybe<Array<Maybe<MediaListStatus>>>;
+  status_not_in?: Maybe<Maybe<MediaListStatus>[]>;
   type?: Maybe<MediaType>;
   userId?: Maybe<Scalars['Int']>;
-  userId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  userId_in?: Maybe<Maybe<Scalars['Int']>[]>;
   userName?: Maybe<Scalars['String']>;
 };
 
@@ -865,7 +865,7 @@ export type InternalPageMediaListArgs = {
 export type InternalPageMediaSubmissionsArgs = {
   assigneeId?: Maybe<Scalars['Int']>;
   mediaId?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<SubmissionSort>>>;
+  sort?: Maybe<Maybe<SubmissionSort>[]>;
   status?: Maybe<SubmissionStatus>;
   submissionId?: Maybe<Scalars['Int']>;
   type?: Maybe<MediaType>;
@@ -887,15 +887,15 @@ export type InternalPageMediaTrendsArgs = {
   episode_lesser?: Maybe<Scalars['Int']>;
   episode_not?: Maybe<Scalars['Int']>;
   mediaId?: Maybe<Scalars['Int']>;
-  mediaId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_in?: Maybe<Maybe<Scalars['Int']>[]>;
   mediaId_not?: Maybe<Scalars['Int']>;
-  mediaId_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   popularity?: Maybe<Scalars['Int']>;
   popularity_greater?: Maybe<Scalars['Int']>;
   popularity_lesser?: Maybe<Scalars['Int']>;
   popularity_not?: Maybe<Scalars['Int']>;
   releasing?: Maybe<Scalars['Boolean']>;
-  sort?: Maybe<Array<Maybe<MediaTrendSort>>>;
+  sort?: Maybe<Maybe<MediaTrendSort>[]>;
   trending?: Maybe<Scalars['Int']>;
   trending_greater?: Maybe<Scalars['Int']>;
   trending_lesser?: Maybe<Scalars['Int']>;
@@ -914,7 +914,7 @@ export type InternalPageModActionsArgs = {
 export type InternalPageNotificationsArgs = {
   resetNotificationCount?: Maybe<Scalars['Boolean']>;
   type?: Maybe<NotificationType>;
-  type_in?: Maybe<Array<Maybe<NotificationType>>>;
+  type_in?: Maybe<Maybe<NotificationType>[]>;
 };
 
 
@@ -927,7 +927,7 @@ export type InternalPageRecommendationsArgs = {
   rating?: Maybe<Scalars['Int']>;
   rating_greater?: Maybe<Scalars['Int']>;
   rating_lesser?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<RecommendationSort>>>;
+  sort?: Maybe<Maybe<RecommendationSort>[]>;
   userId?: Maybe<Scalars['Int']>;
 };
 
@@ -944,7 +944,7 @@ export type InternalPageReviewsArgs = {
   id?: Maybe<Scalars['Int']>;
   mediaId?: Maybe<Scalars['Int']>;
   mediaType?: Maybe<MediaType>;
-  sort?: Maybe<Array<Maybe<ReviewSort>>>;
+  sort?: Maybe<Maybe<ReviewSort>[]>;
   userId?: Maybe<Scalars['Int']>;
 };
 
@@ -962,19 +962,19 @@ export type InternalPageRevisionHistoryArgs = {
 /** Page of data (Used for internal use only) */
 export type InternalPageStaffArgs = {
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id_not?: Maybe<Scalars['Int']>;
-  id_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   isBirthday?: Maybe<Scalars['Boolean']>;
   search?: Maybe<Scalars['String']>;
-  sort?: Maybe<Array<Maybe<StaffSort>>>;
+  sort?: Maybe<Maybe<StaffSort>[]>;
 };
 
 
 /** Page of data (Used for internal use only) */
 export type InternalPageStaffSubmissionsArgs = {
   assigneeId?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<SubmissionSort>>>;
+  sort?: Maybe<Maybe<SubmissionSort>[]>;
   staffId?: Maybe<Scalars['Int']>;
   status?: Maybe<SubmissionStatus>;
   userId?: Maybe<Scalars['Int']>;
@@ -984,18 +984,18 @@ export type InternalPageStaffSubmissionsArgs = {
 /** Page of data (Used for internal use only) */
 export type InternalPageStudiosArgs = {
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id_not?: Maybe<Scalars['Int']>;
-  id_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   search?: Maybe<Scalars['String']>;
-  sort?: Maybe<Array<Maybe<StudioSort>>>;
+  sort?: Maybe<Maybe<StudioSort>[]>;
 };
 
 
 /** Page of data (Used for internal use only) */
 export type InternalPageThreadCommentsArgs = {
   id?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<ThreadCommentSort>>>;
+  sort?: Maybe<Maybe<ThreadCommentSort>[]>;
   threadId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
 };
@@ -1005,11 +1005,11 @@ export type InternalPageThreadCommentsArgs = {
 export type InternalPageThreadsArgs = {
   categoryId?: Maybe<Scalars['Int']>;
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   mediaCategoryId?: Maybe<Scalars['Int']>;
   replyUserId?: Maybe<Scalars['Int']>;
   search?: Maybe<Scalars['String']>;
-  sort?: Maybe<Array<Maybe<ThreadSort>>>;
+  sort?: Maybe<Maybe<ThreadSort>[]>;
   subscribed?: Maybe<Scalars['Boolean']>;
   userId?: Maybe<Scalars['Int']>;
 };
@@ -1027,7 +1027,7 @@ export type InternalPageUsersArgs = {
   isModerator?: Maybe<Scalars['Boolean']>;
   name?: Maybe<Scalars['String']>;
   search?: Maybe<Scalars['String']>;
-  sort?: Maybe<Array<Maybe<UserSort>>>;
+  sort?: Maybe<Maybe<UserSort>[]>;
 };
 
 
@@ -1060,13 +1060,13 @@ export type ListActivity = {
   /** The amount of likes the activity has */
   likeCount: Scalars['Int'];
   /** The users who liked the activity */
-  likes?: Maybe<Array<Maybe<User>>>;
+  likes?: Maybe<Maybe<User>[]>;
   /** The associated media to the activity update */
   media?: Maybe<Media>;
   /** The list progress made */
   progress?: Maybe<Scalars['String']>;
   /** The written replies to the activity */
-  replies?: Maybe<Array<Maybe<ActivityReply>>>;
+  replies?: Maybe<Maybe<ActivityReply>[]>;
   /** The number of activity replies */
   replyCount: Scalars['Int'];
   /** The url for the activity page on the AniList website */
@@ -1127,13 +1127,13 @@ export type Media = {
   /** The amount of episodes the anime has when complete */
   episodes?: Maybe<Scalars['Int']>;
   /** External links to another site related to the media */
-  externalLinks?: Maybe<Array<Maybe<MediaExternalLink>>>;
+  externalLinks?: Maybe<Maybe<MediaExternalLink>[]>;
   /** The amount of user's who have favourited the media */
   favourites?: Maybe<Scalars['Int']>;
   /** The format the media was released in */
   format?: Maybe<MediaFormat>;
   /** The genres of the media */
-  genres?: Maybe<Array<Maybe<Scalars['String']>>>;
+  genres?: Maybe<Maybe<Scalars['String']>[]>;
   /** Official Twitter hashtags for the media */
   hashtag?: Maybe<Scalars['String']>;
   /** The id of the media */
@@ -1165,7 +1165,7 @@ export type Media = {
   /** The number of users with the media on their list */
   popularity?: Maybe<Scalars['Int']>;
   /** The ranking of the media in a particular time span and format compared to other media */
-  rankings?: Maybe<Array<Maybe<MediaRank>>>;
+  rankings?: Maybe<Maybe<MediaRank>[]>;
   /** User recommendations for similar media */
   recommendations?: Maybe<RecommendationConnection>;
   /** Other media in the same or connecting franchise */
@@ -1193,13 +1193,13 @@ export type Media = {
   /** The current releasing status of the media */
   status?: Maybe<MediaStatus>;
   /** Data and links to legal streaming episodes on external sites */
-  streamingEpisodes?: Maybe<Array<Maybe<MediaStreamingEpisode>>>;
+  streamingEpisodes?: Maybe<Maybe<MediaStreamingEpisode>[]>;
   /** The companies who produced the media */
   studios?: Maybe<StudioConnection>;
   /** Alternative titles of the media */
-  synonyms?: Maybe<Array<Maybe<Scalars['String']>>>;
+  synonyms?: Maybe<Maybe<Scalars['String']>[]>;
   /** List of tags that describes elements and themes of the media */
-  tags?: Maybe<Array<Maybe<MediaTag>>>;
+  tags?: Maybe<Maybe<MediaTag>[]>;
   /** The official titles of the media in various languages */
   title?: Maybe<MediaTitle>;
   /** Media trailer or advertisement */
@@ -1230,7 +1230,7 @@ export type MediaCharactersArgs = {
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
   role?: Maybe<CharacterRole>;
-  sort?: Maybe<Array<Maybe<CharacterSort>>>;
+  sort?: Maybe<Maybe<CharacterSort>[]>;
 };
 
 
@@ -1244,7 +1244,7 @@ export type MediaDescriptionArgs = {
 export type MediaRecommendationsArgs = {
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<RecommendationSort>>>;
+  sort?: Maybe<Maybe<RecommendationSort>[]>;
 };
 
 
@@ -1253,7 +1253,7 @@ export type MediaReviewsArgs = {
   limit?: Maybe<Scalars['Int']>;
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<ReviewSort>>>;
+  sort?: Maybe<Maybe<ReviewSort>[]>;
 };
 
 
@@ -1267,7 +1267,7 @@ export type MediaSourceArgs = {
 export type MediaStaffArgs = {
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<StaffSort>>>;
+  sort?: Maybe<Maybe<StaffSort>[]>;
 };
 
 
@@ -1280,7 +1280,7 @@ export type MediaStatusArgs = {
 /** Anime or Manga */
 export type MediaStudiosArgs = {
   isMain?: Maybe<Scalars['Boolean']>;
-  sort?: Maybe<Array<Maybe<StudioSort>>>;
+  sort?: Maybe<Maybe<StudioSort>[]>;
 };
 
 
@@ -1289,7 +1289,7 @@ export type MediaTrendsArgs = {
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
   releasing?: Maybe<Scalars['Boolean']>;
-  sort?: Maybe<Array<Maybe<MediaTrendSort>>>;
+  sort?: Maybe<Maybe<MediaTrendSort>[]>;
 };
 
 /** Internal - Media characters separated */
@@ -1311,8 +1311,8 @@ export type MediaCharacter = {
 
 export type MediaConnection = {
   __typename?: 'MediaConnection';
-  edges?: Maybe<Array<Maybe<MediaEdge>>>;
-  nodes?: Maybe<Array<Maybe<Media>>>;
+  edges?: Maybe<Maybe<MediaEdge>[]>;
+  nodes?: Maybe<Maybe<Media>[]>;
   /** The pagination information */
   pageInfo?: Maybe<PageInfo>;
 };
@@ -1373,7 +1373,7 @@ export type MediaEdge = {
   /** The characters role in the media */
   characterRole?: Maybe<CharacterRole>;
   /** The characters in the media voiced by the parent actor */
-  characters?: Maybe<Array<Maybe<Character>>>;
+  characters?: Maybe<Maybe<Character>[]>;
   /** Used for grouping roles where multiple dubs exist for the same language. Either dubbing company name or language variant. */
   dubGroup?: Maybe<Scalars['String']>;
   /** The order the media should be displayed from the users favourites */
@@ -1390,9 +1390,9 @@ export type MediaEdge = {
   /** The role of the staff member in the production of the media */
   staffRole?: Maybe<Scalars['String']>;
   /** The voice actors of the character with role date */
-  voiceActorRoles?: Maybe<Array<Maybe<StaffRoleType>>>;
+  voiceActorRoles?: Maybe<Maybe<StaffRoleType>[]>;
   /** The voice actors of the character */
-  voiceActors?: Maybe<Array<Maybe<Staff>>>;
+  voiceActors?: Maybe<Maybe<Staff>[]>;
 };
 
 
@@ -1405,14 +1405,14 @@ export type MediaEdgeRelationTypeArgs = {
 /** Media connection edge */
 export type MediaEdgeVoiceActorRolesArgs = {
   language?: Maybe<StaffLanguage>;
-  sort?: Maybe<Array<Maybe<StaffSort>>>;
+  sort?: Maybe<Maybe<StaffSort>[]>;
 };
 
 
 /** Media connection edge */
 export type MediaEdgeVoiceActorsArgs = {
   language?: Maybe<StaffLanguage>;
-  sort?: Maybe<Array<Maybe<StaffSort>>>;
+  sort?: Maybe<Maybe<StaffSort>[]>;
 };
 
 /** An external link to another site related to the media or staff member */
@@ -1532,16 +1532,16 @@ export type MediaListCollection = {
    * A map of media list entry arrays grouped by custom lists
    * @deprecated Not GraphQL spec compliant, use lists field instead.
    */
-  customLists?: Maybe<Array<Maybe<Array<Maybe<MediaList>>>>>;
+  customLists?: Maybe<Maybe<Maybe<MediaList>[]>[]>;
   /** If there is another chunk */
   hasNextChunk?: Maybe<Scalars['Boolean']>;
   /** Grouped media list entries */
-  lists?: Maybe<Array<Maybe<MediaListGroup>>>;
+  lists?: Maybe<Maybe<MediaListGroup>[]>;
   /**
    * A map of media list entry arrays grouped by status
    * @deprecated Not GraphQL spec compliant, use lists field instead.
    */
-  statusLists?: Maybe<Array<Maybe<Array<Maybe<MediaList>>>>>;
+  statusLists?: Maybe<Maybe<Maybe<MediaList>[]>[]>;
   /** The owner of the list */
   user?: Maybe<User>;
 };
@@ -1562,7 +1562,7 @@ export type MediaListCollectionStatusListsArgs = {
 export type MediaListGroup = {
   __typename?: 'MediaListGroup';
   /** Media list entries */
-  entries?: Maybe<Array<Maybe<MediaList>>>;
+  entries?: Maybe<Maybe<MediaList>[]>;
   isCustomList?: Maybe<Scalars['Boolean']>;
   isSplitCompletedList?: Maybe<Scalars['Boolean']>;
   name?: Maybe<Scalars['String']>;
@@ -1597,13 +1597,13 @@ export type MediaListOptions = {
 /** A user's list options for anime or manga lists */
 export type MediaListOptionsInput = {
   /** The names of the user's advanced scoring sections */
-  advancedScoring?: Maybe<Array<Maybe<Scalars['String']>>>;
+  advancedScoring?: Maybe<Maybe<Scalars['String']>[]>;
   /** If advanced scoring is enabled */
   advancedScoringEnabled?: Maybe<Scalars['Boolean']>;
   /** The names of the user's custom lists */
-  customLists?: Maybe<Array<Maybe<Scalars['String']>>>;
+  customLists?: Maybe<Maybe<Scalars['String']>[]>;
   /** The order each list should be displayed in */
-  sectionOrder?: Maybe<Array<Maybe<Scalars['String']>>>;
+  sectionOrder?: Maybe<Maybe<Scalars['String']>[]>;
   /** If the completed sections of the list should be separated by format */
   splitCompletedSectionByFormat?: Maybe<Scalars['Boolean']>;
   /** list theme */
@@ -1664,13 +1664,13 @@ export enum MediaListStatus {
 export type MediaListTypeOptions = {
   __typename?: 'MediaListTypeOptions';
   /** The names of the user's advanced scoring sections */
-  advancedScoring?: Maybe<Array<Maybe<Scalars['String']>>>;
+  advancedScoring?: Maybe<Maybe<Scalars['String']>[]>;
   /** If advanced scoring is enabled */
   advancedScoringEnabled?: Maybe<Scalars['Boolean']>;
   /** The names of the user's custom lists */
-  customLists?: Maybe<Array<Maybe<Scalars['String']>>>;
+  customLists?: Maybe<Maybe<Scalars['String']>[]>;
   /** The order each list should be displayed in */
-  sectionOrder?: Maybe<Array<Maybe<Scalars['String']>>>;
+  sectionOrder?: Maybe<Maybe<Scalars['String']>[]>;
   /** If the completed sections of the list should be separated by format */
   splitCompletedSectionByFormat?: Maybe<Scalars['Boolean']>;
   /**
@@ -1688,7 +1688,7 @@ export type MediaMergeNotification = {
   /** The time the notification was created at */
   createdAt?: Maybe<Scalars['Int']>;
   /** The title of the deleted media */
-  deletedMediaTitles?: Maybe<Array<Maybe<Scalars['String']>>>;
+  deletedMediaTitles?: Maybe<Maybe<Scalars['String']>[]>;
   /** The id of the Notification */
   id: Scalars['Int'];
   /** The media that was merged into */
@@ -1850,9 +1850,9 @@ export enum MediaSource {
 export type MediaStats = {
   __typename?: 'MediaStats';
   /** @deprecated Replaced by MediaTrends */
-  airingProgression?: Maybe<Array<Maybe<AiringProgression>>>;
-  scoreDistribution?: Maybe<Array<Maybe<ScoreDistribution>>>;
-  statusDistribution?: Maybe<Array<Maybe<StatusDistribution>>>;
+  airingProgression?: Maybe<Maybe<AiringProgression>[]>;
+  scoreDistribution?: Maybe<Maybe<ScoreDistribution>[]>;
+  statusDistribution?: Maybe<Maybe<StatusDistribution>[]>;
 };
 
 /** The current releasing status of the media */
@@ -1887,22 +1887,22 @@ export type MediaSubmission = {
   __typename?: 'MediaSubmission';
   /** Data Mod assigned to handle the submission */
   assignee?: Maybe<User>;
-  changes?: Maybe<Array<Maybe<Scalars['String']>>>;
-  characters?: Maybe<Array<Maybe<MediaSubmissionComparison>>>;
+  changes?: Maybe<Maybe<Scalars['String']>[]>;
+  characters?: Maybe<Maybe<MediaSubmissionComparison>[]>;
   createdAt?: Maybe<Scalars['Int']>;
-  externalLinks?: Maybe<Array<Maybe<MediaSubmissionComparison>>>;
+  externalLinks?: Maybe<Maybe<MediaSubmissionComparison>[]>;
   /** The id of the submission */
   id: Scalars['Int'];
   /** Whether the submission is locked */
   locked?: Maybe<Scalars['Boolean']>;
   media?: Maybe<Media>;
   notes?: Maybe<Scalars['String']>;
-  relations?: Maybe<Array<Maybe<MediaEdge>>>;
+  relations?: Maybe<Maybe<MediaEdge>[]>;
   source?: Maybe<Scalars['String']>;
-  staff?: Maybe<Array<Maybe<MediaSubmissionComparison>>>;
+  staff?: Maybe<Maybe<MediaSubmissionComparison>[]>;
   /** Status of the submission */
   status?: Maybe<SubmissionStatus>;
-  studios?: Maybe<Array<Maybe<MediaSubmissionComparison>>>;
+  studios?: Maybe<Maybe<MediaSubmissionComparison>[]>;
   submission?: Maybe<Media>;
   /** User submitter of the submission */
   submitter?: Maybe<User>;
@@ -2040,8 +2040,8 @@ export type MediaTrend = {
 
 export type MediaTrendConnection = {
   __typename?: 'MediaTrendConnection';
-  edges?: Maybe<Array<Maybe<MediaTrendEdge>>>;
-  nodes?: Maybe<Array<Maybe<MediaTrend>>>;
+  edges?: Maybe<Maybe<MediaTrendEdge>[]>;
+  nodes?: Maybe<Maybe<MediaTrend>[]>;
   /** The pagination information */
   pageInfo?: Maybe<PageInfo>;
 };
@@ -2096,7 +2096,7 @@ export type MessageActivity = {
   /** The amount of likes the activity has */
   likeCount: Scalars['Int'];
   /** The users who liked the activity */
-  likes?: Maybe<Array<Maybe<User>>>;
+  likes?: Maybe<Maybe<User>[]>;
   /** The message text (Markdown) */
   message?: Maybe<Scalars['String']>;
   /** The user who sent the activity message */
@@ -2108,7 +2108,7 @@ export type MessageActivity = {
   /** The user id of the activity's recipient */
   recipientId?: Maybe<Scalars['Int']>;
   /** The written replies to the activity */
-  replies?: Maybe<Array<Maybe<ActivityReply>>>;
+  replies?: Maybe<Maybe<ActivityReply>[]>;
   /** The number of activity replies */
   replyCount: Scalars['Int'];
   /** The url for the activity page on the AniList website */
@@ -2225,7 +2225,7 @@ export type Mutation = {
    * Add or remove a like from a likeable type.
    *                           Returns all the users who liked the same model
    */
-  ToggleLike?: Maybe<Array<Maybe<User>>>;
+  ToggleLike?: Maybe<Maybe<User>[]>;
   /** Add or remove a like from a likeable type. */
   ToggleLikeV2?: Maybe<LikeableUnion>;
   /** Toggle the subscription of a forum thread */
@@ -2235,7 +2235,7 @@ export type Mutation = {
   /** Update the order favourites are displayed in */
   UpdateFavouriteOrder?: Maybe<Favourites>;
   /** Update multiple media list entries to the same values */
-  UpdateMediaListEntries?: Maybe<Array<Maybe<MediaList>>>;
+  UpdateMediaListEntries?: Maybe<Maybe<MediaList>[]>;
   UpdateUser?: Maybe<User>;
 };
 
@@ -2297,9 +2297,9 @@ export type MutationSaveListActivityArgs = {
 
 
 export type MutationSaveMediaListEntryArgs = {
-  advancedScores?: Maybe<Array<Maybe<Scalars['Float']>>>;
+  advancedScores?: Maybe<Maybe<Scalars['Float']>[]>;
   completedAt?: Maybe<FuzzyDateInput>;
-  customLists?: Maybe<Array<Maybe<Scalars['String']>>>;
+  customLists?: Maybe<Maybe<Scalars['String']>[]>;
   hiddenFromStatusLists?: Maybe<Scalars['Boolean']>;
   id?: Maybe<Scalars['Int']>;
   mediaId?: Maybe<Scalars['Int']>;
@@ -2352,10 +2352,10 @@ export type MutationSaveTextActivityArgs = {
 
 export type MutationSaveThreadArgs = {
   body?: Maybe<Scalars['String']>;
-  categories?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  categories?: Maybe<Maybe<Scalars['Int']>[]>;
   id?: Maybe<Scalars['Int']>;
   locked?: Maybe<Scalars['Boolean']>;
-  mediaCategories?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaCategories?: Maybe<Maybe<Scalars['Int']>[]>;
   sticky?: Maybe<Scalars['Boolean']>;
   title?: Maybe<Scalars['String']>;
 };
@@ -2415,7 +2415,7 @@ export type MutationToggleThreadSubscriptionArgs = {
 
 
 export type MutationUpdateAniChartHighlightsArgs = {
-  highlights?: Maybe<Array<Maybe<AniChartHighlightInput>>>;
+  highlights?: Maybe<Maybe<AniChartHighlightInput>[]>;
 };
 
 
@@ -2428,24 +2428,24 @@ export type MutationUpdateAniChartSettingsArgs = {
 
 
 export type MutationUpdateFavouriteOrderArgs = {
-  animeIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  animeOrder?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  characterIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  characterOrder?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  mangaIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  mangaOrder?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  staffIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  staffOrder?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  studioIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  studioOrder?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  animeIds?: Maybe<Maybe<Scalars['Int']>[]>;
+  animeOrder?: Maybe<Maybe<Scalars['Int']>[]>;
+  characterIds?: Maybe<Maybe<Scalars['Int']>[]>;
+  characterOrder?: Maybe<Maybe<Scalars['Int']>[]>;
+  mangaIds?: Maybe<Maybe<Scalars['Int']>[]>;
+  mangaOrder?: Maybe<Maybe<Scalars['Int']>[]>;
+  staffIds?: Maybe<Maybe<Scalars['Int']>[]>;
+  staffOrder?: Maybe<Maybe<Scalars['Int']>[]>;
+  studioIds?: Maybe<Maybe<Scalars['Int']>[]>;
+  studioOrder?: Maybe<Maybe<Scalars['Int']>[]>;
 };
 
 
 export type MutationUpdateMediaListEntriesArgs = {
-  advancedScores?: Maybe<Array<Maybe<Scalars['Float']>>>;
+  advancedScores?: Maybe<Maybe<Scalars['Float']>[]>;
   completedAt?: Maybe<FuzzyDateInput>;
   hiddenFromStatusLists?: Maybe<Scalars['Boolean']>;
-  ids?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  ids?: Maybe<Maybe<Scalars['Int']>[]>;
   notes?: Maybe<Scalars['String']>;
   priority?: Maybe<Scalars['Int']>;
   private?: Maybe<Scalars['Boolean']>;
@@ -2464,11 +2464,11 @@ export type MutationUpdateUserArgs = {
   activityMergeTime?: Maybe<Scalars['Int']>;
   airingNotifications?: Maybe<Scalars['Boolean']>;
   animeListOptions?: Maybe<MediaListOptionsInput>;
-  disabledListActivity?: Maybe<Array<Maybe<ListActivityOptionInput>>>;
+  disabledListActivity?: Maybe<Maybe<ListActivityOptionInput>[]>;
   displayAdultContent?: Maybe<Scalars['Boolean']>;
   donatorBadge?: Maybe<Scalars['String']>;
   mangaListOptions?: Maybe<MediaListOptionsInput>;
-  notificationOptions?: Maybe<Array<Maybe<NotificationOptionInput>>>;
+  notificationOptions?: Maybe<Maybe<NotificationOptionInput>[]>;
   profileColor?: Maybe<Scalars['String']>;
   restrictMessagesToFollowing?: Maybe<Scalars['Boolean']>;
   rowOrder?: Maybe<Scalars['String']>;
@@ -2539,26 +2539,26 @@ export type NotificationUnion = ActivityLikeNotification | ActivityMentionNotifi
 /** Page of data */
 export type Page = {
   __typename?: 'Page';
-  activities?: Maybe<Array<Maybe<ActivityUnion>>>;
-  activityReplies?: Maybe<Array<Maybe<ActivityReply>>>;
-  airingSchedules?: Maybe<Array<Maybe<AiringSchedule>>>;
-  characters?: Maybe<Array<Maybe<Character>>>;
-  followers?: Maybe<Array<Maybe<User>>>;
-  following?: Maybe<Array<Maybe<User>>>;
-  likes?: Maybe<Array<Maybe<User>>>;
-  media?: Maybe<Array<Maybe<Media>>>;
-  mediaList?: Maybe<Array<Maybe<MediaList>>>;
-  mediaTrends?: Maybe<Array<Maybe<MediaTrend>>>;
-  notifications?: Maybe<Array<Maybe<NotificationUnion>>>;
+  activities?: Maybe<Maybe<ActivityUnion>[]>;
+  activityReplies?: Maybe<Maybe<ActivityReply>[]>;
+  airingSchedules?: Maybe<Maybe<AiringSchedule>[]>;
+  characters?: Maybe<Maybe<Character>[]>;
+  followers?: Maybe<Maybe<User>[]>;
+  following?: Maybe<Maybe<User>[]>;
+  likes?: Maybe<Maybe<User>[]>;
+  media?: Maybe<Maybe<Media>[]>;
+  mediaList?: Maybe<Maybe<MediaList>[]>;
+  mediaTrends?: Maybe<Maybe<MediaTrend>[]>;
+  notifications?: Maybe<Maybe<NotificationUnion>[]>;
   /** The pagination information */
   pageInfo?: Maybe<PageInfo>;
-  recommendations?: Maybe<Array<Maybe<Recommendation>>>;
-  reviews?: Maybe<Array<Maybe<Review>>>;
-  staff?: Maybe<Array<Maybe<Staff>>>;
-  studios?: Maybe<Array<Maybe<Studio>>>;
-  threadComments?: Maybe<Array<Maybe<ThreadComment>>>;
-  threads?: Maybe<Array<Maybe<Thread>>>;
-  users?: Maybe<Array<Maybe<User>>>;
+  recommendations?: Maybe<Maybe<Recommendation>[]>;
+  reviews?: Maybe<Maybe<Review>[]>;
+  staff?: Maybe<Maybe<Staff>[]>;
+  studios?: Maybe<Maybe<Studio>[]>;
+  threadComments?: Maybe<Maybe<ThreadComment>[]>;
+  threads?: Maybe<Maybe<Thread>[]>;
+  users?: Maybe<Maybe<User>[]>;
 };
 
 
@@ -2570,27 +2570,27 @@ export type PageActivitiesArgs = {
   hasReplies?: Maybe<Scalars['Boolean']>;
   hasRepliesOrTypeText?: Maybe<Scalars['Boolean']>;
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id_not?: Maybe<Scalars['Int']>;
-  id_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   isFollowing?: Maybe<Scalars['Boolean']>;
   mediaId?: Maybe<Scalars['Int']>;
-  mediaId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_in?: Maybe<Maybe<Scalars['Int']>[]>;
   mediaId_not?: Maybe<Scalars['Int']>;
-  mediaId_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   messengerId?: Maybe<Scalars['Int']>;
-  messengerId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  messengerId_in?: Maybe<Maybe<Scalars['Int']>[]>;
   messengerId_not?: Maybe<Scalars['Int']>;
-  messengerId_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  sort?: Maybe<Array<Maybe<ActivitySort>>>;
+  messengerId_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
+  sort?: Maybe<Maybe<ActivitySort>[]>;
   type?: Maybe<ActivityType>;
-  type_in?: Maybe<Array<Maybe<ActivityType>>>;
+  type_in?: Maybe<Maybe<ActivityType>[]>;
   type_not?: Maybe<ActivityType>;
-  type_not_in?: Maybe<Array<Maybe<ActivityType>>>;
+  type_not_in?: Maybe<Maybe<ActivityType>[]>;
   userId?: Maybe<Scalars['Int']>;
-  userId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  userId_in?: Maybe<Maybe<Scalars['Int']>[]>;
   userId_not?: Maybe<Scalars['Int']>;
-  userId_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  userId_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
 };
 
 
@@ -2608,45 +2608,45 @@ export type PageAiringSchedulesArgs = {
   airingAt_lesser?: Maybe<Scalars['Int']>;
   episode?: Maybe<Scalars['Int']>;
   episode_greater?: Maybe<Scalars['Int']>;
-  episode_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  episode_in?: Maybe<Maybe<Scalars['Int']>[]>;
   episode_lesser?: Maybe<Scalars['Int']>;
   episode_not?: Maybe<Scalars['Int']>;
-  episode_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  episode_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id_not?: Maybe<Scalars['Int']>;
-  id_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   mediaId?: Maybe<Scalars['Int']>;
-  mediaId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_in?: Maybe<Maybe<Scalars['Int']>[]>;
   mediaId_not?: Maybe<Scalars['Int']>;
-  mediaId_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   notYetAired?: Maybe<Scalars['Boolean']>;
-  sort?: Maybe<Array<Maybe<AiringSort>>>;
+  sort?: Maybe<Maybe<AiringSort>[]>;
 };
 
 
 /** Page of data */
 export type PageCharactersArgs = {
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id_not?: Maybe<Scalars['Int']>;
-  id_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   isBirthday?: Maybe<Scalars['Boolean']>;
   search?: Maybe<Scalars['String']>;
-  sort?: Maybe<Array<Maybe<CharacterSort>>>;
+  sort?: Maybe<Maybe<CharacterSort>[]>;
 };
 
 
 /** Page of data */
 export type PageFollowersArgs = {
-  sort?: Maybe<Array<Maybe<UserSort>>>;
+  sort?: Maybe<Maybe<UserSort>[]>;
   userId: Scalars['Int'];
 };
 
 
 /** Page of data */
 export type PageFollowingArgs = {
-  sort?: Maybe<Array<Maybe<UserSort>>>;
+  sort?: Maybe<Maybe<UserSort>[]>;
   userId: Scalars['Int'];
 };
 
@@ -2679,26 +2679,26 @@ export type PageMediaArgs = {
   episodes_greater?: Maybe<Scalars['Int']>;
   episodes_lesser?: Maybe<Scalars['Int']>;
   format?: Maybe<MediaFormat>;
-  format_in?: Maybe<Array<Maybe<MediaFormat>>>;
+  format_in?: Maybe<Maybe<MediaFormat>[]>;
   format_not?: Maybe<MediaFormat>;
-  format_not_in?: Maybe<Array<Maybe<MediaFormat>>>;
+  format_not_in?: Maybe<Maybe<MediaFormat>[]>;
   genre?: Maybe<Scalars['String']>;
-  genre_in?: Maybe<Array<Maybe<Scalars['String']>>>;
-  genre_not_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  genre_in?: Maybe<Maybe<Scalars['String']>[]>;
+  genre_not_in?: Maybe<Maybe<Scalars['String']>[]>;
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id_not?: Maybe<Scalars['Int']>;
-  id_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   idMal?: Maybe<Scalars['Int']>;
-  idMal_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  idMal_in?: Maybe<Maybe<Scalars['Int']>[]>;
   idMal_not?: Maybe<Scalars['Int']>;
-  idMal_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  idMal_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   isAdult?: Maybe<Scalars['Boolean']>;
   isLicensed?: Maybe<Scalars['Boolean']>;
   licensedBy?: Maybe<Scalars['String']>;
-  licensedBy_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  licensedBy_in?: Maybe<Maybe<Scalars['String']>[]>;
   licensedById?: Maybe<Scalars['Int']>;
-  licensedById_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  licensedById_in?: Maybe<Maybe<Scalars['Int']>[]>;
   minimumTagRank?: Maybe<Scalars['Int']>;
   onList?: Maybe<Scalars['Boolean']>;
   popularity?: Maybe<Scalars['Int']>;
@@ -2708,23 +2708,23 @@ export type PageMediaArgs = {
   search?: Maybe<Scalars['String']>;
   season?: Maybe<MediaSeason>;
   seasonYear?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<MediaSort>>>;
+  sort?: Maybe<Maybe<MediaSort>[]>;
   source?: Maybe<MediaSource>;
-  source_in?: Maybe<Array<Maybe<MediaSource>>>;
+  source_in?: Maybe<Maybe<MediaSource>[]>;
   startDate?: Maybe<Scalars['FuzzyDateInt']>;
   startDate_greater?: Maybe<Scalars['FuzzyDateInt']>;
   startDate_lesser?: Maybe<Scalars['FuzzyDateInt']>;
   startDate_like?: Maybe<Scalars['String']>;
   status?: Maybe<MediaStatus>;
-  status_in?: Maybe<Array<Maybe<MediaStatus>>>;
+  status_in?: Maybe<Maybe<MediaStatus>[]>;
   status_not?: Maybe<MediaStatus>;
-  status_not_in?: Maybe<Array<Maybe<MediaStatus>>>;
+  status_not_in?: Maybe<Maybe<MediaStatus>[]>;
   tag?: Maybe<Scalars['String']>;
-  tag_in?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tag_not_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tag_in?: Maybe<Maybe<Scalars['String']>[]>;
+  tag_not_in?: Maybe<Maybe<Scalars['String']>[]>;
   tagCategory?: Maybe<Scalars['String']>;
-  tagCategory_in?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tagCategory_not_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tagCategory_in?: Maybe<Maybe<Scalars['String']>[]>;
+  tagCategory_not_in?: Maybe<Maybe<Scalars['String']>[]>;
   type?: Maybe<MediaType>;
   volumes?: Maybe<Scalars['Int']>;
   volumes_greater?: Maybe<Scalars['Int']>;
@@ -2742,22 +2742,22 @@ export type PageMediaListArgs = {
   id?: Maybe<Scalars['Int']>;
   isFollowing?: Maybe<Scalars['Boolean']>;
   mediaId?: Maybe<Scalars['Int']>;
-  mediaId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  mediaId_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_in?: Maybe<Maybe<Scalars['Int']>[]>;
+  mediaId_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   notes?: Maybe<Scalars['String']>;
   notes_like?: Maybe<Scalars['String']>;
-  sort?: Maybe<Array<Maybe<MediaListSort>>>;
+  sort?: Maybe<Maybe<MediaListSort>[]>;
   startedAt?: Maybe<Scalars['FuzzyDateInt']>;
   startedAt_greater?: Maybe<Scalars['FuzzyDateInt']>;
   startedAt_lesser?: Maybe<Scalars['FuzzyDateInt']>;
   startedAt_like?: Maybe<Scalars['String']>;
   status?: Maybe<MediaListStatus>;
-  status_in?: Maybe<Array<Maybe<MediaListStatus>>>;
+  status_in?: Maybe<Maybe<MediaListStatus>[]>;
   status_not?: Maybe<MediaListStatus>;
-  status_not_in?: Maybe<Array<Maybe<MediaListStatus>>>;
+  status_not_in?: Maybe<Maybe<MediaListStatus>[]>;
   type?: Maybe<MediaType>;
   userId?: Maybe<Scalars['Int']>;
-  userId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  userId_in?: Maybe<Maybe<Scalars['Int']>[]>;
   userName?: Maybe<Scalars['String']>;
 };
 
@@ -2776,15 +2776,15 @@ export type PageMediaTrendsArgs = {
   episode_lesser?: Maybe<Scalars['Int']>;
   episode_not?: Maybe<Scalars['Int']>;
   mediaId?: Maybe<Scalars['Int']>;
-  mediaId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_in?: Maybe<Maybe<Scalars['Int']>[]>;
   mediaId_not?: Maybe<Scalars['Int']>;
-  mediaId_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   popularity?: Maybe<Scalars['Int']>;
   popularity_greater?: Maybe<Scalars['Int']>;
   popularity_lesser?: Maybe<Scalars['Int']>;
   popularity_not?: Maybe<Scalars['Int']>;
   releasing?: Maybe<Scalars['Boolean']>;
-  sort?: Maybe<Array<Maybe<MediaTrendSort>>>;
+  sort?: Maybe<Maybe<MediaTrendSort>[]>;
   trending?: Maybe<Scalars['Int']>;
   trending_greater?: Maybe<Scalars['Int']>;
   trending_lesser?: Maybe<Scalars['Int']>;
@@ -2796,7 +2796,7 @@ export type PageMediaTrendsArgs = {
 export type PageNotificationsArgs = {
   resetNotificationCount?: Maybe<Scalars['Boolean']>;
   type?: Maybe<NotificationType>;
-  type_in?: Maybe<Array<Maybe<NotificationType>>>;
+  type_in?: Maybe<Maybe<NotificationType>[]>;
 };
 
 
@@ -2809,7 +2809,7 @@ export type PageRecommendationsArgs = {
   rating?: Maybe<Scalars['Int']>;
   rating_greater?: Maybe<Scalars['Int']>;
   rating_lesser?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<RecommendationSort>>>;
+  sort?: Maybe<Maybe<RecommendationSort>[]>;
   userId?: Maybe<Scalars['Int']>;
 };
 
@@ -2819,7 +2819,7 @@ export type PageReviewsArgs = {
   id?: Maybe<Scalars['Int']>;
   mediaId?: Maybe<Scalars['Int']>;
   mediaType?: Maybe<MediaType>;
-  sort?: Maybe<Array<Maybe<ReviewSort>>>;
+  sort?: Maybe<Maybe<ReviewSort>[]>;
   userId?: Maybe<Scalars['Int']>;
 };
 
@@ -2827,30 +2827,30 @@ export type PageReviewsArgs = {
 /** Page of data */
 export type PageStaffArgs = {
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id_not?: Maybe<Scalars['Int']>;
-  id_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   isBirthday?: Maybe<Scalars['Boolean']>;
   search?: Maybe<Scalars['String']>;
-  sort?: Maybe<Array<Maybe<StaffSort>>>;
+  sort?: Maybe<Maybe<StaffSort>[]>;
 };
 
 
 /** Page of data */
 export type PageStudiosArgs = {
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id_not?: Maybe<Scalars['Int']>;
-  id_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   search?: Maybe<Scalars['String']>;
-  sort?: Maybe<Array<Maybe<StudioSort>>>;
+  sort?: Maybe<Maybe<StudioSort>[]>;
 };
 
 
 /** Page of data */
 export type PageThreadCommentsArgs = {
   id?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<ThreadCommentSort>>>;
+  sort?: Maybe<Maybe<ThreadCommentSort>[]>;
   threadId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
 };
@@ -2860,11 +2860,11 @@ export type PageThreadCommentsArgs = {
 export type PageThreadsArgs = {
   categoryId?: Maybe<Scalars['Int']>;
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   mediaCategoryId?: Maybe<Scalars['Int']>;
   replyUserId?: Maybe<Scalars['Int']>;
   search?: Maybe<Scalars['String']>;
-  sort?: Maybe<Array<Maybe<ThreadSort>>>;
+  sort?: Maybe<Maybe<ThreadSort>[]>;
   subscribed?: Maybe<Scalars['Boolean']>;
   userId?: Maybe<Scalars['Int']>;
 };
@@ -2876,7 +2876,7 @@ export type PageUsersArgs = {
   isModerator?: Maybe<Scalars['Boolean']>;
   name?: Maybe<Scalars['String']>;
   search?: Maybe<Scalars['String']>;
-  sort?: Maybe<Array<Maybe<UserSort>>>;
+  sort?: Maybe<Maybe<UserSort>[]>;
 };
 
 export type PageInfo = {
@@ -2912,13 +2912,13 @@ export type Query = {
   /** Character query */
   Character?: Maybe<Character>;
   /** ExternalLinkSource collection query */
-  ExternalLinkSourceCollection?: Maybe<Array<Maybe<MediaExternalLink>>>;
+  ExternalLinkSourceCollection?: Maybe<Maybe<MediaExternalLink>[]>;
   /** Follow query */
   Follower?: Maybe<User>;
   /** Follow query */
   Following?: Maybe<User>;
   /** Collection of all the possible media genres */
-  GenreCollection?: Maybe<Array<Maybe<Scalars['String']>>>;
+  GenreCollection?: Maybe<Maybe<Scalars['String']>[]>;
   /** Like query */
   Like?: Maybe<User>;
   /** Provide AniList markdown to be converted to html (Requires auth) */
@@ -2930,7 +2930,7 @@ export type Query = {
   /** Media list collection query, provides list pre-grouped by status & custom lists. User ID and Media Type arguments required. */
   MediaListCollection?: Maybe<MediaListCollection>;
   /** Collection of all the possible media tags */
-  MediaTagCollection?: Maybe<Array<Maybe<MediaTag>>>;
+  MediaTagCollection?: Maybe<Maybe<MediaTag>[]>;
   /** Media Trend query */
   MediaTrend?: Maybe<MediaTrend>;
   /** Notification query */
@@ -2949,7 +2949,7 @@ export type Query = {
   /** Thread query */
   Thread?: Maybe<Thread>;
   /** Comment query */
-  ThreadComment?: Maybe<Array<Maybe<ThreadComment>>>;
+  ThreadComment?: Maybe<Maybe<ThreadComment>[]>;
   /** User query */
   User?: Maybe<User>;
   /** Get the currently authenticated user */
@@ -2964,27 +2964,27 @@ export type QueryActivityArgs = {
   hasReplies?: Maybe<Scalars['Boolean']>;
   hasRepliesOrTypeText?: Maybe<Scalars['Boolean']>;
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id_not?: Maybe<Scalars['Int']>;
-  id_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   isFollowing?: Maybe<Scalars['Boolean']>;
   mediaId?: Maybe<Scalars['Int']>;
-  mediaId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_in?: Maybe<Maybe<Scalars['Int']>[]>;
   mediaId_not?: Maybe<Scalars['Int']>;
-  mediaId_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   messengerId?: Maybe<Scalars['Int']>;
-  messengerId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  messengerId_in?: Maybe<Maybe<Scalars['Int']>[]>;
   messengerId_not?: Maybe<Scalars['Int']>;
-  messengerId_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  sort?: Maybe<Array<Maybe<ActivitySort>>>;
+  messengerId_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
+  sort?: Maybe<Maybe<ActivitySort>[]>;
   type?: Maybe<ActivityType>;
-  type_in?: Maybe<Array<Maybe<ActivityType>>>;
+  type_in?: Maybe<Maybe<ActivityType>[]>;
   type_not?: Maybe<ActivityType>;
-  type_not_in?: Maybe<Array<Maybe<ActivityType>>>;
+  type_not_in?: Maybe<Maybe<ActivityType>[]>;
   userId?: Maybe<Scalars['Int']>;
-  userId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  userId_in?: Maybe<Maybe<Scalars['Int']>[]>;
   userId_not?: Maybe<Scalars['Int']>;
-  userId_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  userId_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
 };
 
 
@@ -3000,31 +3000,31 @@ export type QueryAiringScheduleArgs = {
   airingAt_lesser?: Maybe<Scalars['Int']>;
   episode?: Maybe<Scalars['Int']>;
   episode_greater?: Maybe<Scalars['Int']>;
-  episode_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  episode_in?: Maybe<Maybe<Scalars['Int']>[]>;
   episode_lesser?: Maybe<Scalars['Int']>;
   episode_not?: Maybe<Scalars['Int']>;
-  episode_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  episode_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id_not?: Maybe<Scalars['Int']>;
-  id_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   mediaId?: Maybe<Scalars['Int']>;
-  mediaId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_in?: Maybe<Maybe<Scalars['Int']>[]>;
   mediaId_not?: Maybe<Scalars['Int']>;
-  mediaId_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   notYetAired?: Maybe<Scalars['Boolean']>;
-  sort?: Maybe<Array<Maybe<AiringSort>>>;
+  sort?: Maybe<Maybe<AiringSort>[]>;
 };
 
 
 export type QueryCharacterArgs = {
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id_not?: Maybe<Scalars['Int']>;
-  id_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   isBirthday?: Maybe<Scalars['Boolean']>;
   search?: Maybe<Scalars['String']>;
-  sort?: Maybe<Array<Maybe<CharacterSort>>>;
+  sort?: Maybe<Maybe<CharacterSort>[]>;
 };
 
 
@@ -3036,13 +3036,13 @@ export type QueryExternalLinkSourceCollectionArgs = {
 
 
 export type QueryFollowerArgs = {
-  sort?: Maybe<Array<Maybe<UserSort>>>;
+  sort?: Maybe<Maybe<UserSort>[]>;
   userId: Scalars['Int'];
 };
 
 
 export type QueryFollowingArgs = {
-  sort?: Maybe<Array<Maybe<UserSort>>>;
+  sort?: Maybe<Maybe<UserSort>[]>;
   userId: Scalars['Int'];
 };
 
@@ -3078,26 +3078,26 @@ export type QueryMediaArgs = {
   episodes_greater?: Maybe<Scalars['Int']>;
   episodes_lesser?: Maybe<Scalars['Int']>;
   format?: Maybe<MediaFormat>;
-  format_in?: Maybe<Array<Maybe<MediaFormat>>>;
+  format_in?: Maybe<Maybe<MediaFormat>[]>;
   format_not?: Maybe<MediaFormat>;
-  format_not_in?: Maybe<Array<Maybe<MediaFormat>>>;
+  format_not_in?: Maybe<Maybe<MediaFormat>[]>;
   genre?: Maybe<Scalars['String']>;
-  genre_in?: Maybe<Array<Maybe<Scalars['String']>>>;
-  genre_not_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  genre_in?: Maybe<Maybe<Scalars['String']>[]>;
+  genre_not_in?: Maybe<Maybe<Scalars['String']>[]>;
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id_not?: Maybe<Scalars['Int']>;
-  id_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   idMal?: Maybe<Scalars['Int']>;
-  idMal_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  idMal_in?: Maybe<Maybe<Scalars['Int']>[]>;
   idMal_not?: Maybe<Scalars['Int']>;
-  idMal_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  idMal_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   isAdult?: Maybe<Scalars['Boolean']>;
   isLicensed?: Maybe<Scalars['Boolean']>;
   licensedBy?: Maybe<Scalars['String']>;
-  licensedBy_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  licensedBy_in?: Maybe<Maybe<Scalars['String']>[]>;
   licensedById?: Maybe<Scalars['Int']>;
-  licensedById_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  licensedById_in?: Maybe<Maybe<Scalars['Int']>[]>;
   minimumTagRank?: Maybe<Scalars['Int']>;
   onList?: Maybe<Scalars['Boolean']>;
   popularity?: Maybe<Scalars['Int']>;
@@ -3107,23 +3107,23 @@ export type QueryMediaArgs = {
   search?: Maybe<Scalars['String']>;
   season?: Maybe<MediaSeason>;
   seasonYear?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<MediaSort>>>;
+  sort?: Maybe<Maybe<MediaSort>[]>;
   source?: Maybe<MediaSource>;
-  source_in?: Maybe<Array<Maybe<MediaSource>>>;
+  source_in?: Maybe<Maybe<MediaSource>[]>;
   startDate?: Maybe<Scalars['FuzzyDateInt']>;
   startDate_greater?: Maybe<Scalars['FuzzyDateInt']>;
   startDate_lesser?: Maybe<Scalars['FuzzyDateInt']>;
   startDate_like?: Maybe<Scalars['String']>;
   status?: Maybe<MediaStatus>;
-  status_in?: Maybe<Array<Maybe<MediaStatus>>>;
+  status_in?: Maybe<Maybe<MediaStatus>[]>;
   status_not?: Maybe<MediaStatus>;
-  status_not_in?: Maybe<Array<Maybe<MediaStatus>>>;
+  status_not_in?: Maybe<Maybe<MediaStatus>[]>;
   tag?: Maybe<Scalars['String']>;
-  tag_in?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tag_not_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tag_in?: Maybe<Maybe<Scalars['String']>[]>;
+  tag_not_in?: Maybe<Maybe<Scalars['String']>[]>;
   tagCategory?: Maybe<Scalars['String']>;
-  tagCategory_in?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tagCategory_not_in?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tagCategory_in?: Maybe<Maybe<Scalars['String']>[]>;
+  tagCategory_not_in?: Maybe<Maybe<Scalars['String']>[]>;
   type?: Maybe<MediaType>;
   volumes?: Maybe<Scalars['Int']>;
   volumes_greater?: Maybe<Scalars['Int']>;
@@ -3140,22 +3140,22 @@ export type QueryMediaListArgs = {
   id?: Maybe<Scalars['Int']>;
   isFollowing?: Maybe<Scalars['Boolean']>;
   mediaId?: Maybe<Scalars['Int']>;
-  mediaId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  mediaId_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_in?: Maybe<Maybe<Scalars['Int']>[]>;
+  mediaId_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   notes?: Maybe<Scalars['String']>;
   notes_like?: Maybe<Scalars['String']>;
-  sort?: Maybe<Array<Maybe<MediaListSort>>>;
+  sort?: Maybe<Maybe<MediaListSort>[]>;
   startedAt?: Maybe<Scalars['FuzzyDateInt']>;
   startedAt_greater?: Maybe<Scalars['FuzzyDateInt']>;
   startedAt_lesser?: Maybe<Scalars['FuzzyDateInt']>;
   startedAt_like?: Maybe<Scalars['String']>;
   status?: Maybe<MediaListStatus>;
-  status_in?: Maybe<Array<Maybe<MediaListStatus>>>;
+  status_in?: Maybe<Maybe<MediaListStatus>[]>;
   status_not?: Maybe<MediaListStatus>;
-  status_not_in?: Maybe<Array<Maybe<MediaListStatus>>>;
+  status_not_in?: Maybe<Maybe<MediaListStatus>[]>;
   type?: Maybe<MediaType>;
   userId?: Maybe<Scalars['Int']>;
-  userId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  userId_in?: Maybe<Maybe<Scalars['Int']>[]>;
   userName?: Maybe<Scalars['String']>;
 };
 
@@ -3170,15 +3170,15 @@ export type QueryMediaListCollectionArgs = {
   notes?: Maybe<Scalars['String']>;
   notes_like?: Maybe<Scalars['String']>;
   perChunk?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<MediaListSort>>>;
+  sort?: Maybe<Maybe<MediaListSort>[]>;
   startedAt?: Maybe<Scalars['FuzzyDateInt']>;
   startedAt_greater?: Maybe<Scalars['FuzzyDateInt']>;
   startedAt_lesser?: Maybe<Scalars['FuzzyDateInt']>;
   startedAt_like?: Maybe<Scalars['String']>;
   status?: Maybe<MediaListStatus>;
-  status_in?: Maybe<Array<Maybe<MediaListStatus>>>;
+  status_in?: Maybe<Maybe<MediaListStatus>[]>;
   status_not?: Maybe<MediaListStatus>;
-  status_not_in?: Maybe<Array<Maybe<MediaListStatus>>>;
+  status_not_in?: Maybe<Maybe<MediaListStatus>[]>;
   type?: Maybe<MediaType>;
   userId?: Maybe<Scalars['Int']>;
   userName?: Maybe<Scalars['String']>;
@@ -3203,15 +3203,15 @@ export type QueryMediaTrendArgs = {
   episode_lesser?: Maybe<Scalars['Int']>;
   episode_not?: Maybe<Scalars['Int']>;
   mediaId?: Maybe<Scalars['Int']>;
-  mediaId_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_in?: Maybe<Maybe<Scalars['Int']>[]>;
   mediaId_not?: Maybe<Scalars['Int']>;
-  mediaId_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  mediaId_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   popularity?: Maybe<Scalars['Int']>;
   popularity_greater?: Maybe<Scalars['Int']>;
   popularity_lesser?: Maybe<Scalars['Int']>;
   popularity_not?: Maybe<Scalars['Int']>;
   releasing?: Maybe<Scalars['Boolean']>;
-  sort?: Maybe<Array<Maybe<MediaTrendSort>>>;
+  sort?: Maybe<Maybe<MediaTrendSort>[]>;
   trending?: Maybe<Scalars['Int']>;
   trending_greater?: Maybe<Scalars['Int']>;
   trending_lesser?: Maybe<Scalars['Int']>;
@@ -3222,7 +3222,7 @@ export type QueryMediaTrendArgs = {
 export type QueryNotificationArgs = {
   resetNotificationCount?: Maybe<Scalars['Boolean']>;
   type?: Maybe<NotificationType>;
-  type_in?: Maybe<Array<Maybe<NotificationType>>>;
+  type_in?: Maybe<Maybe<NotificationType>[]>;
 };
 
 
@@ -3240,7 +3240,7 @@ export type QueryRecommendationArgs = {
   rating?: Maybe<Scalars['Int']>;
   rating_greater?: Maybe<Scalars['Int']>;
   rating_lesser?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<RecommendationSort>>>;
+  sort?: Maybe<Maybe<RecommendationSort>[]>;
   userId?: Maybe<Scalars['Int']>;
 };
 
@@ -3249,40 +3249,40 @@ export type QueryReviewArgs = {
   id?: Maybe<Scalars['Int']>;
   mediaId?: Maybe<Scalars['Int']>;
   mediaType?: Maybe<MediaType>;
-  sort?: Maybe<Array<Maybe<ReviewSort>>>;
+  sort?: Maybe<Maybe<ReviewSort>[]>;
   userId?: Maybe<Scalars['Int']>;
 };
 
 
 export type QueryStaffArgs = {
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id_not?: Maybe<Scalars['Int']>;
-  id_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   isBirthday?: Maybe<Scalars['Boolean']>;
   search?: Maybe<Scalars['String']>;
-  sort?: Maybe<Array<Maybe<StaffSort>>>;
+  sort?: Maybe<Maybe<StaffSort>[]>;
 };
 
 
 export type QueryStudioArgs = {
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   id_not?: Maybe<Scalars['Int']>;
-  id_not_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_not_in?: Maybe<Maybe<Scalars['Int']>[]>;
   search?: Maybe<Scalars['String']>;
-  sort?: Maybe<Array<Maybe<StudioSort>>>;
+  sort?: Maybe<Maybe<StudioSort>[]>;
 };
 
 
 export type QueryThreadArgs = {
   categoryId?: Maybe<Scalars['Int']>;
   id?: Maybe<Scalars['Int']>;
-  id_in?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  id_in?: Maybe<Maybe<Scalars['Int']>[]>;
   mediaCategoryId?: Maybe<Scalars['Int']>;
   replyUserId?: Maybe<Scalars['Int']>;
   search?: Maybe<Scalars['String']>;
-  sort?: Maybe<Array<Maybe<ThreadSort>>>;
+  sort?: Maybe<Maybe<ThreadSort>[]>;
   subscribed?: Maybe<Scalars['Boolean']>;
   userId?: Maybe<Scalars['Int']>;
 };
@@ -3290,7 +3290,7 @@ export type QueryThreadArgs = {
 
 export type QueryThreadCommentArgs = {
   id?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<ThreadCommentSort>>>;
+  sort?: Maybe<Maybe<ThreadCommentSort>[]>;
   threadId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
 };
@@ -3301,7 +3301,7 @@ export type QueryUserArgs = {
   isModerator?: Maybe<Scalars['Boolean']>;
   name?: Maybe<Scalars['String']>;
   search?: Maybe<Scalars['String']>;
-  sort?: Maybe<Array<Maybe<UserSort>>>;
+  sort?: Maybe<Maybe<UserSort>[]>;
 };
 
 /** Media recommendation */
@@ -3323,8 +3323,8 @@ export type Recommendation = {
 
 export type RecommendationConnection = {
   __typename?: 'RecommendationConnection';
-  edges?: Maybe<Array<Maybe<RecommendationEdge>>>;
-  nodes?: Maybe<Array<Maybe<Recommendation>>>;
+  edges?: Maybe<Maybe<RecommendationEdge>[]>;
+  nodes?: Maybe<Maybe<Recommendation>[]>;
   /** The pagination information */
   pageInfo?: Maybe<PageInfo>;
 };
@@ -3423,8 +3423,8 @@ export type ReviewBodyArgs = {
 
 export type ReviewConnection = {
   __typename?: 'ReviewConnection';
-  edges?: Maybe<Array<Maybe<ReviewEdge>>>;
-  nodes?: Maybe<Array<Maybe<Review>>>;
+  edges?: Maybe<Maybe<ReviewEdge>[]>;
+  nodes?: Maybe<Maybe<Review>[]>;
   /** The pagination information */
   pageInfo?: Maybe<PageInfo>;
 };
@@ -3524,49 +3524,49 @@ export type SiteStatistics = {
 export type SiteStatisticsAnimeArgs = {
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<SiteTrendSort>>>;
+  sort?: Maybe<Maybe<SiteTrendSort>[]>;
 };
 
 
 export type SiteStatisticsCharactersArgs = {
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<SiteTrendSort>>>;
+  sort?: Maybe<Maybe<SiteTrendSort>[]>;
 };
 
 
 export type SiteStatisticsMangaArgs = {
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<SiteTrendSort>>>;
+  sort?: Maybe<Maybe<SiteTrendSort>[]>;
 };
 
 
 export type SiteStatisticsReviewsArgs = {
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<SiteTrendSort>>>;
+  sort?: Maybe<Maybe<SiteTrendSort>[]>;
 };
 
 
 export type SiteStatisticsStaffArgs = {
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<SiteTrendSort>>>;
+  sort?: Maybe<Maybe<SiteTrendSort>[]>;
 };
 
 
 export type SiteStatisticsStudiosArgs = {
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<SiteTrendSort>>>;
+  sort?: Maybe<Maybe<SiteTrendSort>[]>;
 };
 
 
 export type SiteStatisticsUsersArgs = {
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<SiteTrendSort>>>;
+  sort?: Maybe<Maybe<SiteTrendSort>[]>;
 };
 
 /** Daily site statistics */
@@ -3581,8 +3581,8 @@ export type SiteTrend = {
 
 export type SiteTrendConnection = {
   __typename?: 'SiteTrendConnection';
-  edges?: Maybe<Array<Maybe<SiteTrendEdge>>>;
-  nodes?: Maybe<Array<Maybe<SiteTrend>>>;
+  edges?: Maybe<Maybe<SiteTrendEdge>[]>;
+  nodes?: Maybe<Maybe<SiteTrend>[]>;
   /** The pagination information */
   pageInfo?: Maybe<PageInfo>;
 };
@@ -3644,7 +3644,7 @@ export type Staff = {
   /** The names of the staff member */
   name?: Maybe<StaffName>;
   /** The person's primary occupations */
-  primaryOccupations?: Maybe<Array<Maybe<Scalars['String']>>>;
+  primaryOccupations?: Maybe<Maybe<Scalars['String']>[]>;
   /** The url for the staff page on the AniList website */
   siteUrl?: Maybe<Scalars['String']>;
   /** Staff member that the submission is referencing */
@@ -3660,7 +3660,7 @@ export type Staff = {
   /** @deprecated No data available */
   updatedAt?: Maybe<Scalars['Int']>;
   /** [startYear, endYear] (If the 2nd value is not present staff is still active) */
-  yearsActive?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  yearsActive?: Maybe<Maybe<Scalars['Int']>[]>;
 };
 
 
@@ -3669,7 +3669,7 @@ export type StaffCharacterMediaArgs = {
   onList?: Maybe<Scalars['Boolean']>;
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<MediaSort>>>;
+  sort?: Maybe<Maybe<MediaSort>[]>;
 };
 
 
@@ -3677,7 +3677,7 @@ export type StaffCharacterMediaArgs = {
 export type StaffCharactersArgs = {
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<CharacterSort>>>;
+  sort?: Maybe<Maybe<CharacterSort>[]>;
 };
 
 
@@ -3692,14 +3692,14 @@ export type StaffStaffMediaArgs = {
   onList?: Maybe<Scalars['Boolean']>;
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<MediaSort>>>;
+  sort?: Maybe<Maybe<MediaSort>[]>;
   type?: Maybe<MediaType>;
 };
 
 export type StaffConnection = {
   __typename?: 'StaffConnection';
-  edges?: Maybe<Array<Maybe<StaffEdge>>>;
-  nodes?: Maybe<Array<Maybe<Staff>>>;
+  edges?: Maybe<Maybe<StaffEdge>[]>;
+  nodes?: Maybe<Maybe<Staff>[]>;
   /** The pagination information */
   pageInfo?: Maybe<PageInfo>;
 };
@@ -3752,7 +3752,7 @@ export enum StaffLanguage {
 export type StaffName = {
   __typename?: 'StaffName';
   /** Other names the staff member might be referred to as (pen names) */
-  alternative?: Maybe<Array<Maybe<Scalars['String']>>>;
+  alternative?: Maybe<Maybe<Scalars['String']>[]>;
   /** The person's given name */
   first?: Maybe<Scalars['String']>;
   /** The person's first and last name */
@@ -3770,7 +3770,7 @@ export type StaffName = {
 /** The names of the staff member */
 export type StaffNameInput = {
   /** Other names the character might be referred by */
-  alternative?: Maybe<Array<Maybe<Scalars['String']>>>;
+  alternative?: Maybe<Maybe<Scalars['String']>[]>;
   /** The person's given name */
   first?: Maybe<Scalars['String']>;
   /** The person's surname */
@@ -3875,13 +3875,13 @@ export type StudioMediaArgs = {
   onList?: Maybe<Scalars['Boolean']>;
   page?: Maybe<Scalars['Int']>;
   perPage?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<MediaSort>>>;
+  sort?: Maybe<Maybe<MediaSort>[]>;
 };
 
 export type StudioConnection = {
   __typename?: 'StudioConnection';
-  edges?: Maybe<Array<Maybe<StudioEdge>>>;
-  nodes?: Maybe<Array<Maybe<Studio>>>;
+  edges?: Maybe<Maybe<StudioEdge>[]>;
+  nodes?: Maybe<Maybe<Studio>[]>;
   /** The pagination information */
   pageInfo?: Maybe<PageInfo>;
 };
@@ -3961,9 +3961,9 @@ export type TextActivity = {
   /** The amount of likes the activity has */
   likeCount: Scalars['Int'];
   /** The users who liked the activity */
-  likes?: Maybe<Array<Maybe<User>>>;
+  likes?: Maybe<Maybe<User>[]>;
   /** The written replies to the activity */
-  replies?: Maybe<Array<Maybe<ActivityReply>>>;
+  replies?: Maybe<Maybe<ActivityReply>[]>;
   /** The number of activity replies */
   replyCount: Scalars['Int'];
   /** The url for the activity page on the AniList website */
@@ -3990,7 +3990,7 @@ export type Thread = {
   /** The text body of the thread (Markdown) */
   body?: Maybe<Scalars['String']>;
   /** The categories of the thread */
-  categories?: Maybe<Array<Maybe<ThreadCategory>>>;
+  categories?: Maybe<Maybe<ThreadCategory>[]>;
   /** The time of the thread creation */
   createdAt: Scalars['Int'];
   /** The id of the thread */
@@ -4006,9 +4006,9 @@ export type Thread = {
   /** The amount of likes the thread has */
   likeCount: Scalars['Int'];
   /** The users who liked the thread */
-  likes?: Maybe<Array<Maybe<User>>>;
+  likes?: Maybe<Maybe<User>[]>;
   /** The media categories of the thread */
-  mediaCategories?: Maybe<Array<Maybe<Media>>>;
+  mediaCategories?: Maybe<Maybe<Media>[]>;
   /** The time of the last reply */
   repliedAt?: Maybe<Scalars['Int']>;
   /** The id of the most recent comment on the thread */
@@ -4066,7 +4066,7 @@ export type ThreadComment = {
   /** The amount of likes the comment has */
   likeCount: Scalars['Int'];
   /** The users who liked the comment */
-  likes?: Maybe<Array<Maybe<User>>>;
+  likes?: Maybe<Maybe<User>[]>;
   /** The url for the comment page on the AniList website */
   siteUrl?: Maybe<Scalars['String']>;
   /** The thread the comment belongs to */
@@ -4257,7 +4257,7 @@ export type User = {
   /** The user's media list options */
   mediaListOptions?: Maybe<MediaListOptions>;
   /** The user's moderator roles if they are a site moderator */
-  moderatorRoles?: Maybe<Array<Maybe<ModRole>>>;
+  moderatorRoles?: Maybe<Maybe<ModRole>[]>;
   /**
    * If the user is a moderator or data moderator
    * @deprecated Deprecated. Replaced with moderatorRoles field.
@@ -4268,7 +4268,7 @@ export type User = {
   /** The user's general options */
   options?: Maybe<UserOptions>;
   /** The user's previously used names. */
-  previousNames?: Maybe<Array<Maybe<UserPreviousName>>>;
+  previousNames?: Maybe<Maybe<UserPreviousName>[]>;
   /** The url for the user page on the AniList website */
   siteUrl?: Maybe<Scalars['String']>;
   /** The users anime & manga list statistics */
@@ -4322,7 +4322,7 @@ export type UserCountryStatistic = {
   count: Scalars['Int'];
   country?: Maybe<Scalars['CountryCode']>;
   meanScore: Scalars['Float'];
-  mediaIds: Array<Maybe<Scalars['Int']>>;
+  mediaIds: Maybe<Scalars['Int']>[];
   minutesWatched: Scalars['Int'];
 };
 
@@ -4332,7 +4332,7 @@ export type UserFormatStatistic = {
   count: Scalars['Int'];
   format?: Maybe<MediaFormat>;
   meanScore: Scalars['Float'];
-  mediaIds: Array<Maybe<Scalars['Int']>>;
+  mediaIds: Maybe<Scalars['Int']>[];
   minutesWatched: Scalars['Int'];
 };
 
@@ -4342,7 +4342,7 @@ export type UserGenreStatistic = {
   count: Scalars['Int'];
   genre?: Maybe<Scalars['String']>;
   meanScore: Scalars['Float'];
-  mediaIds: Array<Maybe<Scalars['Int']>>;
+  mediaIds: Maybe<Scalars['Int']>[];
   minutesWatched: Scalars['Int'];
 };
 
@@ -4352,14 +4352,14 @@ export type UserLengthStatistic = {
   count: Scalars['Int'];
   length?: Maybe<Scalars['String']>;
   meanScore: Scalars['Float'];
-  mediaIds: Array<Maybe<Scalars['Int']>>;
+  mediaIds: Maybe<Scalars['Int']>[];
   minutesWatched: Scalars['Int'];
 };
 
 /** User data for moderators */
 export type UserModData = {
   __typename?: 'UserModData';
-  alts?: Maybe<Array<Maybe<User>>>;
+  alts?: Maybe<Maybe<User>[]>;
   bans?: Maybe<Scalars['Json']>;
   counts?: Maybe<Scalars['Json']>;
   email?: Maybe<Scalars['String']>;
@@ -4375,11 +4375,11 @@ export type UserOptions = {
   /** Whether the user receives notifications when a show they are watching aires */
   airingNotifications?: Maybe<Scalars['Boolean']>;
   /** The list activity types the user has disabled from being created from list updates */
-  disabledListActivity?: Maybe<Array<Maybe<ListActivityOption>>>;
+  disabledListActivity?: Maybe<Maybe<ListActivityOption>[]>;
   /** Whether the user has enabled viewing of 18+ content */
   displayAdultContent?: Maybe<Scalars['Boolean']>;
   /** Notification options */
-  notificationOptions?: Maybe<Array<Maybe<NotificationOption>>>;
+  notificationOptions?: Maybe<Maybe<NotificationOption>[]>;
   /** Profile highlight color (blue, purple, pink, orange, red, green, gray) */
   profileColor?: Maybe<Scalars['String']>;
   /** Whether the user only allow messages from users they follow */
@@ -4408,7 +4408,7 @@ export type UserReleaseYearStatistic = {
   chaptersRead: Scalars['Int'];
   count: Scalars['Int'];
   meanScore: Scalars['Float'];
-  mediaIds: Array<Maybe<Scalars['Int']>>;
+  mediaIds: Maybe<Scalars['Int']>[];
   minutesWatched: Scalars['Int'];
   releaseYear?: Maybe<Scalars['Int']>;
 };
@@ -4418,7 +4418,7 @@ export type UserScoreStatistic = {
   chaptersRead: Scalars['Int'];
   count: Scalars['Int'];
   meanScore: Scalars['Float'];
-  mediaIds: Array<Maybe<Scalars['Int']>>;
+  mediaIds: Maybe<Scalars['Int']>[];
   minutesWatched: Scalars['Int'];
   score?: Maybe<Scalars['Int']>;
 };
@@ -4451,7 +4451,7 @@ export type UserStaffStatistic = {
   chaptersRead: Scalars['Int'];
   count: Scalars['Int'];
   meanScore: Scalars['Float'];
-  mediaIds: Array<Maybe<Scalars['Int']>>;
+  mediaIds: Maybe<Scalars['Int']>[];
   minutesWatched: Scalars['Int'];
   staff?: Maybe<Staff>;
 };
@@ -4461,7 +4461,7 @@ export type UserStartYearStatistic = {
   chaptersRead: Scalars['Int'];
   count: Scalars['Int'];
   meanScore: Scalars['Float'];
-  mediaIds: Array<Maybe<Scalars['Int']>>;
+  mediaIds: Maybe<Scalars['Int']>[];
   minutesWatched: Scalars['Int'];
   startYear?: Maybe<Scalars['Int']>;
 };
@@ -4470,95 +4470,95 @@ export type UserStatistics = {
   __typename?: 'UserStatistics';
   chaptersRead: Scalars['Int'];
   count: Scalars['Int'];
-  countries?: Maybe<Array<Maybe<UserCountryStatistic>>>;
+  countries?: Maybe<Maybe<UserCountryStatistic>[]>;
   episodesWatched: Scalars['Int'];
-  formats?: Maybe<Array<Maybe<UserFormatStatistic>>>;
-  genres?: Maybe<Array<Maybe<UserGenreStatistic>>>;
-  lengths?: Maybe<Array<Maybe<UserLengthStatistic>>>;
+  formats?: Maybe<Maybe<UserFormatStatistic>[]>;
+  genres?: Maybe<Maybe<UserGenreStatistic>[]>;
+  lengths?: Maybe<Maybe<UserLengthStatistic>[]>;
   meanScore: Scalars['Float'];
   minutesWatched: Scalars['Int'];
-  releaseYears?: Maybe<Array<Maybe<UserReleaseYearStatistic>>>;
-  scores?: Maybe<Array<Maybe<UserScoreStatistic>>>;
-  staff?: Maybe<Array<Maybe<UserStaffStatistic>>>;
+  releaseYears?: Maybe<Maybe<UserReleaseYearStatistic>[]>;
+  scores?: Maybe<Maybe<UserScoreStatistic>[]>;
+  staff?: Maybe<Maybe<UserStaffStatistic>[]>;
   standardDeviation: Scalars['Float'];
-  startYears?: Maybe<Array<Maybe<UserStartYearStatistic>>>;
-  statuses?: Maybe<Array<Maybe<UserStatusStatistic>>>;
-  studios?: Maybe<Array<Maybe<UserStudioStatistic>>>;
-  tags?: Maybe<Array<Maybe<UserTagStatistic>>>;
-  voiceActors?: Maybe<Array<Maybe<UserVoiceActorStatistic>>>;
+  startYears?: Maybe<Maybe<UserStartYearStatistic>[]>;
+  statuses?: Maybe<Maybe<UserStatusStatistic>[]>;
+  studios?: Maybe<Maybe<UserStudioStatistic>[]>;
+  tags?: Maybe<Maybe<UserTagStatistic>[]>;
+  voiceActors?: Maybe<Maybe<UserVoiceActorStatistic>[]>;
   volumesRead: Scalars['Int'];
 };
 
 
 export type UserStatisticsCountriesArgs = {
   limit?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<UserStatisticsSort>>>;
+  sort?: Maybe<Maybe<UserStatisticsSort>[]>;
 };
 
 
 export type UserStatisticsFormatsArgs = {
   limit?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<UserStatisticsSort>>>;
+  sort?: Maybe<Maybe<UserStatisticsSort>[]>;
 };
 
 
 export type UserStatisticsGenresArgs = {
   limit?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<UserStatisticsSort>>>;
+  sort?: Maybe<Maybe<UserStatisticsSort>[]>;
 };
 
 
 export type UserStatisticsLengthsArgs = {
   limit?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<UserStatisticsSort>>>;
+  sort?: Maybe<Maybe<UserStatisticsSort>[]>;
 };
 
 
 export type UserStatisticsReleaseYearsArgs = {
   limit?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<UserStatisticsSort>>>;
+  sort?: Maybe<Maybe<UserStatisticsSort>[]>;
 };
 
 
 export type UserStatisticsScoresArgs = {
   limit?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<UserStatisticsSort>>>;
+  sort?: Maybe<Maybe<UserStatisticsSort>[]>;
 };
 
 
 export type UserStatisticsStaffArgs = {
   limit?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<UserStatisticsSort>>>;
+  sort?: Maybe<Maybe<UserStatisticsSort>[]>;
 };
 
 
 export type UserStatisticsStartYearsArgs = {
   limit?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<UserStatisticsSort>>>;
+  sort?: Maybe<Maybe<UserStatisticsSort>[]>;
 };
 
 
 export type UserStatisticsStatusesArgs = {
   limit?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<UserStatisticsSort>>>;
+  sort?: Maybe<Maybe<UserStatisticsSort>[]>;
 };
 
 
 export type UserStatisticsStudiosArgs = {
   limit?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<UserStatisticsSort>>>;
+  sort?: Maybe<Maybe<UserStatisticsSort>[]>;
 };
 
 
 export type UserStatisticsTagsArgs = {
   limit?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<UserStatisticsSort>>>;
+  sort?: Maybe<Maybe<UserStatisticsSort>[]>;
 };
 
 
 export type UserStatisticsVoiceActorsArgs = {
   limit?: Maybe<Scalars['Int']>;
-  sort?: Maybe<Array<Maybe<UserStatisticsSort>>>;
+  sort?: Maybe<Maybe<UserStatisticsSort>[]>;
 };
 
 /** User statistics sort enum */
@@ -4582,23 +4582,23 @@ export type UserStatisticTypes = {
 /** A user's statistics */
 export type UserStats = {
   __typename?: 'UserStats';
-  activityHistory?: Maybe<Array<Maybe<UserActivityHistory>>>;
+  activityHistory?: Maybe<Maybe<UserActivityHistory>[]>;
   animeListScores?: Maybe<ListScoreStats>;
-  animeScoreDistribution?: Maybe<Array<Maybe<ScoreDistribution>>>;
-  animeStatusDistribution?: Maybe<Array<Maybe<StatusDistribution>>>;
+  animeScoreDistribution?: Maybe<Maybe<ScoreDistribution>[]>;
+  animeStatusDistribution?: Maybe<Maybe<StatusDistribution>[]>;
   /** The amount of manga chapters the user has read */
   chaptersRead?: Maybe<Scalars['Int']>;
-  favouredActors?: Maybe<Array<Maybe<StaffStats>>>;
-  favouredFormats?: Maybe<Array<Maybe<FormatStats>>>;
-  favouredGenres?: Maybe<Array<Maybe<GenreStats>>>;
-  favouredGenresOverview?: Maybe<Array<Maybe<GenreStats>>>;
-  favouredStaff?: Maybe<Array<Maybe<StaffStats>>>;
-  favouredStudios?: Maybe<Array<Maybe<StudioStats>>>;
-  favouredTags?: Maybe<Array<Maybe<TagStats>>>;
-  favouredYears?: Maybe<Array<Maybe<YearStats>>>;
+  favouredActors?: Maybe<Maybe<StaffStats>[]>;
+  favouredFormats?: Maybe<Maybe<FormatStats>[]>;
+  favouredGenres?: Maybe<Maybe<GenreStats>[]>;
+  favouredGenresOverview?: Maybe<Maybe<GenreStats>[]>;
+  favouredStaff?: Maybe<Maybe<StaffStats>[]>;
+  favouredStudios?: Maybe<Maybe<StudioStats>[]>;
+  favouredTags?: Maybe<Maybe<TagStats>[]>;
+  favouredYears?: Maybe<Maybe<YearStats>[]>;
   mangaListScores?: Maybe<ListScoreStats>;
-  mangaScoreDistribution?: Maybe<Array<Maybe<ScoreDistribution>>>;
-  mangaStatusDistribution?: Maybe<Array<Maybe<StatusDistribution>>>;
+  mangaScoreDistribution?: Maybe<Maybe<ScoreDistribution>[]>;
+  mangaStatusDistribution?: Maybe<Maybe<StatusDistribution>[]>;
   /** The amount of anime the user has watched in minutes */
   watchedTime?: Maybe<Scalars['Int']>;
 };
@@ -4608,7 +4608,7 @@ export type UserStatusStatistic = {
   chaptersRead: Scalars['Int'];
   count: Scalars['Int'];
   meanScore: Scalars['Float'];
-  mediaIds: Array<Maybe<Scalars['Int']>>;
+  mediaIds: Maybe<Scalars['Int']>[];
   minutesWatched: Scalars['Int'];
   status?: Maybe<MediaListStatus>;
 };
@@ -4618,7 +4618,7 @@ export type UserStudioStatistic = {
   chaptersRead: Scalars['Int'];
   count: Scalars['Int'];
   meanScore: Scalars['Float'];
-  mediaIds: Array<Maybe<Scalars['Int']>>;
+  mediaIds: Maybe<Scalars['Int']>[];
   minutesWatched: Scalars['Int'];
   studio?: Maybe<Studio>;
 };
@@ -4628,7 +4628,7 @@ export type UserTagStatistic = {
   chaptersRead: Scalars['Int'];
   count: Scalars['Int'];
   meanScore: Scalars['Float'];
-  mediaIds: Array<Maybe<Scalars['Int']>>;
+  mediaIds: Maybe<Scalars['Int']>[];
   minutesWatched: Scalars['Int'];
   tag?: Maybe<MediaTag>;
 };
@@ -4652,10 +4652,10 @@ export enum UserTitleLanguage {
 export type UserVoiceActorStatistic = {
   __typename?: 'UserVoiceActorStatistic';
   chaptersRead: Scalars['Int'];
-  characterIds: Array<Maybe<Scalars['Int']>>;
+  characterIds: Maybe<Scalars['Int']>[];
   count: Scalars['Int'];
   meanScore: Scalars['Float'];
-  mediaIds: Array<Maybe<Scalars['Int']>>;
+  mediaIds: Maybe<Scalars['Int']>[];
   minutesWatched: Scalars['Int'];
   voiceActor?: Maybe<Staff>;
 };
@@ -4709,23 +4709,23 @@ export type AnimeFragmentFragment = (
     & Pick<FuzzyDate, 'year' | 'month' | 'day'>
   )>, studios?: Maybe<(
     { __typename?: 'StudioConnection' }
-    & { nodes?: Maybe<Array<Maybe<(
+    & { nodes?: Maybe<Maybe<(
       { __typename?: 'Studio' }
       & Pick<Studio, 'id' | 'name'>
-    )>>> }
+    )>[]> }
   )>, coverImage?: Maybe<(
     { __typename?: 'MediaCoverImage' }
     & Pick<MediaCoverImage, 'large' | 'medium' | 'color'>
   )>, trailer?: Maybe<(
     { __typename?: 'MediaTrailer' }
     & MediaTrailerDataFragment
-  )>, streamingEpisodes?: Maybe<Array<Maybe<(
+  )>, streamingEpisodes?: Maybe<Maybe<(
     { __typename?: 'MediaStreamingEpisode' }
     & StreamingLinkDataFragment
-  )>>>, externalLinks?: Maybe<Array<Maybe<(
+  )>[]>, externalLinks?: Maybe<Maybe<(
     { __typename?: 'MediaExternalLink' }
     & MediaExternalLinkDataFragment
-  )>>>, nextAiringEpisode?: Maybe<(
+  )>[]>, nextAiringEpisode?: Maybe<(
     { __typename?: 'AiringSchedule' }
     & Pick<AiringSchedule, 'id' | 'airingAt' | 'episode' | 'timeUntilAiring'>
   )>, mediaListEntry?: Maybe<(
@@ -4733,27 +4733,27 @@ export type AnimeFragmentFragment = (
     & Pick<MediaList, 'progress' | 'status' | 'score' | 'id'>
   )>, relations?: Maybe<(
     { __typename?: 'MediaConnection' }
-    & { edges?: Maybe<Array<Maybe<(
+    & { edges?: Maybe<Maybe<(
       { __typename?: 'MediaEdge' }
       & Pick<MediaEdge, 'id' | 'relationType'>
       & { node?: Maybe<(
         { __typename?: 'Media' }
         & AnimeRelationFragmentFragment
       )> }
-    )>>> }
+    )>[]> }
   )>, characters?: Maybe<(
     { __typename?: 'CharacterConnection' }
-    & { edges?: Maybe<Array<Maybe<(
+    & { edges?: Maybe<Maybe<(
       { __typename?: 'CharacterEdge' }
       & Pick<CharacterEdge, 'id' | 'role'>
       & { node?: Maybe<(
         { __typename?: 'Character' }
         & CharacterDataFragment
       )> }
-    )>>>, nodes?: Maybe<Array<Maybe<(
+    )>[]>, nodes?: Maybe<Maybe<(
       { __typename?: 'Character' }
       & CharacterDataFragment
-    )>>> }
+    )>[]> }
   )> }
 );
 
@@ -4871,7 +4871,7 @@ export type GetAnimeQuery = (
 export type GetAnimeListQueryVariables = Exact<{
   userId?: Maybe<Scalars['Int']>;
   status?: Maybe<MediaListStatus>;
-  sort?: Maybe<Array<Maybe<MediaListSort>>>;
+  sort?: Maybe<Maybe<MediaListSort>[]>;
 }>;
 
 
@@ -4880,18 +4880,18 @@ export type GetAnimeListQuery = (
   & { MediaListCollection?: Maybe<(
     { __typename?: 'MediaListCollection' }
     & Pick<MediaListCollection, 'hasNextChunk'>
-    & { lists?: Maybe<Array<Maybe<(
+    & { lists?: Maybe<Maybe<(
       { __typename?: 'MediaListGroup' }
       & Pick<MediaListGroup, 'status' | 'name'>
-      & { entries?: Maybe<Array<Maybe<(
+      & { entries?: Maybe<Maybe<(
         { __typename?: 'MediaList' }
         & Pick<MediaList, 'id' | 'mediaId' | 'score' | 'progress'>
         & { media?: Maybe<(
           { __typename?: 'Media' }
           & AnimeFragmentFragment
         )> }
-      )>>> }
-    )>>> }
+      )>[]> }
+    )>[]> }
   )> }
 );
 
@@ -4914,10 +4914,10 @@ export type GetAnimeNotificationsQuery = (
     & { pageInfo?: Maybe<(
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'total' | 'perPage' | 'currentPage' | 'lastPage' | 'hasNextPage'>
-    )>, notifications?: Maybe<Array<Maybe<{ __typename: 'ActivityLikeNotification' } | { __typename: 'ActivityMentionNotification' } | { __typename: 'ActivityMessageNotification' } | { __typename: 'ActivityReplyLikeNotification' } | { __typename: 'ActivityReplyNotification' } | { __typename: 'ActivityReplySubscribedNotification' } | (
+    )>, notifications?: Maybe<Maybe<{ __typename: 'ActivityLikeNotification' } | { __typename: 'ActivityMentionNotification' } | { __typename: 'ActivityMessageNotification' } | { __typename: 'ActivityReplyLikeNotification' } | { __typename: 'ActivityReplyNotification' } | { __typename: 'ActivityReplySubscribedNotification' } | (
       { __typename: 'AiringNotification' }
       & AiringNotificationFragmentFragment
-    ) | { __typename: 'FollowingNotification' } | { __typename: 'MediaDataChangeNotification' } | { __typename: 'MediaDeletionNotification' } | { __typename: 'MediaMergeNotification' } | { __typename: 'RelatedMediaAdditionNotification' } | { __typename: 'ThreadCommentLikeNotification' } | { __typename: 'ThreadCommentMentionNotification' } | { __typename: 'ThreadCommentReplyNotification' } | { __typename: 'ThreadCommentSubscribedNotification' } | { __typename: 'ThreadLikeNotification' }>>> }
+    ) | { __typename: 'FollowingNotification' } | { __typename: 'MediaDataChangeNotification' } | { __typename: 'MediaDeletionNotification' } | { __typename: 'MediaMergeNotification' } | { __typename: 'RelatedMediaAdditionNotification' } | { __typename: 'ThreadCommentLikeNotification' } | { __typename: 'ThreadCommentMentionNotification' } | { __typename: 'ThreadCommentReplyNotification' } | { __typename: 'ThreadCommentSubscribedNotification' } | { __typename: 'ThreadLikeNotification' }>[]> }
   )> }
 );
 
@@ -4934,10 +4934,10 @@ export type GetTrendingAnimeQuery = (
     & { pageInfo?: Maybe<(
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'hasNextPage' | 'total' | 'currentPage' | 'perPage' | 'lastPage'>
-    )>, media?: Maybe<Array<Maybe<(
+    )>, media?: Maybe<Maybe<(
       { __typename?: 'Media' }
       & AnimeFragmentFragment
-    )>>> }
+    )>[]> }
   )> }
 );
 
@@ -4953,10 +4953,10 @@ export type SearchAnimeQuery = (
     & { pageInfo?: Maybe<(
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'hasNextPage' | 'total'>
-    )>, media?: Maybe<Array<Maybe<(
+    )>, media?: Maybe<Maybe<(
       { __typename?: 'Media' }
       & AnimeFragmentFragment
-    )>>> }
+    )>[]> }
   )> }
 );
 
@@ -4988,7 +4988,7 @@ export type GetViewerQuery = (
       { __typename?: 'Favourites' }
       & { anime?: Maybe<(
         { __typename?: 'MediaConnection' }
-        & { nodes?: Maybe<Array<Maybe<(
+        & { nodes?: Maybe<Maybe<(
           { __typename?: 'Media' }
           & Pick<Media, 'id'>
           & { title?: Maybe<(
@@ -4998,10 +4998,10 @@ export type GetViewerQuery = (
             { __typename?: 'MediaCoverImage' }
             & Pick<MediaCoverImage, 'large' | 'medium'>
           )> }
-        )>>> }
+        )>[]> }
       )>, characters?: Maybe<(
         { __typename?: 'CharacterConnection' }
-        & { nodes?: Maybe<Array<Maybe<(
+        & { nodes?: Maybe<Maybe<(
           { __typename?: 'Character' }
           & Pick<Character, 'id'>
           & { name?: Maybe<(
@@ -5011,7 +5011,7 @@ export type GetViewerQuery = (
             { __typename?: 'CharacterImage' }
             & Pick<CharacterImage, 'large' | 'medium'>
           )> }
-        )>>> }
+        )>[]> }
       )> }
     )>, statistics?: Maybe<(
       { __typename?: 'UserStatisticTypes' }

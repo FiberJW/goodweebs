@@ -11,15 +11,6 @@ import { debounce } from "lodash";
 import { useRef, useEffect, useState } from "react";
 import { useWindowDimensions } from "react-native";
 
-export function useDidMountEffect(func: () => void, deps: any[]) {
-  const didMount = useRef(false);
-
-  useEffect(() => {
-    if (didMount.current) func();
-    else didMount.current = true;
-  }, deps);
-}
-
 export function useNow(interval: "second" | "minute" = "minute") {
   const [now, setNow] = useState(new Date());
 
@@ -30,7 +21,7 @@ export function useNow(interval: "second" | "minute" = "minute") {
     );
 
     return () => clearInterval(handle);
-  }, []);
+  }, [interval]);
 
   return now;
 }
@@ -55,7 +46,7 @@ export function useDebouncedMutation<
     mutationDocument
   );
 
-  const abortController = useRef<AbortController>();
+  const abortController = useRef<AbortController>(null);
   const debouncedMutation = useRef(
     debounce(
       async (
@@ -66,7 +57,6 @@ export function useDebouncedMutation<
         >,
         variables?: MutationVariables
       ) => {
-        // eslint-disable-next-line
         const controller = new AbortController();
         abortController.current = controller;
 
@@ -143,18 +133,6 @@ export function usePersistedState<T>(
 
   const storageKey = id ? `${key}:${id}` : key;
 
-  async function getStorageItem() {
-    if (doNotPersist) return storageItem;
-
-    const data = await AsyncStorage.getItem(storageKey);
-
-    if (data) {
-      const parsedData = JSON.parse(data);
-
-      setStorageItem(parsedData);
-    }
-  }
-
   function updateStorageItem(data: T) {
     if (!doNotPersist) AsyncStorage.setItem(storageKey, JSON.stringify(data));
     setStorageItem(data);
@@ -162,9 +140,24 @@ export function usePersistedState<T>(
     return data;
   }
 
-  useEffect(() => {
-    if (!doNotPersist) getStorageItem();
-  }, [doNotPersist]);
+  useEffect(
+    function setValueFromStorage() {
+      async function getStorageItem() {
+        if (doNotPersist) return storageItem;
+
+        const data = await AsyncStorage.getItem(storageKey);
+
+        if (data) {
+          const parsedData = JSON.parse(data);
+
+          setStorageItem(parsedData);
+        }
+      }
+
+      if (!doNotPersist) getStorageItem();
+    },
+    [doNotPersist, storageKey, storageItem]
+  );
 
   return [storageItem, updateStorageItem];
 }

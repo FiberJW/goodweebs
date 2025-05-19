@@ -149,7 +149,7 @@ export function DetailsScreen({ route, navigation }: Props) {
     if (!showScore) {
       setShowScore(!shouldShowScoreToggleUI);
     }
-  }, [shouldShowScoreToggleUI]);
+  }, [shouldShowScoreToggleUI, showScore, setShowScore]);
 
   const [isRefetchingFromScrollOrMount, setIsRefetchingFromScrollOrMount] =
     useState(true);
@@ -303,7 +303,7 @@ export function DetailsScreen({ route, navigation }: Props) {
   const relations = (data?.Media?.relations?.edges ?? [])?.filter(notEmpty);
 
   const mappedRelations = _.reduce<
-    typeof relations[number],
+    (typeof relations)[number],
     { [K in MediaRelation]?: AnimeRelationFragmentFragment[] }
   >(
     relations,

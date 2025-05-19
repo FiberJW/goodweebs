@@ -4,22 +4,22 @@ import {
   NormalizedCacheObject,
 } from "@apollo/client";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
+import LogRocket from "@logrocket/react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Sentry from "@sentry/react-native";
 import * as SplashScreen from "expo-splash-screen";
+import * as Updates from "expo-updates";
 import React, { useCallback, useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { enableScreens } from "react-native-screens";
-import * as Updates from "expo-updates";
 
 import { createClient } from "yep/graphql/client";
 import { Navigation } from "yep/navigation";
 import { useManrope } from "yep/typefaces";
-import LogRocket from "@logrocket/react-native";
 
-import { AccessTokenProvider, useAccessToken } from "./useAccessToken";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StorageKeys } from "./hooks/helpers";
+import { AccessTokenProvider, useAccessToken } from "./useAccessToken";
 
 enableScreens();
 

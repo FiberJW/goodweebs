@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import { gql } from "graphql-tag";
 
 export const CharacterData = gql`
   fragment CharacterData on Character {

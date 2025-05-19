@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 
-import { useDidMountEffect } from "yep/hooks/helpers";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
@@ -55,11 +54,11 @@ export function Stepper({
 }: Props) {
   const [count, setCount] = useState(defaultValue);
 
-  useDidMountEffect(
+  useEffect(
     function callOnlyChangeWhenCountChanges() {
       onChange(count);
     },
-    [count]
+    [count, onChange]
   );
 
   useEffect(

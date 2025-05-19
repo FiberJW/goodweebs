@@ -81,7 +81,7 @@ export function AnimeListScreen({ navigation }: Props) {
   const listCountText = `${list.length} title${list.length !== 1 ? "s" : ""}`;
 
   // TODO: maybe make this better? feels a little dank
-  const AnimeFlatList = makeAnimeFlatList<typeof list[number]>();
+  const AnimeFlatList = makeAnimeFlatList<(typeof list)[number]>();
 
   const refreshing = loadingViewer || loadingAnimeList;
 
@@ -100,7 +100,7 @@ export function AnimeListScreen({ navigation }: Props) {
           });
         }
       },
-      [isFirstFocus, viewerData, status]
+      [isFirstFocus, viewerData, status, refetch]
     )
   );
 
