@@ -32,8 +32,12 @@ Right now, I'm making it right :)
 
 ## Notes
 
+### Dependencies
+
+- [Bun](https://bun.sh)
+
 ### Releasing this app
 
-To create a production build with [EAS Build](https://docs.expo.dev/build/introduction/), run `yarn build:prod`.
+To create a production build with [EAS Build](https://docs.expo.dev/build/introduction/), run `bun run build:prod`.
 
-To push an update to those production builds using [EAS Update](https://docs.expo.dev/eas-update/introduction/), run `yarn publish:prod`.
+To push an update to those production builds using [EAS Update](https://docs.expo.dev/eas-update/introduction/), run `bun run publish:prod`.

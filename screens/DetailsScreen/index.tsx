@@ -596,7 +596,9 @@ export function DetailsScreen({ route, navigation }: Props) {
           ) : null}
           {data.Media?.characters?.nodes ? (
             <CharacterList
-              characters={(data.Media?.characters?.nodes).filter(notEmpty)}
+              characters={(data.Media?.characters?.nodes ?? []).filter(
+                notEmpty
+              )}
               navigation={navigation}
             />
           ) : null}

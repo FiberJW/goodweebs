@@ -40,7 +40,7 @@ export function getTitle(
 }
 
 // for making sure TS exhaustively checks switches
-export function assertUnreachable(x: never): never {
+export function assertUnreachable(_x: never): never {
   throw new Error("Didn't expect to get here");
 }
 
