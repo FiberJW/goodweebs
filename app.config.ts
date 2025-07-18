@@ -87,9 +87,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           targetSdkVersion: 35,
           buildToolsVersion: "35.0.0",
         },
-        ios: {
-          deploymentTarget: "15.1",
-        },
       },
     ],
     // remove sentry plugin if staging
