@@ -10,6 +10,13 @@ export const Manrope = {
   extraBold: "Manrope-ExtraBold",
 };
 
+export const LINESeedJP = {
+  regular: "LINESeedJP-Regular",
+  extraBold: "LINESeedJP-ExtraBold",
+  bold: "LINESeedJP-Bold",
+  thin: "LINESeedJP-Thin",
+};
+
 export function useManrope() {
   return useFonts({
     [Manrope.bold]: require("yep/assets/fonts/manrope/Manrope-Bold.otf"),
@@ -19,5 +26,9 @@ export function useManrope() {
     [Manrope.medium]: require("yep/assets/fonts/manrope/Manrope-Medium.otf"),
     [Manrope.regular]: require("yep/assets/fonts/manrope/Manrope-Regular.otf"),
     [Manrope.semiBold]: require("yep/assets/fonts/manrope/Manrope-SemiBold.otf"),
+    [LINESeedJP.regular]: require("yep/assets/fonts/LINESeedJP/LINESeedJP_OTF_Rg.otf"),
+    [LINESeedJP.extraBold]: require("yep/assets/fonts/LINESeedJP/LINESeedJP_OTF_Eb.otf"),
+    [LINESeedJP.bold]: require("yep/assets/fonts/LINESeedJP/LINESeedJP_OTF_Bd.otf"),
+    [LINESeedJP.thin]: require("yep/assets/fonts/LINESeedJP/LINESeedJP_OTF_Th.otf"),
   });
 }

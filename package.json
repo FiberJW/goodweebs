@@ -9,7 +9,7 @@
     "update:production": "eas update --channel production --auto",
     "build:production": "eas build --profile production --platform all --auto-submit",
     "build:development": "eas build --profile development --platform all",
-    "export:web": "npx expo export --platform web",
+    "export:web": "bunx expo export --platform web",
     "android": "expo run:android",
     "ios": "expo run:ios"
   },

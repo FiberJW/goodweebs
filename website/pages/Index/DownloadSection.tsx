@@ -3,7 +3,7 @@ import { View, Text, Image, StyleSheet, ImageStyle } from "react-native";
 
 import { useBreakpoints } from "yep/hooks/helpers";
 import { websiteTheme } from "yep/themes";
-import { Manrope } from "yep/typefaces";
+import { LINESeedJP, Manrope } from "yep/typefaces";
 
 const appStore = require("./app-store-button.png");
 const playStore = require("./play-store-button.png");
@@ -19,12 +19,12 @@ export function DownloadSection() {
           <Text
             style={[styles.titleFirstLine, isMobile ? { fontSize: 24 } : null]}
           >
-            Be a good weeb.
+            Good weebs don&apos;t forget the anime they&apos;ve watched.
           </Text>
           <Text
             style={[styles.titleSecondLine, isMobile ? { fontSize: 24 } : null]}
           >
-            Download this app.
+            それは許せない。
           </Text>
           <Text
             style={[styles.description, isMobile ? { fontSize: 16 } : null]}
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   },
   titleSecondLine: {
     color: websiteTheme.text,
-    fontFamily: Manrope.bold,
+    fontFamily: LINESeedJP.extraBold,
     fontSize: 32,
     marginBottom: 8,
   },
