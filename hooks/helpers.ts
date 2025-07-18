@@ -2,8 +2,10 @@ import {
   MutationFunctionOptions,
   useMutation,
   FetchResult,
-  MutationUpdaterFn,
   PureQueryOptions,
+  MutationUpdaterFunction,
+  DefaultContext,
+  ApolloCache,
 } from "@apollo/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DocumentNode } from "graphql";
@@ -32,13 +34,18 @@ export function useDebouncedMutation<
 >({
   mutationDocument,
   makeUpdateFunction,
-  wait = 250,
+  wait = 500,
   refetchQueries,
 }: {
   mutationDocument: DocumentNode;
   makeUpdateFunction?: (
     variables?: MutationVariables
-  ) => MutationUpdaterFn<MutationData>;
+  ) => MutationUpdaterFunction<
+    MutationData,
+    MutationVariables,
+    DefaultContext,
+    ApolloCache<any>
+  >;
   wait?: number;
   refetchQueries?: PureQueryOptions[];
 }) {
@@ -59,7 +66,6 @@ export function useDebouncedMutation<
       ) => {
         const controller = new AbortController();
         abortController.current = controller;
-
         await mutationFunc({
           variables,
           context: { fetchOptions: { signal: controller.signal } },

@@ -1,16 +1,16 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "APP_VARIANT=development npx expo start --tunnel -c",
-    "web": "APP_VARIANT=development npx expo start --web -c",
+    "start": "APP_VARIANT=development bunx expo start --tunnel -c",
+    "web": "APP_VARIANT=development bunx expo start --web -c",
     "gql": "graphql-codegen --config codegen.yml",
     "lint": "eslint . --ext .ts,.js,.tsx --fix",
-    "update:production": "eas update --channel production --auto",
-    "build:production": "eas build --profile production --platform all --auto-submit",
-    "build:development": "eas build --profile development --platform all",
+    "update:production": "bunx eas update --channel production --auto",
+    "build:production": "bunx eas build --profile production --platform all --auto-submit",
+    "build:development": "bunx eas build --profile development --platform all",
     "export:web": "bunx expo export --platform web",
-    "android": "expo run:android",
-    "ios": "expo run:ios"
+    "android": "bunx expo run:android",
+    "ios": "bunx expo run:ios"
   },
   "dependencies": {
     "@apollo/client": "^3.12.11",
