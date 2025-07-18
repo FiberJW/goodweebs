@@ -73,6 +73,11 @@ export async function createClient() {
             }
           });
         if (networkError) {
+          if (networkError.name === "AbortError") {
+            // ignore abort errors
+            return;
+          }
+
           Sentry.captureException(networkError);
           console.error(`[Network error]: ${networkError}`);
         }
