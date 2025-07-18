@@ -5,7 +5,6 @@
     "web": "APP_VARIANT=development npx expo start --web -c",
     "gql": "graphql-codegen --config codegen.yml",
     "lint": "eslint . --ext .ts,.js,.tsx --fix",
-    "oxlint": "bunx oxlint@latest",
     "update:production": "eas update --channel production --auto",
     "build:production": "eas build --profile production --platform all --auto-submit",
     "build:development": "eas build --profile development --platform all",
@@ -81,8 +80,6 @@
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-preset-expo": "~13.0.0",
     "eslint": "^9.27.0",
-    "eslint-config-universe": "^6.0.1",
-    "eslint-plugin-react-native": "^3.10.0",
     "prettier": "^3.5.0",
     "react-compiler-runtime": "^19.1.0-rc.2",
     "typescript": "~5.8.3"
