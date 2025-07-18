@@ -1,5 +1,8 @@
+import { yellowDarkA } from "@radix-ui/colors";
 import { add } from "date-fns/add";
+import { differenceInDays } from "date-fns/differenceInDays";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
+import { Text } from "react-native";
 
 import {
   MediaTitle,
@@ -80,14 +83,33 @@ export function getDateText(
     { __typename?: "FuzzyDate" } & Pick<FuzzyDate, "year" | "month" | "day">
   >,
   dateType?: string
-): string | undefined {
+): React.ReactNode | string | undefined {
   if (!date) return undefined;
 
-  const _dateType = dateType ? `${dateType}: ` : "";
-
   if (date.month && date.day && date.year) {
-    return `${_dateType}${date.month}/${date.day}/${date.year}`;
+    const jsDate = new Date(date.year, date.month - 1, date.day); // month is 0-indexed in JS Date
+    const now = new Date();
+
+    // show a relative date if the date is within the last 30 days
+    const daysDifference = differenceInDays(now, jsDate);
+    if (daysDifference >= 0 && daysDifference <= 30) {
+      const relativeTime = formatDistanceToNow(jsDate, { addSuffix: true });
+      // For relative dates, use dateType without colon for more natural text
+      const dateText = dateType ? `${dateType} ${relativeTime}` : relativeTime;
+
+      if (dateType === "Finished") {
+        return <Text style={{ color: yellowDarkA.yellowA10 }}>{dateText}</Text>;
+      }
+
+      return dateText;
+    }
+
+    // For absolute dates, use colon format
+    return `${dateType ? `${dateType}: ` : ""}${date.month}/${date.day}/${date.year}`;
   }
+
+  // For partial dates (month/year or year only), always use colon format
+  const _dateType = dateType ? `${dateType}: ` : "";
 
   if (date.month && date.year) {
     return `${_dateType}${monthMap[date.month]} ${date.year}`;
@@ -101,7 +123,7 @@ export function getDateText(
 export function getAiringStatusText(
   media: AnimeFragmentFragment,
   now: Date
-): string | undefined {
+): React.ReactNode | string | undefined {
   switch (media.status) {
     case MediaStatus.Releasing:
       return media.nextAiringEpisode
