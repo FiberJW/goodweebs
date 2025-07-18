@@ -11,7 +11,6 @@ import {
   UpdateProgressMutationVariables,
   GetAnimeQuery,
   MediaList,
-  useGetAnimeQuery,
   GetAnimeDocument,
   MediaListStatus,
   refetchGetAnimeQuery,
@@ -20,7 +19,6 @@ import {
 import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
 import { useDebouncedMutation } from "yep/hooks/helpers";
 import { RootStackParamList, TabParamList } from "yep/navigation";
-import { useAccessToken } from "yep/useAccessToken";
 
 type Props = {
   seedData: {
@@ -46,14 +44,9 @@ export function AnimeListItemContainer({
   first,
   last,
 }: Props) {
-  const { accessToken } = useAccessToken();
   const [progressShadow, setProgressShadow] = useState(seedData.progress);
   const [shouldShowProgressShadow, setShouldShowProgressShadow] =
     useState(false);
-  const { loading, data } = useGetAnimeQuery({
-    variables: { id: seedData?.media?.id },
-    skip: !accessToken,
-  });
 
   const updateProgressDebounced = useDebouncedMutation<
     UpdateProgressMutation,
@@ -99,17 +92,15 @@ export function AnimeListItemContainer({
 
   const progress =
     (shouldShowProgressShadow ? progressShadow : null) ??
-    data?.Media?.mediaListEntry?.progress ??
     seedData?.progress ??
     0;
 
   useEffect(() => {
     // show live query
     setShouldShowProgressShadow(false);
-  }, [data?.Media?.mediaListEntry?.progress]);
+  }, [seedData?.media?.mediaListEntry?.progress]);
 
   async function changeProgress(type: "inc" | "dec", increment = 1) {
-    if (!data || loading) return;
     // optimistic UI updates aren't fast enough
     setProgressShadow((p) => (type === "inc" ? p + increment : p - increment));
     setShouldShowProgressShadow(true);
@@ -119,7 +110,7 @@ export function AnimeListItemContainer({
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     await updateProgressDebounced({
-      id: data?.Media?.mediaListEntry?.id,
+      id: seedData?.media?.mediaListEntry?.id,
       progress: newProgress,
     });
   }
@@ -130,7 +121,7 @@ export function AnimeListItemContainer({
       progress={progress}
       onIncrement={async () => changeProgress("inc")}
       onDecrement={async () => changeProgress("dec")}
-      media={(data?.Media ?? seedData?.media) as AnimeFragmentFragment}
+      media={seedData?.media as AnimeFragmentFragment}
       first={first}
       last={last}
     />
