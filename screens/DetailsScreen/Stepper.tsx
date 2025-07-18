@@ -55,13 +55,6 @@ export function Stepper({
   const [count, setCount] = useState(defaultValue);
 
   useEffect(
-    function callOnlyChangeWhenCountChanges() {
-      onChange(count);
-    },
-    [count, onChange]
-  );
-
-  useEffect(
     function setCountWhenDefaultValueChanges() {
       setCount(defaultValue);
     },
@@ -79,7 +72,9 @@ export function Stepper({
           type="decrement"
           disabled={count === lowerBound}
           onPress={() => {
-            setCount((c) => c - 1);
+            const newCount = count - 1;
+            setCount(newCount);
+            onChange(newCount);
           }}
         />
         <StepperCount>{count}</StepperCount>
@@ -87,7 +82,9 @@ export function Stepper({
           type="increment"
           disabled={count === upperBound}
           onPress={() => {
-            setCount((c) => c + 1);
+            const newCount = count + 1;
+            setCount(newCount);
+            onChange(newCount);
           }}
         />
       </StepperContainer>
