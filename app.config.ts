@@ -86,7 +86,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           compileSdkVersion: 35,
           targetSdkVersion: 35,
           buildToolsVersion: "35.0.0",
-          minSdkVersion: 25,
+          minSdkVersion: 35,
         },
       },
     ],
