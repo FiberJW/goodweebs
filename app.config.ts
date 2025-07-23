@@ -118,6 +118,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
   },
   experiments: {
-    reactCompiler: true,
+    reactCompiler: false,
   },
 });
