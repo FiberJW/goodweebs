@@ -6,6 +6,7 @@
   "build": {
     "development": {
       "node": "20.11.0",
+      "this": "doesn't work",
       "developmentClient": true,
       "distribution": "internal",
       "channel": "development",
