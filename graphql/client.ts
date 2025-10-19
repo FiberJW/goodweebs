@@ -50,7 +50,11 @@ export async function createClient() {
 
             console.error("[GraphQL error]:", e);
 
-            if (e.message.toLowerCase().includes("invalid token")) {
+            if (
+              e.message.toLowerCase().includes("invalid token") ||
+              // TODO: revisit this auto-logout logic
+              ("status" in e && e.status === 401)
+            ) {
               await AsyncStorage.removeItem(ANILIST_ACCESS_TOKEN_STORAGE);
               Toast.show("You've been logged out. Please log in again.", {
                 duration: Toast.durations.LONG,
