@@ -18,7 +18,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   newArchEnabled: true,
   name,
-  version: "0.0.17",
+  version: "0.0.18",
   slug: "goodweebs",
   platforms: ["ios", "android", "web"],
   orientation: "portrait",
