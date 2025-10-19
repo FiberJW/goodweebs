@@ -54,24 +54,27 @@ export function AnimeListItemContainer({
   >({
     mutationDocument: UpdateProgress,
     makeUpdateFunction: (variables) => (proxy) => {
+      if (!variables) return;
       // Read the data from our cache for this query.
       const proxyData = proxy.readQuery<GetAnimeQuery>({
         query: GetAnimeDocument,
-        variables: { id: seedData?.media?.id },
+        variables: { id: seedData.media?.id },
       });
 
-      if (seedData?.media) {
+      if (!proxyData) return;
+
+      if (proxyData?.Media?.mediaListEntry) {
         // Write our data back to the cache with the new progress in it
         proxy.writeQuery<GetAnimeQuery>({
           query: GetAnimeDocument,
-          variables: { id: seedData?.media?.id },
+          variables: { id: proxyData.Media?.id },
           data: {
             ...proxyData,
             Media: {
-              ...seedData?.media,
-              id: seedData?.media?.id as number,
+              ...proxyData.Media,
+              id: proxyData.Media.id as number,
               mediaListEntry: {
-                ...(proxyData?.Media?.mediaListEntry as MediaList),
+                ...(proxyData.Media.mediaListEntry as MediaList),
                 progress: variables?.progress,
               },
             },
@@ -79,26 +82,26 @@ export function AnimeListItemContainer({
         });
       }
 
-      if (variables?.progress === proxyData?.Media?.episodes) {
+      if (variables.progress === proxyData.Media?.episodes) {
         // TODO: show dropdown alert to notify that this anime was moved to "completed" list
         refetchList();
       }
     },
     refetchQueries: [
-      refetchGetAnimeQuery({ id: seedData?.media?.id }),
+      refetchGetAnimeQuery({ id: seedData.media?.id }),
       refetchGetAnimeListQuery(refetchListVariables),
     ],
   });
 
   const progress =
     (shouldShowProgressShadow ? progressShadow : null) ??
-    seedData?.progress ??
+    seedData.progress ??
     0;
 
   useEffect(() => {
     // show live query
     setShouldShowProgressShadow(false);
-  }, [seedData?.media?.mediaListEntry?.progress]);
+  }, [seedData.media?.mediaListEntry?.progress]);
 
   async function changeProgress(type: "inc" | "dec", increment = 1) {
     // optimistic UI updates aren't fast enough
@@ -110,7 +113,7 @@ export function AnimeListItemContainer({
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     await updateProgressDebounced({
-      id: seedData?.media?.mediaListEntry?.id,
+      id: seedData.media?.mediaListEntry?.id,
       progress: newProgress,
     });
   }
@@ -121,7 +124,7 @@ export function AnimeListItemContainer({
       progress={progress}
       onIncrement={async () => changeProgress("inc")}
       onDecrement={async () => changeProgress("dec")}
-      media={seedData?.media as AnimeFragmentFragment}
+      media={seedData.media as AnimeFragmentFragment}
       first={first}
       last={last}
     />
