@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, Image, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,19 +8,15 @@ import { aniListBlue } from "yep/colors";
 import { Button } from "yep/components/Button";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { useAniListAuthRequest } from "yep/hooks/auth";
-import { RootStackParamList } from "yep/navigation";
 import { getString } from "yep/strings";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
 
-type Props = {
-  navigation: StackNavigationProp<RootStackParamList>;
-};
-
-export function AuthScreen({ navigation }: Props) {
+export default function AuthScreen() {
   const [, , promptAsync] = useAniListAuthRequest();
   const { setAccessToken } = useAccessToken();
+  const router = useRouter();
 
   useEffect(
     function navigateIfAccessTokenExists() {
@@ -31,16 +27,16 @@ export function AuthScreen({ navigation }: Props) {
           );
 
           if (token) {
-            navigation.replace("Tabs");
+            router.replace("/(tabs)/anime");
           }
         } catch {}
       })();
     },
-    [navigation]
+    [router]
   );
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: darkTheme.background }}>
       <View style={styles.outerContainer}>
         <ScrollView
           style={styles.innerContainer}
@@ -73,7 +69,7 @@ export function AuthScreen({ navigation }: Props) {
                       ANILIST_ACCESS_TOKEN_STORAGE,
                       result.params.access_token
                     );
-                    navigation.replace("Tabs");
+                    router.replace("/(tabs)/anime");
                   }
                 }
               }}
@@ -87,7 +83,10 @@ export function AuthScreen({ navigation }: Props) {
                   "Without an account, you will not be able to keep track of anime or manga, but you can still browse through Discover to explore new series. You can log in or register at any time to begin tracking series to your lists.",
                   [
                     { text: "Cancel" },
-                    { onPress: () => navigation.replace("Tabs"), text: "OK" },
+                    {
+                      onPress: () => router.replace("/(tabs)/discover"),
+                      text: "OK",
+                    },
                   ]
                 );
               }}

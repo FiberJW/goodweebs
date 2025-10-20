@@ -1,6 +1,3 @@
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import { CompositeNavigationProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import * as Haptics from "expo-haptics";
 import React, { useState, useEffect } from "react";
 
@@ -18,7 +15,6 @@ import {
 } from "yep/graphql/generated";
 import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
 import { useDebouncedMutation } from "yep/hooks/helpers";
-import { RootStackParamList, TabParamList } from "yep/navigation";
 
 type Props = {
   seedData: {
@@ -28,17 +24,12 @@ type Props = {
   };
   refetchList: () => Promise<void>;
   refetchListVariables: { userId?: number; status?: MediaListStatus | null };
-  navigation: CompositeNavigationProp<
-    BottomTabNavigationProp<TabParamList, "Anime">,
-    StackNavigationProp<RootStackParamList>
-  >;
   first: boolean;
   last: boolean;
 };
 
 export function AnimeListItemContainer({
   seedData,
-  navigation,
   refetchList,
   refetchListVariables,
   first,
@@ -120,7 +111,6 @@ export function AnimeListItemContainer({
 
   return (
     <AnimeListItem
-      navigation={navigation}
       progress={progress}
       onIncrement={async () => changeProgress("inc")}
       onDecrement={async () => changeProgress("dec")}

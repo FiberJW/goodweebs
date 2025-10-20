@@ -1,24 +1,23 @@
-import { StackNavigationProp } from "@react-navigation/stack";
+import { useRouter } from "expo-router";
 import React from "react";
 
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { AnimeRelationFragmentFragment } from "yep/graphql/generated";
-import { RootStackParamList } from "yep/navigation";
 import { getTitle } from "yep/utils";
 
 type RelatedItemProps = {
   anime: AnimeRelationFragmentFragment;
-  navigation: StackNavigationProp<RootStackParamList>;
 };
 
-export function RelatedAnimeItem({ anime, navigation }: RelatedItemProps) {
+export function RelatedAnimeItem({ anime }: RelatedItemProps) {
+  const router = useRouter();
   if (!anime.coverImage?.large) return null;
 
   return (
     <PressableOpacity
       onPress={() => {
-        navigation.push("Details", { id: anime.id });
+        router.push(`/details/${anime.id}`);
       }}
     >
       <PosterAndTitle

@@ -1,4 +1,4 @@
-import { StackNavigationProp } from "@react-navigation/stack";
+import { useRouter } from "expo-router";
 import React, { PropsWithChildren } from "react";
 import { ImageBackground, RefreshControl, View, Image } from "react-native";
 
@@ -7,11 +7,6 @@ import { Header } from "yep/components/Header";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { useGetViewerQuery } from "yep/graphql/generated";
-import { RootStackParamList, TabParamList } from "yep/navigation";
-import { StringCase, getString } from "yep/strings";
-import { darkTheme } from "yep/themes";
-import { notEmpty, getTitle } from "yep/utils";
-
 import {
   OuterContainer,
   InnerContainer,
@@ -25,13 +20,13 @@ import {
   makeListWithType,
   FavoriteContainer,
   EverythingButTheCTA,
-} from "./styles";
+} from "yep/screens/ProfileScreen/styles";
+import { StringCase, getString } from "yep/strings";
+import { darkTheme } from "yep/themes";
+import { notEmpty, getTitle } from "yep/utils";
 
-type Props = {
-  navigation: StackNavigationProp<RootStackParamList & TabParamList>;
-};
-
-export function ProfileScreen({ navigation }: Props) {
+export default function Profile() {
+  const router = useRouter();
   const {
     loading: loadingViewer,
     data: viewerData,
@@ -44,8 +39,8 @@ export function ProfileScreen({ navigation }: Props) {
     viewerData?.Viewer?.favourites?.characters?.nodes ?? []
   ).filter(notEmpty);
 
-  type AnimeItem = typeof animeList[number];
-  type CharacterItem = typeof characterList[number];
+  type AnimeItem = (typeof animeList)[number];
+  type CharacterItem = (typeof characterList)[number];
 
   const FavoriteAnimeList = makeListWithType<AnimeItem>();
   const FavoriteCharacterList = makeListWithType<CharacterItem>();
@@ -64,11 +59,11 @@ export function ProfileScreen({ navigation }: Props) {
   }
 
   return (
-    <OuterContainer>
+    <OuterContainer style={{ backgroundColor: darkTheme.background }}>
       <Header
         label={getString("profile", StringCase.TITLE)}
         rightSlot={
-          <PressableOpacity onPress={() => navigation.navigate("Settings")}>
+          <PressableOpacity onPress={() => router.push("/settings")}>
             <Image
               style={{
                 tintColor: white,
@@ -141,14 +136,12 @@ export function ProfileScreen({ navigation }: Props) {
                   contentContainerStyle={{ gap: 8 }}
                   horizontal
                   showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item) => `${item.id}`}
+                  keyExtractor={(item: AnimeItem) => `${item.id}`}
                   data={animeList}
-                  renderItem={({ item }) => (
+                  renderItem={({ item }: { item: AnimeItem }) => (
                     <FavoriteContainer>
                       <PressableOpacity
-                        onPress={() =>
-                          navigation.navigate("Details", { id: item.id })
-                        }
+                        onPress={() => router.push(`/details/${item.id}`)}
                       >
                         <PosterAndTitle
                           size="profile"
@@ -168,14 +161,12 @@ export function ProfileScreen({ navigation }: Props) {
                   horizontal
                   showsHorizontalScrollIndicator={false}
                   contentContainerStyle={{ gap: 8 }}
-                  keyExtractor={(item) => `${item.id}`}
+                  keyExtractor={(item: CharacterItem) => `${item.id}`}
                   data={characterList}
-                  renderItem={({ item }) => (
+                  renderItem={({ item }: { item: CharacterItem }) => (
                     <FavoriteContainer>
                       <PressableOpacity
-                        onPress={() =>
-                          navigation.navigate("Character", { id: item.id })
-                        }
+                        onPress={() => router.push(`/character/${item.id}`)}
                       >
                         <PosterAndTitle
                           size="profile"

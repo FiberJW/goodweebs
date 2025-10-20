@@ -76,6 +76,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     bundler: "metro",
   },
   plugins: [
+    "expo-router",
     "expo-font",
     "expo-web-browser",
     "@logrocket/react-native",

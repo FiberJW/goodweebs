@@ -1,25 +1,21 @@
-import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { AnimeFragmentFragment } from "yep/graphql/generated";
-import { RootStackParamList } from "yep/navigation";
 import { getTitle } from "yep/utils";
 
 export function DiscoverPoster({
   item,
-  navigation,
   index,
+  onPress,
 }: {
   item: AnimeFragmentFragment;
   index: number;
-  navigation: StackNavigationProp<RootStackParamList>;
+  onPress?: () => void;
 }) {
   return (
-    <PressableOpacity
-      onPress={() => navigation.navigate("Details", { id: item.id })}
-    >
+    <PressableOpacity onPress={onPress}>
       <PosterAndTitle
         uri={item.coverImage?.large ?? item.coverImage?.medium ?? ""}
         size="large"

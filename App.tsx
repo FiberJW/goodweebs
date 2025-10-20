@@ -1,21 +1,14 @@
-import {
-  ApolloClient,
-  ApolloProvider,
-  NormalizedCacheObject,
-} from "@apollo/client";
-import { ActionSheetProvider } from "@expo/react-native-action-sheet";
+import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
 import LogRocket from "@logrocket/react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Sentry from "@sentry/react-native";
 import * as SplashScreen from "expo-splash-screen";
 import * as Updates from "expo-updates";
-import React, { useCallback, useEffect } from "react";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import React, { useEffect } from "react";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { enableScreens } from "react-native-screens";
 
 import { createClient } from "yep/graphql/client";
-import { Navigation } from "yep/navigation";
 import { useManrope } from "yep/typefaces";
 
 import { StorageKeys } from "./hooks/helpers";
@@ -38,7 +31,7 @@ export default function App() {
 }
 
 function InnerApp() {
-  const { checkedForToken, accessToken } = useAccessToken();
+  const { checkedForToken } = useAccessToken();
   const fontsLoaded = useManrope();
 
   const [client, setClient] =
@@ -80,14 +73,9 @@ function InnerApp() {
 
   const appIsReady = fontsLoaded && checkedForToken && !!client;
 
-  const onLayoutRootView = useCallback(async () => {
+  useEffect(() => {
     if (appIsReady) {
-      // This tells the splash screen to hide immediately! If we call this after
-      // `setAppIsReady`, then we may see a blank screen while the app is
-      // loading its initial state and rendering its first pixels. So instead,
-      // we hide the splash screen once we know the root view has already
-      // performed layout.
-      await SplashScreen.hideAsync();
+      SplashScreen.hideAsync();
     }
   }, [appIsReady]);
 
@@ -95,13 +83,5 @@ function InnerApp() {
     return null;
   }
 
-  return (
-    <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <ApolloProvider client={client}>
-        <ActionSheetProvider>
-          <Navigation accessToken={accessToken} />
-        </ActionSheetProvider>
-      </ApolloProvider>
-    </GestureHandlerRootView>
-  );
+  return null;
 }

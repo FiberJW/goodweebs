@@ -1,11 +1,9 @@
-import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 
 import {
   AnimeRelationFragmentFragment,
   MediaRelation,
 } from "yep/graphql/generated";
-import { RootStackParamList } from "yep/navigation";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
@@ -31,13 +29,11 @@ const RelatedListHeader = takimoto.Text({
 type RelatedListProps = {
   relations: AnimeRelationFragmentFragment[];
   relationType: MediaRelation;
-  navigation: StackNavigationProp<RootStackParamList>;
 };
 
 export function RelatedAnimeList({
   relationType,
   relations,
-  navigation,
 }: RelatedListProps) {
   if (
     // filter out non-anime relations
@@ -63,7 +59,7 @@ export function RelatedAnimeList({
         keyExtractor={(item) => `${item.id}`}
         data={relations}
         renderItem={({ item }) => {
-          return <RelatedAnimeItem anime={item} navigation={navigation} />;
+          return <RelatedAnimeItem anime={item} />;
         }}
       />
     </>

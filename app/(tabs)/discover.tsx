@@ -1,4 +1,4 @@
-import { StackNavigationProp } from "@react-navigation/stack";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   RefreshControl,
@@ -16,21 +16,16 @@ import {
   useGetTrendingAnimeQuery,
   useSearchAnimeQuery,
 } from "yep/graphql/generated";
-import { RootStackParamList } from "yep/navigation";
+import { DiscoverPoster } from "yep/screens/DiscoverScreen/DiscoverPoster";
 import { getString, StringCase } from "yep/strings";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { notEmpty } from "yep/utils";
 
-import { DiscoverPoster } from "./DiscoverPoster";
-
-type Props = {
-  navigation: StackNavigationProp<RootStackParamList>;
-};
-
-export function DiscoverScreen({ navigation }: Props) {
+export default function Discover() {
   const [searchTerm, setSearchTerm] = useState("");
   const { width: windowWidth } = useWindowDimensions();
+  const router = useRouter();
 
   const posterWidth = (windowWidth - 16 * 4) / 3;
   const posterHeight = posterWidth * 1.4285714286;
@@ -60,7 +55,9 @@ export function DiscoverScreen({ navigation }: Props) {
   }
 
   return (
-    <View style={styles.outerContainer}>
+    <View
+      style={[styles.outerContainer, { backgroundColor: darkTheme.background }]}
+    >
       <Header label={getString("discover", StringCase.TITLE)} />
       <SearchBox
         value={searchTerm}
@@ -101,7 +98,8 @@ export function DiscoverScreen({ navigation }: Props) {
               keyExtractor={(item) => `${item.id}`}
               renderItem={({ item, index }) => (
                 <DiscoverPoster
-                  {...{ item, index, navigation, posterHeight, posterWidth }}
+                  {...{ item, index, posterHeight, posterWidth }}
+                  onPress={() => router.push(`/details/${item.id}`)}
                   key={item.id}
                 />
               )}
@@ -138,7 +136,8 @@ export function DiscoverScreen({ navigation }: Props) {
               renderItem={({ item, index }) => {
                 return (
                   <DiscoverPoster
-                    {...{ item, index, navigation, posterHeight, posterWidth }}
+                    {...{ item, index, posterHeight, posterWidth }}
+                    onPress={() => router.push(`/details/${item.id}`)}
                     key={item.id}
                   />
                 );
