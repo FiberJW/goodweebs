@@ -14,6 +14,7 @@ import React, { useCallback, useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { enableScreens } from "react-native-screens";
+import { vexo } from "vexo-analytics";
 
 import { createClient } from "yep/graphql/client";
 import { darkTheme } from "yep/themes";
@@ -22,6 +23,7 @@ import { Manrope, useManrope } from "yep/typefaces";
 import { StorageKeys } from "../hooks/helpers";
 import { AccessTokenProvider, useAccessToken } from "../useAccessToken";
 
+vexo("e6f94c3b-f7d3-4edd-b48c-baad9bfd42b5");
 enableScreens();
 
 SplashScreen.preventAutoHideAsync();

@@ -63,7 +63,8 @@
     "react-native-web": "^0.21.0",
     "react-router-dom": "^6.6.1",
     "showdown": "^2.1.0",
-    "title": "^3.4.2"
+    "title": "^3.4.2",
+    "vexo-analytics": "^1.5.2"
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",
