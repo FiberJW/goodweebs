@@ -19,6 +19,12 @@
         "APP_VARIANT": "development"
       }
     },
+    "simulator": {
+      "extends": "development",
+      "ios": {
+        "simulator": true
+      }
+    },
     "preview": {
       "node": "20.11.0",
       "distribution": "internal",
