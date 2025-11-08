@@ -7,10 +7,12 @@ import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import LogRocket from "@logrocket/react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Sentry from "@sentry/react-native";
+import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import * as Updates from "expo-updates";
 import React, { useCallback, useEffect } from "react";
+import { Platform } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { enableScreens } from "react-native-screens";
@@ -18,17 +20,48 @@ import { vexo } from "vexo-analytics";
 
 import { createClient } from "yep/graphql/client";
 import { darkTheme } from "yep/themes";
-import { Manrope, useManrope } from "yep/typefaces";
+import { LINESeedJP, Manrope } from "yep/typefaces";
 
 import { StorageKeys } from "../hooks/helpers";
 import { AccessTokenProvider, useAccessToken } from "../useAccessToken";
 
-vexo("e6f94c3b-f7d3-4edd-b48c-baad9bfd42b5");
-enableScreens();
+if (Platform.OS !== "web") {
+  vexo("e6f94c3b-f7d3-4edd-b48c-baad9bfd42b5");
+  enableScreens();
+  SplashScreen.preventAutoHideAsync();
+}
 
-SplashScreen.preventAutoHideAsync();
+function WebLayout() {
+  useFonts({
+    [Manrope.bold]: require("yep/assets/fonts/manrope/Manrope-Bold.otf"),
+    [Manrope.extraBold]: require("yep/assets/fonts/manrope/Manrope-ExtraBold.otf"),
+    [Manrope.extraLight]: require("yep/assets/fonts/manrope/Manrope-ExtraLight.otf"),
+    [Manrope.light]: require("yep/assets/fonts/manrope/Manrope-Light.otf"),
+    [Manrope.medium]: require("yep/assets/fonts/manrope/Manrope-Medium.otf"),
+    [Manrope.regular]: require("yep/assets/fonts/manrope/Manrope-Regular.otf"),
+    [Manrope.semiBold]: require("yep/assets/fonts/manrope/Manrope-SemiBold.otf"),
+    [LINESeedJP.regular]: require("yep/assets/fonts/LINESeedJP/LINESeedJP_OTF_Rg.otf"),
+    [LINESeedJP.extraBold]: require("yep/assets/fonts/LINESeedJP/LINESeedJP_OTF_Eb.otf"),
+    [LINESeedJP.bold]: require("yep/assets/fonts/LINESeedJP/LINESeedJP_OTF_Bd.otf"),
+    [LINESeedJP.thin]: require("yep/assets/fonts/LINESeedJP/LINESeedJP_OTF_Th.otf"),
+  });
+
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+    </Stack>
+  );
+}
 
 export default function RootLayout() {
+  if (Platform.OS === "web") {
+    return <WebLayout />;
+  }
+
   return (
     <RootSiblingParent>
       <AccessTokenProvider>
@@ -40,7 +73,6 @@ export default function RootLayout() {
 
 function InnerLayout() {
   const { checkedForToken } = useAccessToken();
-  const fontsLoaded = useManrope();
 
   const [client, setClient] =
     React.useState<ApolloClient<NormalizedCacheObject> | null>(null);
@@ -79,7 +111,7 @@ function InnerLayout() {
     })();
   }, []);
 
-  const appIsReady = fontsLoaded && checkedForToken && !!client;
+  const appIsReady = checkedForToken && !!client;
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {

@@ -77,7 +77,24 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     "expo-router",
-    "expo-font",
+    [
+      "expo-font",
+      {
+        fonts: [
+          "./assets/fonts/manrope/Manrope-Bold.otf",
+          "./assets/fonts/manrope/Manrope-ExtraBold.otf",
+          "./assets/fonts/manrope/Manrope-ExtraLight.otf",
+          "./assets/fonts/manrope/Manrope-Light.otf",
+          "./assets/fonts/manrope/Manrope-Medium.otf",
+          "./assets/fonts/manrope/Manrope-Regular.otf",
+          "./assets/fonts/manrope/Manrope-SemiBold.otf",
+          "./assets/fonts/LINESeedJP/LINESeedJP_OTF_Rg.otf",
+          "./assets/fonts/LINESeedJP/LINESeedJP_OTF_Eb.otf",
+          "./assets/fonts/LINESeedJP/LINESeedJP_OTF_Bd.otf",
+          "./assets/fonts/LINESeedJP/LINESeedJP_OTF_Th.otf",
+        ],
+      },
+    ],
     [
       "expo-secure-store",
       {
