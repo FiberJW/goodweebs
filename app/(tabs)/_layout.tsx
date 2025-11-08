@@ -1,10 +1,4 @@
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import {
-  Icon,
-  Label,
-  NativeTabs,
-  VectorIcon,
-} from "expo-router/unstable-native-tabs";
+import { Icon, Label, NativeTabs } from "expo-router/unstable-native-tabs";
 import React from "react";
 import { Platform } from "react-native";
 
@@ -19,27 +13,22 @@ export default function TabsLayout() {
       backgroundColor={darkTheme.navBackground}
       tintColor={Platform.OS === "ios" ? darkTheme.accent : darkTheme.text}
       indicatorColor={darkTheme.button}
+      disableIndicator
       labelVisibilityMode="unlabeled"
     >
       <NativeTabs.Trigger name="anime">
-        <Icon
-          src={<VectorIcon family={MaterialCommunityIcons} name="television" />}
-        />
+        <Icon src={require("yep/assets/icons/navigation/anime-tab.png")} />
         <Label>Anime</Label>
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="discover">
-        <Icon
-          src={<VectorIcon family={MaterialCommunityIcons} name="search-web" />}
-        />
+        <Icon src={require("yep/assets/icons/navigation/discover-tab.png")} />
         <Label>Discover</Label>
       </NativeTabs.Trigger>
 
       {accessToken && (
         <NativeTabs.Trigger name="profile">
-          <Icon
-            src={<VectorIcon family={MaterialCommunityIcons} name="account" />}
-          />
+          <Icon src={require("yep/assets/icons/navigation/profile-tab.png")} />
           <Label>Profile</Label>
         </NativeTabs.Trigger>
       )}
