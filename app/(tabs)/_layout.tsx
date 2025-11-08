@@ -2,6 +2,7 @@ import { Icon, Label, NativeTabs } from "expo-router/unstable-native-tabs";
 import React from "react";
 import { Platform } from "react-native";
 
+import { officialSiteFallback } from "yep/colors";
 import { darkTheme } from "yep/themes";
 import { useAccessToken } from "yep/useAccessToken";
 
@@ -11,7 +12,7 @@ export default function TabsLayout() {
   return (
     <NativeTabs
       backgroundColor={darkTheme.navBackground}
-      tintColor={Platform.OS === "ios" ? darkTheme.accent : darkTheme.text}
+      tintColor={Platform.OS === "ios" ? officialSiteFallback : darkTheme.text}
       indicatorColor={darkTheme.button}
       disableIndicator
       labelVisibilityMode="unlabeled"
