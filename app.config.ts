@@ -78,6 +78,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   plugins: [
     "expo-router",
     "expo-font",
+    [
+      "expo-secure-store",
+      {
+        configureAndroidBackup: true,
+        faceIDPermission:
+          "Allow Goodweebs to access your Face ID biometric data.",
+      },
+    ],
     "expo-web-browser",
     "@logrocket/react-native",
     [

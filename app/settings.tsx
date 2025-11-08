@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import React from "react";
 import {
   Alert,
@@ -190,7 +190,9 @@ export default function Settings() {
                   text: "Log out",
                   style: "destructive",
                   onPress: async () => {
-                    await AsyncStorage.removeItem(ANILIST_ACCESS_TOKEN_STORAGE);
+                    await SecureStore.deleteItemAsync(
+                      ANILIST_ACCESS_TOKEN_STORAGE
+                    );
                     setAccessToken(undefined);
                     router.replace("/auth");
                     await client.resetStore();

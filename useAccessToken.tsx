@@ -1,4 +1,4 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 import React, { useState, createContext, use, useEffect } from "react";
 
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
@@ -32,7 +32,9 @@ export function AccessTokenProvider({
   useEffect(function fetchToken() {
     (async () => {
       try {
-        const token = await AsyncStorage.getItem(ANILIST_ACCESS_TOKEN_STORAGE);
+        const token = await SecureStore.getItemAsync(
+          ANILIST_ACCESS_TOKEN_STORAGE
+        );
         if (token) {
           setAccessToken(token);
         }

@@ -1,5 +1,5 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import { sortBy } from "lodash";
 import React, { useState, useMemo } from "react";
 import { RefreshControl, View, StyleSheet } from "react-native";
@@ -120,7 +120,7 @@ export default function Anime() {
                     if (result.type === "error" || result.type === "success") {
                       if (result.params.access_token) {
                         setAccessToken(result.params.access_token);
-                        await AsyncStorage.setItem(
+                        await SecureStore.setItemAsync(
                           ANILIST_ACCESS_TOKEN_STORAGE,
                           result.params.access_token
                         );

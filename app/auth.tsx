@@ -1,5 +1,5 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import React, { useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, Image, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -22,7 +22,7 @@ export default function AuthScreen() {
     function navigateIfAccessTokenExists() {
       (async () => {
         try {
-          const token = await AsyncStorage.getItem(
+          const token = await SecureStore.getItemAsync(
             ANILIST_ACCESS_TOKEN_STORAGE
           );
 
@@ -65,7 +65,7 @@ export default function AuthScreen() {
                 if (result.type === "error" || result.type === "success") {
                   if (result.params.access_token) {
                     setAccessToken(result.params.access_token);
-                    await AsyncStorage.setItem(
+                    await SecureStore.setItemAsync(
                       ANILIST_ACCESS_TOKEN_STORAGE,
                       result.params.access_token
                     );
