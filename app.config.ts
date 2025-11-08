@@ -39,6 +39,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   assetBundlePatterns: ["**/*"],
   ios: {
+    userInterfaceStyle: "dark",
     entitlements: {
       "aps-environment": "development",
     },
