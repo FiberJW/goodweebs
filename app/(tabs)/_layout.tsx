@@ -26,12 +26,10 @@ export default function TabsLayout() {
         <Label>Discover</Label>
       </NativeTabs.Trigger>
 
-      {accessToken && (
-        <NativeTabs.Trigger name="profile">
-          <Icon src={require("yep/assets/icons/navigation/profile-tab.png")} />
-          <Label>Profile</Label>
-        </NativeTabs.Trigger>
-      )}
+      <NativeTabs.Trigger hidden={!accessToken} name="profile">
+        <Icon src={require("yep/assets/icons/navigation/profile-tab.png")} />
+        <Label>Profile</Label>
+      </NativeTabs.Trigger>
     </NativeTabs>
   );
 }

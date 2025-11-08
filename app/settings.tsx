@@ -180,7 +180,7 @@ export default function Settings() {
             Privacy Policy
           </Text>
         </PressableOpacity>
-        {accessToken && (
+        {accessToken ? (
           <Button
             label="Log out"
             onPress={async () => {
@@ -201,7 +201,7 @@ export default function Settings() {
               ]);
             }}
           />
-        )}
+        ) : null}
       </View>
     </ScrollView>
   );

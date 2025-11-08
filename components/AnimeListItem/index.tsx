@@ -100,7 +100,7 @@ export function AnimeListItem({
             {getProgress(media, progress)}
           </Text>
         </View>
-        {media.status !== MediaStatus.NotYetReleased && (
+        {media.status !== MediaStatus.NotYetReleased ? (
           <View style={styles.progressButtonGroup}>
             <ProgressButton
               disabled={Boolean(disabled) || progress === 0}
@@ -121,7 +121,7 @@ export function AnimeListItem({
               }}
             />
           </View>
-        )}
+        ) : null}
       </View>
     </PressableOpacity>
   );
