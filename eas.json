@@ -10,19 +10,14 @@
       "distribution": "internal",
       "channel": "development",
       "ios": {
-        "resourceClass": "medium"
+        "resourceClass": "medium",
+        "simulator": true
       },
       "android": {
         "resourceClass": "medium"
       },
       "env": {
         "APP_VARIANT": "development"
-      }
-    },
-    "simulator": {
-      "extends": "development",
-      "ios": {
-        "simulator": true
       }
     },
     "preview": {

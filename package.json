@@ -8,7 +8,6 @@
     "update:production": "bunx eas update --channel production --auto",
     "build:production": "bunx eas build --profile production --platform all --auto-submit",
     "build:development": "bunx eas build --profile development --platform all",
-    "build:simulator": "bunx eas build --profile simulator --platform ios",
     "export:web": "bunx expo export --platform web",
     "android": "bunx expo run:android",
     "ios": "bunx expo run:ios"
