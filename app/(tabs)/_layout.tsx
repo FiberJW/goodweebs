@@ -16,6 +16,7 @@ export default function TabsLayout() {
       indicatorColor={darkTheme.button}
       disableIndicator
       labelVisibilityMode="unlabeled"
+      // TODO: figure out how to configure a background color and inset for < iOS 26 native tabs
     >
       <NativeTabs.Trigger name="anime">
         <Icon src={require("yep/assets/icons/navigation/anime-tab.png")} />
