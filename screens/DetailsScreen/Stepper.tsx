@@ -1,39 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { View } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
-import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
 import { StepperButton } from "./StepperButton";
-
-const StepperWithLabelContainer = takimoto.View({
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "space-between",
-  width: "100%",
-  marginBottom: 16,
-});
-
-const StepperLabel = takimoto.Text({
-  fontSize: 16,
-  color: darkTheme.text,
-  fontFamily: Manrope.semiBold,
-  textAlign: "center",
-});
-
-const StepperContainer = takimoto.View({
-  flexDirection: "row",
-  alignItems: "center",
-});
-
-const StepperCount = takimoto.Text({
-  fontSize: 16,
-  color: darkTheme.text,
-  fontFamily: Manrope.semiBold,
-  textAlign: "center",
-  width: 48,
-});
 
 type Props = {
   defaultValue: number;
@@ -58,16 +29,16 @@ export function Stepper({
     function setCountWhenDefaultValueChanges() {
       setCount(defaultValue);
     },
-    [defaultValue]
+    [defaultValue],
   );
 
   return (
-    <StepperWithLabelContainer>
+    <View style={styles.stepperWithLabelContainer}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         {icon}
-        <StepperLabel>{label}</StepperLabel>
+        <Text style={styles.stepperLabel}>{label}</Text>
       </View>
-      <StepperContainer>
+      <View style={styles.stepperContainer}>
         <StepperButton
           type="decrement"
           disabled={count === lowerBound}
@@ -77,7 +48,7 @@ export function Stepper({
             onChange(newCount);
           }}
         />
-        <StepperCount>{count}</StepperCount>
+        <Text style={styles.stepperCount}>{count}</Text>
         <StepperButton
           type="increment"
           disabled={count === upperBound}
@@ -87,7 +58,34 @@ export function Stepper({
             onChange(newCount);
           }}
         />
-      </StepperContainer>
-    </StepperWithLabelContainer>
+      </View>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  stepperWithLabelContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: 16,
+  },
+  stepperLabel: {
+    fontSize: 16,
+    color: darkTheme.text,
+    fontFamily: Manrope.semiBold,
+    textAlign: "center",
+  },
+  stepperContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  stepperCount: {
+    fontSize: 16,
+    color: darkTheme.text,
+    fontFamily: Manrope.semiBold,
+    textAlign: "center",
+    width: 48,
+  },
+});

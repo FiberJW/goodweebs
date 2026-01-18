@@ -1,19 +1,12 @@
 import React from "react";
+import { Text, StyleSheet } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 
 import { CharacterDataFragment } from "yep/graphql/generated";
-import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
 import { CharacterItem } from "./CharacterItem";
-
-const Header = takimoto.Text({
-  fontFamily: Manrope.semiBold,
-  color: darkTheme.text,
-  fontSize: 16,
-  marginBottom: 8,
-});
 
 type Props = {
   characters: CharacterDataFragment[];
@@ -22,7 +15,7 @@ type Props = {
 export function CharacterList({ characters }: Props) {
   return (
     <>
-      <Header>Characters</Header>
+      <Text style={styles.header}>Characters</Text>
       <FlatList
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
@@ -38,3 +31,12 @@ export function CharacterList({ characters }: Props) {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    fontFamily: Manrope.semiBold,
+    color: darkTheme.text,
+    fontSize: 16,
+    marginBottom: 8,
+  },
+});

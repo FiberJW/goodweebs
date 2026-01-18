@@ -1,30 +1,15 @@
 import React from "react";
+import { Text, FlatList, StyleSheet } from "react-native";
 
 import {
   AnimeRelationFragmentFragment,
   MediaRelation,
 } from "yep/graphql/generated";
-import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { getReadableMediaRelation } from "yep/utils";
 
 import { RelatedAnimeItem } from "./RelatedAnimeItem";
-
-const RelatedListFlatList = takimoto.FlatList<AnimeRelationFragmentFragment>(
-  {
-    width: "100%",
-    marginBottom: 16,
-  },
-  { gap: 8 }
-);
-
-const RelatedListHeader = takimoto.Text({
-  fontFamily: Manrope.semiBold,
-  color: darkTheme.text,
-  fontSize: 16,
-  marginBottom: 8,
-});
 
 type RelatedListProps = {
   relations: AnimeRelationFragmentFragment[];
@@ -51,10 +36,12 @@ export function RelatedAnimeList({
 
   return (
     <>
-      <RelatedListHeader>
+      <Text style={styles.relatedListHeader}>
         {getReadableMediaRelation(relationType)}
-      </RelatedListHeader>
-      <RelatedListFlatList
+      </Text>
+      <FlatList
+        style={styles.relatedListFlatList}
+        contentContainerStyle={{ gap: 8 }}
         horizontal
         keyExtractor={(item) => `${item.id}`}
         data={relations}
@@ -65,3 +52,16 @@ export function RelatedAnimeList({
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  relatedListFlatList: {
+    width: "100%",
+    marginBottom: 16,
+  },
+  relatedListHeader: {
+    fontFamily: Manrope.semiBold,
+    color: darkTheme.text,
+    fontSize: 16,
+    marginBottom: 8,
+  },
+});
