@@ -4,7 +4,14 @@ import * as Haptics from "expo-haptics";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import _ from "lodash";
 import React, { ReactNode, useEffect, useState } from "react";
-import { RefreshControl, Text, View, Image } from "react-native";
+import {
+  RefreshControl,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import title from "title";
 
@@ -50,68 +57,28 @@ import { ExternalLink } from "yep/screens/DetailsScreen/ExternalLink";
 import { RelatedAnimeList } from "yep/screens/DetailsScreen/RelatedAnimeList";
 import { Stepper } from "yep/screens/DetailsScreen/Stepper";
 import { Trailer } from "yep/screens/DetailsScreen/Trailer";
-import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { getDateText, notEmpty } from "yep/utils";
-
-const Container = takimoto.ScrollView({
-  flex: 1,
-  padding: 16,
-});
-
-const InfoRow = takimoto.View({
-  flexDirection: "row",
-});
-
-const InfoTable = takimoto.View({
-  flex: 1,
-  gap: 8,
-});
-
-const InfoContainer = takimoto.View({
-  flex: 1,
-});
-
-const InfoLabel = takimoto.Text({
-  fontFamily: Manrope.regular,
-  fontSize: 12.8,
-  color: darkTheme.text,
-  marginBottom: 4,
-});
-
-const InfoValue = takimoto.Text({
-  fontFamily: Manrope.semiBold,
-  fontSize: 16,
-  color: darkTheme.text,
-});
-
-const PosterAndInfoContainer = takimoto.View({
-  flexDirection: "row",
-  marginBottom: 16,
-});
 
 type InfoProps = { label: string; value: ReactNode };
 
 function Info({ label, value }: InfoProps) {
   return (
-    <InfoContainer>
-      <InfoLabel numberOfLines={1}>{label}</InfoLabel>
+    <View style={styles.infoContainer}>
+      <Text style={styles.infoLabel} numberOfLines={1}>
+        {label}
+      </Text>
       {typeof value === "string" ? (
-        <InfoValue numberOfLines={2}>{value}</InfoValue>
+        <Text style={styles.infoValue} numberOfLines={2}>
+          {value}
+        </Text>
       ) : (
         value
       )}
-    </InfoContainer>
+    </View>
   );
 }
-
-const ButtonsRow = takimoto.View({
-  flexDirection: "row",
-  width: "100%",
-  alignItems: "center",
-  marginBottom: 16,
-});
 
 export default function Details() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -121,14 +88,14 @@ export default function Details() {
   const insets = useSafeAreaInsets();
   const [loadingStatus, setLoadingStatus] = useState(false);
   const [shouldShowScoreToggleUI] = usePersistedState<boolean>(
-    StorageKeys.HIDE_SCORES_GLOBAL
+    StorageKeys.HIDE_SCORES_GLOBAL,
   );
   const [shouldPersistScoreVisibility] = usePersistedState<boolean>(
-    StorageKeys.SHOULD_PERSIST_SCORE_VISIBILITY
+    StorageKeys.SHOULD_PERSIST_SCORE_VISIBILITY,
   );
   const [showScore, setShowScore] = usePersistedState<boolean>(
     StorageKeys.SHOW_SCORE_FOR_MEDIA,
-    { id: String(animeId), doNotPersist: !shouldPersistScoreVisibility }
+    { id: String(animeId), doNotPersist: !shouldPersistScoreVisibility },
   );
 
   useEffect(() => {
@@ -323,14 +290,15 @@ export default function Details() {
 
       return result;
     },
-    {}
+    {},
   );
 
   const externalLinks = data?.Media?.externalLinks?.filter(notEmpty);
   const studio = (data?.Media?.studios?.nodes ?? [])[0]?.name;
 
   return (
-    <Container
+    <ScrollView
+      style={styles.container}
       contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
       showsVerticalScrollIndicator={false}
       refreshControl={
@@ -351,7 +319,7 @@ export default function Details() {
         ) : null
       ) : (
         <>
-          <PosterAndInfoContainer>
+          <View style={styles.posterAndInfoContainer}>
             <PosterAndTitle
               size="details"
               uri={data?.Media?.coverImage?.large ?? ""}
@@ -382,8 +350,8 @@ export default function Details() {
                 />
               </View>
             </PosterAndTitle>
-            <InfoTable>
-              <InfoRow>
+            <View style={styles.infoTable}>
+              <View style={styles.infoRow}>
                 {data?.Media?.episodes ? (
                   <Info label="Episodes" value={`${data?.Media?.episodes}`} />
                 ) : null}
@@ -391,8 +359,8 @@ export default function Details() {
                   label="Genre"
                   value={data?.Media?.genres?.join(", ") ?? ""}
                 />
-              </InfoRow>
-              <InfoRow>
+              </View>
+              <View style={styles.infoRow}>
                 {data?.Media?.averageScore ? (
                   <PressableOpacity
                     useDisabledOpacity={false}
@@ -406,12 +374,15 @@ export default function Details() {
                         showScore ? (
                           `${(data?.Media?.averageScore ?? 0) / 10} / 10`
                         ) : (
-                          <InfoValue
+                          <Text
                             numberOfLines={2}
-                            style={{ textDecorationLine: "underline" }}
+                            style={[
+                              styles.infoValue,
+                              { textDecorationLine: "underline" },
+                            ]}
                           >
                             Tap to show
-                          </InfoValue>
+                          </Text>
                         )
                       }
                     />
@@ -421,12 +392,12 @@ export default function Details() {
                   label="Status"
                   value={title(
                     MediaStatusWithLabel.find(
-                      (m) => m.value === data?.Media?.status
-                    )?.label ?? ""
+                      (m) => m.value === data?.Media?.status,
+                    )?.label ?? "",
                   )}
                 />
-              </InfoRow>
-              <InfoRow>
+              </View>
+              <View style={styles.infoRow}>
                 {studio ? <Info label="Studio" value={studio} /> : null}
                 {data?.Media?.status === MediaStatus.Releasing &&
                 data?.Media?.nextAiringEpisode ? (
@@ -438,7 +409,7 @@ export default function Details() {
                       add(now, {
                         seconds:
                           data?.Media?.nextAiringEpisode?.timeUntilAiring ?? 0,
-                      })
+                      }),
                     )}`}
                   />
                 ) : null}
@@ -460,17 +431,17 @@ export default function Details() {
                     value={getDateText(data.Media.endDate)!}
                   />
                 ) : null}
-              </InfoRow>
-            </InfoTable>
-          </PosterAndInfoContainer>
-          <ButtonsRow>
+              </View>
+            </View>
+          </View>
+          <View style={styles.buttonsRow}>
             <Button
               size="small"
               containerStyle={{ flex: 1 }}
               loading={loadingStatus}
               label={
                 MediaListStatusWithLabel.find(
-                  (x) => x.value === data?.Media?.mediaListEntry?.status
+                  (x) => x.value === data?.Media?.mediaListEntry?.status,
                 )?.label ?? "Add to List"
               }
               onPress={() => {
@@ -480,7 +451,7 @@ export default function Details() {
                       data?.Media?.mediaListEntry?.status === s.value
                         ? "✔ "
                         : ""
-                    }${s.label}`
+                    }${s.label}`,
                 );
 
                 const mediaListEntry = data?.Media?.mediaListEntry;
@@ -521,11 +492,11 @@ export default function Details() {
                       });
                     }
                     setLoadingStatus(false);
-                  }
+                  },
                 );
               }}
             />
-          </ButtonsRow>
+          </View>
           {data?.Media?.mediaListEntry &&
           data.Media.status !== MediaStatus.NotYetReleased ? (
             <>
@@ -587,7 +558,7 @@ export default function Details() {
           {data.Media?.characters?.nodes ? (
             <CharacterList
               characters={(data.Media?.characters?.nodes ?? []).filter(
-                notEmpty
+                notEmpty,
               )}
             />
           ) : null}
@@ -626,6 +597,44 @@ export default function Details() {
           ) : null}
         </>
       )}
-    </Container>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  infoRow: {
+    flexDirection: "row",
+  },
+  infoTable: {
+    flex: 1,
+    gap: 8,
+  },
+  infoContainer: {
+    flex: 1,
+  },
+  infoLabel: {
+    fontFamily: Manrope.regular,
+    fontSize: 12.8,
+    color: darkTheme.text,
+    marginBottom: 4,
+  },
+  infoValue: {
+    fontFamily: Manrope.semiBold,
+    fontSize: 16,
+    color: darkTheme.text,
+  },
+  posterAndInfoContainer: {
+    flexDirection: "row",
+    marginBottom: 16,
+  },
+  buttonsRow: {
+    flexDirection: "row",
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+});

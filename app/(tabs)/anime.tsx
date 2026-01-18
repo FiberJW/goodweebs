@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { sortBy } from "lodash";
 import React, { useState, useMemo } from "react";
-import { RefreshControl, View, StyleSheet } from "react-native";
+import { RefreshControl, View, StyleSheet, Text, FlatList } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
@@ -19,7 +19,6 @@ import {
 } from "yep/graphql/generated";
 import { useAniListAuthRequest } from "yep/hooks/auth";
 import { getString, StringCase } from "yep/strings";
-import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
@@ -27,7 +26,7 @@ import { notEmpty } from "yep/utils";
 
 export default function Anime() {
   const [status, setStatus] = useState<MediaListStatus>(
-    MediaListStatusWithLabel[0].value
+    MediaListStatusWithLabel[0].value,
   );
 
   const { accessToken, setAccessToken } = useAccessToken();
@@ -56,32 +55,33 @@ export default function Anime() {
     () =>
       sortBy(
         (animeListData?.MediaListCollection?.lists?.[0]?.entries ?? []).filter(
-          notEmpty
+          notEmpty,
         ),
-        (m) => m.media?.title?.english
+        (m) => m.media?.title?.english,
       ),
-    [animeListData]
+    [animeListData],
   );
 
   const listCountText = `${list.length} title${list.length !== 1 ? "s" : ""}`;
 
-  const AnimeFlatList = makeAnimeFlatList<(typeof list)[number]>();
-
   const refreshing = loadingViewer || loadingAnimeList;
 
   return (
-    <OuterContainer style={{ backgroundColor: darkTheme.background }}>
+    <View
+      style={[styles.outerContainer, { backgroundColor: darkTheme.background }]}
+    >
       <Header label={getString("anime", StringCase.TITLE)} />
 
-      <AnimeFlatList
+      <FlatList
         contentContainerStyle={{ padding: 16 }}
         ListHeaderComponent={() => (
           <View style={{ gap: 16, paddingBottom: 16 }}>
-            <StatusChipListContainer>
-              <StatusChipList
+            <View>
+              <FlatList
                 alwaysBounceVertical={false}
                 showsHorizontalScrollIndicator={false}
                 horizontal
+                contentContainerStyle={{ gap: 8 }}
                 data={MediaListStatusWithLabel}
                 keyExtractor={({ label }) => label}
                 renderItem={({ item: { label, value } }) => (
@@ -93,14 +93,14 @@ export default function Anime() {
                   />
                 )}
               />
-            </StatusChipListContainer>
-            <CountAndSortRow>
-              <Count>{listCountText}</Count>
-            </CountAndSortRow>
+            </View>
+            <View style={styles.countAndSortRow}>
+              <Text style={styles.count}>{listCountText}</Text>
+            </View>
           </View>
         )}
         showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={AnimeListDivider}
+        ItemSeparatorComponent={() => <View style={styles.animeListDivider} />}
         data={list}
         ListEmptyComponent={() =>
           refreshing ? null : (
@@ -122,7 +122,7 @@ export default function Anime() {
                         setAccessToken(result.params.access_token);
                         await SecureStore.setItemAsync(
                           ANILIST_ACCESS_TOKEN_STORAGE,
-                          result.params.access_token
+                          result.params.access_token,
                         );
                       }
                     }
@@ -170,40 +170,25 @@ export default function Anime() {
           />
         )}
       />
-    </OuterContainer>
+    </View>
   );
 }
 
-const OuterContainer = takimoto.View({
-  flex: 1,
-});
-
-const StatusChipListContainer = takimoto.View({});
-const StatusChipList = takimoto.FlatList<{
-  label: string;
-  value: MediaListStatus;
-}>({}, { gap: 8 });
-
-function makeAnimeFlatList<T>() {
-  return takimoto.FlatList<T>({}, {});
-}
-
-const AnimeListDivider = takimoto.View({
-  height: StyleSheet.hairlineWidth,
-  backgroundColor: darkTheme.listItemBorder,
-});
-
-const CountAndSortRow = takimoto.View({
-  flexDirection: "row",
-  justifyContent: "space-between",
-});
-
-const Count = takimoto.Text({
-  fontFamily: Manrope.regular,
-  fontSize: 12.8,
-  color: darkTheme.listCount,
-});
-
-export const Spinner = takimoto.ActivityIndicator({
-  paddingBottom: 16,
+const styles = StyleSheet.create({
+  outerContainer: {
+    flex: 1,
+  },
+  animeListDivider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: darkTheme.listItemBorder,
+  },
+  countAndSortRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  count: {
+    fontFamily: Manrope.regular,
+    fontSize: 12.8,
+    color: darkTheme.listCount,
+  },
 });
