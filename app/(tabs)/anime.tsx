@@ -2,14 +2,7 @@ import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { sortBy } from "lodash";
 import React, { useState, useMemo } from "react";
-import {
-  RefreshControl,
-  View,
-  StyleSheet,
-  Text,
-  FlatList,
-  ActivityIndicator,
-} from "react-native";
+import { RefreshControl, View, StyleSheet, Text, FlatList } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
@@ -198,11 +191,4 @@ const styles = StyleSheet.create({
     fontSize: 12.8,
     color: darkTheme.listCount,
   },
-  spinner: {
-    paddingBottom: 16,
-  },
 });
-
-export function Spinner() {
-  return <ActivityIndicator style={styles.spinner} />;
-}
