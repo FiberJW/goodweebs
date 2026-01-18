@@ -1,7 +1,6 @@
-import { RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import React from "react";
-import { StyleSheet, View, ScrollView, Text } from "react-native";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import React, { useEffect } from "react";
+import { StyleSheet, View, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { DescriptionRenderer } from "yep/components/DescriptionRenderer";
@@ -13,26 +12,30 @@ import {
   useToggleFavoriteMutation,
   useGetCharacterQuery,
 } from "yep/graphql/generated";
-import { RootStackParamList } from "yep/navigation";
-import { darkTheme } from "yep/themes";
-import { Manrope } from "yep/typefaces";
 
-type Props = {
-  navigation: StackNavigationProp<RootStackParamList>;
-  route: RouteProp<RootStackParamList, "Character">;
-};
-
-export function CharacterScreen({ route }: Props) {
+export default function Character() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const characterId = parseInt(id, 10);
+  const navigation = useNavigation();
   const insets = useSafeAreaInsets();
 
   const { loading, data, error } = useGetCharacterQuery({
-    variables: { id: route.params.id },
+    variables: { id: characterId },
     notifyOnNetworkStatusChange: true,
   });
 
   const [toggleFavorite] = useToggleFavoriteMutation();
 
   const character = data?.Character;
+
+  // Set navigation title dynamically
+  useEffect(() => {
+    if (character?.name?.full) {
+      navigation.setOptions({
+        title: character.name.full,
+      });
+    }
+  }, [character, navigation]);
 
   return (
     <ScrollView
@@ -49,9 +52,6 @@ export function CharacterScreen({ route }: Props) {
         ) : null
       ) : (
         <>
-          <Text style={styles.title} numberOfLines={5}>
-            {character?.name?.full}
-          </Text>
           <View style={styles.posterAndDescriptionContainer}>
             <PosterAndTitle
               size="details"
@@ -75,12 +75,11 @@ export function CharacterScreen({ route }: Props) {
                           characterId: character?.id,
                         },
                         refetchQueries: [
-                          refetchGetCharacterQuery({ id: route.params.id }),
+                          refetchGetCharacterQuery({ id: characterId }),
                         ],
                       });
                     } catch (error) {
                       console.error(error);
-                      // TODO: toast this error
                     }
                   }}
                 />
@@ -100,12 +99,6 @@ const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
   posterAndDescriptionContainer: {
     flexDirection: "row",
-    marginBottom: 16,
-  },
-  title: {
-    color: darkTheme.text,
-    fontFamily: Manrope.extraBold,
-    fontSize: 31.25,
     marginBottom: 16,
   },
 });

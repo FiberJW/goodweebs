@@ -1,23 +1,22 @@
-import { StackNavigationProp } from "@react-navigation/stack";
+import { useRouter } from "expo-router";
 import React from "react";
 
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { CharacterDataFragment } from "yep/graphql/generated";
-import { RootStackParamList } from "yep/navigation";
 
 type Props = {
   character: CharacterDataFragment;
-  navigation: StackNavigationProp<RootStackParamList>;
 };
 
-export function CharacterItem({ character, navigation }: Props) {
+export function CharacterItem({ character }: Props) {
+  const router = useRouter();
   if (!character.image?.large) return null;
 
   return (
     <PressableOpacity
       onPress={() => {
-        navigation.push("Character", { id: character.id });
+        router.push(`/character/${character.id}`);
       }}
     >
       <PosterAndTitle

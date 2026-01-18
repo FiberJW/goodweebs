@@ -1,9 +1,7 @@
-import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { FlatList } from "react-native-gesture-handler";
 
 import { CharacterDataFragment } from "yep/graphql/generated";
-import { RootStackParamList } from "yep/navigation";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
@@ -19,14 +17,9 @@ const Header = takimoto.Text({
 
 type Props = {
   characters: CharacterDataFragment[];
-  navigation: StackNavigationProp<RootStackParamList>;
 };
 
-export function CharacterList({
-  characters,
-
-  navigation,
-}: Props) {
+export function CharacterList({ characters }: Props) {
   return (
     <>
       <Header>Characters</Header>
@@ -39,7 +32,7 @@ export function CharacterList({
         keyExtractor={(item) => `${item.id}`}
         data={characters}
         renderItem={({ item }) => {
-          return <CharacterItem character={item} navigation={navigation} />;
+          return <CharacterItem character={item} />;
         }}
       />
     </>

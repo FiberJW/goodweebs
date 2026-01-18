@@ -1,12 +1,7 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import {
-  CompositeNavigationProp,
-  useFocusEffect,
-} from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import { sortBy } from "lodash";
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo } from "react";
 import { RefreshControl, View, StyleSheet } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
@@ -23,7 +18,6 @@ import {
   useGetAnimeListQuery,
 } from "yep/graphql/generated";
 import { useAniListAuthRequest } from "yep/hooks/auth";
-import { RootStackParamList, TabParamList } from "yep/navigation";
 import { getString, StringCase } from "yep/strings";
 import { takimoto } from "yep/takimoto";
 import { darkTheme } from "yep/themes";
@@ -31,23 +25,15 @@ import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
 import { notEmpty } from "yep/utils";
 
-type Props = {
-  navigation: CompositeNavigationProp<
-    BottomTabNavigationProp<TabParamList, "Anime">,
-    StackNavigationProp<RootStackParamList>
-  >;
-};
-
-export function AnimeListScreen({ navigation }: Props) {
-  const [isFirstFocus, setIsFirstFocus] = useState(true);
+export default function Anime() {
   const [status, setStatus] = useState<MediaListStatus>(
     MediaListStatusWithLabel[0].value
   );
 
   const { accessToken, setAccessToken } = useAccessToken();
+  const router = useRouter();
 
   const [, , promptAsync] = useAniListAuthRequest();
-  // TODO: save userId to AsyncStorage instead of fetching
   const { loading: loadingViewer, data: viewerData } = useGetViewerQuery({
     skip: !accessToken,
   });
@@ -62,7 +48,6 @@ export function AnimeListScreen({ navigation }: Props) {
       userId: viewerData?.Viewer?.id,
       status,
     },
-    // TODO: figure out how to maintain the list position while also updating the cache
     fetchPolicy: "no-cache",
     notifyOnNetworkStatusChange: true,
   });
@@ -80,32 +65,12 @@ export function AnimeListScreen({ navigation }: Props) {
 
   const listCountText = `${list.length} title${list.length !== 1 ? "s" : ""}`;
 
-  // TODO: maybe make this better? feels a little dank
   const AnimeFlatList = makeAnimeFlatList<(typeof list)[number]>();
 
   const refreshing = loadingViewer || loadingAnimeList;
 
-  useFocusEffect(
-    useCallback(
-      function refetchWhenRefocused() {
-        if (isFirstFocus) {
-          setIsFirstFocus(false);
-          return;
-        }
-
-        if (viewerData) {
-          refetch({
-            userId: viewerData?.Viewer?.id,
-            status,
-          });
-        }
-      },
-      [isFirstFocus, viewerData, status, refetch]
-    )
-  );
-
   return (
-    <OuterContainer>
+    <OuterContainer style={{ backgroundColor: darkTheme.background }}>
       <Header label={getString("anime", StringCase.TITLE)} />
 
       <AnimeFlatList
@@ -155,14 +120,14 @@ export function AnimeListScreen({ navigation }: Props) {
                     if (result.type === "error" || result.type === "success") {
                       if (result.params.access_token) {
                         setAccessToken(result.params.access_token);
-                        await AsyncStorage.setItem(
+                        await SecureStore.setItemAsync(
                           ANILIST_ACCESS_TOKEN_STORAGE,
                           result.params.access_token
                         );
                       }
                     }
                   } else {
-                    navigation.navigate("Discover");
+                    router.push("/(tabs)/discover");
                   }
                 },
               }}
@@ -200,7 +165,6 @@ export function AnimeListScreen({ navigation }: Props) {
               userId: viewerData?.Viewer?.id,
               status,
             }}
-            navigation={navigation}
             first={index === 0}
             last={index === list.length - 1}
           />

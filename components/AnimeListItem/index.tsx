@@ -1,6 +1,4 @@
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import { CompositeNavigationProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
@@ -11,7 +9,6 @@ import {
   MediaListStatus,
 } from "yep/graphql/generated";
 import { useNow } from "yep/hooks/helpers";
-import { RootStackParamList, TabParamList } from "yep/navigation";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { getAiringStatusText, getProgress, getTitle } from "yep/utils";
@@ -28,10 +25,6 @@ type Props = {
   progress: number;
   disabled?: boolean;
   media: AnimeFragmentFragment;
-  navigation: CompositeNavigationProp<
-    BottomTabNavigationProp<TabParamList, "Anime">,
-    StackNavigationProp<RootStackParamList>
-  >;
   first: boolean;
   last: boolean;
 };
@@ -42,10 +35,10 @@ export function AnimeListItem({
   disabled,
   onIncrement,
   onDecrement,
-  navigation,
   first,
   last,
 }: Props) {
+  const router = useRouter();
   const now = useNow();
 
   const isAiringAndCurrentlyWatching =
@@ -74,7 +67,7 @@ export function AnimeListItem({
         },
       ]}
       activeOpacity={0.7}
-      onPress={() => navigation.navigate("Details", { id: media.id })}
+      onPress={() => router.push(`/details/${media.id}`)}
     >
       <View>
         <PosterAndTitle uri={media.coverImage?.large ?? ""} size="small">
@@ -107,7 +100,7 @@ export function AnimeListItem({
             {getProgress(media, progress)}
           </Text>
         </View>
-        {media.status !== MediaStatus.NotYetReleased && (
+        {media.status !== MediaStatus.NotYetReleased ? (
           <View style={styles.progressButtonGroup}>
             <ProgressButton
               disabled={Boolean(disabled) || progress === 0}
@@ -128,7 +121,7 @@ export function AnimeListItem({
               }}
             />
           </View>
-        )}
+        ) : null}
       </View>
     </PressableOpacity>
   );

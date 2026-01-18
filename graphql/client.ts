@@ -5,6 +5,7 @@ import { HttpLink } from "@apollo/client/link/http";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Sentry from "@sentry/react-native";
 import { persistCache, AsyncStorageWrapper } from "apollo3-cache-persist";
+import * as SecureStore from "expo-secure-store";
 import * as Updates from "expo-updates";
 import Toast from "react-native-root-toast";
 
@@ -12,7 +13,7 @@ import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 
 const authLink = setContext(async (_, { headers }) => {
   // get the authentication token from local storage if it exists
-  const token = await AsyncStorage.getItem(ANILIST_ACCESS_TOKEN_STORAGE);
+  const token = await SecureStore.getItemAsync(ANILIST_ACCESS_TOKEN_STORAGE);
 
   const Authorization = token ? `Bearer ${token}` : undefined;
 
@@ -55,7 +56,7 @@ export async function createClient() {
               // TODO: revisit this auto-logout logic
               ("status" in e && e.status === 401)
             ) {
-              await AsyncStorage.removeItem(ANILIST_ACCESS_TOKEN_STORAGE);
+              await SecureStore.deleteItemAsync(ANILIST_ACCESS_TOKEN_STORAGE);
               Toast.show("You've been logged out. Please log in again.", {
                 duration: Toast.durations.LONG,
                 position: Toast.positions.TOP,

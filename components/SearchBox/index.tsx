@@ -41,28 +41,28 @@ export function SearchBox({
           onFocus={() => setIsCancelButtonVisible(true)}
           placeholderTextColor={darkTheme.inputPlaceholder}
         />
-        {(textInputProps.value?.length ?? 0) > 0 && (
+        {(textInputProps.value?.length ?? 0) > 0 ? (
           <PressableOpacity onPress={onClearPress}>
             <Image
               style={styles.clearIcon}
               source={require("yep/assets/icons/clear.png")}
             />
           </PressableOpacity>
-        )}
+        ) : null}
       </View>
-      {isCancelButtonVisible && (
+      {isCancelButtonVisible ? (
         <PressableOpacity
           onPress={() => {
             setIsCancelButtonVisible(false);
             // eslint doesn't understand optional chaining
-            inputRef.current?.blur();  
+            inputRef.current?.blur();
             onCancelPress();
           }}
           style={{ marginLeft: 8 }}
         >
           <Text style={styles.cancelLabel}>Cancel</Text>
         </PressableOpacity>
-      )}
+      ) : null}
     </View>
   );
 }

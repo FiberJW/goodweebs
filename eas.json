@@ -10,7 +10,8 @@
       "distribution": "internal",
       "channel": "development",
       "ios": {
-        "resourceClass": "medium"
+        "resourceClass": "medium",
+        "simulator": true
       },
       "android": {
         "resourceClass": "medium"
