@@ -1,0 +1,27 @@
+name: Preview
+
+on:
+  workflow_dispatch: {}
+  pull_request:
+    branches:
+      - senpai
+
+jobs:
+  build_ios:
+    name: Build iOS
+    type: build
+    params:
+      platform: ios
+      profile: preview
+
+  build_android:
+    name: Build Android
+    type: build
+    params:
+      platform: android
+      profile: preview
+
+  comment:
+    name: Comment on PR
+    after: [build_ios, build_android]
+    type: github-comment
