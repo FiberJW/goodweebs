@@ -6,12 +6,6 @@ import {
   AnimeFragmentFragment,
   UpdateProgressMutation,
   UpdateProgressMutationVariables,
-  GetAnimeQuery,
-  MediaList,
-  GetAnimeDocument,
-  MediaListStatus,
-  refetchGetAnimeQuery,
-  refetchGetAnimeListQuery,
 } from "yep/graphql/generated";
 import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
 import { useDebouncedMutation } from "yep/hooks/helpers";
@@ -22,98 +16,78 @@ type Props = {
     progress: number;
     media: AnimeFragmentFragment | null;
   };
-  refetchList: () => Promise<void>;
-  refetchListVariables: { userId?: number; status?: MediaListStatus | null };
   first: boolean;
   last: boolean;
 };
 
-export function AnimeListItemContainer({
-  seedData,
-  refetchList,
-  refetchListVariables,
-  first,
-  last,
-}: Props) {
-  const [progressShadow, setProgressShadow] = useState(seedData.progress);
-  const [shouldShowProgressShadow, setShouldShowProgressShadow] =
-    useState(false);
+export function AnimeListItemContainer({ seedData, first, last }: Props) {
+  const mediaListEntryId = seedData.media?.mediaListEntry?.id;
+  const cacheProgress = seedData.media?.mediaListEntry?.progress ?? 0;
+  const progressUpperBound = seedData.media?.episodes;
+
+  // Local state for instant UI feedback
+  const [displayProgress, setDisplayProgress] = useState(cacheProgress);
+
+  // Sync when cache updates (e.g., from server response)
+  useEffect(() => {
+    setDisplayProgress(cacheProgress);
+  }, [cacheProgress]);
 
   const updateProgressDebounced = useDebouncedMutation<
     UpdateProgressMutation,
     UpdateProgressMutationVariables
   >({
     mutationDocument: UpdateProgress,
-    makeUpdateFunction: (variables) => (proxy) => {
-      if (!variables) return;
-      // Read the data from our cache for this query.
-      const proxyData = proxy.readQuery<GetAnimeQuery>({
-        query: GetAnimeDocument,
-        variables: { id: seedData.media?.id },
+    makeUpdateFunction: (variables) => (cache) => {
+      if (!mediaListEntryId || variables?.progress === undefined) return;
+
+      // Direct cache update for optimistic UI
+      cache.modify({
+        id: cache.identify({ __typename: "MediaList", id: mediaListEntryId }),
+        fields: {
+          progress: () => variables.progress,
+        },
       });
-
-      if (!proxyData) return;
-
-      if (proxyData?.Media?.mediaListEntry) {
-        // Write our data back to the cache with the new progress in it
-        proxy.writeQuery<GetAnimeQuery>({
-          query: GetAnimeDocument,
-          variables: { id: proxyData.Media?.id },
-          data: {
-            ...proxyData,
-            Media: {
-              ...proxyData.Media,
-              id: proxyData.Media.id as number,
-              mediaListEntry: {
-                ...(proxyData.Media.mediaListEntry as MediaList),
-                progress: variables?.progress,
-              },
-            },
-          },
-        });
-      }
-
-      if (variables.progress === proxyData.Media?.episodes) {
-        // TODO: show dropdown alert to notify that this anime was moved to "completed" list
-        refetchList();
-      }
     },
-    refetchQueries: [
-      refetchGetAnimeQuery({ id: seedData.media?.id }),
-      refetchGetAnimeListQuery(refetchListVariables),
-    ],
+    wait: 0,
   });
 
-  const progress =
-    (shouldShowProgressShadow ? progressShadow : null) ??
-    seedData.progress ??
-    0;
-
-  useEffect(() => {
-    // show live query
-    setShouldShowProgressShadow(false);
-  }, [seedData.media?.mediaListEntry?.progress]);
+  function clampProgress(value: number) {
+    const clamped = Math.max(value, 0);
+    return typeof progressUpperBound === "number"
+      ? Math.min(clamped, progressUpperBound)
+      : clamped;
+  }
 
   async function changeProgress(type: "inc" | "dec", increment = 1) {
-    // optimistic UI updates aren't fast enough
-    setProgressShadow((p) => (type === "inc" ? p + increment : p - increment));
-    setShouldShowProgressShadow(true);
-    const newProgress =
-      type === "inc" ? progress + increment : progress - increment;
+    if (!mediaListEntryId) return;
 
+    const newProgress = clampProgress(
+      type === "inc"
+        ? displayProgress + increment
+        : displayProgress - increment,
+    );
+    if (newProgress === displayProgress) return;
+
+    // Instant UI update
+    setDisplayProgress(newProgress);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
-    await updateProgressDebounced({
-      id: seedData.media?.mediaListEntry?.id,
-      progress: newProgress,
-    });
+    try {
+      await updateProgressDebounced({
+        id: mediaListEntryId,
+        progress: newProgress,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
     <AnimeListItem
-      progress={progress}
-      onIncrement={async () => changeProgress("inc")}
-      onDecrement={async () => changeProgress("dec")}
+      progress={displayProgress}
+      onIncrement={() => changeProgress("inc")}
+      onDecrement={() => changeProgress("dec")}
       media={seedData.media as AnimeFragmentFragment}
       first={first}
       last={last}

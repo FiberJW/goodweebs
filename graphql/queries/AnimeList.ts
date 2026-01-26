@@ -20,8 +20,9 @@ export const GetAnimeList = gql`
         entries {
           id
           mediaId
-          score
           progress
+          status
+          score(format: POINT_10)
           media {
             ...AnimeFragment
           }

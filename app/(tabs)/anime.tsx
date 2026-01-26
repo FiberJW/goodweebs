@@ -47,7 +47,7 @@ export default function Anime() {
       userId: viewerData?.Viewer?.id,
       status,
     },
-    fetchPolicy: "no-cache",
+    fetchPolicy: "cache-and-network",
     notifyOnNetworkStatusChange: true,
   });
 
@@ -154,16 +154,6 @@ export default function Anime() {
               id: item.id,
               progress: item.progress ?? 0,
               media: item.media ?? null,
-            }}
-            refetchList={async () => {
-              await refetch({
-                userId: viewerData?.Viewer?.id,
-                status,
-              });
-            }}
-            refetchListVariables={{
-              userId: viewerData?.Viewer?.id,
-              status,
             }}
             first={index === 0}
             last={index === list.length - 1}
