@@ -1,5 +1,7 @@
 import { gql } from "graphql-tag";
 
+import { CharacterData } from "./Character";
+
 export const AnimeRelationFragment = gql`
   fragment AnimeRelationFragment on Media {
     id
@@ -90,10 +92,10 @@ export const AnimeFragment = gql`
       timeUntilAiring
     }
     mediaListEntry {
+      id
       progress
       status
       score(format: POINT_10)
-      id
     }
     relations {
       edges {

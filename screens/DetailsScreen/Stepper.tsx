@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 import { darkTheme } from "yep/themes";
@@ -7,31 +7,24 @@ import { Manrope } from "yep/typefaces";
 import { StepperButton } from "./StepperButton";
 
 type Props = {
-  defaultValue: number;
+  value: number;
   label: string;
   upperBound?: number;
   lowerBound: number;
-  onChange: (value: number) => void;
+  onIncrement: () => void;
+  onDecrement: () => void;
   icon?: React.ReactNode;
 };
 
 export function Stepper({
-  defaultValue,
+  value,
   upperBound,
   lowerBound,
   label,
-  onChange,
+  onIncrement,
+  onDecrement,
   icon,
 }: Props) {
-  const [count, setCount] = useState(defaultValue);
-
-  useEffect(
-    function setCountWhenDefaultValueChanges() {
-      setCount(defaultValue);
-    },
-    [defaultValue],
-  );
-
   return (
     <View style={styles.stepperWithLabelContainer}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -41,22 +34,14 @@ export function Stepper({
       <View style={styles.stepperContainer}>
         <StepperButton
           type="decrement"
-          disabled={count === lowerBound}
-          onPress={() => {
-            const newCount = count - 1;
-            setCount(newCount);
-            onChange(newCount);
-          }}
+          disabled={value === lowerBound}
+          onPress={onDecrement}
         />
-        <Text style={styles.stepperCount}>{count}</Text>
+        <Text style={styles.stepperCount}>{value}</Text>
         <StepperButton
           type="increment"
-          disabled={count === upperBound}
-          onPress={() => {
-            const newCount = count + 1;
-            setCount(newCount);
-            onChange(newCount);
-          }}
+          disabled={value === upperBound}
+          onPress={onIncrement}
         />
       </View>
     </View>

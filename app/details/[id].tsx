@@ -23,7 +23,6 @@ import { LikeButton } from "yep/components/PosterAndTitle/LikeButton";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { MediaListStatusWithLabel, MediaStatusWithLabel } from "yep/constants";
 import {
-  GetAnimeQuery,
   MediaStatus,
   UpdateStatusMutation,
   UpdateStatusMutationVariables,
@@ -34,13 +33,10 @@ import {
   MediaRelation,
   AnimeRelationFragmentFragment,
   MediaType,
-  MediaList,
   useGetAnimeQuery,
-  GetAnimeDocument,
   UpdateProgressDocument,
   UpdateScoreDocument,
   UpdateStatusDocument,
-  refetchGetAnimeQuery,
   useToggleFavoriteMutation,
   RemoveFromListMutation,
   RemoveFromListMutationVariables,
@@ -130,37 +126,37 @@ export default function Details() {
     }
   }, [data, navigation]);
 
+  const mediaListEntryId = data?.Media?.mediaListEntry?.id;
+  const cacheScore = data?.Media?.mediaListEntry?.score ?? 0;
+  const cacheProgress = data?.Media?.mediaListEntry?.progress ?? 0;
+  const progressUpperBound = data?.Media?.episodes;
+  const [displayScore, setDisplayScore] = useState(cacheScore);
+  const [displayProgress, setDisplayProgress] = useState(cacheProgress);
+
+  useEffect(() => {
+    setDisplayScore(cacheScore);
+  }, [cacheScore]);
+
+  useEffect(() => {
+    setDisplayProgress(cacheProgress);
+  }, [cacheProgress]);
+
   const updateStatus = useDebouncedMutation<
     UpdateStatusMutation,
     UpdateStatusMutationVariables
   >({
     mutationDocument: UpdateStatusDocument,
-    makeUpdateFunction: (variables) => (proxy) => {
-      const proxyData = proxy.readQuery<GetAnimeQuery>({
-        query: GetAnimeDocument,
-        variables: { id: animeId },
-      });
+    makeUpdateFunction: (variables) => (cache) => {
+      if (!mediaListEntryId || !variables?.status) return;
 
-      if (proxyData?.Media?.mediaListEntry) {
-        proxy.writeQuery<GetAnimeQuery>({
-          query: GetAnimeDocument,
-          variables: { id: animeId },
-          data: {
-            ...proxyData,
-            Media: {
-              ...proxyData?.Media,
-              id: proxyData?.Media?.id as number,
-              mediaListEntry: {
-                ...(proxyData?.Media?.mediaListEntry as MediaList),
-                status: variables?.status,
-              },
-            },
-          },
-        });
-      }
+      cache.modify({
+        id: cache.identify({ __typename: "MediaList", id: mediaListEntryId }),
+        fields: {
+          status: () => variables.status,
+        },
+      });
     },
     wait: 0,
-    refetchQueries: [refetchGetAnimeQuery({ id: animeId })],
   });
 
   const removeFromList = useDebouncedMutation<
@@ -168,29 +164,21 @@ export default function Details() {
     RemoveFromListMutationVariables
   >({
     mutationDocument: RemoveFromListDocument,
-    makeUpdateFunction: (_variables) => (proxy) => {
-      const proxyData = proxy.readQuery<GetAnimeQuery>({
-        query: GetAnimeDocument,
-        variables: { id: animeId },
-      });
+    makeUpdateFunction: () => (cache) => {
+      if (!mediaListEntryId) return;
 
-      if (proxyData?.Media?.mediaListEntry) {
-        proxy.writeQuery<GetAnimeQuery>({
-          query: GetAnimeDocument,
-          variables: { id: animeId },
-          data: {
-            ...proxyData,
-            Media: {
-              ...proxyData?.Media,
-              id: proxyData?.Media?.id as number,
-              mediaListEntry: undefined,
-            },
-          },
-        });
-      }
+      cache.modify({
+        id: cache.identify({ __typename: "Media", id: animeId }),
+        fields: {
+          mediaListEntry: () => null,
+        },
+      });
+      cache.evict({
+        id: cache.identify({ __typename: "MediaList", id: mediaListEntryId }),
+      });
+      cache.gc();
     },
     wait: 0,
-    refetchQueries: [refetchGetAnimeQuery({ id: animeId })],
   });
 
   const updateScore = useDebouncedMutation<
@@ -198,31 +186,17 @@ export default function Details() {
     UpdateScoreMutationVariables
   >({
     mutationDocument: UpdateScoreDocument,
-    makeUpdateFunction: (variables) => (proxy) => {
-      const proxyData = proxy.readQuery<GetAnimeQuery>({
-        query: GetAnimeDocument,
-        variables: { id: animeId },
-      });
+    makeUpdateFunction: (variables) => (cache) => {
+      if (!mediaListEntryId || variables?.scoreRaw === undefined) return;
 
-      if (proxyData?.Media?.mediaListEntry) {
-        proxy.writeQuery<GetAnimeQuery>({
-          query: GetAnimeDocument,
-          variables: { id: animeId },
-          data: {
-            ...proxyData,
-            Media: {
-              ...proxyData?.Media,
-              id: proxyData?.Media?.id as number,
-              mediaListEntry: {
-                ...(proxyData?.Media?.mediaListEntry as MediaList),
-                score: (variables?.scoreRaw ?? 0) / 10,
-              },
-            },
-          },
-        });
-      }
+      cache.modify({
+        id: cache.identify({ __typename: "MediaList", id: mediaListEntryId }),
+        fields: {
+          score: () => (variables.scoreRaw ?? 0) / 10,
+        },
+      });
     },
-    refetchQueries: [refetchGetAnimeQuery({ id: animeId })],
+    wait: 0,
   });
 
   const updateProgress = useDebouncedMutation<
@@ -230,36 +204,69 @@ export default function Details() {
     UpdateProgressMutationVariables
   >({
     mutationDocument: UpdateProgressDocument,
-    makeUpdateFunction: (variables) => (proxy) => {
-      const proxyData = proxy.readQuery<GetAnimeQuery>({
-        query: GetAnimeDocument,
-        variables: { id: animeId },
+    makeUpdateFunction: (variables) => (cache) => {
+      if (!mediaListEntryId || variables?.progress === undefined) return;
+
+      cache.modify({
+        id: cache.identify({ __typename: "MediaList", id: mediaListEntryId }),
+        fields: {
+          progress: () => variables.progress,
+        },
       });
-
-      if (proxyData?.Media?.mediaListEntry) {
-        proxy.writeQuery<GetAnimeQuery>({
-          query: GetAnimeDocument,
-          variables: { id: animeId },
-          data: {
-            ...proxyData,
-            Media: {
-              ...proxyData?.Media,
-              id: proxyData?.Media?.id as number,
-              mediaListEntry: {
-                ...(proxyData?.Media?.mediaListEntry as MediaList),
-                progress: variables?.progress,
-              },
-            },
-          },
-        });
-      }
-
-      if (variables?.progress === proxyData?.Media?.episodes) {
-        // TODO: show dropdown alert to notify that this anime was moved to "completed" list
-      }
     },
-    refetchQueries: [refetchGetAnimeQuery({ id: animeId })],
+    wait: 0,
   });
+
+  function clampScore(value: number) {
+    return Math.min(Math.max(value, 0), 10);
+  }
+
+  function clampProgress(value: number) {
+    const clamped = Math.max(value, 0);
+    return typeof progressUpperBound === "number"
+      ? Math.min(clamped, progressUpperBound)
+      : clamped;
+  }
+
+  async function changeScore(type: "inc" | "dec") {
+    if (!mediaListEntryId) return;
+
+    const nextScore = clampScore(
+      type === "inc" ? displayScore + 1 : displayScore - 1,
+    );
+    if (nextScore === displayScore) return;
+    setDisplayScore(nextScore);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    try {
+      await updateScore({
+        id: mediaListEntryId,
+        scoreRaw: nextScore * 10,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function changeProgress(type: "inc" | "dec") {
+    if (!mediaListEntryId) return;
+
+    const nextProgress = clampProgress(
+      type === "inc" ? displayProgress + 1 : displayProgress - 1,
+    );
+    if (nextProgress === displayProgress) return;
+    setDisplayProgress(nextProgress);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    try {
+      await updateProgress({
+        id: mediaListEntryId,
+        progress: nextProgress,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   async function refetchFromScroll() {
     setIsRefetchingFromScrollOrMount(true);
@@ -341,7 +348,17 @@ export default function Details() {
                         variables: {
                           animeId: data?.Media?.id,
                         },
-                        refetchQueries: [refetchGetAnimeQuery({ id: animeId })],
+                        update: (cache) => {
+                          cache.modify({
+                            id: cache.identify({
+                              __typename: "Media",
+                              id: animeId,
+                            }),
+                            fields: {
+                              isFavourite: (current) => !current,
+                            },
+                          });
+                        },
                       });
                     } catch (error) {
                       console.error(error);
@@ -508,20 +525,11 @@ export default function Details() {
                     source={require("yep/assets/icons/star.png")}
                   />
                 }
-                defaultValue={data?.Media?.mediaListEntry?.score ?? 5}
+                value={displayScore}
                 upperBound={10}
                 lowerBound={0}
-                onChange={async (s) => {
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                  try {
-                    await updateScore({
-                      id: data?.Media?.mediaListEntry?.id,
-                      scoreRaw: s * 10,
-                    });
-                  } catch (e) {
-                    console.error(e);
-                  }
-                }}
+                onIncrement={() => changeScore("inc")}
+                onDecrement={() => changeScore("dec")}
               />
               <Stepper
                 icon={
@@ -531,20 +539,11 @@ export default function Details() {
                   />
                 }
                 label="Progress"
-                defaultValue={data?.Media?.mediaListEntry?.progress ?? 0}
+                value={displayProgress}
                 upperBound={data?.Media?.episodes ?? undefined}
                 lowerBound={0}
-                onChange={async (progress) => {
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                  try {
-                    await updateProgress({
-                      id: data?.Media?.mediaListEntry?.id,
-                      progress,
-                    });
-                  } catch (e) {
-                    console.error(e);
-                  }
-                }}
+                onIncrement={() => changeProgress("inc")}
+                onDecrement={() => changeProgress("dec")}
               />
             </>
           ) : null}

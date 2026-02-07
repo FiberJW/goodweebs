@@ -4,6 +4,9 @@ export const UpdateProgress = gql`
   mutation UpdateProgress($id: Int, $progress: Int) {
     SaveMediaListEntry(id: $id, progress: $progress) {
       id
+      progress
+      status
+      score(format: POINT_10)
     }
   }
 `;

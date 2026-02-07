@@ -2,7 +2,6 @@ import {
   MutationFunctionOptions,
   useMutation,
   FetchResult,
-  PureQueryOptions,
   MutationUpdaterFunction,
   DefaultContext,
   ApolloCache,
@@ -19,7 +18,7 @@ export function useNow(interval: "second" | "minute" = "minute") {
   useEffect(() => {
     const handle = setInterval(
       () => setNow(new Date()),
-      interval === "second" ? 1 * 1000 : 60 * 1000
+      interval === "second" ? 1 * 1000 : 60 * 1000,
     );
 
     return () => clearInterval(handle);
@@ -35,11 +34,10 @@ export function useDebouncedMutation<
   mutationDocument,
   makeUpdateFunction,
   wait = 500,
-  refetchQueries,
 }: {
   mutationDocument: DocumentNode;
   makeUpdateFunction?: (
-    variables?: MutationVariables
+    variables?: MutationVariables,
   ) => MutationUpdaterFunction<
     MutationData,
     MutationVariables,
@@ -47,10 +45,9 @@ export function useDebouncedMutation<
     ApolloCache<any>
   >;
   wait?: number;
-  refetchQueries?: PureQueryOptions[];
 }) {
   const [originalMutation] = useMutation<MutationData, MutationVariables>(
-    mutationDocument
+    mutationDocument,
   );
 
   const abortController = useRef<AbortController>(null);
@@ -62,7 +59,7 @@ export function useDebouncedMutation<
         }: MutationFunctionOptions<MutationData, MutationVariables>) => Promise<
           FetchResult<MutationData>
         >,
-        variables?: MutationVariables
+        variables?: MutationVariables,
       ) => {
         const controller = new AbortController();
         abortController.current = controller;
@@ -71,8 +68,8 @@ export function useDebouncedMutation<
           context: { fetchOptions: { signal: controller.signal } },
         });
       },
-      wait
-    )
+      wait,
+    ),
   );
 
   const abortLatest = () => abortController.current?.abort();
@@ -91,8 +88,6 @@ export function useDebouncedMutation<
       variables,
       context,
       update,
-      refetchQueries,
-      awaitRefetchQueries: refetchQueries ? true : undefined,
     });
   };
 
@@ -100,7 +95,7 @@ export function useDebouncedMutation<
     abortLatest();
     return await debouncedMutation.current(
       mutationWithOptimisticUI,
-      newVariables
+      newVariables,
     );
   };
 }
@@ -131,7 +126,7 @@ const defaultValues: { [key in StorageKeys]: any } = {
 
 export function usePersistedState<T>(
   key: StorageKeys,
-  options?: { id?: string; doNotPersist?: boolean }
+  options?: { id?: string; doNotPersist?: boolean },
 ): [T, (data: T) => T] {
   const [storageItem, setStorageItem] = useState<T>(defaultValues[key]);
 
@@ -162,7 +157,7 @@ export function usePersistedState<T>(
 
       if (!doNotPersist) getStorageItem();
     },
-    [doNotPersist, storageKey, storageItem]
+    [doNotPersist, storageKey, storageItem],
   );
 
   return [storageItem, updateStorageItem];
