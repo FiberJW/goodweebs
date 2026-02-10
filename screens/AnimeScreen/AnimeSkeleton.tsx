@@ -4,29 +4,18 @@ import { StyleSheet, View } from "react-native";
 import { SkeletonShimmerBlock } from "yep/components/SkeletonShimmerBlock";
 import { darkTheme } from "yep/themes";
 
-const STATUS_CHIP_WIDTHS = [144, 118, 164, 122];
-
 type Props = {
   rowCount?: number;
 };
 
 export function AnimeSkeleton({ rowCount = 8 }: Props) {
-  const rows = useMemo(() => Array.from({ length: rowCount }, (_, i) => i), [
-    rowCount,
-  ]);
+  const rows = useMemo(
+    () => Array.from({ length: rowCount }, (_, i) => i),
+    [rowCount],
+  );
 
   return (
     <View style={styles.container}>
-      <View style={styles.statusChipRow}>
-        {STATUS_CHIP_WIDTHS.map((width) => (
-          <SkeletonShimmerBlock
-            key={width}
-            borderRadius={100}
-            height={48}
-            width={width}
-          />
-        ))}
-      </View>
       <SkeletonShimmerBlock
         borderRadius={4}
         height={13}
@@ -39,7 +28,11 @@ export function AnimeSkeleton({ rowCount = 8 }: Props) {
             <View style={styles.row}>
               <SkeletonShimmerBlock borderRadius={8} height={80} width={56} />
               <View style={styles.titleColumn}>
-                <SkeletonShimmerBlock borderRadius={4} height={16} width="86%" />
+                <SkeletonShimmerBlock
+                  borderRadius={4}
+                  height={16}
+                  width="86%"
+                />
                 <SkeletonShimmerBlock
                   borderRadius={4}
                   height={13}
@@ -50,8 +43,16 @@ export function AnimeSkeleton({ rowCount = 8 }: Props) {
               <View style={styles.progressColumn}>
                 <SkeletonShimmerBlock borderRadius={8} height={30} width={84} />
                 <View style={styles.progressButtons}>
-                  <SkeletonShimmerBlock borderRadius={100} height={32} width={48} />
-                  <SkeletonShimmerBlock borderRadius={100} height={32} width={48} />
+                  <SkeletonShimmerBlock
+                    borderRadius={100}
+                    height={32}
+                    width={48}
+                  />
+                  <SkeletonShimmerBlock
+                    borderRadius={100}
+                    height={32}
+                    width={48}
+                  />
                 </View>
               </View>
             </View>
@@ -66,7 +67,6 @@ export function AnimeSkeleton({ rowCount = 8 }: Props) {
 const styles = StyleSheet.create({
   container: {
     gap: 16,
-    padding: 16,
   },
   count: {
     marginTop: -2,

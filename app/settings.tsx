@@ -24,12 +24,12 @@ import { useAccessToken } from "yep/useAccessToken";
 
 export default function Settings() {
   const [hideScores, setHideScores] = usePersistedState<boolean>(
-    StorageKeys.HIDE_SCORES_GLOBAL
+    StorageKeys.HIDE_SCORES_GLOBAL,
   );
   const [optOutCrashReporting, setOptOutCrashReporting] =
     usePersistedState<boolean>(StorageKeys.OPT_OUT_CRASH_REPORTING);
   const [optOutAnalytics, setOptOutAnalytics] = usePersistedState<boolean>(
-    StorageKeys.OPT_OUT_ANALYTICS
+    StorageKeys.OPT_OUT_ANALYTICS,
   );
   const [shouldPersistScoreVisibility, setShouldPersistScoreVisibility] =
     usePersistedState<boolean>(StorageKeys.SHOULD_PERSIST_SCORE_VISIBILITY);
@@ -64,7 +64,7 @@ export default function Settings() {
               useBuiltInState={false}
               isChecked={hideScores}
               size={24}
-              fillColor={darkTheme.button}
+              fillColor={darkTheme.text}
               unFillColor="black"
               text="Hide scores by default"
               innerIconStyle={{
@@ -85,7 +85,7 @@ export default function Settings() {
               useBuiltInState={false}
               isChecked={shouldPersistScoreVisibility}
               size={24}
-              fillColor={darkTheme.button}
+              fillColor={darkTheme.text}
               unFillColor="black"
               text="Should persist score visibility per anime"
               innerIconStyle={{
@@ -120,7 +120,7 @@ export default function Settings() {
               useBuiltInState={false}
               isChecked={optOutCrashReporting}
               size={24}
-              fillColor={darkTheme.button}
+              fillColor={darkTheme.text}
               unFillColor="black"
               text="Opt-out of crash reporting"
               innerIconStyle={{
@@ -141,7 +141,7 @@ export default function Settings() {
               useBuiltInState={false}
               isChecked={optOutAnalytics}
               size={24}
-              fillColor={darkTheme.button}
+              fillColor={darkTheme.text}
               unFillColor="black"
               text="Opt-out of session analytics"
               innerIconStyle={{
@@ -166,7 +166,7 @@ export default function Settings() {
           style={{ alignSelf: "center" }}
           onPress={() => {
             Linking.openURL(
-              "https://fiberjw.notion.site/Privacy-Policy-for-Goodweebs-1f70379bbe828028b5eed7413e8184e5?pvs=4"
+              "https://fiberjw.notion.site/Privacy-Policy-for-Goodweebs-1f70379bbe828028b5eed7413e8184e5?pvs=4",
             );
           }}
         >
@@ -191,7 +191,7 @@ export default function Settings() {
                   style: "destructive",
                   onPress: async () => {
                     await SecureStore.deleteItemAsync(
-                      ANILIST_ACCESS_TOKEN_STORAGE
+                      ANILIST_ACCESS_TOKEN_STORAGE,
                     );
                     setAccessToken(undefined);
                     router.replace("/auth");
