@@ -8,7 +8,6 @@ import { aniListBlue } from "yep/colors";
 import { Button } from "yep/components/Button";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { useAniListAuthRequest } from "yep/hooks/auth";
-import { getString } from "yep/strings";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
@@ -53,12 +52,14 @@ export default function AuthScreen() {
               style={styles.logo}
               source={require("yep/assets/launch/logo-wrapped-dark.png")}
             />
-            <Text style={styles.tagline}>{getString("tagline")}</Text>
+            <Text style={styles.tagline}>
+              An anime tracking app powered by AniList and Expo.
+            </Text>
           </View>
           <View style={styles.buttonGroup}>
             <Button
               color={aniListBlue}
-              label="Log In With AniList"
+              label="Log in with AniList"
               onPress={async () => {
                 const result = await promptAsync();
 
@@ -76,7 +77,7 @@ export default function AuthScreen() {
             />
 
             <Button
-              label="Continue Without Logging In"
+              label="Continue without logging in"
               onPress={async () => {
                 Alert.alert(
                   "",

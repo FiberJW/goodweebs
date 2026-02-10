@@ -462,7 +462,7 @@ export default function Details() {
               label={
                 MediaListStatusWithLabel.find(
                   (x) => x.value === data?.Media?.mediaListEntry?.status,
-                )?.label ?? "Add to List"
+                )?.label ?? "Add to list"
               }
               onPress={() => {
                 const options = MediaListStatusWithLabel.map(
@@ -476,7 +476,7 @@ export default function Details() {
 
                 const mediaListEntry = data?.Media?.mediaListEntry;
 
-                mediaListEntry && options.push("Remove from List");
+                mediaListEntry && options.push("Remove from list");
                 options.push("Cancel");
 
                 const destructiveButtonIndex = mediaListEntry
@@ -587,7 +587,7 @@ export default function Details() {
                   fontSize: 20,
                 }}
               >
-                External Links
+                External links
               </Text>
               <View style={{ height: 16 }} />
               <View style={{ gap: 8 }}>

@@ -177,7 +177,7 @@ export default function Settings() {
               fontSize: 16,
             }}
           >
-            Privacy Policy
+            Privacy policy
           </Text>
         </PressableOpacity>
         {accessToken ? (

@@ -19,7 +19,6 @@ import {
 } from "yep/graphql/generated";
 import { useAniListAuthRequest } from "yep/hooks/auth";
 import { AnimeSkeleton } from "yep/screens/AnimeScreen/AnimeSkeleton";
-import { getString, StringCase } from "yep/strings";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
@@ -72,7 +71,7 @@ export default function Anime() {
     <View
       style={[styles.outerContainer, { backgroundColor: darkTheme.background }]}
     >
-      <Header label={getString("anime", StringCase.TITLE)} />
+      <Header label="Anime" />
 
       {isInitialAnimeLoading ? (
         <AnimeSkeleton />
@@ -110,14 +109,14 @@ export default function Anime() {
           ListEmptyComponent={() =>
             refreshing ? null : (
               <EmptyState
-                title={!accessToken ? "Log In" : "Empty list"}
+                title={!accessToken ? "Log in" : "Empty list"}
                 description={
                   !accessToken
                     ? "Start tracking your anime by using an AniList account!"
                     : "Explore the world of anime by adding some shows to your list!"
                 }
                 cta={{
-                  label: !accessToken ? "Log In" : "Discover new anime",
+                  label: !accessToken ? "Log in" : "Discover new anime",
                   onPress: async () => {
                     if (!accessToken) {
                       const result = await promptAsync();

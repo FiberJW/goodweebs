@@ -18,7 +18,6 @@ import {
 } from "yep/graphql/generated";
 import { DiscoverPoster } from "yep/screens/DiscoverScreen/DiscoverPoster";
 import { DiscoverSkeletonGrid } from "yep/screens/DiscoverScreen/DiscoverSkeleton";
-import { getString, StringCase } from "yep/strings";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { notEmpty } from "yep/utils";
@@ -71,7 +70,7 @@ export default function Discover() {
     <View
       style={[styles.outerContainer, { backgroundColor: darkTheme.background }]}
     >
-      <Header label={getString("discover", StringCase.TITLE)} />
+      <Header label="Discover" />
       <SearchBox
         value={searchTerm}
         onChangeText={(text) => setSearchTerm(text)}

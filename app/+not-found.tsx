@@ -14,10 +14,10 @@ export default function NotFound() {
   return (
     <View style={{ flex: 1, backgroundColor: darkTheme.background }}>
       <EmptyState
-        title="Page Not Found"
+        title="Page not found"
         description="The page you're looking for doesn't exist."
         cta={{
-          label: "Go Home",
+          label: "Go home",
           onPress: () => router.replace("/(tabs)/discover"),
         }}
       />

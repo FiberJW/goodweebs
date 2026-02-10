@@ -17,7 +17,6 @@ import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { useGetViewerQuery } from "yep/graphql/generated";
 import { ProfileSkeleton } from "yep/screens/ProfileScreen/ProfileSkeleton";
-import { StringCase, getString } from "yep/strings";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { notEmpty, getTitle } from "yep/utils";
@@ -73,7 +72,7 @@ export default function Profile() {
       style={[styles.outerContainer, { backgroundColor: darkTheme.background }]}
     >
       <Header
-        label={getString("profile", StringCase.TITLE)}
+        label="Profile"
         rightSlot={
           <PressableOpacity onPress={() => router.push("/settings")}>
             <Image
@@ -133,11 +132,11 @@ export default function Profile() {
                 </View>
                 <View style={styles.statsRow}>
                   <Stat
-                    label="Total Anime"
+                    label="Total anime"
                     value={viewerData.Viewer.statistics?.anime?.count ?? 0}
                   />
                   <Stat
-                    label="Days Watched"
+                    label="Days watched"
                     value={Math.round(
                       (viewerData.Viewer.statistics?.anime?.minutesWatched ??
                         0) /
@@ -150,7 +149,7 @@ export default function Profile() {
             </OptionalBackgroundImage>
             {animeList.length ? (
               <View>
-                <Text style={styles.listHeader}>Favorite Anime</Text>
+                <Text style={styles.listHeader}>Favorite anime</Text>
                 <FlatList
                   contentContainerStyle={[
                     styles.listContentContainer,
@@ -178,7 +177,7 @@ export default function Profile() {
             ) : null}
             {characterList.length ? (
               <View>
-                <Text style={styles.listHeader}>Favorite Characters</Text>
+                <Text style={styles.listHeader}>Favorite characters</Text>
                 <FlatList
                   horizontal
                   showsHorizontalScrollIndicator={false}

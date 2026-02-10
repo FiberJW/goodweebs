@@ -32,8 +32,8 @@ export const MediaListStatusWithLabel: {
   value: MediaListStatus;
 }[] = [
   { label: "Watching", value: MediaListStatus.Current },
-  { label: "On Hold", value: MediaListStatus.Paused },
-  { label: "Plan to Watch", value: MediaListStatus.Planning },
+  { label: "On hold", value: MediaListStatus.Paused },
+  { label: "Plan to watch", value: MediaListStatus.Planning },
   { label: "Dropped", value: MediaListStatus.Dropped },
   { label: "Completed", value: MediaListStatus.Completed },
 ];
@@ -50,7 +50,7 @@ export const MediaStatusWithLabel: {
 
 export const Sorts: { label: string; value: MediaListSort }[] = [
   // { label: "Title", value: MediaListSort.MediaTitleEnglish }, // Currently Bugged https://github.com/AniList/ApiV2-GraphQL-Docs/issues/94
-  { label: "Last Updated", value: MediaListSort.UpdatedTimeDesc },
-  { label: "Highest Rated", value: MediaListSort.ScoreDesc },
-  { label: "Lowest Rated", value: MediaListSort.Score },
+  { label: "Last updated", value: MediaListSort.UpdatedTimeDesc },
+  { label: "Highest rated", value: MediaListSort.ScoreDesc },
+  { label: "Lowest rated", value: MediaListSort.Score },
 ];
