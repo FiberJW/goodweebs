@@ -2,10 +2,17 @@
 const { defineConfig, globalIgnores } = require("eslint/config");
 const expoConfig = require("eslint-config-expo/flat");
 const reactCompiler = require("eslint-plugin-react-compiler");
+const reactHooks = require("eslint-plugin-react-hooks");
 
 module.exports = defineConfig([
   expoConfig,
   reactCompiler.configs.recommended,
+  {
+    plugins: {
+      "react-hooks": reactHooks,
+    },
+    rules: reactHooks.configs.recommended.rules,
+  },
   globalIgnores(["dist/*", "graphql/generated.tsx"]),
   {
     rules: {
