@@ -10,11 +10,10 @@ import {
   Text,
   Linking,
 } from "react-native";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { black } from "yep/colors";
 import { Button } from "yep/components/Button";
+import { CheckboxRow } from "yep/components/CheckboxRow";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { StorageKeys, usePersistedState } from "yep/hooks/helpers";
@@ -59,48 +58,16 @@ export default function Settings() {
           >
             Display settings
           </Text>
-          <View style={{ flexDirection: "column", gap: 16 }}>
-            <BouncyCheckbox
-              useBuiltInState={false}
-              isChecked={hideScores}
-              size={24}
-              fillColor={darkTheme.text}
-              unFillColor="black"
-              text="Hide scores by default"
-              innerIconStyle={{
-                borderWidth: StyleSheet.hairlineWidth,
-                backgroundColor: black,
-              }}
-              textStyle={{
-                color: darkTheme.subText,
-                fontFamily: Manrope.regular,
-                textDecorationLine: "none",
-                fontSize: 16,
-              }}
-              onPress={() => {
-                setHideScores(!hideScores);
-              }}
+          <View style={styles.checkboxGroup}>
+            <CheckboxRow
+              label="Hide scores by default"
+              value={hideScores}
+              onValueChange={setHideScores}
             />
-            <BouncyCheckbox
-              useBuiltInState={false}
-              isChecked={shouldPersistScoreVisibility}
-              size={24}
-              fillColor={darkTheme.text}
-              unFillColor="black"
-              text="Should persist score visibility per anime"
-              innerIconStyle={{
-                borderWidth: StyleSheet.hairlineWidth,
-                backgroundColor: black,
-              }}
-              textStyle={{
-                color: darkTheme.subText,
-                fontFamily: Manrope.regular,
-                textDecorationLine: "none",
-                fontSize: 16,
-              }}
-              onPress={() => {
-                setShouldPersistScoreVisibility(!shouldPersistScoreVisibility);
-              }}
+            <CheckboxRow
+              label="Should persist score visibility per anime"
+              value={shouldPersistScoreVisibility}
+              onValueChange={setShouldPersistScoreVisibility}
             />
           </View>
         </View>
@@ -115,48 +82,16 @@ export default function Settings() {
           >
             Privacy settings
           </Text>
-          <View style={{ flexDirection: "column", gap: 16 }}>
-            <BouncyCheckbox
-              useBuiltInState={false}
-              isChecked={optOutCrashReporting}
-              size={24}
-              fillColor={darkTheme.text}
-              unFillColor="black"
-              text="Opt-out of crash reporting"
-              innerIconStyle={{
-                borderWidth: StyleSheet.hairlineWidth,
-                backgroundColor: black,
-              }}
-              textStyle={{
-                color: darkTheme.subText,
-                fontFamily: Manrope.regular,
-                textDecorationLine: "none",
-                fontSize: 16,
-              }}
-              onPress={() => {
-                setOptOutCrashReporting(!optOutCrashReporting);
-              }}
+          <View style={styles.checkboxGroup}>
+            <CheckboxRow
+              label="Opt-out of crash reporting"
+              value={optOutCrashReporting}
+              onValueChange={setOptOutCrashReporting}
             />
-            <BouncyCheckbox
-              useBuiltInState={false}
-              isChecked={optOutAnalytics}
-              size={24}
-              fillColor={darkTheme.text}
-              unFillColor="black"
-              text="Opt-out of session analytics"
-              innerIconStyle={{
-                borderWidth: StyleSheet.hairlineWidth,
-                backgroundColor: black,
-              }}
-              textStyle={{
-                color: darkTheme.subText,
-                fontFamily: Manrope.regular,
-                textDecorationLine: "none",
-                fontSize: 16,
-              }}
-              onPress={() => {
-                setOptOutAnalytics(!optOutAnalytics);
-              }}
+            <CheckboxRow
+              label="Opt-out of session analytics"
+              value={optOutAnalytics}
+              onValueChange={setOptOutAnalytics}
             />
           </View>
         </View>
@@ -208,6 +143,10 @@ export default function Settings() {
 }
 
 const styles = StyleSheet.create({
+  checkboxGroup: {
+    flexDirection: "column",
+    gap: 16,
+  },
   contentContainer: {
     flex: 1,
     gap: 16,
