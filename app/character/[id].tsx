@@ -12,6 +12,7 @@ import {
   useToggleFavoriteMutation,
   useGetCharacterQuery,
 } from "yep/graphql/generated";
+import { CharacterSkeleton } from "yep/screens/CharacterScreen/CharacterSkeleton";
 
 export default function Character() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -44,7 +45,9 @@ export default function Character() {
       showsVerticalScrollIndicator={false}
     >
       {!data ? (
-        !loading && error ? (
+        loading ? (
+          <CharacterSkeleton />
+        ) : error ? (
           <EmptyState
             title="Could not find character"
             description={`We ran into an unexpected error loading the requested character: ${error?.message}`}

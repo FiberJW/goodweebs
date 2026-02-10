@@ -16,6 +16,7 @@ import { Header } from "yep/components/Header";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { useGetViewerQuery } from "yep/graphql/generated";
+import { ProfileSkeleton } from "yep/screens/ProfileScreen/ProfileSkeleton";
 import { StringCase, getString } from "yep/strings";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
@@ -49,6 +50,7 @@ export default function Profile() {
   const characterList = (
     viewerData?.Viewer?.favourites?.characters?.nodes ?? []
   ).filter(notEmpty);
+  const shouldShowInitialProfileLoading = loadingViewer && !viewerData?.Viewer;
 
   type AnimeItem = (typeof animeList)[number];
   type CharacterItem = (typeof characterList)[number];
@@ -97,7 +99,9 @@ export default function Profile() {
         }
         showsVerticalScrollIndicator={false}
       >
-        {viewerData?.Viewer ? (
+        {shouldShowInitialProfileLoading ? (
+          <ProfileSkeleton />
+        ) : viewerData?.Viewer ? (
           <View style={styles.everythingButTheCTA}>
             <OptionalBackgroundImage>
               <View

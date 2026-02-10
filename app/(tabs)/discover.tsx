@@ -17,6 +17,7 @@ import {
   useSearchAnimeQuery,
 } from "yep/graphql/generated";
 import { DiscoverPoster } from "yep/screens/DiscoverScreen/DiscoverPoster";
+import { DiscoverSkeletonGrid } from "yep/screens/DiscoverScreen/DiscoverSkeleton";
 import { getString, StringCase } from "yep/strings";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
@@ -41,7 +42,12 @@ export default function Discover() {
     notifyOnNetworkStatusChange: true,
   });
 
-  const { data: searchData, loading: loadingSearchData } = useSearchAnimeQuery({
+  const {
+    data: searchData,
+    error: searchError,
+    loading: loadingSearchData,
+    refetch: refetchSearch,
+  } = useSearchAnimeQuery({
     skip: searchTerm.trim().length === 0,
     variables: { search: searchTerm },
     notifyOnNetworkStatusChange: true,
@@ -49,9 +55,16 @@ export default function Discover() {
 
   const searchList = (searchData?.Page?.media ?? []).filter(notEmpty);
   const trendingList = (trendingData?.Page?.media ?? []).filter(notEmpty);
+  const isSearchLoading = showSearchResultsView && loadingSearchData;
+  const isSearchError = showSearchResultsView && Boolean(searchError);
+  const isTrendingInitialLoading = !showSearchResultsView && loadingTrending;
 
   async function refetchTrending() {
     await refetchTrendingOriginal();
+  }
+
+  async function refetchSearchResults() {
+    await refetchSearch({ search: searchTerm });
   }
 
   return (
@@ -71,7 +84,20 @@ export default function Discover() {
         }}
       />
       <View style={styles.innerContainer}>
-        {showSearchResultsView ? (
+        {isSearchLoading ? (
+          <DiscoverSkeletonGrid
+            {...{
+              posterHeight,
+              posterWidth,
+            }}
+          />
+        ) : isSearchError ? (
+          <EmptyState
+            title="Couldn't load search results"
+            description="Check your connection and try again."
+            cta={{ label: "Retry", onPress: refetchSearchResults }}
+          />
+        ) : showSearchResultsView ? (
           <>
             <Text style={styles.listHeader}>
               Search results for: {searchTerm}
@@ -105,6 +131,13 @@ export default function Discover() {
               )}
             />
           </>
+        ) : isTrendingInitialLoading ? (
+          <DiscoverSkeletonGrid
+            {...{
+              posterHeight,
+              posterWidth,
+            }}
+          />
         ) : (
           <>
             {trendingList.length ? (

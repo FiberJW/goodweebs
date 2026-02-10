@@ -49,6 +49,7 @@ import {
   StorageKeys,
 } from "yep/hooks/helpers";
 import { CharacterList } from "yep/screens/DetailsScreen/CharacterList";
+import { DetailsSkeleton } from "yep/screens/DetailsScreen/DetailsSkeleton";
 import { ExternalLink } from "yep/screens/DetailsScreen/ExternalLink";
 import { RelatedAnimeList } from "yep/screens/DetailsScreen/RelatedAnimeList";
 import { Stepper } from "yep/screens/DetailsScreen/Stepper";
@@ -318,7 +319,9 @@ export default function Details() {
       }
     >
       {!data ? (
-        !loading && error ? (
+        loading ? (
+          <DetailsSkeleton />
+        ) : error ? (
           <EmptyState
             title="Could not find anime"
             description={`We ran into an unexpected error loading the requested anime: ${error?.message}`}
