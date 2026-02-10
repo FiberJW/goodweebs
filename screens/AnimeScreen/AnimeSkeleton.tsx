@@ -15,59 +15,44 @@ export function AnimeSkeleton({ rowCount = 8 }: Props) {
   );
 
   return (
-    <View style={styles.container}>
-      <SkeletonShimmerBlock
-        borderRadius={4}
-        height={13}
-        style={styles.count}
-        width={82}
-      />
-      <View style={styles.list}>
-        {rows.map((index) => (
-          <View key={index}>
-            <View style={styles.row}>
-              <SkeletonShimmerBlock borderRadius={8} height={80} width={56} />
-              <View style={styles.titleColumn}>
+    <View style={styles.list}>
+      {rows.map((index) => (
+        <View key={index}>
+          <View style={styles.row}>
+            <SkeletonShimmerBlock borderRadius={8} height={80} width={56} />
+            <View style={styles.titleColumn}>
+              <SkeletonShimmerBlock borderRadius={4} height={16} width="86%" />
+              <SkeletonShimmerBlock
+                borderRadius={4}
+                height={13}
+                style={styles.subTitle}
+                width="62%"
+              />
+            </View>
+            <View style={styles.progressColumn}>
+              <SkeletonShimmerBlock borderRadius={8} height={30} width={84} />
+              <View style={styles.progressButtons}>
                 <SkeletonShimmerBlock
-                  borderRadius={4}
-                  height={16}
-                  width="86%"
+                  borderRadius={100}
+                  height={32}
+                  width={48}
                 />
                 <SkeletonShimmerBlock
-                  borderRadius={4}
-                  height={13}
-                  style={styles.subTitle}
-                  width="62%"
+                  borderRadius={100}
+                  height={32}
+                  width={48}
                 />
-              </View>
-              <View style={styles.progressColumn}>
-                <SkeletonShimmerBlock borderRadius={8} height={30} width={84} />
-                <View style={styles.progressButtons}>
-                  <SkeletonShimmerBlock
-                    borderRadius={100}
-                    height={32}
-                    width={48}
-                  />
-                  <SkeletonShimmerBlock
-                    borderRadius={100}
-                    height={32}
-                    width={48}
-                  />
-                </View>
               </View>
             </View>
-            {index !== rows.length - 1 ? <View style={styles.divider} /> : null}
           </View>
-        ))}
-      </View>
+          {index !== rows.length - 1 ? <View style={styles.divider} /> : null}
+        </View>
+      ))}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    gap: 16,
-  },
   count: {
     marginTop: -2,
   },
