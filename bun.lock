@@ -10,7 +10,7 @@
         "@expo/metro-runtime": "~6.1.2",
         "@expo/ngrok": "^4.1.3",
         "@expo/react-native-action-sheet": "^4.0.1",
-        "@logrocket/react-native": "^1.54.2",
+        "@logrocket/react-native": "^1.61.2",
         "@radix-ui/colors": "^3.0.0",
         "@react-native-async-storage/async-storage": "2.2.0",
         "@sentry/react-native": "^7.5.0",
@@ -563,7 +563,7 @@
 
     "@jsamr/react-native-li": ["@jsamr/react-native-li@2.3.1", "", { "peerDependencies": { "@jsamr/counter-style": "^1.0.0 || ^2.0.0", "react": "*", "react-native": "*" } }, "sha512-Qbo4NEj48SQ4k8FZJHFE2fgZDKTWaUGmVxcIQh3msg5JezLdTMMHuRRDYctfdHI6L0FZGObmEv3haWbIvmol8w=="],
 
-    "@logrocket/react-native": ["@logrocket/react-native@1.54.2", "", { "peerDependencies": { "expo": ">=45.0.0", "expo-build-properties": "*", "react": "*", "react-native": ">=0.60.0-rc.0 <1.0.x" }, "optionalPeers": ["expo"] }, "sha512-BVx2Br5D2U/muUuPLwJkSd1SCyBepDuLM8QdsfgqzmdeguYBVrOR4FHa2B1xqqS4KpsL8bU1CMyOj7m9cTO1uA=="],
+    "@logrocket/react-native": ["@logrocket/react-native@1.61.2", "", { "peerDependencies": { "expo": ">=45.0.0", "expo-build-properties": "*", "react": "*", "react-native": ">=0.60.0-rc.0 <1.0.x" }, "optionalPeers": ["expo"] }, "sha512-G/XfYyXqStZARvUACfDOZUYYBbaaOOn5zEpG5Jr5jipmQSxn7+X+WdMDSUZFY+9joz2lXHyIoidmErHjKWIrhQ=="],
 
     "@napi-rs/wasm-runtime": ["@napi-rs/wasm-runtime@0.2.11", "", { "dependencies": { "@emnapi/core": "^1.4.3", "@emnapi/runtime": "^1.4.3", "@tybys/wasm-util": "^0.9.0" } }, "sha512-9DPkXtvHydrcOsopiYpUgPHpmj0HWZKMUnL2dZqpvC42lsratuBG06V5ipyno0fUek5VlFsNQ+AcFATSrJXgMA=="],
 
