@@ -1,4 +1,5 @@
 import { yellowDarkA } from "@radix-ui/colors";
+import { fbs } from "fbtee";
 import React from "react";
 import { useWindowDimensions, View } from "react-native";
 import RenderHtml from "react-native-render-html";
@@ -31,7 +32,9 @@ export function DescriptionRenderer({ description }: Props) {
     .replace(
       spoilerRegex,
       showSpoilers
-        ? `<p><strong style="color:${yellowDarkA.yellowA9}">Spoiler:</strong> $1</p>`
+        ? `<p><strong style="color:${yellowDarkA.yellowA9}">${String(
+            fbs("Spoiler:", "Spoiler prefix label"),
+          )}</strong> $1</p>`
         : ""
     );
 
@@ -39,7 +42,7 @@ export function DescriptionRenderer({ description }: Props) {
     <View style={{ marginBottom: 16 }}>
       {hasSpoilers && !showSpoilers ? (
         <Button
-          label="Show spoilers"
+          label={String(fbs("Show spoilers", "Show spoilers button label"))}
           onPress={() => setShowSpoilers(true)}
           style={{ marginBottom: 8 }}
         />

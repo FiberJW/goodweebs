@@ -1,3 +1,4 @@
+import { fbs } from "fbtee";
 import React from "react";
 import {
   Linking,
@@ -42,7 +43,9 @@ export function Trailer({ trailer: { id, site, thumbnail } }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Trailer</Text>
+      <Text style={styles.label}>
+        {String(fbs("Trailer", "Trailer section title"))}
+      </Text>
       <PressableOpacity
         onPress={() => Linking.openURL(videoURL)}
         borderRadius={8}

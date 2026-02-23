@@ -1,4 +1,5 @@
 import { useRouter } from "expo-router";
+import { fbs } from "fbtee";
 import React, { PropsWithChildren } from "react";
 import {
   ImageBackground,
@@ -72,7 +73,7 @@ export default function Profile() {
       style={[styles.outerContainer, { backgroundColor: darkTheme.background }]}
     >
       <Header
-        label="Profile"
+        label={String(fbs("Profile", "Profile tab header label"))}
         rightSlot={
           <PressableOpacity onPress={() => router.push("/settings")}>
             <Image
@@ -132,11 +133,13 @@ export default function Profile() {
                 </View>
                 <View style={styles.statsRow}>
                   <Stat
-                    label="Total anime"
+                    label={String(fbs("Total anime", "Profile stat total anime"))}
                     value={viewerData.Viewer.statistics?.anime?.count ?? 0}
                   />
                   <Stat
-                    label="Days watched"
+                    label={String(
+                      fbs("Days watched", "Profile stat days watched"),
+                    )}
                     value={Math.round(
                       (viewerData.Viewer.statistics?.anime?.minutesWatched ??
                         0) /
@@ -149,7 +152,9 @@ export default function Profile() {
             </OptionalBackgroundImage>
             {animeList.length ? (
               <View>
-                <Text style={styles.listHeader}>Favorite anime</Text>
+                <Text style={styles.listHeader}>
+                  {String(fbs("Favorite anime", "Favorite anime section title"))}
+                </Text>
                 <FlatList
                   contentContainerStyle={[
                     styles.listContentContainer,
@@ -177,7 +182,14 @@ export default function Profile() {
             ) : null}
             {characterList.length ? (
               <View>
-                <Text style={styles.listHeader}>Favorite characters</Text>
+                <Text style={styles.listHeader}>
+                  {String(
+                    fbs(
+                      "Favorite characters",
+                      "Favorite characters section title",
+                    ),
+                  )}
+                </Text>
                 <FlatList
                   horizontal
                   showsHorizontalScrollIndicator={false}

@@ -1,6 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import { fbs } from "fbtee";
 import React from "react";
 import {
   Alert,
@@ -56,16 +57,23 @@ export default function Settings() {
               marginBottom: 24,
             }}
           >
-            Display settings
+            {String(fbs("Display settings", "Display settings section title"))}
           </Text>
           <View style={styles.checkboxGroup}>
             <CheckboxRow
-              label="Hide scores by default"
+              label={String(
+                fbs("Hide scores by default", "Hide scores setting label"),
+              )}
               value={hideScores}
               onValueChange={setHideScores}
             />
             <CheckboxRow
-              label="Should persist score visibility per anime"
+              label={String(
+                fbs(
+                  "Should persist score visibility per anime",
+                  "Persist score visibility setting label",
+                ),
+              )}
               value={shouldPersistScoreVisibility}
               onValueChange={setShouldPersistScoreVisibility}
             />
@@ -80,16 +88,26 @@ export default function Settings() {
               marginBottom: 24,
             }}
           >
-            Privacy settings
+            {String(fbs("Privacy settings", "Privacy settings section title"))}
           </Text>
           <View style={styles.checkboxGroup}>
             <CheckboxRow
-              label="Opt-out of crash reporting"
+              label={String(
+                fbs(
+                  "Opt-out of crash reporting",
+                  "Crash reporting opt-out setting label",
+                ),
+              )}
               value={optOutCrashReporting}
               onValueChange={setOptOutCrashReporting}
             />
             <CheckboxRow
-              label="Opt-out of session analytics"
+              label={String(
+                fbs(
+                  "Opt-out of session analytics",
+                  "Session analytics opt-out setting label",
+                ),
+              )}
               value={optOutAnalytics}
               onValueChange={setOptOutAnalytics}
             />
@@ -112,28 +130,42 @@ export default function Settings() {
               fontSize: 16,
             }}
           >
-            Privacy policy
+            {String(fbs("Privacy policy", "Privacy policy link label"))}
           </Text>
         </PressableOpacity>
         {accessToken ? (
           <Button
-            label="Log out"
+            label={String(fbs("Log out", "Log out button label"))}
             onPress={async () => {
-              Alert.alert("Are you sure that you want to log out?", undefined, [
-                { style: "cancel", text: "Cancel" },
-                {
-                  text: "Log out",
-                  style: "destructive",
-                  onPress: async () => {
-                    await SecureStore.deleteItemAsync(
-                      ANILIST_ACCESS_TOKEN_STORAGE,
-                    );
-                    setAccessToken(undefined);
-                    router.replace("/auth");
-                    await client.resetStore();
+              Alert.alert(
+                String(
+                  fbs(
+                    "Are you sure that you want to log out?",
+                    "Log out confirmation message",
+                  ),
+                ),
+                undefined,
+                [
+                  {
+                    style: "cancel",
+                    text: String(fbs("Cancel", "Cancel button label")),
                   },
-                },
-              ]);
+                  {
+                    text: String(
+                      fbs("Log out", "Log out confirmation button label"),
+                    ),
+                    style: "destructive",
+                    onPress: async () => {
+                      await SecureStore.deleteItemAsync(
+                        ANILIST_ACCESS_TOKEN_STORAGE,
+                      );
+                      setAccessToken(undefined);
+                      router.replace("/auth");
+                      await client.resetStore();
+                    },
+                  },
+                ],
+              );
             }}
           />
         ) : null}

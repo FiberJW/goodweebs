@@ -1,0 +1,1013 @@
+{
+  "fb-locale": "ja_JP",
+  "translations": {
+    "m7fu6wgRxGlKJsdy1YPwMA==": {
+      "description": "Not found page title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Page not found",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "Ob+VC29sYVhmbZ6Ald+l3w==": {
+      "description": "Not found page description",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "The page you're looking for doesn't exist.",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "b6g4br9Rg+rvT9JZTorg8A==": {
+      "description": "Not found page call to action label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Go home",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "0+/5NpAov545bvSLgdnweQ==": {
+      "description": "Settings screen title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Settings",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "VYZJ2HZP70IAaJdxdLpimw==": {
+      "description": "Display settings section title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Display settings",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "c3hpC20jffS6srQ6jZk9uA==": {
+      "description": "Hide scores setting label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Hide scores by default",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "7K2RJnPLk7rIiBDNsQmwqA==": {
+      "description": "Persist score visibility setting label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Should persist score visibility per anime",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "Z7qOCgQC+5FDU1V01Xvpgw==": {
+      "description": "Privacy settings section title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Privacy settings",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "g/7ez9/sELBgHvIXrQz3fQ==": {
+      "description": "Crash reporting opt-out setting label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Opt-out of crash reporting",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "6HWLVlkYBnpEfOPY82m26w==": {
+      "description": "Session analytics opt-out setting label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Opt-out of session analytics",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "ALZzC57F9KPKXCSBb8Q/jA==": {
+      "description": "Privacy policy link label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Privacy policy",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "ATdMWiPkUphqnYyrr8UA4g==": {
+      "description": "Log out button label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Log out",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "wHimXYPazIqJagoaX/Jjag==": {
+      "description": "Log out confirmation message",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Are you sure that you want to log out?",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "mlny88jeQIS5+fJfuuypuw==": {
+      "description": "Cancel button label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Cancel",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "VdN+l0Te+R97RrsisxJLSQ==": {
+      "description": "Log out confirmation button label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Log out",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "IYUmtYxQtGdt1MucjXrsVA==": {
+      "description": "Label with meaning 'at least number'",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "{number}+",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "ZIF1WhVQwt7WZJvFTEbMWw==": {
+      "description": "Label with meaning 'less than number'",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "<{number}",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "Oc/9PrbjfyLHS60BXceD1A==": {
+      "description": "A list of items of various types, for example: \"San Francisco; London; Tokyo\". {previous items} and {following items} are themselves lists that contain one or more items.",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "{previous items}; {following items}",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "AXXbKEUZuc0ji1IClRrOOw==": {
+      "description": "A list of items of various types separated by bullets, for example: \"San Francisco \\u2022 London \\u2022 Tokyo\". {previous items} and {following items} are themselves lists that contain one or more items.",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "{previous items} • {following items}",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "89ACgPMtnwlLDSeqhLBx2Q==": {
+      "description": "A list of items of various types separated by commas, for example: \"San Francisco, London, Tokyo\". {previous items} and {following items} are themselves lists that contain one or more items.",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "{previous items}, {following items}",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "5hL7VXOBVnetm46YAjpX0g==": {
+      "description": "A list of items of various types with a serial comma, for example: \"item1, item2, and item3\"",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "{list of items}, and {last item}",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "icNetEL/crQv/PS6yhySVQ==": {
+      "description": "A list of items of various types, for example: \"item1, item2, item3 and item4\"",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "{list of items} and {last item}",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "8kLAQ3ffiiFnQ/bWPqXfuQ==": {
+      "description": "A list of items of various types with a serial comma, for example: \"item1, item2, or item3\"",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "{list of items}, or {last item}",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "8eSaAzrWtAqn9ktNKfkaEg==": {
+      "description": "A list of items of various types, for example: \"item1, item2, item3 or item4\"",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "{list of items} or {last item}",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "+IBI7kr/mMKdzp+3stDvkw==": {
+      "description": "A list of items of various types, for example: \"San Francisco; London; Tokyo\". {previous items} itself contains one or more items.",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "{previous items}; {last item}",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "55IeE8c0qqtjTU0lo7q9AA==": {
+      "description": "A list of items of various types separated by bullets, for example: \"San Francisco \\u2022 London \\u2022 Tokyo\". {previous items} contains one or more items.",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "{list of items} • {last item}",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "6PRJS0QalZfvaN8CkKCUCw==": {
+      "description": "A list of items of various types, for example: \"item1, item2, item3, item4\"",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "{list of items}, {last item}",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "RyfkI42I5vyNZSsBfilRLQ==": {
+      "description": "Auth screen tagline",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "An anime tracking app powered by AniList and Expo.",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "M9zHnUHG6aY1C7f4RdPpJA==": {
+      "description": "Auth screen login button label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Log in with AniList",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "m+MBCxVH3MhZdSnBf3Nf1Q==": {
+      "description": "Auth screen continue without login button label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Continue without logging in",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "mkSHsB2OntroY24wvQENvg==": {
+      "description": "Auth screen continue without login warning",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Without an account, you will not be able to keep track of anime or manga, but you can still browse through Discover to explore new series. You can log in or register at any time to begin tracking series to your lists.",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "K2rLOy7Or2rdtMgQ+vqoVQ==": {
+      "description": "Auth screen continue warning cancel",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Cancel",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "9RZllFATWuiBDWlmJcIjlg==": {
+      "description": "Auth screen continue warning confirm button",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "OK",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "1YX0EJsCsAKx2mD+5u4m+A==": {
+      "description": "Anime not found error title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Could not find anime",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "2no6v1NpzOqslpIazuCUwQ==": {
+      "description": "Anime not found error description prefix",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "We ran into an unexpected error loading the requested anime:",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "KMhMRRjRDFlvw7fRM6BPWg==": {
+      "description": "Anime details episodes label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Episodes",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "leAKjTK5hfr6jUAChANsOQ==": {
+      "description": "Anime details genre label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Genre",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "1B868UzSzHzJNyfPq38aJg==": {
+      "description": "Anime details average score label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Average score",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "l00GuSmT5EiMUz9Ir681XA==": {
+      "description": "Anime details average score hidden prompt",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Tap to show",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "zVV8jsGwfajo4hdhVMlzew==": {
+      "description": "Anime details status label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Status",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "Mpgxw8WYcB3fwh6fnCwRAw==": {
+      "description": "Anime details studio label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Studio",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "oLNYQOHuaxf8qXQXjqEB6g==": {
+      "description": "Anime details next episode label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Next episode",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "bYKpbEk0UU6LnLCTby0aFw==": {
+      "description": "Episode abbreviation for next episode",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "EP",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "y1xvaBGaMvsrxZ3y6U8poA==": {
+      "description": "Next episode airs in label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "airs in",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "dPgCiJ+DNlFp14mgWXzjwA==": {
+      "description": "Anime details start date label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Start date",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "j0jBs0jk7AzQIHbwUxsLhQ==": {
+      "description": "Anime details end date label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "End date",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "+gVDKEAQF9HpfVIQkiDVGw==": {
+      "description": "Anime details add to list button",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Add to list",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "cCPSNTux64fRkWVo5L3ueA==": {
+      "description": "Anime details remove from list action sheet option",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Remove from list",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "qdLXApM++tZ/hAoU3bwJKw==": {
+      "description": "Anime details cancel action sheet option",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Cancel",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "tIjT8N1yJLzqKb7JGcXVxQ==": {
+      "description": "Anime details score stepper label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Score",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "yAQ16l0uz9zLEAAu4y1zHg==": {
+      "description": "Anime details progress stepper label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Progress",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "J2Wz/YEsWBqqyYbCwMxRlQ==": {
+      "description": "Anime details external links title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "External links",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "Cg0SZ0V/q4ecxch+S+uB6Q==": {
+      "description": "Character not found error title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Could not find character",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "n5fySLqpcsjSrhgUbNyr3A==": {
+      "description": "Character not found error description prefix",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "We ran into an unexpected error loading the requested character:",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "XYg47wtzdOzk0OOY5EmrkQ==": {
+      "description": "Anime tab header label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Anime",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "CKOv+jsdvTJDLviOEADQwA==": {
+      "description": "Anime list title count",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "{count} titles",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "iZoAqpSbzBU9bo7OQg9Fow==": {
+      "description": "Anime list title count",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "{count} title",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "E+GWME49UPTLdrFmIo/06A==": {
+      "description": "Anime empty state login title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Log in",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "uHLuB91DRBqCCknJz7YMpQ==": {
+      "description": "Anime empty state title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Empty list",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "kJ99OOo1VtPzrogh1zJ4YA==": {
+      "description": "Anime empty state login description",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Start tracking your anime by using an AniList account!",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "0cVNPpbnh1XbJ9vZHwQjNg==": {
+      "description": "Anime empty state list description",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Explore the world of anime by adding some shows to your list!",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "sUR5nzygpa1lbLpQsBrUIQ==": {
+      "description": "Anime empty state login call to action",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Log in",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "perRUn9M77OShfDO+YfZHA==": {
+      "description": "Anime empty state discover call to action",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Discover new anime",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "g/25RMlfck/696fSBDOsrA==": {
+      "description": "Discover tab header label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Discover",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "Ad+8R8ZahdDc7C5MpW0+Sw==": {
+      "description": "Search input placeholder",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Search anime",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "UT9JfXUl8Q3HwWtddC6woQ==": {
+      "description": "Search error title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Couldn't load search results",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "wDirB+RlLLPn75m8PyhTfw==": {
+      "description": "Search error description",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Check your connection and try again.",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "KPTV7XgtC+lwvLvdMDeD7g==": {
+      "description": "Search retry button label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Retry",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "lccEwYd3OdATQoDrHi9BCw==": {
+      "description": "Search results header",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Search results for: {searchTerm}",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "nNo9tZoN8ruSt+aynW9rcg==": {
+      "description": "No search results title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "No search results",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "6BLV/Tcvkwy85CMOjNvHQA==": {
+      "description": "No search results description",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "You may have misspelled what you were looking for, or this anime isn't listed on AniList.",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "qGcxPyRxzHw/d3rzpy1SoA==": {
+      "description": "Trending anime list header",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Top {count} trending anime",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "ZXu86w8CXXSsTOhPH8jZDA==": {
+      "description": "Trending loading error title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Unexpected loading error",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "gWFosyMBK9cW2j90zNW7uw==": {
+      "description": "Trending loading error description",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Swipe down to try again",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "Qx4CYbzSp68iR/RYQz2/Uw==": {
+      "description": "Profile tab header label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Profile",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "OcnmzUhwctDP6t+5y4SqIg==": {
+      "description": "Profile stat total anime",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Total anime",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "RBNWZWGMZhtuYXH3Hks1EQ==": {
+      "description": "Profile stat days watched",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Days watched",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "B9EulfPJOyUk49xEKCSf2Q==": {
+      "description": "Favorite anime section title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Favorite anime",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "aBA4HcvIgK480aprbd8T2g==": {
+      "description": "Favorite characters section title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Favorite characters",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "ohFREBuesmr5uM5WSycKGA==": {
+      "description": "Spoiler prefix label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Spoiler:",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "X3hkT875Iyc1h7VMKzWOxA==": {
+      "description": "Show spoilers button label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Show spoilers",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "pQoKGcaMveallt0CkNH1aQ==": {
+      "description": "Search box cancel button label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Cancel",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "uVxLyCW49c0sQ2EJsY0BxA==": {
+      "description": "Trailer section title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Trailer",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "PkCtj0o8OdaeNPgUFr3UMA==": {
+      "description": "Characters section title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Characters",
+          "variations": {}
+        }
+      ],
+      "types": []
+    }
+  }
+}

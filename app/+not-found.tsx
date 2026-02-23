@@ -1,4 +1,5 @@
 import { useRouter, usePathname } from "expo-router";
+import { fbs } from "fbtee";
 import React from "react";
 import { View } from "react-native";
 
@@ -14,10 +15,15 @@ export default function NotFound() {
   return (
     <View style={{ flex: 1, backgroundColor: darkTheme.background }}>
       <EmptyState
-        title="Page not found"
-        description="The page you're looking for doesn't exist."
+        title={String(fbs("Page not found", "Not found page title"))}
+        description={String(
+          fbs(
+            "The page you're looking for doesn't exist.",
+            "Not found page description",
+          ),
+        )}
         cta={{
-          label: "Go home",
+          label: String(fbs("Go home", "Not found page call to action label")),
           onPress: () => router.replace("/(tabs)/discover"),
         }}
       />

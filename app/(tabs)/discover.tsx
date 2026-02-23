@@ -1,4 +1,5 @@
 import { useRouter } from "expo-router";
+import { fbs } from "fbtee";
 import React, { useState } from "react";
 import {
   RefreshControl,
@@ -70,11 +71,11 @@ export default function Discover() {
     <View
       style={[styles.outerContainer, { backgroundColor: darkTheme.background }]}
     >
-      <Header label="Discover" />
+      <Header label={String(fbs("Discover", "Discover tab header label"))} />
       <SearchBox
         value={searchTerm}
         onChangeText={(text) => setSearchTerm(text)}
-        placeholder="Search anime"
+        placeholder={String(fbs("Search anime", "Search input placeholder"))}
         onCancelPress={() => {
           setSearchTerm("");
         }}
@@ -92,14 +93,27 @@ export default function Discover() {
           />
         ) : isSearchError ? (
           <EmptyState
-            title="Couldn't load search results"
-            description="Check your connection and try again."
-            cta={{ label: "Retry", onPress: refetchSearchResults }}
+            title={String(
+              fbs("Couldn't load search results", "Search error title"),
+            )}
+            description={String(
+              fbs(
+                "Check your connection and try again.",
+                "Search error description",
+              ),
+            )}
+            cta={{
+              label: String(fbs("Retry", "Search retry button label")),
+              onPress: refetchSearchResults,
+            }}
           />
         ) : showSearchResultsView ? (
           <>
             <Text style={styles.listHeader}>
-              Search results for: {searchTerm}
+              <fbt desc="Search results header">
+                Search results for:{" "}
+                <fbt:param name="searchTerm">{searchTerm}</fbt:param>
+              </fbt>
             </Text>
             <FlatList
               contentContainerStyle={{ gap: 16 }}
@@ -107,8 +121,15 @@ export default function Discover() {
               ListEmptyComponent={() =>
                 loadingSearchData ? null : (
                   <EmptyState
-                    title="No search results"
-                    description="You may have misspelled what you were looking for, or this anime isn't listed on AniList."
+                    title={String(
+                      fbs("No search results", "No search results title"),
+                    )}
+                    description={String(
+                      fbs(
+                        "You may have misspelled what you were looking for, or this anime isn't listed on AniList.",
+                        "No search results description",
+                      ),
+                    )}
                   />
                 )
               }
@@ -141,7 +162,11 @@ export default function Discover() {
           <>
             {trendingList.length ? (
               <Text style={styles.listHeader}>
-                Top {trendingList.length} trending anime
+                <fbt desc="Trending anime list header">
+                  Top{" "}
+                  <fbt:param name="count">{trendingList.length}</fbt:param>{" "}
+                  trending anime
+                </fbt>
               </Text>
             ) : null}
             <FlatList
@@ -151,8 +176,18 @@ export default function Discover() {
               ListEmptyComponent={() =>
                 loadingTrending ? null : (
                   <EmptyState
-                    title="Unexpected loading error"
-                    description="Swipe down to try again"
+                    title={String(
+                      fbs(
+                        "Unexpected loading error",
+                        "Trending loading error title",
+                      ),
+                    )}
+                    description={String(
+                      fbs(
+                        "Swipe down to try again",
+                        "Trending loading error description",
+                      ),
+                    )}
                   />
                 )
               }

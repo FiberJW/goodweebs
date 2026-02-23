@@ -1,5 +1,6 @@
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import { fbs } from "fbtee";
 import { sortBy } from "lodash";
 import React, { useState, useMemo } from "react";
 import { RefreshControl, View, StyleSheet, Text, FlatList } from "react-native";
@@ -22,7 +23,7 @@ import { AnimeSkeleton } from "yep/screens/AnimeScreen/AnimeSkeleton";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
-import { notEmpty } from "yep/utils";
+import { getMediaListStatusLabel, notEmpty } from "yep/utils";
 
 export default function Anime() {
   const [status, setStatus] = useState<MediaListStatus>(
@@ -62,7 +63,10 @@ export default function Anime() {
     [animeListData],
   );
 
-  const listCountText = `${list.length} title${list.length !== 1 ? "s" : ""}`;
+  const statusOptions = MediaListStatusWithLabel.map(({ value }) => ({
+    label: getMediaListStatusLabel(value),
+    value,
+  }));
 
   const refreshing = loadingViewer || loadingAnimeList;
 
@@ -70,7 +74,7 @@ export default function Anime() {
     <View
       style={[styles.outerContainer, { backgroundColor: darkTheme.background }]}
     >
-      <Header label="Anime" />
+      <Header label={String(fbs("Anime", "Anime tab header label"))} />
       <FlatList
         contentContainerStyle={{ padding: 16 }}
         ListHeaderComponent={() => (
@@ -81,12 +85,12 @@ export default function Anime() {
                 showsHorizontalScrollIndicator={false}
                 horizontal
                 contentContainerStyle={{ gap: 8 }}
-                data={MediaListStatusWithLabel}
-                keyExtractor={({ label }) => label}
+                data={statusOptions}
+                keyExtractor={({ value }) => `${value}`}
                 renderItem={({ item: { label, value } }) => (
                   <StatusChip
                     label={label}
-                    key={label}
+                    key={value}
                     onPress={() => setStatus(value)}
                     isSelected={status === value}
                   />
@@ -94,7 +98,14 @@ export default function Anime() {
               />
             </View>
             <View style={styles.countAndSortRow}>
-              <Text style={styles.count}>{listCountText}</Text>
+              <Text style={styles.count}>
+                <fbt desc="Anime list title count">
+                  <fbt:param name="count">{list.length}</fbt:param>{" "}
+                  <fbt:plural count={list.length} many="titles" name="titleCount">
+                    title
+                  </fbt:plural>
+                </fbt>
+              </Text>
             </View>
           </View>
         )}
@@ -106,14 +117,37 @@ export default function Anime() {
             <AnimeSkeleton />
           ) : (
             <EmptyState
-              title={!accessToken ? "Log in" : "Empty list"}
+              title={
+                !accessToken
+                  ? String(fbs("Log in", "Anime empty state login title"))
+                  : String(fbs("Empty list", "Anime empty state title"))
+              }
               description={
                 !accessToken
-                  ? "Start tracking your anime by using an AniList account!"
-                  : "Explore the world of anime by adding some shows to your list!"
+                  ? String(
+                      fbs(
+                        "Start tracking your anime by using an AniList account!",
+                        "Anime empty state login description",
+                      ),
+                    )
+                  : String(
+                      fbs(
+                        "Explore the world of anime by adding some shows to your list!",
+                        "Anime empty state list description",
+                      ),
+                    )
               }
               cta={{
-                label: !accessToken ? "Log in" : "Discover new anime",
+                label: !accessToken
+                  ? String(
+                      fbs("Log in", "Anime empty state login call to action"),
+                    )
+                  : String(
+                      fbs(
+                        "Discover new anime",
+                        "Anime empty state discover call to action",
+                      ),
+                    ),
                 onPress: async () => {
                   if (!accessToken) {
                     const result = await promptAsync();

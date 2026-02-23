@@ -1,5 +1,6 @@
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import { fbs } from "fbtee";
 import React, { useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, Image, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -53,13 +54,20 @@ export default function AuthScreen() {
               source={require("yep/assets/launch/logo-wrapped-dark.png")}
             />
             <Text style={styles.tagline}>
-              An anime tracking app powered by AniList and Expo.
+              {String(
+                fbs(
+                  "An anime tracking app powered by AniList and Expo.",
+                  "Auth screen tagline",
+                ),
+              )}
             </Text>
           </View>
           <View style={styles.buttonGroup}>
             <Button
               color={aniListBlue}
-              label="Log in with AniList"
+              label={String(
+                fbs("Log in with AniList", "Auth screen login button label"),
+              )}
               onPress={async () => {
                 const result = await promptAsync();
 
@@ -77,16 +85,35 @@ export default function AuthScreen() {
             />
 
             <Button
-              label="Continue without logging in"
+              label={String(
+                fbs(
+                  "Continue without logging in",
+                  "Auth screen continue without login button label",
+                ),
+              )}
               onPress={async () => {
                 Alert.alert(
                   "",
-                  "Without an account, you will not be able to keep track of anime or manga, but you can still browse through Discover to explore new series. You can log in or register at any time to begin tracking series to your lists.",
+                  String(
+                    fbs(
+                      "Without an account, you will not be able to keep track of anime or manga, but you can still browse through Discover to explore new series. You can log in or register at any time to begin tracking series to your lists.",
+                      "Auth screen continue without login warning",
+                    ),
+                  ),
                   [
-                    { text: "Cancel" },
+                    {
+                      text: String(
+                        fbs("Cancel", "Auth screen continue warning cancel"),
+                      ),
+                    },
                     {
                       onPress: () => router.replace("/(tabs)/discover"),
-                      text: "OK",
+                      text: String(
+                        fbs(
+                          "OK",
+                          "Auth screen continue warning confirm button",
+                        ),
+                      ),
                     },
                   ]
                 );

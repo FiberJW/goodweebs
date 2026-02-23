@@ -1,7 +1,7 @@
 module.exports = function (api) {
   api.cache(true);
   return {
-    presets: [["babel-preset-expo"]],
+    presets: ["@nkzw/babel-preset-fbtee", "babel-preset-expo"],
     plugins: [
       [
         "module-resolver",

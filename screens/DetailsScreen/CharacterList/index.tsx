@@ -1,3 +1,4 @@
+import { fbs } from "fbtee";
 import React from "react";
 import { Text, StyleSheet } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
@@ -15,7 +16,9 @@ type Props = {
 export function CharacterList({ characters }: Props) {
   return (
     <>
-      <Text style={styles.header}>Characters</Text>
+      <Text style={styles.header}>
+        {String(fbs("Characters", "Characters section title"))}
+      </Text>
       <FlatList
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}

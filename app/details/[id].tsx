@@ -2,6 +2,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { formatDistanceToNow, add } from "date-fns";
 import * as Haptics from "expo-haptics";
 import { useLocalSearchParams, useNavigation } from "expo-router";
+import { fbs } from "fbtee";
 import _ from "lodash";
 import React, { ReactNode, useEffect, useState } from "react";
 import {
@@ -13,7 +14,6 @@ import {
   StyleSheet,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import title from "title";
 
 import { Button } from "yep/components/Button";
 import { DescriptionRenderer } from "yep/components/DescriptionRenderer";
@@ -21,7 +21,7 @@ import { EmptyState } from "yep/components/EmptyState";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { LikeButton } from "yep/components/PosterAndTitle/LikeButton";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import { MediaListStatusWithLabel, MediaStatusWithLabel } from "yep/constants";
+import { MediaListStatusWithLabel } from "yep/constants";
 import {
   MediaStatus,
   UpdateStatusMutation,
@@ -56,7 +56,12 @@ import { Stepper } from "yep/screens/DetailsScreen/Stepper";
 import { Trailer } from "yep/screens/DetailsScreen/Trailer";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { getDateText, notEmpty } from "yep/utils";
+import {
+  getDateText,
+  getMediaListStatusLabel,
+  getMediaStatusLabel,
+  notEmpty,
+} from "yep/utils";
 
 type InfoProps = { label: string; value: ReactNode };
 
@@ -303,6 +308,10 @@ export default function Details() {
 
   const externalLinks = data?.Media?.externalLinks?.filter(notEmpty);
   const studio = (data?.Media?.studios?.nodes ?? [])[0]?.name;
+  const statusOptions = MediaListStatusWithLabel.map(({ value }) => ({
+    label: getMediaListStatusLabel(value),
+    value,
+  }));
 
   return (
     <ScrollView
@@ -323,8 +332,13 @@ export default function Details() {
           <DetailsSkeleton />
         ) : error ? (
           <EmptyState
-            title="Could not find anime"
-            description={`We ran into an unexpected error loading the requested anime: ${error?.message}`}
+            title={String(fbs("Could not find anime", "Anime not found error title"))}
+            description={`${String(
+              fbs(
+                "We ran into an unexpected error loading the requested anime:",
+                "Anime not found error description prefix",
+              ),
+            )} ${error?.message}`}
           />
         ) : null
       ) : (
@@ -373,10 +387,13 @@ export default function Details() {
             <View style={styles.infoTable}>
               <View style={styles.infoRow}>
                 {data?.Media?.episodes ? (
-                  <Info label="Episodes" value={`${data?.Media?.episodes}`} />
+                  <Info
+                    label={String(fbs("Episodes", "Anime details episodes label"))}
+                    value={`${data?.Media?.episodes}`}
+                  />
                 ) : null}
                 <Info
-                  label="Genre"
+                  label={String(fbs("Genre", "Anime details genre label"))}
                   value={data?.Media?.genres?.join(", ") ?? ""}
                 />
               </View>
@@ -389,7 +406,9 @@ export default function Details() {
                     onPress={() => setShowScore(!showScore)}
                   >
                     <Info
-                      label="Average score"
+                      label={String(
+                        fbs("Average score", "Anime details average score label"),
+                      )}
                       value={
                         showScore ? (
                           `${(data?.Media?.averageScore ?? 0) / 10} / 10`
@@ -401,7 +420,12 @@ export default function Details() {
                               { textDecorationLine: "underline" },
                             ]}
                           >
-                            Tap to show
+                            {String(
+                              fbs(
+                                "Tap to show",
+                                "Anime details average score hidden prompt",
+                              ),
+                            )}
                           </Text>
                         )
                       }
@@ -409,23 +433,34 @@ export default function Details() {
                   </PressableOpacity>
                 ) : null}
                 <Info
-                  label="Status"
-                  value={title(
-                    MediaStatusWithLabel.find(
-                      (m) => m.value === data?.Media?.status,
-                    )?.label ?? "",
-                  )}
+                  label={String(fbs("Status", "Anime details status label"))}
+                  value={
+                    data?.Media?.status
+                      ? getMediaStatusLabel(data.Media.status)
+                      : ""
+                  }
                 />
               </View>
               <View style={styles.infoRow}>
-                {studio ? <Info label="Studio" value={studio} /> : null}
+                {studio ? (
+                  <Info
+                    label={String(fbs("Studio", "Anime details studio label"))}
+                    value={studio}
+                  />
+                ) : null}
                 {data?.Media?.status === MediaStatus.Releasing &&
                 data?.Media?.nextAiringEpisode ? (
                   <Info
-                    label="Next episode"
-                    value={`EP ${
+                    label={String(
+                      fbs("Next episode", "Anime details next episode label"),
+                    )}
+                    value={`${String(
+                      fbs("EP", "Episode abbreviation for next episode"),
+                    )} ${
                       data?.Media?.nextAiringEpisode?.episode
-                    } airs in ${formatDistanceToNow(
+                    } ${String(
+                      fbs("airs in", "Next episode airs in label"),
+                    )} ${formatDistanceToNow(
                       add(now, {
                         seconds:
                           data?.Media?.nextAiringEpisode?.timeUntilAiring ?? 0,
@@ -437,7 +472,9 @@ export default function Details() {
                 data.Media.startDate &&
                 getDateText(data.Media.startDate) ? (
                   <Info
-                    label="Start date"
+                    label={String(
+                      fbs("Start date", "Anime details start date label"),
+                    )}
                     value={getDateText(data.Media.startDate)!}
                   />
                 ) : null}
@@ -447,7 +484,9 @@ export default function Details() {
                 data?.Media?.endDate &&
                 getDateText(data.Media.endDate) ? (
                   <Info
-                    label="End date"
+                    label={String(
+                      fbs("End date", "Anime details end date label"),
+                    )}
                     value={getDateText(data.Media.endDate)!}
                   />
                 ) : null}
@@ -460,12 +499,12 @@ export default function Details() {
               containerStyle={{ flex: 1 }}
               loading={loadingStatus}
               label={
-                MediaListStatusWithLabel.find(
-                  (x) => x.value === data?.Media?.mediaListEntry?.status,
-                )?.label ?? "Add to list"
+                data?.Media?.mediaListEntry?.status
+                  ? getMediaListStatusLabel(data.Media.mediaListEntry.status)
+                  : String(fbs("Add to list", "Anime details add to list button"))
               }
               onPress={() => {
-                const options = MediaListStatusWithLabel.map(
+                const options = statusOptions.map(
                   (s) =>
                     `${
                       data?.Media?.mediaListEntry?.status === s.value
@@ -476,8 +515,20 @@ export default function Details() {
 
                 const mediaListEntry = data?.Media?.mediaListEntry;
 
-                mediaListEntry && options.push("Remove from list");
-                options.push("Cancel");
+                mediaListEntry &&
+                  options.push(
+                    String(
+                      fbs(
+                        "Remove from list",
+                        "Anime details remove from list action sheet option",
+                      ),
+                    ),
+                  );
+                options.push(
+                  String(
+                    fbs("Cancel", "Anime details cancel action sheet option"),
+                  ),
+                );
 
                 const destructiveButtonIndex = mediaListEntry
                   ? options.length - 2
@@ -508,7 +559,7 @@ export default function Details() {
                     } else {
                       await updateStatus({
                         mediaId: data?.Media?.id,
-                        status: MediaListStatusWithLabel[buttonIndex].value,
+                        status: statusOptions[buttonIndex].value,
                       });
                     }
                     setLoadingStatus(false);
@@ -521,7 +572,7 @@ export default function Details() {
           data.Media.status !== MediaStatus.NotYetReleased ? (
             <>
               <Stepper
-                label="Score"
+                label={String(fbs("Score", "Anime details score stepper label"))}
                 icon={
                   <Image
                     style={{ height: 24, width: 24, marginRight: 4 }}
@@ -541,7 +592,9 @@ export default function Details() {
                     source={require("yep/assets/icons/progress.png")}
                   />
                 }
-                label="Progress"
+                label={String(
+                  fbs("Progress", "Anime details progress stepper label"),
+                )}
                 value={displayProgress}
                 upperBound={data?.Media?.episodes ?? undefined}
                 lowerBound={0}
@@ -587,7 +640,7 @@ export default function Details() {
                   fontSize: 20,
                 }}
               >
-                External links
+                {String(fbs("External links", "Anime details external links title"))}
               </Text>
               <View style={{ height: 16 }} />
               <View style={{ gap: 8 }}>

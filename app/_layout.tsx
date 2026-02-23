@@ -11,6 +11,7 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import * as Updates from "expo-updates";
+import { fbs } from "fbtee";
 import React, { useCallback, useEffect } from "react";
 import { Platform, StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -19,6 +20,7 @@ import { enableScreens } from "react-native-screens";
 import { vexo } from "vexo-analytics";
 
 import { createClient } from "yep/graphql/client";
+import { LocaleProvider } from "yep/i18n/LocaleContext";
 import { darkTheme } from "yep/themes";
 import { LINESeedJP, Manrope } from "yep/typefaces";
 
@@ -59,15 +61,21 @@ function WebLayout() {
 
 export default function RootLayout() {
   if (Platform.OS === "web") {
-    return <WebLayout />;
+    return (
+      <LocaleProvider>
+        <WebLayout />
+      </LocaleProvider>
+    );
   }
 
   return (
-    <RootSiblingParent>
-      <AccessTokenProvider>
-        <InnerLayout />
-      </AccessTokenProvider>
-    </RootSiblingParent>
+    <LocaleProvider>
+      <RootSiblingParent>
+        <AccessTokenProvider>
+          <InnerLayout />
+        </AccessTokenProvider>
+      </RootSiblingParent>
+    </LocaleProvider>
   );
 }
 
@@ -149,7 +157,7 @@ function InnerLayout() {
             <Stack.Screen
               name="settings"
               options={{
-                title: "Settings",
+                title: String(fbs("Settings", "Settings screen title")),
                 headerTitleStyle: {
                   fontFamily: Manrope.semiBold,
                   fontSize: 16,

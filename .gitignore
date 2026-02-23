@@ -18,3 +18,7 @@ goodweebs-secrets
 
 dist
 .vercel
+
+# fbtee
+.enum_manifest.json
+source_strings.json

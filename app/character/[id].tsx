@@ -1,4 +1,5 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
+import { fbs } from "fbtee";
 import React, { useEffect } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -49,8 +50,15 @@ export default function Character() {
           <CharacterSkeleton />
         ) : error ? (
           <EmptyState
-            title="Could not find character"
-            description={`We ran into an unexpected error loading the requested character: ${error?.message}`}
+            title={String(
+              fbs("Could not find character", "Character not found error title"),
+            )}
+            description={`${String(
+              fbs(
+                "We ran into an unexpected error loading the requested character:",
+                "Character not found error description prefix",
+              ),
+            )} ${error?.message}`}
           />
         ) : null
       ) : (

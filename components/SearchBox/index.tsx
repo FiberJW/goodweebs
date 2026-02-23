@@ -1,3 +1,4 @@
+import { fbs } from "fbtee";
 import React, { useState, useRef } from "react";
 import {
   TextInputProps,
@@ -60,7 +61,9 @@ export function SearchBox({
           }}
           style={{ marginLeft: 8 }}
         >
-          <Text style={styles.cancelLabel}>Cancel</Text>
+          <Text style={styles.cancelLabel}>
+            {String(fbs("Cancel", "Search box cancel button label"))}
+          </Text>
         </PressableOpacity>
       ) : null}
     </View>
