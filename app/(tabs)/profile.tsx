@@ -20,7 +20,7 @@ import { useGetViewerQuery } from "yep/graphql/generated";
 import { ProfileSkeleton } from "yep/screens/ProfileScreen/ProfileSkeleton";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { notEmpty, getTitle } from "yep/utils";
+import { notEmpty, useGetTitle } from "yep/utils";
 
 type StatProps = { label: string; value: number };
 
@@ -39,6 +39,7 @@ function Stat({ label, value }: StatProps) {
 
 export default function Profile() {
   const router = useRouter();
+  const getTitle = useGetTitle();
   const {
     loading: loadingViewer,
     data: viewerData,

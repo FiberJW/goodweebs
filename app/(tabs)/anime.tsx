@@ -23,7 +23,7 @@ import { AnimeSkeleton } from "yep/screens/AnimeScreen/AnimeSkeleton";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
-import { getMediaListStatusLabel, notEmpty } from "yep/utils";
+import { getMediaListStatusLabel, notEmpty, useGetTitle } from "yep/utils";
 
 export default function Anime() {
   const [status, setStatus] = useState<MediaListStatus>(
@@ -32,6 +32,7 @@ export default function Anime() {
 
   const { accessToken, setAccessToken } = useAccessToken();
   const router = useRouter();
+  const getTitle = useGetTitle();
 
   const [, , promptAsync] = useAniListAuthRequest();
   const { loading: loadingViewer, data: viewerData } = useGetViewerQuery({
@@ -58,9 +59,9 @@ export default function Anime() {
         (animeListData?.MediaListCollection?.lists?.[0]?.entries ?? []).filter(
           notEmpty,
         ),
-        (m) => m.media?.title?.english,
+        (m) => getTitle(m.media?.title),
       ),
-    [animeListData],
+    [animeListData, getTitle],
   );
 
   const statusOptions = MediaListStatusWithLabel.map(({ value }) => ({

@@ -11,7 +11,7 @@ import {
 import { useNow } from "yep/hooks/helpers";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { getAiringStatusText, getProgress, getTitle } from "yep/utils";
+import { getAiringStatusText, getProgress, useGetTitle } from "yep/utils";
 
 import { PosterAndTitle } from "../PosterAndTitle";
 import { PressableOpacity } from "../PressableOpacity";
@@ -40,6 +40,7 @@ export function AnimeListItem({
 }: Props) {
   const router = useRouter();
   const now = useNow();
+  const getTitle = useGetTitle();
 
   const isAiringAndCurrentlyWatching =
     media.status === MediaStatus.Releasing &&

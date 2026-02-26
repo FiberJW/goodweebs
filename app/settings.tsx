@@ -18,11 +18,17 @@ import { CheckboxRow } from "yep/components/CheckboxRow";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { StorageKeys, usePersistedState } from "yep/hooks/helpers";
+import {
+  availableLanguages,
+  useLocaleContext,
+} from "yep/i18n/LocaleContext";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
 
 export default function Settings() {
+  const { locale, setLocale } = useLocaleContext();
+
   const [hideScores, setHideScores] = usePersistedState<boolean>(
     StorageKeys.HIDE_SCORES_GLOBAL,
   );
@@ -77,6 +83,42 @@ export default function Settings() {
               value={shouldPersistScoreVisibility}
               onValueChange={setShouldPersistScoreVisibility}
             />
+          </View>
+        </View>
+        <View style={{ flexDirection: "column" }}>
+          <Text
+            style={{
+              color: darkTheme.subHeader,
+              fontFamily: Manrope.semiBold,
+              fontSize: 20,
+              marginBottom: 24,
+            }}
+          >
+            {String(fbs("Language", "Language settings section title"))}
+          </Text>
+          <View style={styles.languageOptions}>
+            {[...availableLanguages].map(([code, label]) => {
+              const isSelected = locale === code;
+              return (
+                <PressableOpacity
+                  key={code}
+                  style={[
+                    styles.languageOption,
+                    isSelected && styles.languageOptionSelected,
+                  ]}
+                  onPress={() => setLocale(code)}
+                >
+                  <Text
+                    style={[
+                      styles.languageOptionText,
+                      isSelected && styles.languageOptionTextSelected,
+                    ]}
+                  >
+                    {label}
+                  </Text>
+                </PressableOpacity>
+              );
+            })}
           </View>
         </View>
         <View style={{ flexDirection: "column" }}>
@@ -184,5 +226,30 @@ const styles = StyleSheet.create({
     gap: 16,
     justifyContent: "space-between",
     padding: 16,
+  },
+  languageOptions: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  languageOption: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 12,
+    backgroundColor: darkTheme.button,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: darkTheme.buttonBorder,
+    alignItems: "center",
+  },
+  languageOptionSelected: {
+    backgroundColor: darkTheme.accent,
+    borderColor: darkTheme.accent,
+  },
+  languageOptionText: {
+    fontFamily: Manrope.semiBold,
+    fontSize: 16,
+    color: darkTheme.subText,
+  },
+  languageOptionTextSelected: {
+    color: darkTheme.text,
   },
 });

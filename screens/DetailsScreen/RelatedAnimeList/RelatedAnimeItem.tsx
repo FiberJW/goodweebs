@@ -4,7 +4,7 @@ import React from "react";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { AnimeRelationFragmentFragment } from "yep/graphql/generated";
-import { getTitle } from "yep/utils";
+import { useGetTitle } from "yep/utils";
 
 type RelatedItemProps = {
   anime: AnimeRelationFragmentFragment;
@@ -12,6 +12,8 @@ type RelatedItemProps = {
 
 export function RelatedAnimeItem({ anime }: RelatedItemProps) {
   const router = useRouter();
+  const getTitle = useGetTitle();
+
   if (!anime.coverImage?.large) return null;
 
   return (

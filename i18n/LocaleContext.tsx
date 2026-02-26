@@ -1,5 +1,5 @@
 import { getLocales } from "expo-localization";
-import { createLocaleContext } from "fbtee";
+import { createLocaleContext, useLocaleContext } from "fbtee";
 import React, { PropsWithChildren } from "react";
 
 import jaJP from "yep/i18n/translations/ja_JP.json";
@@ -22,6 +22,8 @@ const LocaleContext = createLocaleContext({
     return {};
   },
 });
+
+export { useLocaleContext };
 
 type Props = PropsWithChildren;
 

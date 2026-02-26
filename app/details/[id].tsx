@@ -61,6 +61,7 @@ import {
   getMediaListStatusLabel,
   getMediaStatusLabel,
   notEmpty,
+  useGetTitle,
 } from "yep/utils";
 
 type InfoProps = { label: string; value: ReactNode };
@@ -106,6 +107,8 @@ export default function Details() {
     }
   }, [shouldShowScoreToggleUI, showScore, setShowScore]);
 
+  const getTitle = useGetTitle();
+
   const [isRefetchingFromScrollOrMount, setIsRefetchingFromScrollOrMount] =
     useState(true);
 
@@ -121,16 +124,11 @@ export default function Details() {
   // Set navigation title dynamically
   useEffect(() => {
     if (data?.Media) {
-      const animeTitle =
-        data.Media.title?.english ??
-        data.Media.title?.romaji ??
-        data.Media.title?.native ??
-        "";
       navigation.setOptions({
-        title: animeTitle,
+        title: getTitle(data.Media.title) ?? "",
       });
     }
-  }, [data, navigation]);
+  }, [data, navigation, getTitle]);
 
   const mediaListEntryId = data?.Media?.mediaListEntry?.id;
   const cacheScore = data?.Media?.mediaListEntry?.score ?? 0;

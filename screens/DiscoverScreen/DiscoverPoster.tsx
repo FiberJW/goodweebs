@@ -3,7 +3,7 @@ import React from "react";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { AnimeFragmentFragment } from "yep/graphql/generated";
-import { getTitle } from "yep/utils";
+import { useGetTitle } from "yep/utils";
 
 export function DiscoverPoster({
   item,
@@ -14,6 +14,8 @@ export function DiscoverPoster({
   index: number;
   onPress?: () => void;
 }) {
+  const getTitle = useGetTitle();
+
   return (
     <PressableOpacity onPress={onPress}>
       <PosterAndTitle

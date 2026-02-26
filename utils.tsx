@@ -3,6 +3,7 @@ import { add } from "date-fns/add";
 import { differenceInDays } from "date-fns/differenceInDays";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import { fbs } from "fbtee";
+import { useCallback } from "react";
 import { Text } from "react-native";
 
 import {
@@ -14,6 +15,7 @@ import {
   Maybe,
   FuzzyDate,
 } from "./graphql/generated";
+import { useLocaleContext } from "./i18n/LocaleContext";
 
 export function notEmpty<TValue>(
   value: TValue | null | undefined
@@ -53,11 +55,25 @@ function getMonthName(month: number): string {
 }
 
 export function getTitle(
-  title: MediaTitle | undefined | null
+  title: MediaTitle | undefined | null,
+  locale?: string,
 ): string | undefined {
   if (!title) return undefined;
 
+  if (locale === "ja_JP") {
+    return title.native ?? title.romaji ?? title.english ?? undefined;
+  }
+
   return title.english ?? title.romaji ?? title.native ?? undefined;
+}
+
+export function useGetTitle() {
+  const { locale } = useLocaleContext();
+
+  return useCallback(
+    (title: MediaTitle | undefined | null) => getTitle(title, locale),
+    [locale],
+  );
 }
 
 // for making sure TS exhaustively checks switches
