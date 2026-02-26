@@ -1,3 +1,5 @@
+import "expo-sqlite/localStorage/install";
+
 import {
   ApolloClient,
   ApolloProvider,
@@ -5,7 +7,6 @@ import {
 } from "@apollo/client";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import LogRocket from "@logrocket/react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Sentry from "@sentry/react-native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -93,30 +94,28 @@ function InnerLayout() {
   }, []);
 
   useEffect(function initializeAnalytics() {
-    (async () => {
-      const sentryOptOut = await AsyncStorage.getItem(
-        StorageKeys.OPT_OUT_CRASH_REPORTING
-      );
+    const sentryOptOut = localStorage.getItem(
+      StorageKeys.OPT_OUT_CRASH_REPORTING
+    );
 
-      if (!(sentryOptOut && JSON.parse(sentryOptOut) === true)) {
-        Sentry.init({
-          dsn: "https://b2756b0df548451d98707d024aff00d1@o58038.ingest.sentry.io/5248224",
-          debug: __DEV__,
-          enabled: !__DEV__,
-        });
-      }
+    if (!(sentryOptOut && JSON.parse(sentryOptOut) === true)) {
+      Sentry.init({
+        dsn: "https://b2756b0df548451d98707d024aff00d1@o58038.ingest.sentry.io/5248224",
+        debug: __DEV__,
+        enabled: !__DEV__,
+      });
+    }
 
-      const logRocketOptOut = await AsyncStorage.getItem(
-        StorageKeys.OPT_OUT_ANALYTICS
-      );
+    const logRocketOptOut = localStorage.getItem(
+      StorageKeys.OPT_OUT_ANALYTICS
+    );
 
-      if (!(logRocketOptOut && JSON.parse(logRocketOptOut) === true)) {
-        LogRocket.init("iltgzt/goodweebs", {
-          updateId: Updates.isEmbeddedLaunch ? null : Updates.updateId,
-          expoChannel: Updates.channel,
-        });
-      }
-    })();
+    if (!(logRocketOptOut && JSON.parse(logRocketOptOut) === true)) {
+      LogRocket.init("iltgzt/goodweebs", {
+        updateId: Updates.isEmbeddedLaunch ? null : Updates.updateId,
+        expoChannel: Updates.channel,
+      });
+    }
   }, []);
 
   const appIsReady = checkedForToken && !!client;

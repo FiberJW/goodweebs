@@ -16,7 +16,6 @@ const scheme = (() => {
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  newArchEnabled: true,
   name,
   version: "0.0.18",
   slug: "goodweebs",
@@ -37,7 +36,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       ? "https://staging-u.expo.dev/4678c342-b7f2-4911-ae87-0c5c0de6c188"
       : "https://u.expo.dev/21cb2a71-d249-4289-abb6-3b9b39e3b0a3",
   },
-  assetBundlePatterns: ["**/*"],
   ios: {
     userInterfaceStyle: "dark",
     entitlements: {
@@ -145,7 +143,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
   },
   experiments: {
-    // TODO: enable react compiler
-    reactCompiler: false,
+    reactCompiler: true,
   },
 });

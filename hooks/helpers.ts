@@ -6,7 +6,6 @@ import {
   DefaultContext,
   ApolloCache,
 } from "@apollo/client";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DocumentNode } from "graphql";
 import { debounce } from "lodash";
 import { useRef, useEffect, useState } from "react";
@@ -128,37 +127,20 @@ export function usePersistedState<T>(
   key: StorageKeys,
   options?: { id?: string; doNotPersist?: boolean },
 ): [T, (data: T) => T] {
-  const [storageItem, setStorageItem] = useState<T>(defaultValues[key]);
-
   const { id, doNotPersist } = options ?? {};
-
   const storageKey = id ? `${key}:${id}` : key;
 
-  function updateStorageItem(data: T) {
-    if (!doNotPersist) AsyncStorage.setItem(storageKey, JSON.stringify(data));
-    setStorageItem(data);
+  const [storageItem, setStorageItem] = useState<T>(() => {
+    if (doNotPersist) return defaultValues[key];
+    const data = localStorage.getItem(storageKey);
+    return data ? JSON.parse(data) : defaultValues[key];
+  });
 
+  function updateStorageItem(data: T) {
+    if (!doNotPersist) localStorage.setItem(storageKey, JSON.stringify(data));
+    setStorageItem(data);
     return data;
   }
-
-  useEffect(
-    function setValueFromStorage() {
-      async function getStorageItem() {
-        if (doNotPersist) return storageItem;
-
-        const data = await AsyncStorage.getItem(storageKey);
-
-        if (data) {
-          const parsedData = JSON.parse(data);
-
-          setStorageItem(parsedData);
-        }
-      }
-
-      if (!doNotPersist) getStorageItem();
-    },
-    [doNotPersist, storageKey, storageItem],
-  );
 
   return [storageItem, updateStorageItem];
 }

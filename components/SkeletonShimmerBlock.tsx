@@ -1,4 +1,3 @@
-import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useState } from "react";
 import {
   DimensionValue,
@@ -89,7 +88,7 @@ export function SkeletonShimmerBlock({
         <Animated.View
           pointerEvents="none"
           style={[
-            styles.shimmerContainer,
+            styles.shimmerStrip,
             {
               borderRadius,
               height,
@@ -97,18 +96,7 @@ export function SkeletonShimmerBlock({
             },
             animatedShimmerStyle,
           ]}
-        >
-          <LinearGradient
-            colors={[
-              "rgba(255, 255, 255, 0)",
-              "rgba(255, 255, 255, 0.08)",
-              "rgba(255, 255, 255, 0)",
-            ]}
-            end={{ x: 1, y: 0.5 }}
-            start={{ x: 0, y: 0.5 }}
-            style={StyleSheet.absoluteFillObject}
-          />
-        </Animated.View>
+        />
       ) : null}
     </View>
   );
@@ -119,8 +107,10 @@ const styles = StyleSheet.create({
     backgroundColor: darkTheme.listItemBackground,
     overflow: "hidden",
   },
-  shimmerContainer: {
+  shimmerStrip: {
     position: "absolute",
     top: 0,
-  },
+    experimental_backgroundImage:
+      "linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.08), rgba(255,255,255,0))",
+  } as ViewStyle,
 });

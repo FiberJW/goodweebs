@@ -2,9 +2,8 @@ import { ApolloClient, InMemoryCache, ApolloLink } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { HttpLink } from "@apollo/client/link/http";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Sentry from "@sentry/react-native";
-import { persistCache, AsyncStorageWrapper } from "apollo3-cache-persist";
+import { persistCache, LocalStorageWrapper } from "apollo3-cache-persist";
 import * as SecureStore from "expo-secure-store";
 import * as Updates from "expo-updates";
 import Toast from "react-native-root-toast";
@@ -39,7 +38,7 @@ const cache = new InMemoryCache();
 export async function createClient() {
   await persistCache({
     cache,
-    storage: new AsyncStorageWrapper(AsyncStorage),
+    storage: new LocalStorageWrapper(localStorage),
   });
 
   return new ApolloClient({
