@@ -3,11 +3,11 @@
   "translations": {
     "m7fu6wgRxGlKJsdy1YPwMA==": {
       "description": "Not found page title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Page not found",
+          "translation": "ページが見つかりません",
           "variations": {}
         }
       ],
@@ -15,11 +15,11 @@
     },
     "Ob+VC29sYVhmbZ6Ald+l3w==": {
       "description": "Not found page description",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "The page you're looking for doesn't exist.",
+          "translation": "お探しのページは存在しません。",
           "variations": {}
         }
       ],
@@ -27,11 +27,11 @@
     },
     "b6g4br9Rg+rvT9JZTorg8A==": {
       "description": "Not found page call to action label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Go home",
+          "translation": "ホームに戻る",
           "variations": {}
         }
       ],
@@ -39,11 +39,11 @@
     },
     "0+/5NpAov545bvSLgdnweQ==": {
       "description": "Settings screen title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Settings",
+          "translation": "設定",
           "variations": {}
         }
       ],
@@ -51,11 +51,11 @@
     },
     "VYZJ2HZP70IAaJdxdLpimw==": {
       "description": "Display settings section title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Display settings",
+          "translation": "表示設定",
           "variations": {}
         }
       ],
@@ -63,11 +63,11 @@
     },
     "c3hpC20jffS6srQ6jZk9uA==": {
       "description": "Hide scores setting label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Hide scores by default",
+          "translation": "デフォルトでスコアを非表示",
           "variations": {}
         }
       ],
@@ -75,11 +75,11 @@
     },
     "7K2RJnPLk7rIiBDNsQmwqA==": {
       "description": "Persist score visibility setting label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Should persist score visibility per anime",
+          "translation": "アニメごとのスコア表示設定を保持する",
           "variations": {}
         }
       ],
@@ -87,11 +87,11 @@
     },
     "Z7qOCgQC+5FDU1V01Xvpgw==": {
       "description": "Privacy settings section title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Privacy settings",
+          "translation": "プライバシー設定",
           "variations": {}
         }
       ],
@@ -99,11 +99,11 @@
     },
     "g/7ez9/sELBgHvIXrQz3fQ==": {
       "description": "Crash reporting opt-out setting label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Opt-out of crash reporting",
+          "translation": "クラッシュレポートを無効にする",
           "variations": {}
         }
       ],
@@ -111,11 +111,11 @@
     },
     "6HWLVlkYBnpEfOPY82m26w==": {
       "description": "Session analytics opt-out setting label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Opt-out of session analytics",
+          "translation": "セッション分析を無効にする",
           "variations": {}
         }
       ],
@@ -123,11 +123,11 @@
     },
     "ALZzC57F9KPKXCSBb8Q/jA==": {
       "description": "Privacy policy link label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Privacy policy",
+          "translation": "プライバシーポリシー",
           "variations": {}
         }
       ],
@@ -135,11 +135,11 @@
     },
     "ATdMWiPkUphqnYyrr8UA4g==": {
       "description": "Log out button label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Log out",
+          "translation": "ログアウト",
           "variations": {}
         }
       ],
@@ -147,11 +147,11 @@
     },
     "wHimXYPazIqJagoaX/Jjag==": {
       "description": "Log out confirmation message",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Are you sure that you want to log out?",
+          "translation": "ログアウトしてもよろしいですか？",
           "variations": {}
         }
       ],
@@ -159,11 +159,11 @@
     },
     "mlny88jeQIS5+fJfuuypuw==": {
       "description": "Cancel button label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Cancel",
+          "translation": "キャンセル",
           "variations": {}
         }
       ],
@@ -171,11 +171,11 @@
     },
     "VdN+l0Te+R97RrsisxJLSQ==": {
       "description": "Log out confirmation button label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Log out",
+          "translation": "ログアウト",
           "variations": {}
         }
       ],
@@ -183,7 +183,7 @@
     },
     "IYUmtYxQtGdt1MucjXrsVA==": {
       "description": "Label with meaning 'at least number'",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
@@ -195,7 +195,7 @@
     },
     "ZIF1WhVQwt7WZJvFTEbMWw==": {
       "description": "Label with meaning 'less than number'",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
@@ -207,11 +207,11 @@
     },
     "Oc/9PrbjfyLHS60BXceD1A==": {
       "description": "A list of items of various types, for example: \"San Francisco; London; Tokyo\". {previous items} and {following items} are themselves lists that contain one or more items.",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "{previous items}; {following items}",
+          "translation": "{previous items}、{following items}",
           "variations": {}
         }
       ],
@@ -219,11 +219,11 @@
     },
     "AXXbKEUZuc0ji1IClRrOOw==": {
       "description": "A list of items of various types separated by bullets, for example: \"San Francisco \\u2022 London \\u2022 Tokyo\". {previous items} and {following items} are themselves lists that contain one or more items.",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "{previous items} • {following items}",
+          "translation": "{previous items} ・ {following items}",
           "variations": {}
         }
       ],
@@ -231,11 +231,11 @@
     },
     "89ACgPMtnwlLDSeqhLBx2Q==": {
       "description": "A list of items of various types separated by commas, for example: \"San Francisco, London, Tokyo\". {previous items} and {following items} are themselves lists that contain one or more items.",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "{previous items}, {following items}",
+          "translation": "{previous items}、{following items}",
           "variations": {}
         }
       ],
@@ -243,11 +243,11 @@
     },
     "5hL7VXOBVnetm46YAjpX0g==": {
       "description": "A list of items of various types with a serial comma, for example: \"item1, item2, and item3\"",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "{list of items}, and {last item}",
+          "translation": "{list of items}、{last item}",
           "variations": {}
         }
       ],
@@ -255,11 +255,11 @@
     },
     "icNetEL/crQv/PS6yhySVQ==": {
       "description": "A list of items of various types, for example: \"item1, item2, item3 and item4\"",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "{list of items} and {last item}",
+          "translation": "{list of items}、{last item}",
           "variations": {}
         }
       ],
@@ -267,11 +267,11 @@
     },
     "8kLAQ3ffiiFnQ/bWPqXfuQ==": {
       "description": "A list of items of various types with a serial comma, for example: \"item1, item2, or item3\"",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "{list of items}, or {last item}",
+          "translation": "{list of items}、または{last item}",
           "variations": {}
         }
       ],
@@ -279,11 +279,11 @@
     },
     "8eSaAzrWtAqn9ktNKfkaEg==": {
       "description": "A list of items of various types, for example: \"item1, item2, item3 or item4\"",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "{list of items} or {last item}",
+          "translation": "{list of items}、または{last item}",
           "variations": {}
         }
       ],
@@ -291,11 +291,11 @@
     },
     "+IBI7kr/mMKdzp+3stDvkw==": {
       "description": "A list of items of various types, for example: \"San Francisco; London; Tokyo\". {previous items} itself contains one or more items.",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "{previous items}; {last item}",
+          "translation": "{previous items}、{last item}",
           "variations": {}
         }
       ],
@@ -303,11 +303,11 @@
     },
     "55IeE8c0qqtjTU0lo7q9AA==": {
       "description": "A list of items of various types separated by bullets, for example: \"San Francisco \\u2022 London \\u2022 Tokyo\". {previous items} contains one or more items.",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "{list of items} • {last item}",
+          "translation": "{list of items} ・ {last item}",
           "variations": {}
         }
       ],
@@ -315,11 +315,11 @@
     },
     "6PRJS0QalZfvaN8CkKCUCw==": {
       "description": "A list of items of various types, for example: \"item1, item2, item3, item4\"",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "{list of items}, {last item}",
+          "translation": "{list of items}、{last item}",
           "variations": {}
         }
       ],
@@ -327,11 +327,11 @@
     },
     "RyfkI42I5vyNZSsBfilRLQ==": {
       "description": "Auth screen tagline",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "An anime tracking app powered by AniList and Expo.",
+          "translation": "AniListとExpoで動くアニメ管理アプリ。",
           "variations": {}
         }
       ],
@@ -339,11 +339,11 @@
     },
     "M9zHnUHG6aY1C7f4RdPpJA==": {
       "description": "Auth screen login button label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Log in with AniList",
+          "translation": "AniListでログイン",
           "variations": {}
         }
       ],
@@ -351,11 +351,11 @@
     },
     "m+MBCxVH3MhZdSnBf3Nf1Q==": {
       "description": "Auth screen continue without login button label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Continue without logging in",
+          "translation": "ログインせずに続ける",
           "variations": {}
         }
       ],
@@ -363,11 +363,11 @@
     },
     "mkSHsB2OntroY24wvQENvg==": {
       "description": "Auth screen continue without login warning",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Without an account, you will not be able to keep track of anime or manga, but you can still browse through Discover to explore new series. You can log in or register at any time to begin tracking series to your lists.",
+          "translation": "アカウントなしでは、アニメやマンガの記録はできませんが、「探索」から新しい作品を閲覧できます。いつでもログインまたは登録して、リストへの追跡を始められます。",
           "variations": {}
         }
       ],
@@ -375,11 +375,11 @@
     },
     "K2rLOy7Or2rdtMgQ+vqoVQ==": {
       "description": "Auth screen continue warning cancel",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Cancel",
+          "translation": "キャンセル",
           "variations": {}
         }
       ],
@@ -387,7 +387,7 @@
     },
     "9RZllFATWuiBDWlmJcIjlg==": {
       "description": "Auth screen continue warning confirm button",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
@@ -399,11 +399,11 @@
     },
     "1YX0EJsCsAKx2mD+5u4m+A==": {
       "description": "Anime not found error title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Could not find anime",
+          "translation": "アニメが見つかりません",
           "variations": {}
         }
       ],
@@ -411,11 +411,11 @@
     },
     "2no6v1NpzOqslpIazuCUwQ==": {
       "description": "Anime not found error description prefix",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "We ran into an unexpected error loading the requested anime:",
+          "translation": "リクエストされたアニメの読み込み中にエラーが発生しました：",
           "variations": {}
         }
       ],
@@ -423,11 +423,11 @@
     },
     "KMhMRRjRDFlvw7fRM6BPWg==": {
       "description": "Anime details episodes label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Episodes",
+          "translation": "話数",
           "variations": {}
         }
       ],
@@ -435,11 +435,11 @@
     },
     "leAKjTK5hfr6jUAChANsOQ==": {
       "description": "Anime details genre label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Genre",
+          "translation": "ジャンル",
           "variations": {}
         }
       ],
@@ -447,11 +447,11 @@
     },
     "1B868UzSzHzJNyfPq38aJg==": {
       "description": "Anime details average score label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Average score",
+          "translation": "平均スコア",
           "variations": {}
         }
       ],
@@ -459,11 +459,11 @@
     },
     "l00GuSmT5EiMUz9Ir681XA==": {
       "description": "Anime details average score hidden prompt",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Tap to show",
+          "translation": "タップして表示",
           "variations": {}
         }
       ],
@@ -471,11 +471,11 @@
     },
     "zVV8jsGwfajo4hdhVMlzew==": {
       "description": "Anime details status label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Status",
+          "translation": "ステータス",
           "variations": {}
         }
       ],
@@ -483,11 +483,11 @@
     },
     "Mpgxw8WYcB3fwh6fnCwRAw==": {
       "description": "Anime details studio label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Studio",
+          "translation": "スタジオ",
           "variations": {}
         }
       ],
@@ -495,11 +495,11 @@
     },
     "oLNYQOHuaxf8qXQXjqEB6g==": {
       "description": "Anime details next episode label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Next episode",
+          "translation": "次のエピソード",
           "variations": {}
         }
       ],
@@ -507,11 +507,11 @@
     },
     "bYKpbEk0UU6LnLCTby0aFw==": {
       "description": "Episode abbreviation for next episode",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "EP",
+          "translation": "第",
           "variations": {}
         }
       ],
@@ -519,11 +519,11 @@
     },
     "y1xvaBGaMvsrxZ3y6U8poA==": {
       "description": "Next episode airs in label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "airs in",
+          "translation": "話 放送まで",
           "variations": {}
         }
       ],
@@ -531,11 +531,11 @@
     },
     "dPgCiJ+DNlFp14mgWXzjwA==": {
       "description": "Anime details start date label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Start date",
+          "translation": "開始日",
           "variations": {}
         }
       ],
@@ -543,11 +543,11 @@
     },
     "j0jBs0jk7AzQIHbwUxsLhQ==": {
       "description": "Anime details end date label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "End date",
+          "translation": "終了日",
           "variations": {}
         }
       ],
@@ -555,11 +555,11 @@
     },
     "+gVDKEAQF9HpfVIQkiDVGw==": {
       "description": "Anime details add to list button",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Add to list",
+          "translation": "リストに追加",
           "variations": {}
         }
       ],
@@ -567,11 +567,11 @@
     },
     "cCPSNTux64fRkWVo5L3ueA==": {
       "description": "Anime details remove from list action sheet option",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Remove from list",
+          "translation": "リストから削除",
           "variations": {}
         }
       ],
@@ -579,11 +579,11 @@
     },
     "qdLXApM++tZ/hAoU3bwJKw==": {
       "description": "Anime details cancel action sheet option",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Cancel",
+          "translation": "キャンセル",
           "variations": {}
         }
       ],
@@ -591,11 +591,11 @@
     },
     "tIjT8N1yJLzqKb7JGcXVxQ==": {
       "description": "Anime details score stepper label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Score",
+          "translation": "スコア",
           "variations": {}
         }
       ],
@@ -603,11 +603,11 @@
     },
     "yAQ16l0uz9zLEAAu4y1zHg==": {
       "description": "Anime details progress stepper label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Progress",
+          "translation": "進捗",
           "variations": {}
         }
       ],
@@ -615,11 +615,11 @@
     },
     "J2Wz/YEsWBqqyYbCwMxRlQ==": {
       "description": "Anime details external links title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "External links",
+          "translation": "外部リンク",
           "variations": {}
         }
       ],
@@ -627,11 +627,11 @@
     },
     "Cg0SZ0V/q4ecxch+S+uB6Q==": {
       "description": "Character not found error title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Could not find character",
+          "translation": "キャラクターが見つかりません",
           "variations": {}
         }
       ],
@@ -639,11 +639,11 @@
     },
     "n5fySLqpcsjSrhgUbNyr3A==": {
       "description": "Character not found error description prefix",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "We ran into an unexpected error loading the requested character:",
+          "translation": "リクエストされたキャラクターの読み込み中にエラーが発生しました：",
           "variations": {}
         }
       ],
@@ -651,11 +651,11 @@
     },
     "XYg47wtzdOzk0OOY5EmrkQ==": {
       "description": "Anime tab header label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Anime",
+          "translation": "アニメ",
           "variations": {}
         }
       ],
@@ -663,11 +663,11 @@
     },
     "CKOv+jsdvTJDLviOEADQwA==": {
       "description": "Anime list title count",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "{count} titles",
+          "translation": "{count}作品",
           "variations": {}
         }
       ],
@@ -675,11 +675,11 @@
     },
     "iZoAqpSbzBU9bo7OQg9Fow==": {
       "description": "Anime list title count",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "{count} title",
+          "translation": "{count}作品",
           "variations": {}
         }
       ],
@@ -687,11 +687,11 @@
     },
     "E+GWME49UPTLdrFmIo/06A==": {
       "description": "Anime empty state login title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Log in",
+          "translation": "ログイン",
           "variations": {}
         }
       ],
@@ -699,11 +699,11 @@
     },
     "uHLuB91DRBqCCknJz7YMpQ==": {
       "description": "Anime empty state title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Empty list",
+          "translation": "リストが空です",
           "variations": {}
         }
       ],
@@ -711,11 +711,11 @@
     },
     "kJ99OOo1VtPzrogh1zJ4YA==": {
       "description": "Anime empty state login description",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Start tracking your anime by using an AniList account!",
+          "translation": "AniListアカウントでアニメの視聴記録を始めましょう！",
           "variations": {}
         }
       ],
@@ -723,11 +723,11 @@
     },
     "0cVNPpbnh1XbJ9vZHwQjNg==": {
       "description": "Anime empty state list description",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Explore the world of anime by adding some shows to your list!",
+          "translation": "リストにアニメを追加して、アニメの世界を探索しましょう！",
           "variations": {}
         }
       ],
@@ -735,11 +735,11 @@
     },
     "sUR5nzygpa1lbLpQsBrUIQ==": {
       "description": "Anime empty state login call to action",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Log in",
+          "translation": "ログイン",
           "variations": {}
         }
       ],
@@ -747,11 +747,11 @@
     },
     "perRUn9M77OShfDO+YfZHA==": {
       "description": "Anime empty state discover call to action",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Discover new anime",
+          "translation": "新しいアニメを探索",
           "variations": {}
         }
       ],
@@ -759,11 +759,11 @@
     },
     "g/25RMlfck/696fSBDOsrA==": {
       "description": "Discover tab header label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Discover",
+          "translation": "探索",
           "variations": {}
         }
       ],
@@ -771,11 +771,11 @@
     },
     "Ad+8R8ZahdDc7C5MpW0+Sw==": {
       "description": "Search input placeholder",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Search anime",
+          "translation": "アニメを検索",
           "variations": {}
         }
       ],
@@ -783,11 +783,11 @@
     },
     "UT9JfXUl8Q3HwWtddC6woQ==": {
       "description": "Search error title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Couldn't load search results",
+          "translation": "検索結果を読み込めませんでした",
           "variations": {}
         }
       ],
@@ -795,11 +795,11 @@
     },
     "wDirB+RlLLPn75m8PyhTfw==": {
       "description": "Search error description",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Check your connection and try again.",
+          "translation": "接続を確認してもう一度お試しください。",
           "variations": {}
         }
       ],
@@ -807,11 +807,11 @@
     },
     "KPTV7XgtC+lwvLvdMDeD7g==": {
       "description": "Search retry button label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Retry",
+          "translation": "再試行",
           "variations": {}
         }
       ],
@@ -819,11 +819,11 @@
     },
     "lccEwYd3OdATQoDrHi9BCw==": {
       "description": "Search results header",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Search results for: {searchTerm}",
+          "translation": "「{searchTerm}」の検索結果",
           "variations": {}
         }
       ],
@@ -831,11 +831,11 @@
     },
     "nNo9tZoN8ruSt+aynW9rcg==": {
       "description": "No search results title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "No search results",
+          "translation": "検索結果なし",
           "variations": {}
         }
       ],
@@ -843,11 +843,11 @@
     },
     "6BLV/Tcvkwy85CMOjNvHQA==": {
       "description": "No search results description",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "You may have misspelled what you were looking for, or this anime isn't listed on AniList.",
+          "translation": "入力が間違っているか、このアニメはAniListに登録されていない可能性があります。",
           "variations": {}
         }
       ],
@@ -855,11 +855,11 @@
     },
     "qGcxPyRxzHw/d3rzpy1SoA==": {
       "description": "Trending anime list header",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Top {count} trending anime",
+          "translation": "トレンドアニメ トップ{count}",
           "variations": {}
         }
       ],
@@ -867,11 +867,11 @@
     },
     "ZXu86w8CXXSsTOhPH8jZDA==": {
       "description": "Trending loading error title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Unexpected loading error",
+          "translation": "予期しない読み込みエラー",
           "variations": {}
         }
       ],
@@ -879,11 +879,11 @@
     },
     "gWFosyMBK9cW2j90zNW7uw==": {
       "description": "Trending loading error description",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Swipe down to try again",
+          "translation": "下にスワイプして再試行",
           "variations": {}
         }
       ],
@@ -891,11 +891,11 @@
     },
     "Qx4CYbzSp68iR/RYQz2/Uw==": {
       "description": "Profile tab header label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Profile",
+          "translation": "プロフィール",
           "variations": {}
         }
       ],
@@ -903,11 +903,11 @@
     },
     "OcnmzUhwctDP6t+5y4SqIg==": {
       "description": "Profile stat total anime",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Total anime",
+          "translation": "アニメ合計",
           "variations": {}
         }
       ],
@@ -915,11 +915,11 @@
     },
     "RBNWZWGMZhtuYXH3Hks1EQ==": {
       "description": "Profile stat days watched",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Days watched",
+          "translation": "視聴日数",
           "variations": {}
         }
       ],
@@ -927,11 +927,11 @@
     },
     "B9EulfPJOyUk49xEKCSf2Q==": {
       "description": "Favorite anime section title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Favorite anime",
+          "translation": "お気に入りアニメ",
           "variations": {}
         }
       ],
@@ -939,11 +939,11 @@
     },
     "aBA4HcvIgK480aprbd8T2g==": {
       "description": "Favorite characters section title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Favorite characters",
+          "translation": "お気に入りキャラクター",
           "variations": {}
         }
       ],
@@ -951,11 +951,11 @@
     },
     "ohFREBuesmr5uM5WSycKGA==": {
       "description": "Spoiler prefix label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Spoiler:",
+          "translation": "ネタバレ：",
           "variations": {}
         }
       ],
@@ -963,11 +963,11 @@
     },
     "X3hkT875Iyc1h7VMKzWOxA==": {
       "description": "Show spoilers button label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Show spoilers",
+          "translation": "ネタバレを表示",
           "variations": {}
         }
       ],
@@ -975,11 +975,11 @@
     },
     "pQoKGcaMveallt0CkNH1aQ==": {
       "description": "Search box cancel button label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Cancel",
+          "translation": "キャンセル",
           "variations": {}
         }
       ],
@@ -987,11 +987,11 @@
     },
     "uVxLyCW49c0sQ2EJsY0BxA==": {
       "description": "Trailer section title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Trailer",
+          "translation": "予告編",
           "variations": {}
         }
       ],
@@ -999,11 +999,587 @@
     },
     "PkCtj0o8OdaeNPgUFr3UMA==": {
       "description": "Characters section title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Characters",
+          "translation": "キャラクター",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "a4eM2mOHS4j1ZRMoiFp/rg==": {
+      "description": "Language settings section title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "言語",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "4yheiW+n1T8EFjPleAtVIw==": {
+      "description": "Month name January",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "1月",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "s4y6GIyiwKNc9AauLhlEcA==": {
+      "description": "Month name February",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "2月",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "Te4+1XbiveoRrKmdXh6z/w==": {
+      "description": "Month name March",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "3月",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "vZFS5rE+R+tYzcfJuHOCnQ==": {
+      "description": "Month name April",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "4月",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "Sy4ag9bO3UxBuXbnrg5clg==": {
+      "description": "Month name May",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "5月",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "uZk4+3WJfRnAldGcH18eqA==": {
+      "description": "Month name June",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "6月",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "xomCbHHfLEZZumkOfDsjZg==": {
+      "description": "Month name July",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "7月",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "NNUPWCYogihTJvekJ5ujHQ==": {
+      "description": "Month name August",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "8月",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "WITYZxJl8NrD6ISQAiGsmg==": {
+      "description": "Month name September",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "9月",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "KCV6QpkUtDO85nQYWdpXAg==": {
+      "description": "Month name October",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "10月",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "kwx4hQCO4Xsq6EdKRfx2Ig==": {
+      "description": "Month name November",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "11月",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "qcy6jmZpjnmRCl1eEMC0Gw==": {
+      "description": "Month name December",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "12月",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "V8GcVD4/8uaF3lZ3WulSfw==": {
+      "description": "Media relation adaptation",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "原作",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "JheK0pGqjDHxcH/VGbCHMw==": {
+      "description": "Media relation alternative",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "別バージョン",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "XYvicrl/mmrWtetvJTmiOQ==": {
+      "description": "Media relation prequel",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "前編",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "LpnzE8GLlyetN0n+OPwdBQ==": {
+      "description": "Media relation parent",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "親作品",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "sAadav3OQXy/gWi5tLlUjw==": {
+      "description": "Media relation sequel",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "続編",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "DJjcJdaSXYtF63Q5BqHoTQ==": {
+      "description": "Media relation character",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "キャラクター",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "QGhMAsTZsnt6d+UYy4ZqKA==": {
+      "description": "Media relation side story",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "サイドストーリー",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "xwXrLTNy9JQG3DxPQvPqTA==": {
+      "description": "Media relation summary",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "総集編",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "lSkBqprcZJAomOPoO/2FYg==": {
+      "description": "Media relation spin off",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "スピンオフ",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "55VKFLZtDI2o0PevlLl4Hw==": {
+      "description": "Media relation other",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "その他",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "cLlicj6OKzLmxsjRYSM8hQ==": {
+      "description": "Media relation source",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "原作",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "XQ6eh8O/sxJlBxLgsKq5qA==": {
+      "description": "Media relation compilation",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "総集編",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "pUajm3IhOF6mimv02q2xXg==": {
+      "description": "Media relation contains",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "収録",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "yBnhdughs2HElLUgdsr5aw==": {
+      "description": "Media list status watching",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "視聴中",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "ZeB+WUN4PQOSFMzFGWh9yw==": {
+      "description": "Media list status on hold",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "保留中",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "owCIH89AYSnvYsh2rPtCAg==": {
+      "description": "Media list status plan to watch",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "視聴予定",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "4APpI9saVB7uLc9LGQdKLA==": {
+      "description": "Media list status dropped",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "中断",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "6kYYL3ePmSIKU7qNrwGF1A==": {
+      "description": "Media list status completed",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "完了",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "gArunMvDedmccnqPLIVpXg==": {
+      "description": "Media list status repeating",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "再視聴",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "2I9cv53ydg37glgqBRkd4Q==": {
+      "description": "Media status finished",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "完結",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "31e9MCL12i7MMU/oY37+cw==": {
+      "description": "Media status currently releasing",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "放送中",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "KnchdEC1k3XXgVeE9MGECg==": {
+      "description": "Media status not yet released",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "未放送",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "BQlkLAtdBKFAJFtx2gORDA==": {
+      "description": "Media status cancelled",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "打ち切り",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "2o74ls/uZ2lvNlgL/dQtBQ==": {
+      "description": "Media status on hiatus",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "休止中",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "sZFaM29Looo/aTYN0M9Ruw==": {
+      "description": "Episode abbreviation",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "第",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "oZyEXTe6Z58Hf9hZjq4Z9Q==": {
+      "description": "Airs in status text",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "話 放送まで",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "hN1ZWq+RRHC7TzhoJMmtqw==": {
+      "description": "Anime status releasing",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "放送中",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "61H7eUBIhF/pwSaRDTM4VA==": {
+      "description": "Starting date label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "開始",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "aphmTZ+Z/IM1yqqginQbAA==": {
+      "description": "Anime status not yet released",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "未放送",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "P0oZxssCYgyC3gP2XWFEFA==": {
+      "description": "Anime status on hiatus",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "休止中",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "CmPodXDDbYoG5fkMSMLTGQ==": {
+      "description": "Finished date label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "完結",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "A57P/7RIXs189OG5C5o+Bw==": {
+      "description": "Anime status finished",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "完結",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "xU0N8jS4EtFuB3/UcGUjvg==": {
+      "description": "Cancelled date label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "打ち切り",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "Dei14TPWjP7PrYXl4lixEQ==": {
+      "description": "Anime status cancelled",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "打ち切り",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "vFEv6FNeQi0yMcntNWjJAA==": {
+      "description": "Episode abbreviation in progress text",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "話",
           "variations": {}
         }
       ],

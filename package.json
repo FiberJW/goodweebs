@@ -4,7 +4,7 @@
     "start": "APP_VARIANT=development bunx expo start --tunnel -c",
     "web": "APP_VARIANT=development bunx expo start --web -c",
     "gql": "graphql-codegen --config codegen.ts",
-    "i18n:collect": "fbtee collect --src app components containers hooks screens",
+    "i18n:collect": "fbtee collect --src . app components containers hooks screens",
     "i18n:prepare": "fbtee prepare-translations --locales ja_JP --output-dir translations",
     "i18n:translate": "fbtee translate --translations translations/*.json --output-dir i18n/translations",
     "i18n:sync": "bun run i18n:collect && bun run i18n:prepare && bun run i18n:translate",
