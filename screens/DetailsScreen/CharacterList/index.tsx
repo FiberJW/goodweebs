@@ -3,7 +3,7 @@ import React from "react";
 import { Text, StyleSheet } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 
-import { CharacterDataFragment } from "yep/graphql/generated";
+import type { CharacterDataFragment } from "yep/graphql/generated";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
@@ -12,6 +12,14 @@ import { CharacterItem } from "./CharacterItem";
 type Props = {
   characters: CharacterDataFragment[];
 };
+
+function keyExtractor(item: CharacterDataFragment) {
+  return `${item.id}`;
+}
+
+function renderCharacterItem({ item }: { item: CharacterDataFragment }) {
+  return <CharacterItem character={item} />;
+}
 
 export function CharacterList({ characters }: Props) {
   return (
@@ -25,11 +33,9 @@ export function CharacterList({ characters }: Props) {
         style={{ width: "100%", marginBottom: 16 }}
         contentContainerStyle={{ gap: 8 }}
         horizontal
-        keyExtractor={(item) => `${item.id}`}
+        keyExtractor={keyExtractor}
         data={characters}
-        renderItem={({ item }) => {
-          return <CharacterItem character={item} />;
-        }}
+        renderItem={renderCharacterItem}
       />
     </>
   );

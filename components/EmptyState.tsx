@@ -1,5 +1,6 @@
+import { Image } from "expo-image";
 import React from "react";
-import { StyleSheet, View, ViewStyle, Text, Image } from "react-native";
+import { StyleSheet, View, ViewStyle, Text } from "react-native";
 
 import { Button } from "yep/components/Button";
 import { darkTheme } from "yep/themes";

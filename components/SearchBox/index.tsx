@@ -1,3 +1,4 @@
+import { Image } from "expo-image";
 import { fbs } from "fbtee";
 import React, { useState, useRef } from "react";
 import {
@@ -5,7 +6,6 @@ import {
   TextInput,
   StyleSheet,
   View,
-  Image,
   Text,
 } from "react-native";
 

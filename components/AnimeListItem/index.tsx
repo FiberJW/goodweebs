@@ -3,11 +3,7 @@ import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
 import { black15, white12_5, white5, white95 } from "yep/colors";
-import {
-  AnimeFragmentFragment,
-  MediaStatus,
-  MediaListStatus,
-} from "yep/graphql/generated";
+import type { AnimeFragmentFragment } from "yep/graphql/generated";
 import { useNow } from "yep/hooks/helpers";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
@@ -43,8 +39,7 @@ export function AnimeListItem({
   const getTitle = useGetTitle();
 
   const isAiringAndCurrentlyWatching =
-    media.status === MediaStatus.Releasing &&
-    media.mediaListEntry?.status === MediaListStatus.Current;
+    media.status === "RELEASING" && media.mediaListEntry?.status === "CURRENT";
 
   const episodesBehind =
     isAiringAndCurrentlyWatching &&
@@ -101,7 +96,7 @@ export function AnimeListItem({
             {getProgress(media, progress)}
           </Text>
         </View>
-        {media.status !== MediaStatus.NotYetReleased ? (
+        {media.status !== "NOT_YET_RELEASED" ? (
           <View style={styles.progressButtonGroup}>
             <ProgressButton
               disabled={Boolean(disabled) || progress === 0}

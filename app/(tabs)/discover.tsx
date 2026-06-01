@@ -1,4 +1,3 @@
-import { useRouter } from "expo-router";
 import { fbs } from "fbtee";
 import React, { useState } from "react";
 import {
@@ -17,16 +16,32 @@ import {
   useGetTrendingAnimeQuery,
   useSearchAnimeQuery,
 } from "yep/graphql/generated";
+import type { AnimeFragmentFragment } from "yep/graphql/generated";
 import { DiscoverPoster } from "yep/screens/DiscoverScreen/DiscoverPoster";
 import { DiscoverSkeletonGrid } from "yep/screens/DiscoverScreen/DiscoverSkeleton";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { notEmpty } from "yep/utils";
 
+type ItemWithId = { id: number };
+
+function keyExtractor(item: ItemWithId) {
+  return `${item.id}`;
+}
+
+function renderDiscoverPoster({
+  item,
+  index,
+}: {
+  item: AnimeFragmentFragment;
+  index: number;
+}) {
+  return <DiscoverPoster item={item} index={index} />;
+}
+
 export default function Discover() {
   const [searchTerm, setSearchTerm] = useState("");
   const { width: windowWidth } = useWindowDimensions();
-  const router = useRouter();
 
   const posterWidth = (windowWidth - 16 * 4) / 3;
   const posterHeight = posterWidth * 1.4285714286;
@@ -110,10 +125,15 @@ export default function Discover() {
         ) : showSearchResultsView ? (
           <>
             <Text style={styles.listHeader}>
-              <fbt desc="Search results header">
-                Search results for:{" "}
-                <fbt:param name="searchTerm">{searchTerm}</fbt:param>
-              </fbt>
+              {String(
+                fbs(
+                  [
+                    "Search results for: ",
+                    fbs.param("searchTerm", searchTerm),
+                  ],
+                  "Search results header",
+                ),
+              )}
             </Text>
             <FlatList
               contentContainerStyle={{ gap: 16 }}
@@ -141,14 +161,8 @@ export default function Discover() {
                 />
               }
               numColumns={3}
-              keyExtractor={(item) => `${item.id}`}
-              renderItem={({ item, index }) => (
-                <DiscoverPoster
-                  {...{ item, index, posterHeight, posterWidth }}
-                  onPress={() => router.push(`/details/${item.id}`)}
-                  key={item.id}
-                />
-              )}
+              keyExtractor={keyExtractor}
+              renderItem={renderDiscoverPoster}
             />
           </>
         ) : isTrendingInitialLoading ? (
@@ -162,11 +176,18 @@ export default function Discover() {
           <>
             {trendingList.length ? (
               <Text style={styles.listHeader}>
-                <fbt desc="Trending anime list header">
-                  Top{" "}
-                  <fbt:param name="count">{trendingList.length}</fbt:param>{" "}
-                  trending anime
-                </fbt>
+                {String(
+                  fbs(
+                    [
+                      "Top ",
+                      fbs.param("count", String(trendingList.length), {
+                        number: trendingList.length,
+                      }),
+                      " trending anime",
+                    ],
+                    "Trending anime list header",
+                  ),
+                )}
               </Text>
             ) : null}
             <FlatList
@@ -199,16 +220,8 @@ export default function Discover() {
                   titleColor={darkTheme.text}
                 />
               }
-              keyExtractor={(item) => `${item.id}`}
-              renderItem={({ item, index }) => {
-                return (
-                  <DiscoverPoster
-                    {...{ item, index, posterHeight, posterWidth }}
-                    onPress={() => router.push(`/details/${item.id}`)}
-                    key={item.id}
-                  />
-                );
-              }}
+              keyExtractor={keyExtractor}
+              renderItem={renderDiscoverPoster}
             />
           </>
         )}

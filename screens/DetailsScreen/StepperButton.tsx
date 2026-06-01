@@ -1,5 +1,6 @@
+import { Image } from "expo-image";
 import React from "react";
-import { StyleSheet, Image } from "react-native";
+import { StyleSheet } from "react-native";
 
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { darkTheme } from "yep/themes";

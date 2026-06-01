@@ -7,8 +7,8 @@ import {
   ApolloCache,
 } from "@apollo/client";
 import { DocumentNode } from "graphql";
-import { debounce } from "lodash";
-import { useRef, useEffect, useState } from "react";
+import debounce from "lodash/debounce";
+import { useEffect, useState } from "react";
 import { useWindowDimensions } from "react-native";
 
 export function useNow(interval: "second" | "minute" = "minute") {
@@ -49,9 +49,10 @@ export function useDebouncedMutation<
     mutationDocument,
   );
 
-  const abortController = useRef<AbortController>(null);
-  const debouncedMutation = useRef(
-    debounce(
+  const [mutationQueue] = useState(() => {
+    let abortController: AbortController | null = null;
+
+    const debouncedMutation = debounce(
       async (
         mutationFunc: ({
           variables,
@@ -61,17 +62,20 @@ export function useDebouncedMutation<
         variables?: MutationVariables,
       ) => {
         const controller = new AbortController();
-        abortController.current = controller;
+        abortController = controller;
         await mutationFunc({
           variables,
           context: { fetchOptions: { signal: controller.signal } },
         });
       },
       wait,
-    ),
-  );
+    );
 
-  const abortLatest = () => abortController.current?.abort();
+    return {
+      abortLatest: () => abortController?.abort(),
+      debouncedMutation,
+    };
+  });
 
   const mutationWithOptimisticUI = async ({
     variables,
@@ -91,8 +95,8 @@ export function useDebouncedMutation<
   };
 
   return async (newVariables?: MutationVariables) => {
-    abortLatest();
-    return await debouncedMutation.current(
+    mutationQueue.abortLatest();
+    return await mutationQueue.debouncedMutation(
       mutationWithOptimisticUI,
       newVariables,
     );

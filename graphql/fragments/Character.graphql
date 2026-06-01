@@ -1,0 +1,17 @@
+fragment CharacterData on Character {
+  id
+  isFavourite
+  name {
+    first
+    last
+    full
+    native
+    alternative
+  }
+  image {
+    large
+    medium
+  }
+  description
+  siteUrl
+}

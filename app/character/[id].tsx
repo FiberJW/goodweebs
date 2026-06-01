@@ -9,7 +9,7 @@ import { EmptyState } from "yep/components/EmptyState";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { LikeButton } from "yep/components/PosterAndTitle/LikeButton";
 import {
-  refetchGetCharacterQuery,
+  GetCharacterDocument,
   useToggleFavoriteMutation,
   useGetCharacterQuery,
 } from "yep/graphql/generated";
@@ -42,7 +42,7 @@ export default function Character() {
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
+      contentInset={{ bottom: insets.bottom + 16 }}
       showsVerticalScrollIndicator={false}
     >
       {!data ? (
@@ -86,7 +86,10 @@ export default function Character() {
                           characterId: character?.id,
                         },
                         refetchQueries: [
-                          refetchGetCharacterQuery({ id: characterId }),
+                          {
+                            query: GetCharacterDocument,
+                            variables: { id: characterId },
+                          },
                         ],
                       });
                     } catch (error) {

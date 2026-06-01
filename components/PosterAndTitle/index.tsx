@@ -1,9 +1,9 @@
+import { ImageBackground } from "expo-image";
 import React, { ReactNode } from "react";
 import {
   StyleSheet,
   useWindowDimensions,
   ViewStyle,
-  ImageBackground,
   Text,
   View,
 } from "react-native";

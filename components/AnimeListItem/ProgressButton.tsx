@@ -1,5 +1,6 @@
+import { Image } from "expo-image";
 import React from "react";
-import { ImageSourcePropType, StyleSheet, Image } from "react-native";
+import { ImageSourcePropType, StyleSheet } from "react-native";
 
 import { darkTheme } from "yep/themes";
 

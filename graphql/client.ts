@@ -45,36 +45,41 @@ export async function createClient() {
     link: ApolloLink.from([
       onError(({ graphQLErrors, networkError }) => {
         if (graphQLErrors)
-          graphQLErrors.forEach(async (e) => {
-            Sentry.captureMessage(e.message);
+          void Promise.all(
+            graphQLErrors.map(async (e) => {
+              Sentry.captureMessage(e.message);
 
-            console.error("[GraphQL error]:", e);
+              console.error("[GraphQL error]:", e);
 
-            if (
-              e.message.toLowerCase().includes("invalid token") ||
-              // TODO: revisit this auto-logout logic
-              ("status" in e && e.status === 401)
-            ) {
-              await SecureStore.deleteItemAsync(ANILIST_ACCESS_TOKEN_STORAGE);
-              Toast.show("You've been logged out. Please log in again.", {
-                duration: Toast.durations.LONG,
-                position: Toast.positions.TOP,
-                shadow: true,
-                animation: true,
-                hideOnPress: true,
-                delay: 0,
-              });
-              await Updates.reloadAsync();
-            } else {
-              Toast.show(e.message, {
-                duration: Toast.durations.LONG,
-                position: Toast.positions.TOP,
-                shadow: true,
-                animation: true,
-                hideOnPress: true,
-                delay: 0,
-              });
-            }
+              if (
+                e.message.toLowerCase().includes("invalid token") ||
+                // TODO: revisit this auto-logout logic
+                ("status" in e && e.status === 401)
+              ) {
+                await SecureStore.deleteItemAsync(ANILIST_ACCESS_TOKEN_STORAGE);
+                Toast.show("You've been logged out. Please log in again.", {
+                  duration: Toast.durations.LONG,
+                  position: Toast.positions.TOP,
+                  shadow: true,
+                  animation: true,
+                  hideOnPress: true,
+                  delay: 0,
+                });
+                await Updates.reloadAsync();
+              } else {
+                Toast.show(e.message, {
+                  duration: Toast.durations.LONG,
+                  position: Toast.positions.TOP,
+                  shadow: true,
+                  animation: true,
+                  hideOnPress: true,
+                  delay: 0,
+                });
+              }
+            }),
+          ).catch((error) => {
+            Sentry.captureException(error);
+            console.error("[GraphQL error handler failed]:", error);
           });
         if (networkError) {
           if (networkError.name === "AbortError") {

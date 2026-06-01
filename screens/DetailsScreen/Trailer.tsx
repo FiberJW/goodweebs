@@ -1,18 +1,17 @@
+import { Image, ImageBackground } from "expo-image";
 import { fbs } from "fbtee";
 import React from "react";
 import {
   Linking,
-  Image,
   useWindowDimensions,
   View,
   StyleSheet,
   Text,
-  ImageBackground,
 } from "react-native";
 
 import { black, white80 } from "yep/colors";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import { MediaTrailerDataFragment } from "yep/graphql/generated";
+import type { MediaTrailerDataFragment } from "yep/graphql/generated";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 

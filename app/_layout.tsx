@@ -13,7 +13,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import * as Updates from "expo-updates";
 import { fbs } from "fbtee";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Platform, StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { RootSiblingParent } from "react-native-root-siblings";
@@ -120,11 +120,11 @@ function InnerLayout() {
 
   const appIsReady = checkedForToken && !!client;
 
-  const onLayoutRootView = useCallback(async () => {
+  async function onLayoutRootView() {
     if (appIsReady) {
       await SplashScreen.hideAsync();
     }
-  }, [appIsReady]);
+  }
 
   if (!appIsReady) {
     return null;

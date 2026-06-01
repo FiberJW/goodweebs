@@ -1,11 +1,10 @@
+import { Image, ImageBackground } from "expo-image";
 import { useRouter } from "expo-router";
 import { fbs } from "fbtee";
 import React, { PropsWithChildren } from "react";
 import {
-  ImageBackground,
   RefreshControl,
   View,
-  Image,
   ScrollView,
   Text,
   FlatList,
@@ -24,6 +23,83 @@ import { notEmpty, useGetTitle } from "yep/utils";
 
 type StatProps = { label: string; value: number };
 
+type ItemWithId = { id: number };
+type FavoriteAnimeItem = {
+  id: number;
+  title?: {
+    english?: string | null;
+    romaji?: string | null;
+    native?: string | null;
+  } | null;
+  coverImage?: { large?: string | null; medium?: string | null } | null;
+};
+type FavoriteCharacterItem = {
+  id: number;
+  name?: { full?: string | null } | null;
+  image?: { large?: string | null; medium?: string | null } | null;
+};
+
+function keyExtractor(item: ItemWithId) {
+  return `${item.id}`;
+}
+
+function renderFavoriteAnime({ item }: { item: FavoriteAnimeItem }) {
+  return <FavoriteAnimeListItem item={item} />;
+}
+
+function renderFavoriteCharacter({ item }: { item: FavoriteCharacterItem }) {
+  return <FavoriteCharacterListItem item={item} />;
+}
+
+function FavoriteAnimeListItem({ item }: { item: FavoriteAnimeItem }) {
+  const router = useRouter();
+  const getTitle = useGetTitle();
+
+  return (
+    <View style={styles.favoriteContainer}>
+      <PressableOpacity onPress={() => router.push(`/details/${item.id}`)}>
+        <PosterAndTitle
+          size="profile"
+          uri={item?.coverImage?.large ?? ""}
+          title={getTitle(item.title)}
+        />
+      </PressableOpacity>
+    </View>
+  );
+}
+
+function FavoriteCharacterListItem({ item }: { item: FavoriteCharacterItem }) {
+  const router = useRouter();
+
+  return (
+    <View style={styles.favoriteContainer}>
+      <PressableOpacity onPress={() => router.push(`/character/${item.id}`)}>
+        <PosterAndTitle
+          size="profile"
+          uri={item?.image?.large ?? ""}
+          title={item.name?.full ?? undefined}
+        />
+      </PressableOpacity>
+    </View>
+  );
+}
+
+function OptionalBackgroundImage({
+  bannerImage,
+  children,
+}: PropsWithChildren<{ bannerImage?: string | null }>) {
+  return bannerImage ? (
+    <ImageBackground
+      source={{ uri: bannerImage }}
+      style={{ borderRadius: 8, overflow: "hidden" }}
+    >
+      {children}
+    </ImageBackground>
+  ) : (
+    <>{children}</>
+  );
+}
+
 function Stat({ label, value }: StatProps) {
   return (
     <View style={styles.statContainer}>
@@ -39,7 +115,6 @@ function Stat({ label, value }: StatProps) {
 
 export default function Profile() {
   const router = useRouter();
-  const getTitle = useGetTitle();
   const {
     loading: loadingViewer,
     data: viewerData,
@@ -52,22 +127,6 @@ export default function Profile() {
     viewerData?.Viewer?.favourites?.characters?.nodes ?? []
   ).filter(notEmpty);
   const shouldShowInitialProfileLoading = loadingViewer && !viewerData?.Viewer;
-
-  type AnimeItem = (typeof animeList)[number];
-  type CharacterItem = (typeof characterList)[number];
-
-  function OptionalBackgroundImage({ children }: PropsWithChildren) {
-    return viewerData?.Viewer?.bannerImage ? (
-      <ImageBackground
-        source={{ uri: viewerData.Viewer.bannerImage }}
-        style={{ borderRadius: 8, overflow: "hidden" }}
-      >
-        {children}
-      </ImageBackground>
-    ) : (
-      <>{children}</>
-    );
-  }
 
   return (
     <View
@@ -104,7 +163,7 @@ export default function Profile() {
           <ProfileSkeleton />
         ) : viewerData?.Viewer ? (
           <View style={styles.everythingButTheCTA}>
-            <OptionalBackgroundImage>
+            <OptionalBackgroundImage bannerImage={viewerData.Viewer.bannerImage}>
               <View
                 style={[
                   styles.userInfoAndStatsContainer,
@@ -163,21 +222,9 @@ export default function Profile() {
                   ]}
                   horizontal
                   showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item: AnimeItem) => `${item.id}`}
+                  keyExtractor={keyExtractor}
                   data={animeList}
-                  renderItem={({ item }: { item: AnimeItem }) => (
-                    <View style={styles.favoriteContainer}>
-                      <PressableOpacity
-                        onPress={() => router.push(`/details/${item.id}`)}
-                      >
-                        <PosterAndTitle
-                          size="profile"
-                          uri={item?.coverImage?.large ?? ""}
-                          title={getTitle(item.title)}
-                        />
-                      </PressableOpacity>
-                    </View>
-                  )}
+                  renderItem={renderFavoriteAnime}
                 />
               </View>
             ) : null}
@@ -198,21 +245,9 @@ export default function Profile() {
                     styles.listContentContainer,
                     { gap: 8 },
                   ]}
-                  keyExtractor={(item: CharacterItem) => `${item.id}`}
+                  keyExtractor={keyExtractor}
                   data={characterList}
-                  renderItem={({ item }: { item: CharacterItem }) => (
-                    <View style={styles.favoriteContainer}>
-                      <PressableOpacity
-                        onPress={() => router.push(`/character/${item.id}`)}
-                      >
-                        <PosterAndTitle
-                          size="profile"
-                          uri={item?.image?.large ?? ""}
-                          title={item.name?.full ?? undefined}
-                        />
-                      </PressableOpacity>
-                    </View>
-                  )}
+                  renderItem={renderFavoriteCharacter}
                 />
               </View>
             ) : null}

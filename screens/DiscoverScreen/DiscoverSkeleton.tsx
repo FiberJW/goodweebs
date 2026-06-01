@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { StyleSheet, View } from "react-native";
 
 import { SkeletonShimmerBlock } from "yep/components/SkeletonShimmerBlock";
@@ -16,9 +16,10 @@ export function DiscoverSkeletonGrid({
   itemCount = 12,
   showHeader = true,
 }: DiscoverSkeletonGridProps) {
-  const items = useMemo(() => Array.from({ length: itemCount }, (_, i) => i), [
-    itemCount,
-  ]);
+  const items = Array.from({ length: itemCount }, (_, index) => ({
+    id: `discover-skeleton-${index}`,
+    hasRightSpacing: (index + 1) % 3 !== 0,
+  }));
   const primaryTitleWidth = Math.round(posterWidth * 0.82);
   const secondaryTitleWidth = Math.round(posterWidth * 0.56);
   const headerWidth = Math.max(160, Math.round(posterWidth * 2.2));
@@ -34,15 +35,15 @@ export function DiscoverSkeletonGrid({
         />
       ) : null}
       <View style={styles.grid}>
-        {items.map((index) => (
+        {items.map((item) => (
           <View
-            key={index}
+            key={item.id}
             style={[
               styles.tile,
               {
                 width: posterWidth,
               },
-              (index + 1) % 3 !== 0 ? styles.withRightSpacing : null,
+              item.hasRightSpacing ? styles.withRightSpacing : null,
             ]}
           >
             <SkeletonShimmerBlock

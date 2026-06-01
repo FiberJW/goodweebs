@@ -1,8 +1,8 @@
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
-import { sortBy } from "lodash";
-import React, { useState, useMemo } from "react";
+import sortBy from "lodash/sortBy";
+import React, { useState } from "react";
 import { RefreshControl, View, StyleSheet, Text, FlatList } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
@@ -14,9 +14,12 @@ import {
 } from "yep/constants";
 import { AnimeListItemContainer } from "yep/containers/AnimeListItemContainer";
 import {
-  MediaListStatus,
   useGetViewerQuery,
   useGetAnimeListQuery,
+} from "yep/graphql/generated";
+import type {
+  AnimeFragmentFragment,
+  MediaListStatus,
 } from "yep/graphql/generated";
 import { useAniListAuthRequest } from "yep/hooks/auth";
 import { AnimeSkeleton } from "yep/screens/AnimeScreen/AnimeSkeleton";
@@ -24,6 +27,59 @@ import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
 import { getMediaListStatusLabel, notEmpty, useGetTitle } from "yep/utils";
+
+type StatusOption = {
+  label: string;
+  value: MediaListStatus;
+  isSelected: boolean;
+  onPress: () => void;
+};
+type AnimeListEntry = {
+  id: number;
+  progress?: number | null;
+  media?: AnimeFragmentFragment | null;
+};
+type AnimeListRow = {
+  entry: AnimeListEntry;
+  first: boolean;
+  last: boolean;
+};
+
+function keyExtractor({ entry }: AnimeListRow) {
+  return `${entry.id}`;
+}
+
+function statusOptionKeyExtractor({ value }: StatusOption) {
+  return `${value}`;
+}
+
+function renderStatusOption({
+  item: { label, isSelected, onPress },
+}: {
+  item: StatusOption;
+}) {
+  return (
+    <StatusChip label={label} onPress={onPress} isSelected={isSelected} />
+  );
+}
+
+function renderAnimeItem({
+  item: { entry, first, last },
+}: {
+  item: AnimeListRow;
+}) {
+  return (
+    <AnimeListItemContainer
+      seedData={{
+        id: entry.id,
+        progress: entry.progress ?? 0,
+        media: entry.media ?? null,
+      }}
+      first={first}
+      last={last}
+    />
+  );
+}
 
 export default function Anime() {
   const [status, setStatus] = useState<MediaListStatus>(
@@ -53,23 +109,26 @@ export default function Anime() {
     notifyOnNetworkStatusChange: true,
   });
 
-  const list = useMemo(
-    () =>
-      sortBy(
-        (animeListData?.MediaListCollection?.lists?.[0]?.entries ?? []).filter(
-          notEmpty,
-        ),
-        (m) => getTitle(m.media?.title),
-      ),
-    [animeListData, getTitle],
+  const list = sortBy(
+    (animeListData?.MediaListCollection?.lists?.[0]?.entries ?? []).filter(
+      notEmpty,
+    ),
+    (m) => getTitle(m.media?.title),
   );
 
   const statusOptions = MediaListStatusWithLabel.map(({ value }) => ({
     label: getMediaListStatusLabel(value),
     value,
+    isSelected: status === value,
+    onPress: () => setStatus(value),
   }));
 
   const refreshing = loadingViewer || loadingAnimeList;
+  const listRows = list.map((entry, index) => ({
+    entry,
+    first: index === 0,
+    last: index === list.length - 1,
+  }));
 
   return (
     <View
@@ -87,32 +146,34 @@ export default function Anime() {
                 horizontal
                 contentContainerStyle={{ gap: 8 }}
                 data={statusOptions}
-                keyExtractor={({ value }) => `${value}`}
-                renderItem={({ item: { label, value } }) => (
-                  <StatusChip
-                    label={label}
-                    key={value}
-                    onPress={() => setStatus(value)}
-                    isSelected={status === value}
-                  />
-                )}
+                keyExtractor={statusOptionKeyExtractor}
+                renderItem={renderStatusOption}
               />
             </View>
             <View style={styles.countAndSortRow}>
               <Text style={styles.count}>
-                <fbt desc="Anime list title count">
-                  <fbt:param name="count">{list.length}</fbt:param>{" "}
-                  <fbt:plural count={list.length} many="titles" name="titleCount">
-                    title
-                  </fbt:plural>
-                </fbt>
+                {String(
+                  fbs(
+                    [
+                      fbs.param("count", String(list.length), {
+                        number: list.length,
+                      }),
+                      " ",
+                      fbs.plural("title", list.length, {
+                        many: "titles",
+                        name: "titleCount",
+                      }),
+                    ],
+                    "Anime list title count",
+                  ),
+                )}
               </Text>
             </View>
           </View>
         )}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <View style={styles.animeListDivider} />}
-        data={list}
+        data={listRows}
         ListEmptyComponent={() =>
           refreshing ? (
             <AnimeSkeleton />
@@ -183,18 +244,8 @@ export default function Anime() {
             titleColor={darkTheme.text}
           />
         }
-        keyExtractor={(item) => `${item.id}`}
-        renderItem={({ item, index }) => (
-          <AnimeListItemContainer
-            seedData={{
-              id: item.id,
-              progress: item.progress ?? 0,
-              media: item.media ?? null,
-            }}
-            first={index === 0}
-            last={index === list.length - 1}
-          />
-        )}
+        keyExtractor={keyExtractor}
+        renderItem={renderAnimeItem}
       />
     </View>
   );

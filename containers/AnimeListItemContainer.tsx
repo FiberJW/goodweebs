@@ -1,13 +1,15 @@
 import * as Haptics from "expo-haptics";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { AnimeListItem } from "yep/components/AnimeListItem";
 import {
+  UpdateProgressDocument,
+} from "yep/graphql/generated";
+import type {
   AnimeFragmentFragment,
   UpdateProgressMutation,
   UpdateProgressMutationVariables,
 } from "yep/graphql/generated";
-import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
 import { useDebouncedMutation } from "yep/hooks/helpers";
 
 type Props = {
@@ -20,24 +22,28 @@ type Props = {
   last: boolean;
 };
 
+type ProgressOverride = {
+  cacheProgress: number;
+  progress: number;
+};
+
 export function AnimeListItemContainer({ seedData, first, last }: Props) {
   const mediaListEntryId = seedData.media?.mediaListEntry?.id;
   const cacheProgress = seedData.media?.mediaListEntry?.progress ?? 0;
   const progressUpperBound = seedData.media?.episodes;
 
-  // Local state for instant UI feedback
-  const [displayProgress, setDisplayProgress] = useState(cacheProgress);
-
-  // Sync when cache updates (e.g., from server response)
-  useEffect(() => {
-    setDisplayProgress(cacheProgress);
-  }, [cacheProgress]);
+  const [progressOverride, setProgressOverride] =
+    useState<ProgressOverride | null>(null);
+  const displayProgress =
+    progressOverride?.cacheProgress === cacheProgress
+      ? progressOverride.progress
+      : cacheProgress;
 
   const updateProgressDebounced = useDebouncedMutation<
     UpdateProgressMutation,
     UpdateProgressMutationVariables
   >({
-    mutationDocument: UpdateProgress,
+    mutationDocument: UpdateProgressDocument,
     makeUpdateFunction: (variables) => (cache) => {
       if (!mediaListEntryId || variables?.progress === undefined) return;
 
@@ -70,7 +76,7 @@ export function AnimeListItemContainer({ seedData, first, last }: Props) {
     if (newProgress === displayProgress) return;
 
     // Instant UI update
-    setDisplayProgress(newProgress);
+    setProgressOverride({ cacheProgress, progress: newProgress });
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     try {
