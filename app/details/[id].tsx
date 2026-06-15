@@ -3,7 +3,6 @@ import { formatDistanceToNow, add } from "date-fns";
 import * as Haptics from "expo-haptics";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { fbs } from "fbtee";
-import _ from "lodash";
 import React, { ReactNode, useEffect, useState } from "react";
 import {
   RefreshControl,
@@ -160,7 +159,6 @@ export default function Details() {
         },
       });
     },
-    wait: 0,
   });
 
   const removeFromList = useDebouncedMutation<
@@ -182,7 +180,6 @@ export default function Details() {
       });
       cache.gc();
     },
-    wait: 0,
   });
 
   const updateScore = useDebouncedMutation<
@@ -200,7 +197,6 @@ export default function Details() {
         },
       });
     },
-    wait: 0,
   });
 
   const updateProgress = useDebouncedMutation<
@@ -218,7 +214,6 @@ export default function Details() {
         },
       });
     },
-    wait: 0,
   });
 
   function clampScore(value: number) {
@@ -280,29 +275,18 @@ export default function Details() {
 
   const relations = (data?.Media?.relations?.edges ?? [])?.filter(notEmpty);
 
-  const mappedRelations = _.reduce<
-    (typeof relations)[number],
-    { [K in MediaRelation]?: AnimeRelationFragmentFragment[] }
-  >(
-    relations,
-    function (result, value, _key) {
-      if (
-        !value?.relationType ||
-        !value.node ||
-        !(value.node.type === MediaType.Anime)
-      )
-        return result;
+  const mappedRelations: {
+    [K in MediaRelation]?: AnimeRelationFragmentFragment[];
+  } = {};
 
-      if (result[value?.relationType]) {
-        result[value?.relationType]!.push(value.node);
-      } else {
-        result[value?.relationType] = [value.node];
-      }
+  for (const relation of relations) {
+    const relationType = relation.relationType;
+    const node = relation.node;
 
-      return result;
-    },
-    {},
-  );
+    if (!relationType || !node || node.type !== MediaType.Anime) continue;
+
+    (mappedRelations[relationType] ??= []).push(node);
+  }
 
   const externalLinks = data?.Media?.externalLinks?.filter(notEmpty);
   const studio = (data?.Media?.studios?.nodes ?? [])[0]?.name;

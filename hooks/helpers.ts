@@ -1,13 +1,11 @@
 import {
   MutationFunctionOptions,
   useMutation,
-  FetchResult,
   MutationUpdaterFunction,
   DefaultContext,
   ApolloCache,
 } from "@apollo/client";
 import { DocumentNode } from "graphql";
-import { debounce } from "lodash";
 import { useRef, useEffect, useState } from "react";
 import { useWindowDimensions } from "react-native";
 
@@ -32,7 +30,6 @@ export function useDebouncedMutation<
 >({
   mutationDocument,
   makeUpdateFunction,
-  wait = 500,
 }: {
   mutationDocument: DocumentNode;
   makeUpdateFunction?: (
@@ -43,33 +40,12 @@ export function useDebouncedMutation<
     DefaultContext,
     ApolloCache<any>
   >;
-  wait?: number;
 }) {
   const [originalMutation] = useMutation<MutationData, MutationVariables>(
     mutationDocument,
   );
 
   const abortController = useRef<AbortController>(null);
-  const debouncedMutation = useRef(
-    debounce(
-      async (
-        mutationFunc: ({
-          variables,
-        }: MutationFunctionOptions<MutationData, MutationVariables>) => Promise<
-          FetchResult<MutationData>
-        >,
-        variables?: MutationVariables,
-      ) => {
-        const controller = new AbortController();
-        abortController.current = controller;
-        await mutationFunc({
-          variables,
-          context: { fetchOptions: { signal: controller.signal } },
-        });
-      },
-      wait,
-    ),
-  );
 
   const abortLatest = () => abortController.current?.abort();
 
@@ -92,10 +68,13 @@ export function useDebouncedMutation<
 
   return async (newVariables?: MutationVariables) => {
     abortLatest();
-    return await debouncedMutation.current(
-      mutationWithOptimisticUI,
-      newVariables,
-    );
+    const controller = new AbortController();
+    abortController.current = controller;
+
+    return await mutationWithOptimisticUI({
+      variables: newVariables,
+      context: { fetchOptions: { signal: controller.signal } },
+    });
   };
 }
 

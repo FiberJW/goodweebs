@@ -49,7 +49,6 @@ export function AnimeListItemContainer({ seedData, first, last }: Props) {
         },
       });
     },
-    wait: 0,
   });
 
   function clampProgress(value: number) {

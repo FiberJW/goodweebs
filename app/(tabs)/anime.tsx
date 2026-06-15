@@ -1,7 +1,6 @@
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
-import { sortBy } from "lodash";
 import React, { useState, useMemo } from "react";
 import { RefreshControl, View, StyleSheet, Text, FlatList } from "react-native";
 
@@ -54,13 +53,17 @@ export default function Anime() {
   });
 
   const list = useMemo(
-    () =>
-      sortBy(
-        (animeListData?.MediaListCollection?.lists?.[0]?.entries ?? []).filter(
-          notEmpty,
+    () => {
+      const entries = (
+        animeListData?.MediaListCollection?.lists?.[0]?.entries ?? []
+      ).filter(notEmpty);
+
+      return [...entries].sort((a, b) =>
+        (getTitle(a.media?.title) ?? "").localeCompare(
+          getTitle(b.media?.title) ?? "",
         ),
-        (m) => getTitle(m.media?.title),
-      ),
+      );
+    },
     [animeListData, getTitle],
   );
 
