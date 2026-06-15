@@ -1,10 +1,6 @@
 import Constants, { ExecutionEnvironment } from "expo-constants";
 
-import {
-  MediaListStatus,
-  MediaListSort,
-  MediaStatus,
-} from "yep/graphql/generated";
+import { MediaListStatus } from "yep/graphql/generated";
 
 // AniList Client IDs and their redirect URIs based on https://docs.expo.dev/guides/authentication/#redirect-uri-patterns
 enum AniListClientID {
@@ -35,19 +31,4 @@ export const MediaListStatusWithLabel: {
   { value: MediaListStatus.Planning },
   { value: MediaListStatus.Dropped },
   { value: MediaListStatus.Completed },
-];
-
-export const MediaStatusWithLabel: {
-  value: MediaStatus;
-}[] = [
-  { value: MediaStatus.Finished },
-  { value: MediaStatus.Releasing },
-  { value: MediaStatus.NotYetReleased },
-  { value: MediaStatus.Cancelled },
-];
-
-export const Sorts: { value: MediaListSort }[] = [
-  { value: MediaListSort.UpdatedTimeDesc },
-  { value: MediaListSort.ScoreDesc },
-  { value: MediaListSort.Score },
 ];
