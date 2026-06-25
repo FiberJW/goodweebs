@@ -34,10 +34,18 @@ export function AnimeListItemContainer({ seedData, first, last }: Props) {
 
   const [progressOverride, setProgressOverride] =
     useState<ProgressOverride | null>(null);
-  const displayProgress =
-    progressOverride?.cacheProgress === cacheProgress
-      ? progressOverride.progress
-      : cacheProgress;
+  // The optimistic override only applies while the cache still shows the value
+  // it was captured against. Once the cache moves (the mutation's write landed,
+  // or a refetch/external update arrived) drop it — otherwise a later cache
+  // value equal to the pre-tap snapshot would resurrect the stale number.
+  let activeProgressOverride = progressOverride;
+  if (progressOverride && progressOverride.cacheProgress !== cacheProgress) {
+    setProgressOverride(null);
+    activeProgressOverride = null;
+  }
+  const displayProgress = activeProgressOverride
+    ? activeProgressOverride.progress
+    : cacheProgress;
 
   const updateProgressDebounced = useDebouncedMutation<
     UpdateProgressMutation,

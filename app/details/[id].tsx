@@ -403,12 +403,25 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
     cacheProgress: number;
     progress: number;
   } | null>(null);
-  const displayScore =
-    scoreOverride?.cacheScore === cacheScore ? scoreOverride.score : cacheScore;
-  const displayProgress =
-    progressOverride?.cacheProgress === cacheProgress
-      ? progressOverride.progress
-      : cacheProgress;
+  // Drop a stale optimistic override once the cache moves off the value it was
+  // captured against, so a later cache value equal to the pre-tap snapshot
+  // can't resurrect it (and a failed mutation can't leave it pinned).
+  let activeScoreOverride = scoreOverride;
+  if (scoreOverride && scoreOverride.cacheScore !== cacheScore) {
+    setScoreOverride(null);
+    activeScoreOverride = null;
+  }
+  let activeProgressOverride = progressOverride;
+  if (progressOverride && progressOverride.cacheProgress !== cacheProgress) {
+    setProgressOverride(null);
+    activeProgressOverride = null;
+  }
+  const displayScore = activeScoreOverride
+    ? activeScoreOverride.score
+    : cacheScore;
+  const displayProgress = activeProgressOverride
+    ? activeProgressOverride.progress
+    : cacheProgress;
 
   const updateScore = useDebouncedMutation<
     UpdateScoreMutation,
