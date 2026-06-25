@@ -671,6 +671,7 @@ export default function Details() {
     <ScrollView
       style={styles.container}
       showsVerticalScrollIndicator={false}
+      // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
       refreshControl={
         <RefreshControl
           refreshing={isRefetchingFromScrollOrMount && loading}

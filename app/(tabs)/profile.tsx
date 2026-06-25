@@ -149,6 +149,7 @@ export default function Profile() {
       />
       <ScrollView
         contentContainerStyle={styles.innerContainerContent}
+        // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
         refreshControl={
           <RefreshControl
             refreshing={loadingViewer}

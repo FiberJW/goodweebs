@@ -153,6 +153,7 @@ export default function Discover() {
                   />
                 )
               }
+              // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
               refreshControl={
                 <RefreshControl
                   refreshing={loadingSearchData}
@@ -212,6 +213,7 @@ export default function Discover() {
                   />
                 )
               }
+              // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
               refreshControl={
                 <RefreshControl
                   refreshing={loadingTrending}
