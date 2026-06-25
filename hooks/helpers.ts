@@ -51,8 +51,16 @@ export function useDebouncedMutation<
 
   const [mutationQueue] = useState(() => {
     let abortController: AbortController | null = null;
+    // lodash's debounced function returns the *previous* run's result
+    // (undefined on the first call), so we can't await it directly. Instead we
+    // track the callers awaiting the next run and settle them all together when
+    // the coalesced mutation actually resolves/rejects.
+    let waiters: {
+      resolve: (value: FetchResult<MutationData> | undefined) => void;
+      reject: (error: unknown) => void;
+    }[] = [];
 
-    const debouncedMutation = debounce(
+    const run = debounce(
       async (
         mutationFunc: ({
           variables,
@@ -63,17 +71,42 @@ export function useDebouncedMutation<
       ) => {
         const controller = new AbortController();
         abortController = controller;
-        await mutationFunc({
-          variables,
-          context: { fetchOptions: { signal: controller.signal } },
-        });
+        const settle = waiters;
+        waiters = [];
+        try {
+          const result = await mutationFunc({
+            variables,
+            context: { fetchOptions: { signal: controller.signal } },
+          });
+          settle.forEach((w) => w.resolve(result));
+        } catch (error) {
+          // An aborted request was intentionally superseded, not a failure.
+          if (controller.signal.aborted) {
+            settle.forEach((w) => w.resolve(undefined));
+          } else {
+            settle.forEach((w) => w.reject(error));
+          }
+        }
       },
       wait,
     );
 
     return {
       abortLatest: () => abortController?.abort(),
-      debouncedMutation,
+      schedule: (
+        mutationFunc: ({
+          variables,
+        }: MutationFunctionOptions<MutationData, MutationVariables>) => Promise<
+          FetchResult<MutationData>
+        >,
+        variables?: MutationVariables,
+      ) =>
+        new Promise<FetchResult<MutationData> | undefined>(
+          (resolve, reject) => {
+            waiters.push({ resolve, reject });
+            run(mutationFunc, variables);
+          },
+        ),
     };
   });
 
@@ -96,7 +129,7 @@ export function useDebouncedMutation<
 
   return async (newVariables?: MutationVariables) => {
     mutationQueue.abortLatest();
-    return await mutationQueue.debouncedMutation(
+    return await mutationQueue.schedule(
       mutationWithOptimisticUI,
       newVariables,
     );

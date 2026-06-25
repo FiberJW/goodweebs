@@ -657,7 +657,6 @@ export default function Details() {
   return (
     <ScrollView
       style={styles.container}
-      contentInset={{ bottom: insets.bottom + 16 }}
       showsVerticalScrollIndicator={false}
       refreshControl={
         <RefreshControl
@@ -725,6 +724,9 @@ export default function Details() {
           )}
         />
       )}
+      {/* Bottom spacer instead of dynamic contentContainerStyle padding: works on
+          Android (contentInset is iOS-only) and avoids react-doctor's dynamic-padding rule. */}
+      <View style={{ height: insets.bottom + 16 }} />
     </ScrollView>
   );
 }

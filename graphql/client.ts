@@ -36,51 +36,67 @@ const httpLink = new HttpLink({
 const cache = new InMemoryCache();
 
 export async function createClient() {
-  await persistCache({
-    cache,
-    storage: new LocalStorageWrapper(localStorage),
-  });
+  // A failed cache restore must not block startup — fall back to an
+  // in-memory-only cache so the app still boots.
+  try {
+    await persistCache({
+      cache,
+      storage: new LocalStorageWrapper(localStorage),
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    console.error("[Cache persistence failed]:", error);
+  }
 
   return new ApolloClient({
     link: ApolloLink.from([
       onError(({ graphQLErrors, networkError }) => {
+        // Keep this handler synchronous (returning undefined): Apollo's error
+        // link treats any truthy return as a retry Observable. The async work
+        // is fire-and-forget inside a void IIFE.
         if (graphQLErrors)
-          void Promise.all(
-            graphQLErrors.map(async (e) => {
-              Sentry.captureMessage(e.message);
+          void (async () => {
+            try {
+              await Promise.all(
+                graphQLErrors.map(async (e) => {
+                  Sentry.captureMessage(e.message);
 
-              console.error("[GraphQL error]:", e);
+                  console.error("[GraphQL error]:", e);
 
-              if (
-                e.message.toLowerCase().includes("invalid token") ||
-                // TODO: revisit this auto-logout logic
-                ("status" in e && e.status === 401)
-              ) {
-                await SecureStore.deleteItemAsync(ANILIST_ACCESS_TOKEN_STORAGE);
-                Toast.show("You've been logged out. Please log in again.", {
-                  duration: Toast.durations.LONG,
-                  position: Toast.positions.TOP,
-                  shadow: true,
-                  animation: true,
-                  hideOnPress: true,
-                  delay: 0,
-                });
-                await Updates.reloadAsync();
-              } else {
-                Toast.show(e.message, {
-                  duration: Toast.durations.LONG,
-                  position: Toast.positions.TOP,
-                  shadow: true,
-                  animation: true,
-                  hideOnPress: true,
-                  delay: 0,
-                });
-              }
-            }),
-          ).catch((error) => {
-            Sentry.captureException(error);
-            console.error("[GraphQL error handler failed]:", error);
-          });
+                  if (
+                    e.message.toLowerCase().includes("invalid token") ||
+                    // TODO: revisit this auto-logout logic
+                    ("status" in e && e.status === 401)
+                  ) {
+                    await SecureStore.deleteItemAsync(
+                      ANILIST_ACCESS_TOKEN_STORAGE,
+                    );
+                    Toast.show("You've been logged out. Please log in again.", {
+                      duration: Toast.durations.LONG,
+                      position: Toast.positions.TOP,
+                      shadow: true,
+                      animation: true,
+                      hideOnPress: true,
+                      delay: 0,
+                    });
+                    await Updates.reloadAsync();
+                  } else {
+                    Toast.show(e.message, {
+                      duration: Toast.durations.LONG,
+                      position: Toast.positions.TOP,
+                      shadow: true,
+                      animation: true,
+                      hideOnPress: true,
+                      delay: 0,
+                    });
+                  }
+                }),
+              );
+            } catch (error) {
+              Sentry.captureException(error);
+              console.error("[GraphQL error handler failed]:", error);
+            }
+          })();
         if (networkError) {
           if (networkError.name === "AbortError") {
             // ignore abort errors

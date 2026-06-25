@@ -46,7 +46,7 @@ export function PosterAndTitle({ size, uri, title, style, children }: Props) {
   return (
     <View style={[styles.container, style]}>
       <ImageBackground
-        resizeMode="cover"
+        contentFit="cover"
         style={[styles.poster, { width: posterWidth, height: posterHeight }]}
         source={{ uri }}
       >

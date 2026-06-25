@@ -88,8 +88,13 @@ function InnerLayout() {
 
   useEffect(function createClientWithPersistedCache() {
     (async () => {
-      const client = await createClient();
-      setClient(client);
+      try {
+        const client = await createClient();
+        setClient(client);
+      } catch (error) {
+        Sentry.captureException(error);
+        console.error("[Failed to create Apollo client]:", error);
+      }
     })();
   }, []);
 
