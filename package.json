@@ -82,6 +82,7 @@
     "@types/showdown": "^2.0.6",
     "babel-plugin-module-resolver": "^5.0.2",
     "eslint": "^9.27.0",
+    "eslint-plugin-react-doctor": "^0.5.8",
     "prettier": "^3.5.0",
     "typescript": "~5.9.2"
   },
