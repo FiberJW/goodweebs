@@ -8,7 +8,7 @@ import { Text } from "react-native";
 import type {
   MediaTitle,
   MediaRelation,
-  AnimeFragmentFragment,
+  AnimeListEntryFragmentFragment,
   MediaStatus,
   MediaListStatus,
   Maybe,
@@ -179,7 +179,7 @@ export function getDateText(
 }
 
 export function getAiringStatusText(
-  media: AnimeFragmentFragment,
+  media: AnimeListEntryFragmentFragment,
   now: Date
 ): React.ReactNode | string | undefined {
   switch (media.status) {
@@ -220,7 +220,7 @@ export function getAiringStatusText(
   }
 }
 
-export function getProgress(media: AnimeFragmentFragment, progress: number) {
+export function getProgress(media: AnimeListEntryFragmentFragment, progress: number) {
   const episodeAbbreviation = String(
     fbs("EP", "Episode abbreviation in progress text"),
   );

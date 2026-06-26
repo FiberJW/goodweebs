@@ -14,12 +14,8 @@ query GetAnimeList(
       name
       entries {
         id
-        mediaId
-        progress
-        status
-        score(format: POINT_10)
         media {
-          ...AnimeFragment
+          ...AnimeListEntryFragment
         }
       }
     }

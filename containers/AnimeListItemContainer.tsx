@@ -6,7 +6,7 @@ import {
   UpdateProgressDocument,
 } from "yep/graphql/generated";
 import type {
-  AnimeFragmentFragment,
+  AnimeListEntryFragmentFragment,
   UpdateProgressMutation,
   UpdateProgressMutationVariables,
 } from "yep/graphql/generated";
@@ -16,7 +16,7 @@ type Props = {
   seedData: {
     id: number;
     progress: number;
-    media: AnimeFragmentFragment | null;
+    media: AnimeListEntryFragmentFragment | null;
   };
   first: boolean;
   last: boolean;
@@ -102,7 +102,7 @@ export function AnimeListItemContainer({ seedData, first, last }: Props) {
       progress={displayProgress}
       onIncrement={() => changeProgress("inc")}
       onDecrement={() => changeProgress("dec")}
-      media={seedData.media as AnimeFragmentFragment}
+      media={seedData.media as AnimeListEntryFragmentFragment}
       first={first}
       last={last}
     />

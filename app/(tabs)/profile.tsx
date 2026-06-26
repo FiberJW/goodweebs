@@ -1,3 +1,4 @@
+import { NetworkStatus } from "@apollo/client";
 import { Image, ImageBackground } from "expo-image";
 import { useRouter } from "expo-router";
 import { fbs } from "fbtee";
@@ -119,7 +120,11 @@ export default function Profile() {
     loading: loadingViewer,
     data: viewerData,
     refetch,
+    networkStatus,
   } = useGetViewerQuery({ notifyOnNetworkStatusChange: true });
+  // RefreshControl spins only for a user-pull refetch (networkStatus 4), not on
+  // initial load (1) — fixes the spinner showing under the skeleton on mount.
+  const isRefetching = networkStatus === NetworkStatus.refetch;
   const animeList = (viewerData?.Viewer?.favourites?.anime?.nodes ?? []).filter(
     notEmpty,
   );
@@ -152,7 +157,7 @@ export default function Profile() {
         // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
         refreshControl={
           <RefreshControl
-            refreshing={loadingViewer}
+            refreshing={isRefetching}
             onRefresh={() => refetch()}
             tintColor={white}
             titleColor={white}

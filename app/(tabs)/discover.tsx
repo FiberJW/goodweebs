@@ -1,3 +1,4 @@
+import { NetworkStatus } from "@apollo/client";
 import { fbs } from "fbtee";
 import React, { useState } from "react";
 import {
@@ -16,7 +17,7 @@ import {
   useGetTrendingAnimeQuery,
   useSearchAnimeQuery,
 } from "yep/graphql/generated";
-import type { AnimeFragmentFragment } from "yep/graphql/generated";
+import type { MediaPosterFragmentFragment } from "yep/graphql/generated";
 import { DiscoverPoster } from "yep/screens/DiscoverScreen/DiscoverPoster";
 import { DiscoverSkeletonGrid } from "yep/screens/DiscoverScreen/DiscoverSkeleton";
 import { darkTheme } from "yep/themes";
@@ -33,7 +34,7 @@ function renderDiscoverPoster({
   item,
   index,
 }: {
-  item: AnimeFragmentFragment;
+  item: MediaPosterFragmentFragment;
   index: number;
 }) {
   return <DiscoverPoster item={item} index={index} />;
@@ -51,7 +52,8 @@ export default function Discover() {
   const {
     loading: loadingTrending,
     data: trendingData,
-    refetch: refetchTrendingOriginal,
+    refetch: refetchTrending,
+    networkStatus: trendingNetworkStatus,
   } = useGetTrendingAnimeQuery({
     variables: { perPage: 30 },
     notifyOnNetworkStatusChange: true,
@@ -62,6 +64,7 @@ export default function Discover() {
     error: searchError,
     loading: loadingSearchData,
     refetch: refetchSearch,
+    networkStatus: searchNetworkStatus,
   } = useSearchAnimeQuery({
     skip: searchTerm.trim().length === 0,
     variables: { search: searchTerm },
@@ -73,10 +76,11 @@ export default function Discover() {
   const isSearchLoading = showSearchResultsView && loadingSearchData;
   const isSearchError = showSearchResultsView && Boolean(searchError);
   const isTrendingInitialLoading = !showSearchResultsView && loadingTrending;
-
-  async function refetchTrending() {
-    await refetchTrendingOriginal();
-  }
+  // Each RefreshControl tracks its OWN query's networkStatus; refetch(4) is set
+  // only by an explicit pull, never on initial load(1) or a search-term change(2).
+  const isTrendingRefetching =
+    trendingNetworkStatus === NetworkStatus.refetch;
+  const isSearchRefetching = searchNetworkStatus === NetworkStatus.refetch;
 
   async function refetchSearchResults() {
     await refetchSearch({ search: searchTerm });
@@ -156,7 +160,10 @@ export default function Discover() {
               // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
               refreshControl={
                 <RefreshControl
-                  refreshing={loadingSearchData}
+                  refreshing={isSearchRefetching}
+                  onRefresh={() => {
+                    refetchSearch({ search: searchTerm });
+                  }}
                   tintColor={darkTheme.text}
                   titleColor={darkTheme.text}
                 />
@@ -216,8 +223,10 @@ export default function Discover() {
               // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
               refreshControl={
                 <RefreshControl
-                  refreshing={loadingTrending}
-                  onRefresh={refetchTrending}
+                  refreshing={isTrendingRefetching}
+                  onRefresh={() => {
+                    refetchTrending();
+                  }}
                   tintColor={darkTheme.text}
                   titleColor={darkTheme.text}
                 />

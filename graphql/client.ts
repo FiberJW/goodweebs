@@ -31,9 +31,26 @@ const authLink = setContext(async (_, { headers }) => {
 
 const httpLink = new HttpLink({
   uri: "https://graphql.anilist.co",
+  // Apollo Client 3.13+ defaults Accept to
+  // "application/graphql-response+json,application/json". AniList's API
+  // degrades severely on that header (small queries take ~6s, large ones like
+  // the anime list effectively hang), so pin Accept to application/json.
+  headers: { accept: "application/json" },
 });
 
-const cache = new InMemoryCache();
+// These embedded value-objects have no `id`, so when the same normalized parent
+// (e.g. a Media) is written by two queries selecting different sub-fields —
+// AnimeFragment's coverImage { large medium color } vs the lean list/poster
+// fragments' coverImage { large } — Apollo would overwrite the cached copy and
+// drop the missing fields (and warn). `merge: true` shallow-merges instead, so
+// the richer cached data survives a leaner write and the details screen doesn't
+// have to refetch color/medium.
+const cache = new InMemoryCache({
+  typePolicies: {
+    Media: { fields: { coverImage: { merge: true } } },
+    Character: { fields: { name: { merge: true } } },
+  },
+});
 
 export async function createClient() {
   // A failed cache restore must not block startup — fall back to an

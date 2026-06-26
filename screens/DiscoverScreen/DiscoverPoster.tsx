@@ -3,14 +3,14 @@ import React from "react";
 
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import type { AnimeFragmentFragment } from "yep/graphql/generated";
+import type { MediaPosterFragmentFragment } from "yep/graphql/generated";
 import { useGetTitle } from "yep/utils";
 
 export function DiscoverPoster({
   item,
   index,
 }: {
-  item: AnimeFragmentFragment;
+  item: MediaPosterFragmentFragment;
   index: number;
 }) {
   const router = useRouter();

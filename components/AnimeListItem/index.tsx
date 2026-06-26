@@ -3,7 +3,7 @@ import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
 import { black15, white12_5, white5, white95 } from "yep/colors";
-import type { AnimeFragmentFragment } from "yep/graphql/generated";
+import type { AnimeListEntryFragmentFragment } from "yep/graphql/generated";
 import { useNow } from "yep/hooks/helpers";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
@@ -20,7 +20,7 @@ type Props = {
   onDecrement: () => void;
   progress: number;
   disabled?: boolean;
-  media: AnimeFragmentFragment;
+  media: AnimeListEntryFragmentFragment;
   first: boolean;
   last: boolean;
 };

@@ -1,3 +1,4 @@
+import { NetworkStatus } from "@apollo/client";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
@@ -18,7 +19,7 @@ import {
   useGetAnimeListQuery,
 } from "yep/graphql/generated";
 import type {
-  AnimeFragmentFragment,
+  AnimeListEntryFragmentFragment,
   MediaListStatus,
 } from "yep/graphql/generated";
 import { useAniListAuthRequest } from "yep/hooks/auth";
@@ -37,7 +38,7 @@ type StatusOption = {
 type AnimeListEntry = {
   id: number;
   progress?: number | null;
-  media?: AnimeFragmentFragment | null;
+  media?: AnimeListEntryFragmentFragment | null;
 };
 type AnimeListRow = {
   entry: AnimeListEntry;
@@ -72,7 +73,7 @@ function renderAnimeItem({
     <AnimeListItemContainer
       seedData={{
         id: entry.id,
-        progress: entry.progress ?? 0,
+        progress: entry.media?.mediaListEntry?.progress ?? 0,
         media: entry.media ?? null,
       }}
       first={first}
@@ -99,6 +100,7 @@ export default function Anime() {
     loading: loadingAnimeList,
     data: animeListData,
     refetch,
+    networkStatus,
   } = useGetAnimeListQuery({
     skip: !viewerData?.Viewer?.id || !accessToken,
     variables: {
@@ -123,7 +125,14 @@ export default function Anime() {
     onPress: () => setStatus(value),
   }));
 
+  // `refreshing` (initial-load state) drives the skeleton ListEmptyComponent.
+  // The RefreshControl is driven separately by networkStatus === refetch(4),
+  // which Apollo sets ONLY for an explicit refetch() (a user pull) — never on
+  // initial load (1), a status-chip variable change (2), or background fetches.
+  // It auto-resets to ready(7) when the refetch settles, so the spinner clears
+  // without any awaited promise or manual state.
   const refreshing = loadingViewer || loadingAnimeList;
+  const isRefetching = networkStatus === NetworkStatus.refetch;
   const listRows = list.map((entry, index) => ({
     entry,
     first: index === 0,
@@ -234,12 +243,9 @@ export default function Anime() {
         // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
         refreshControl={
           <RefreshControl
-            refreshing={refreshing}
-            onRefresh={async () => {
-              await refetch({
-                userId: viewerData?.Viewer?.id,
-                status,
-              });
+            refreshing={isRefetching}
+            onRefresh={() => {
+              refetch({ userId: viewerData?.Viewer?.id, status });
             }}
             tintColor={darkTheme.text}
             titleColor={darkTheme.text}

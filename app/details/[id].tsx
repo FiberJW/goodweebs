@@ -1,3 +1,4 @@
+import { NetworkStatus } from "@apollo/client";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { formatDistanceToNow, add } from "date-fns";
 import * as Haptics from "expo-haptics";
@@ -608,15 +609,16 @@ export default function Details() {
 
   const getTitle = useGetTitle();
 
-  const [isRefetchingFromScrollOrMount, setIsRefetchingFromScrollOrMount] =
-    useState(true);
-
   const now = useNow();
 
-  const { loading, data, refetch, error } = useGetAnimeQuery({
+  const { loading, data, refetch, error, networkStatus } = useGetAnimeQuery({
     variables: { id: animeId },
     notifyOnNetworkStatusChange: true,
   });
+  // Only a user pull (explicit refetch) sets networkStatus to refetch(4); the
+  // initial load is loading(1)/ready(7), so the spinner no longer shows on
+  // first render the way `isRefetchingFromScrollOrMount && loading` did.
+  const isRefetching = networkStatus === NetworkStatus.refetch;
   const media = data?.Media;
 
   // Set navigation title dynamically
@@ -627,12 +629,6 @@ export default function Details() {
       });
     }
   }, [media, navigation, getTitle]);
-
-  async function refetchFromScroll() {
-    setIsRefetchingFromScrollOrMount(true);
-    await refetch({ id: animeId });
-    setIsRefetchingFromScrollOrMount(false);
-  }
 
   const relations = (media?.relations?.edges ?? [])?.filter(notEmpty);
 
@@ -674,8 +670,10 @@ export default function Details() {
       // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
       refreshControl={
         <RefreshControl
-          refreshing={isRefetchingFromScrollOrMount && loading}
-          onRefresh={refetchFromScroll}
+          refreshing={isRefetching}
+          onRefresh={() => {
+            refetch({ id: animeId });
+          }}
           tintColor={darkTheme.text}
           titleColor={darkTheme.text}
         />
