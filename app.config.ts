@@ -109,9 +109,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       "expo-build-properties",
       {
         android: {
-          compileSdkVersion: 35,
-          targetSdkVersion: 35,
-          buildToolsVersion: "35.0.0",
+          // SDK 55 deps (e.g. androidx.core:core:1.17.0) require compileSdk 36;
+          // pinning to 35 fails :app:checkReleaseAarMetadata.
+          compileSdkVersion: 36,
+          targetSdkVersion: 36,
+          buildToolsVersion: "36.0.0",
           minSdkVersion: 35,
         },
       },
