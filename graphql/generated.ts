@@ -4769,12 +4769,12 @@ export type GetAnimeListQueryVariables = Exact<{
   userId?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<MediaListStatus>;
   sort?: InputMaybe<Array<InputMaybe<MediaListSort>> | InputMaybe<MediaListSort>>;
-  chunk?: InputMaybe<Scalars['Int']['input']>;
-  perChunk?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  perPage?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type GetAnimeListQuery = { __typename?: 'Query', MediaListCollection?: { __typename?: 'MediaListCollection', hasNextChunk?: boolean | null, lists?: Array<{ __typename?: 'MediaListGroup', status?: MediaListStatus | null, name?: string | null, isCustomList?: boolean | null, entries?: Array<{ __typename?: 'MediaList', id: number, media?: { __typename?: 'Media', id: number, episodes?: number | null, status?: MediaStatus | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null } | null, startDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, endDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, nextAiringEpisode?: { __typename?: 'AiringSchedule', id: number, airingAt: number, episode: number } | null, mediaListEntry?: { __typename?: 'MediaList', id: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null } | null } | null } | null> | null } | null> | null } | null };
+export type GetAnimeListQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', pageInfo?: { __typename?: 'PageInfo', hasNextPage?: boolean | null } | null, mediaList?: Array<{ __typename?: 'MediaList', id: number, media?: { __typename?: 'Media', id: number, episodes?: number | null, status?: MediaStatus | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null } | null, startDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, endDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, nextAiringEpisode?: { __typename?: 'AiringSchedule', id: number, airingAt: number, episode: number } | null, mediaListEntry?: { __typename?: 'MediaList', id: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null } | null } | null } | null> | null } | null };
 
 export type GetTrendingAnimeQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -5219,25 +5219,15 @@ export type GetAnimeLazyQueryHookResult = ReturnType<typeof useGetAnimeLazyQuery
 export type GetAnimeSuspenseQueryHookResult = ReturnType<typeof useGetAnimeSuspenseQuery>;
 export type GetAnimeQueryResult = Apollo.QueryResult<GetAnimeQuery, GetAnimeQueryVariables>;
 export const GetAnimeListDocument = gql`
-    query GetAnimeList($userId: Int, $status: MediaListStatus, $sort: [MediaListSort], $chunk: Int = 1, $perChunk: Int = 50) {
-  MediaListCollection(
-    userId: $userId
-    type: ANIME
-    status: $status
-    sort: $sort
-    chunk: $chunk
-    perChunk: $perChunk
-  ) {
-    hasNextChunk
-    lists {
-      status
-      name
-      isCustomList
-      entries {
-        id
-        media {
-          ...AnimeListEntryFragment
-        }
+    query GetAnimeList($userId: Int, $status: MediaListStatus, $sort: [MediaListSort], $page: Int = 1, $perPage: Int = 50) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+    }
+    mediaList(userId: $userId, type: ANIME, status: $status, sort: $sort) {
+      id
+      media {
+        ...AnimeListEntryFragment
       }
     }
   }
@@ -5259,8 +5249,8 @@ export const GetAnimeListDocument = gql`
  *      userId: // value for 'userId'
  *      status: // value for 'status'
  *      sort: // value for 'sort'
- *      chunk: // value for 'chunk'
- *      perChunk: // value for 'perChunk'
+ *      page: // value for 'page'
+ *      perPage: // value for 'perPage'
  *   },
  * });
  */

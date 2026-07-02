@@ -2,7 +2,7 @@ import { NetworkStatus } from "@apollo/client";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   RefreshControl,
@@ -21,9 +21,8 @@ import {
 } from "yep/constants";
 import { AnimeListItemContainer } from "yep/containers/AnimeListItemContainer";
 import {
-  ANIME_LIST_PER_CHUNK,
-  mergeAnimeListChunks,
-  nextChunkToRequest,
+  ANIME_LIST_PER_PAGE,
+  nextPageToRequest,
   titleSortForLocale,
 } from "yep/graphql/animeListChunks";
 import {
@@ -127,26 +126,17 @@ export default function Anime() {
       userId: viewerData?.Viewer?.id,
       status,
       sort: [titleSortForLocale(locale)],
-      perChunk: ANIME_LIST_PER_CHUNK,
+      perPage: ANIME_LIST_PER_PAGE,
     },
     fetchPolicy: "cache-and-network",
     notifyOnNetworkStatusChange: true,
   });
 
-  // A user with custom lists or "Split completed list by format" gets several
-  // groups back; merge the non-custom ones (custom lists duplicate entries that
-  // already live in a status group) instead of showing an arbitrary lists[0].
-  // Sort is server-side (title sort matching the locale) so chunks appended by
+  // Server-side sort (title sort matching the locale) so pages appended by
   // fetchMore keep a stable order — a client re-sort would reshuffle rows
-  // mid-scroll. ponytail: split-completed users see per-format groups
-  // concatenated rather than one merged A–Z; client-merge after the last chunk
-  // if anyone complains.
-  const list = (animeListData?.MediaListCollection?.lists ?? []).flatMap(
-    (group) =>
-      group && !group.isCustomList
-        ? (group.entries ?? []).filter(notEmpty)
-        : [],
-  );
+  // mid-scroll. Page.mediaList is flat: no list groups, no custom-list
+  // duplicates.
+  const list = (animeListData?.Page?.mediaList ?? []).filter(notEmpty);
 
   const statusOptions = MediaListStatusWithLabel.map(({ value }) => ({
     label: getMediaListStatusLabel(value),
@@ -164,18 +154,32 @@ export default function Anime() {
   const refreshing = loadingViewer || loadingAnimeList;
   const isRefetching = networkStatus === NetworkStatus.refetch;
 
-  const hasNextChunk = Boolean(
-    animeListData?.MediaListCollection?.hasNextChunk,
-  );
   const isFetchingMore = networkStatus === NetworkStatus.fetchMore;
 
-  // Fire-and-forget, like onRefresh — never awaited.
-  function loadNextChunk() {
-    if (!hasNextChunk || isFetchingMore || refreshing) return;
-    fetchMore({
-      variables: { chunk: nextChunkToRequest(animeListData) },
-      updateQuery: (prev, { fetchMoreResult }) =>
-        fetchMoreResult ? mergeAnimeListChunks(prev, fetchMoreResult) : prev,
+  // FlatList can hold a stale onEndReached closure (observed live: the UI
+  // rendered the merged list while the callback still computed the page from
+  // the previous data), so loadNextPage reads the latest data through a ref
+  // instead of its closure. The ref is written in an effect — not during
+  // render — to stay React Compiler-safe.
+  const animeListDataRef = useRef(animeListData);
+  const fetchingMoreRef = useRef(false);
+  useEffect(() => {
+    animeListDataRef.current = animeListData;
+  }, [animeListData]);
+
+  // Fire-and-forget, like onRefresh — never awaited. Guards on the
+  // pull-refresh state specifically, NOT `refreshing` (loadingViewer ||
+  // loadingAnimeList): this query's `loading` sticks at networkStatus 1 after
+  // the skip-flip on mount (Apollo 3.12 quirk), which would block fetchMore
+  // forever. The cache typePolicy (graphql/client.ts) owns the page merge, so
+  // no updateQuery here — and a duplicate page request merges idempotently.
+  function loadNextPage() {
+    const data = animeListDataRef.current;
+    if (fetchingMoreRef.current || isRefetching) return;
+    if (!data?.Page?.pageInfo?.hasNextPage) return;
+    fetchingMoreRef.current = true;
+    fetchMore({ variables: { page: nextPageToRequest(data) } }).finally(() => {
+      fetchingMoreRef.current = false;
     });
   }
   const listRows = list.map((entry, index) => ({
@@ -292,7 +296,9 @@ export default function Anime() {
           <RefreshControl
             refreshing={isRefetching}
             onRefresh={() => {
-              refetch({ userId: viewerData?.Viewer?.id, status });
+              // page: 1 explicitly — refetch merges partial variables over the
+              // current ones, which include the last fetchMore's page.
+              refetch({ userId: viewerData?.Viewer?.id, status, page: 1 });
             }}
             tintColor={darkTheme.text}
             titleColor={darkTheme.text}
@@ -300,7 +306,7 @@ export default function Anime() {
         }
         keyExtractor={keyExtractor}
         renderItem={renderAnimeItem}
-        onEndReached={loadNextChunk}
+        onEndReached={loadNextPage}
         onEndReachedThreshold={0.5}
         ListFooterComponent={isFetchingMore ? ListFooterSpinner : null}
       />

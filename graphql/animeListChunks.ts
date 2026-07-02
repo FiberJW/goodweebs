@@ -1,64 +1,39 @@
 import type { GetAnimeListQuery, MediaListSort } from "./generated";
 
-export const ANIME_LIST_PER_CHUNK = 50;
+export const ANIME_LIST_PER_PAGE = 50;
 
-type ListGroup = NonNullable<
-  NonNullable<GetAnimeListQuery["MediaListCollection"]>["lists"]
->[number];
 
-function groupKey(group: NonNullable<ListGroup>) {
-  return group.status ?? group.name ?? "";
+// The next page is derived from how many entries are loaded (instead of
+// tracked in state), so it self-heals when a refetch or status change resets
+// the cache back to page 1.
+export function nextPageToRequest(
+  data: GetAnimeListQuery | undefined,
+): number {
+  const loaded = (data?.Page?.mediaList ?? []).length;
+  return Math.floor(loaded / ANIME_LIST_PER_PAGE) + 1;
 }
 
-// AniList chunks the user's raw entries; the non-custom status groups hold
-// exactly those entries (custom lists only duplicate them), so the loaded
-// non-custom count tells us which chunk to request next. Deriving it from
-// data (instead of tracking state) self-heals when a background
-// cache-and-network refetch resets the cache to chunk 1.
-export function nextChunkToRequest(data: GetAnimeListQuery | undefined): number {
-  const loaded = (data?.MediaListCollection?.lists ?? []).reduce(
-    (sum, group) =>
-      group && !group.isCustomList ? sum + (group.entries ?? []).length : sum,
-    0,
-  );
-  return Math.floor(loaded / ANIME_LIST_PER_CHUNK) + 1;
-}
-
-export function mergeAnimeListChunks(
-  prev: GetAnimeListQuery,
-  next: GetAnimeListQuery,
-): GetAnimeListQuery {
-  if (!prev.MediaListCollection) return next;
-  if (!next.MediaListCollection) return prev;
-
-  const merged: ListGroup[] = (prev.MediaListCollection.lists ?? []).map((group) =>
-    group ? { ...group, entries: [...(group.entries ?? [])] } : group,
-  );
-
-  const byKey = new Map<string, NonNullable<ListGroup>>();
-  for (const g of merged) {
-    if (g) byKey.set(groupKey(g), g);
-  }
-
-  for (const group of next.MediaListCollection.lists ?? []) {
-    if (!group) continue;
-    const existing = byKey.get(groupKey(group));
-    if (!existing) {
-      merged.push(group);
-      byKey.set(groupKey(group), group);
-      continue;
+// Cache-layer page merge for Page.mediaList (wired up in graphql/client.ts).
+// `entryId` is injectable because inside Apollo's cache the entries are
+// normalized References ({ __ref: "MediaList:123" }), not plain objects — the
+// typePolicy passes a readField-based accessor. Dedupes by entry id so a
+// repeated page fetch is idempotent.
+export function mergeMediaListPages<T>(
+  existing: readonly T[] | null | undefined,
+  incoming: readonly T[],
+  entryId: (entry: unknown) => unknown = (e) =>
+    (e as { id?: number } | null)?.id,
+): T[] {
+  const merged = [...(existing ?? [])];
+  const seen = new Set(merged.map((e) => entryId(e)));
+  for (const entry of incoming) {
+    const id = entryId(entry);
+    if (id == null || !seen.has(id)) {
+      merged.push(entry);
+      seen.add(id);
     }
-    const seen = new Set((existing.entries ?? []).map((e) => e?.id));
-    existing.entries = [
-      ...(existing.entries ?? []),
-      ...(group.entries ?? []).filter((e) => !e || !seen.has(e.id)),
-    ];
   }
-
-  return {
-    ...next,
-    MediaListCollection: { ...next.MediaListCollection, lists: merged },
-  };
+  return merged;
 }
 
 // Matches getTitle's display fallback (utils.tsx): ja_JP shows native titles,
