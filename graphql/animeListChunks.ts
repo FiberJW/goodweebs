@@ -31,7 +31,7 @@ export function mergeAnimeListChunks(
   if (!prev.MediaListCollection) return next;
   if (!next.MediaListCollection) return prev;
 
-  const merged = (prev.MediaListCollection.lists ?? []).map((group) =>
+  const merged: ListGroup[] = (prev.MediaListCollection.lists ?? []).map((group) =>
     group ? { ...group, entries: [...(group.entries ?? [])] } : group,
   );
 
