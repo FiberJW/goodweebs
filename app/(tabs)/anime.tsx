@@ -2,9 +2,15 @@ import { NetworkStatus } from "@apollo/client";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
-import sortBy from "lodash/sortBy";
 import React, { useState } from "react";
-import { RefreshControl, View, StyleSheet, Text, FlatList } from "react-native";
+import {
+  ActivityIndicator,
+  RefreshControl,
+  View,
+  StyleSheet,
+  Text,
+  FlatList,
+} from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
@@ -15,6 +21,12 @@ import {
 } from "yep/constants";
 import { AnimeListItemContainer } from "yep/containers/AnimeListItemContainer";
 import {
+  ANIME_LIST_PER_CHUNK,
+  mergeAnimeListChunks,
+  nextChunkToRequest,
+  titleSortForLocale,
+} from "yep/graphql/animeListChunks";
+import {
   useGetViewerQuery,
   useGetAnimeListQuery,
 } from "yep/graphql/generated";
@@ -23,11 +35,12 @@ import type {
   MediaListStatus,
 } from "yep/graphql/generated";
 import { useAniListAuthRequest } from "yep/hooks/auth";
+import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { AnimeSkeleton } from "yep/screens/AnimeScreen/AnimeSkeleton";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
-import { getMediaListStatusLabel, notEmpty, useGetTitle } from "yep/utils";
+import { getMediaListStatusLabel, notEmpty } from "yep/utils";
 
 type StatusOption = {
   label: string;
@@ -82,6 +95,12 @@ function renderAnimeItem({
   );
 }
 
+function ListFooterSpinner() {
+  return (
+    <ActivityIndicator color={darkTheme.text} style={styles.footerSpinner} />
+  );
+}
+
 export default function Anime() {
   const [status, setStatus] = useState<MediaListStatus>(
     MediaListStatusWithLabel[0].value,
@@ -89,7 +108,7 @@ export default function Anime() {
 
   const { accessToken, setAccessToken } = useAccessToken();
   const router = useRouter();
-  const getTitle = useGetTitle();
+  const { locale } = useLocaleContext();
 
   const [, , promptAsync] = useAniListAuthRequest();
   const { loading: loadingViewer, data: viewerData } = useGetViewerQuery({
@@ -100,12 +119,15 @@ export default function Anime() {
     loading: loadingAnimeList,
     data: animeListData,
     refetch,
+    fetchMore,
     networkStatus,
   } = useGetAnimeListQuery({
     skip: !viewerData?.Viewer?.id || !accessToken,
     variables: {
       userId: viewerData?.Viewer?.id,
       status,
+      sort: [titleSortForLocale(locale)],
+      perChunk: ANIME_LIST_PER_CHUNK,
     },
     fetchPolicy: "cache-and-network",
     notifyOnNetworkStatusChange: true,
@@ -114,13 +136,16 @@ export default function Anime() {
   // A user with custom lists or "Split completed list by format" gets several
   // groups back; merge the non-custom ones (custom lists duplicate entries that
   // already live in a status group) instead of showing an arbitrary lists[0].
-  const list = sortBy(
-    (animeListData?.MediaListCollection?.lists ?? []).flatMap((group) =>
+  // Sort is server-side (title sort matching the locale) so chunks appended by
+  // fetchMore keep a stable order — a client re-sort would reshuffle rows
+  // mid-scroll. ponytail: split-completed users see per-format groups
+  // concatenated rather than one merged A–Z; client-merge after the last chunk
+  // if anyone complains.
+  const list = (animeListData?.MediaListCollection?.lists ?? []).flatMap(
+    (group) =>
       group && !group.isCustomList
         ? (group.entries ?? []).filter(notEmpty)
         : [],
-    ),
-    (m) => getTitle(m.media?.title),
   );
 
   const statusOptions = MediaListStatusWithLabel.map(({ value }) => ({
@@ -138,6 +163,21 @@ export default function Anime() {
   // without any awaited promise or manual state.
   const refreshing = loadingViewer || loadingAnimeList;
   const isRefetching = networkStatus === NetworkStatus.refetch;
+
+  const hasNextChunk = Boolean(
+    animeListData?.MediaListCollection?.hasNextChunk,
+  );
+  const isFetchingMore = networkStatus === NetworkStatus.fetchMore;
+
+  // Fire-and-forget, like onRefresh — never awaited.
+  function loadNextChunk() {
+    if (!hasNextChunk || isFetchingMore || refreshing) return;
+    fetchMore({
+      variables: { chunk: nextChunkToRequest(animeListData) },
+      updateQuery: (prev, { fetchMoreResult }) =>
+        fetchMoreResult ? mergeAnimeListChunks(prev, fetchMoreResult) : prev,
+    });
+  }
   const listRows = list.map((entry, index) => ({
     entry,
     first: index === 0,
@@ -260,6 +300,9 @@ export default function Anime() {
         }
         keyExtractor={keyExtractor}
         renderItem={renderAnimeItem}
+        onEndReached={loadNextChunk}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={isFetchingMore ? ListFooterSpinner : null}
       />
     </View>
   );
@@ -281,5 +324,8 @@ const styles = StyleSheet.create({
     fontFamily: Manrope.regular,
     fontSize: 12.8,
     color: darkTheme.listCount,
+  },
+  footerSpinner: {
+    paddingVertical: 16,
   },
 });
