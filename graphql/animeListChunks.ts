@@ -35,11 +35,17 @@ export function mergeAnimeListChunks(
     group ? { ...group, entries: [...(group.entries ?? [])] } : group,
   );
 
+  const byKey = new Map<string, NonNullable<ListGroup>>();
+  for (const g of merged) {
+    if (g) byKey.set(groupKey(g), g);
+  }
+
   for (const group of next.MediaListCollection.lists ?? []) {
     if (!group) continue;
-    const existing = merged.find((g) => g && groupKey(g) === groupKey(group));
+    const existing = byKey.get(groupKey(group));
     if (!existing) {
       merged.push(group);
+      byKey.set(groupKey(group), group);
       continue;
     }
     const seen = new Set((existing.entries ?? []).map((e) => e?.id));
