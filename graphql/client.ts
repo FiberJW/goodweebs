@@ -30,8 +30,34 @@ const authLink = setContext(async (_, { headers }) => {
       {};
 });
 
+// AniList's burst limiter sometimes drops a connection without closing it; RN's
+// fetch then never settles, which pins RefreshControl spinners forever (and
+// Apollo dedupes any re-pull onto the same hung request, so the user can't
+// recover). Cap every request at 30s. Timeouts reject with name "TimeoutError"
+// (NOT "AbortError") so RetryLink retries them while caller-initiated aborts —
+// a debounced mutation superseding an in-flight one — are still not retried.
+function fetchWithTimeout(
+  input: RequestInfo | URL,
+  init?: RequestInit,
+): Promise<Response> {
+  return new Promise((resolve, reject) => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      const error = new Error("AniList request timed out after 30s");
+      error.name = "TimeoutError";
+      reject(error);
+      controller.abort();
+    }, 30_000);
+    init?.signal?.addEventListener("abort", () => controller.abort());
+    fetch(input, { ...init, signal: controller.signal })
+      .then(resolve, reject)
+      .finally(() => clearTimeout(timer));
+  });
+}
+
 const httpLink = new HttpLink({
   uri: "https://graphql.anilist.co",
+  fetch: fetchWithTimeout,
   // Apollo Client 3.13+ defaults Accept to
   // "application/graphql-response+json,application/json". AniList's API
   // degrades severely on that header (small queries take ~6s, large ones like
@@ -69,10 +95,12 @@ const retryLink = new RetryLink({
   attempts: {
     max: 3, // initial request + 2 retries
     retryIf: (error) => {
+      // Intentionally superseded by a newer debounced mutation — never replay.
+      if ((error as Error | null)?.name === "AbortError") return false;
       const status = (error as { statusCode?: number } | null)?.statusCode;
       if (status === 429) return true; // rate-limited: back off and retry
       if (typeof status === "number") return false; // 401/other 4xx/5xx: don't retry
-      return true; // no status code = transient network failure: retry
+      return true; // no status code = transient network failure/timeout: retry
     },
   },
 });

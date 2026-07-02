@@ -111,9 +111,14 @@ export default function Anime() {
     notifyOnNetworkStatusChange: true,
   });
 
+  // A user with custom lists or "Split completed list by format" gets several
+  // groups back; merge the non-custom ones (custom lists duplicate entries that
+  // already live in a status group) instead of showing an arbitrary lists[0].
   const list = sortBy(
-    (animeListData?.MediaListCollection?.lists?.[0]?.entries ?? []).filter(
-      notEmpty,
+    (animeListData?.MediaListCollection?.lists ?? []).flatMap((group) =>
+      group && !group.isCustomList
+        ? (group.entries ?? []).filter(notEmpty)
+        : [],
     ),
     (m) => getTitle(m.media?.title),
   );
@@ -146,7 +151,9 @@ export default function Anime() {
       <Header label={String(fbs("Anime", "Anime tab header label"))} />
       <FlatList
         contentContainerStyle={{ padding: 16 }}
-        ListHeaderComponent={() => (
+        // An element (not an inline component) so FlatList doesn't remount the
+        // header — and reset the chip row's scroll — on every data/status change.
+        ListHeaderComponent={
           <View style={{ gap: 16, paddingBottom: 16 }}>
             <View>
               <FlatList
@@ -179,7 +186,7 @@ export default function Anime() {
               </Text>
             </View>
           </View>
-        )}
+        }
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <View style={styles.animeListDivider} />}
         data={listRows}

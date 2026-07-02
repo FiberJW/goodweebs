@@ -26,7 +26,10 @@ export default function Character() {
     notifyOnNetworkStatusChange: true,
   });
 
-  const [toggleFavorite] = useToggleFavoriteMutation();
+  // Keep the Profile favorites shelves (GetViewer, cache-first) in sync.
+  const [toggleFavorite] = useToggleFavoriteMutation({
+    refetchQueries: ["GetViewer"],
+  });
 
   const character = data?.Character;
 

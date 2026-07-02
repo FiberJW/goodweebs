@@ -13,5 +13,4 @@ fragment CharacterData on Character {
     medium
   }
   description
-  siteUrl
 }

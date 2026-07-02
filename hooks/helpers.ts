@@ -8,23 +8,8 @@ import {
 } from "@apollo/client";
 import { DocumentNode } from "graphql";
 import debounce from "lodash/debounce";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useWindowDimensions } from "react-native";
-
-export function useNow(interval: "second" | "minute" = "minute") {
-  const [now, setNow] = useState(new Date());
-
-  useEffect(() => {
-    const handle = setInterval(
-      () => setNow(new Date()),
-      interval === "second" ? 1 * 1000 : 60 * 1000,
-    );
-
-    return () => clearInterval(handle);
-  }, [interval]);
-
-  return now;
-}
 
 export function useDebouncedMutation<
   MutationData = any,

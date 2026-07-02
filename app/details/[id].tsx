@@ -1,6 +1,6 @@
 import { NetworkStatus } from "@apollo/client";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { formatDistanceToNow, add } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useNavigation } from "expo-router";
@@ -44,7 +44,6 @@ import type {
   UpdateStatusMutationVariables,
 } from "yep/graphql/generated";
 import {
-  useNow,
   useDebouncedMutation,
   usePersistedState,
   StorageKeys,
@@ -104,7 +103,6 @@ function Info({ label, value }: InfoProps) {
 function PosterInfoSection({
   animeId,
   media,
-  now,
   shouldShowScoreToggleUI,
   showScore,
   setShowScore,
@@ -112,13 +110,16 @@ function PosterInfoSection({
 }: {
   animeId: number;
   media: DetailsMedia;
-  now: Date;
   shouldShowScoreToggleUI: boolean;
   showScore: boolean;
   setShowScore: (showScore: boolean) => boolean;
   studio?: string;
 }) {
-  const [toggleFavorite] = useToggleFavoriteMutation();
+  // GetViewer (cache-first) holds the Profile favorites shelves; without a
+  // refetch a newly hearted anime never shows up there until a manual pull.
+  const [toggleFavorite] = useToggleFavoriteMutation({
+    refetchQueries: ["GetViewer"],
+  });
 
   return (
     <View style={styles.posterAndInfoContainer}>
@@ -215,7 +216,7 @@ function PosterInfoSection({
               value={studio}
             />
           ) : null}
-          {media.status === "RELEASING" && media.nextAiringEpisode ? (
+          {media.status === "RELEASING" && media.nextAiringEpisode?.airingAt ? (
             <Info
               label={String(
                 fbs("Next episode", "Anime details next episode label"),
@@ -225,9 +226,7 @@ function PosterInfoSection({
               )} ${media.nextAiringEpisode.episode} ${String(
                 fbs("airs in", "Next episode airs in label"),
               )} ${formatDistanceToNow(
-                add(now, {
-                  seconds: media.nextAiringEpisode.timeUntilAiring ?? 0,
-                }),
+                new Date(media.nextAiringEpisode.airingAt * 1000),
               )}`}
             />
           ) : null}
@@ -483,6 +482,10 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
         scoreRaw: nextScore * 10,
       });
     } catch (error) {
+      // A failed mutation never moves the cache, so the override would stay
+      // pinned to the unsaved value forever — revert it. (The global onError
+      // link already toasts the failure.)
+      setScoreOverride(null);
       console.error(error);
     }
   }
@@ -503,6 +506,8 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
         progress: nextProgress,
       });
     } catch (error) {
+      // Revert the optimistic value — a failed mutation never moves the cache.
+      setProgressOverride(null);
       console.error(error);
     }
   }
@@ -609,8 +614,6 @@ export default function Details() {
 
   const getTitle = useGetTitle();
 
-  const now = useNow();
-
   const { loading, data, refetch, error, networkStatus } = useGetAnimeQuery({
     variables: { id: animeId },
     notifyOnNetworkStatusChange: true,
@@ -698,7 +701,6 @@ export default function Details() {
           <PosterInfoSection
             animeId={animeId}
             media={media}
-            now={now}
             shouldShowScoreToggleUI={shouldShowScoreToggleUI}
             showScore={showScore}
             setShowScore={setShowScore}

@@ -1,3 +1,5 @@
+# ponytail: accepts AniList's 500-entries-per-status cap; add chunk/perChunk
+# pagination via fetchMore if users with >500 entries in one status report gaps.
 query GetAnimeList(
   $userId: Int
   $status: MediaListStatus
@@ -12,6 +14,7 @@ query GetAnimeList(
     lists {
       status
       name
+      isCustomList
       entries {
         id
         media {
@@ -19,6 +22,5 @@ query GetAnimeList(
         }
       }
     }
-    hasNextChunk
   }
 }

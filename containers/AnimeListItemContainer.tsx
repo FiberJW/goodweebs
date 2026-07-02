@@ -93,6 +93,10 @@ export function AnimeListItemContainer({ seedData, first, last }: Props) {
         progress: newProgress,
       });
     } catch (error) {
+      // A failed mutation never moves the cache, so the override would stay
+      // pinned to the unsaved value forever — revert it. (The global onError
+      // link already toasts the failure.)
+      setProgressOverride(null);
       console.error(error);
     }
   }
