@@ -33,26 +33,26 @@ const authLink = setContext(async (_, { headers }) => {
 // AniList's burst limiter sometimes drops a connection without closing it; RN's
 // fetch then never settles, which pins RefreshControl spinners forever (and
 // Apollo dedupes any re-pull onto the same hung request, so the user can't
-// recover). Cap every request at 30s. Timeouts reject with name "TimeoutError"
-// (NOT "AbortError") so RetryLink retries them while caller-initiated aborts —
-// a debounced mutation superseding an in-flight one — are still not retried.
+// recover). Cap every request at 30s via Promise.race — deliberately WITHOUT
+// substituting our own AbortSignal into fetch (replacing RN fetch's signal
+// wedges its networking; a raced-out request is simply abandoned). Timeouts
+// reject with name "TimeoutError" (NOT "AbortError") so RetryLink retries them
+// while caller-initiated aborts (a debounced mutation superseding an in-flight
+// one) are still not retried.
 function fetchWithTimeout(
   input: RequestInfo | URL,
   init?: RequestInit,
 ): Promise<Response> {
-  return new Promise((resolve, reject) => {
-    const controller = new AbortController();
-    const timer = setTimeout(() => {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => {
       const error = new Error("AniList request timed out after 30s");
       error.name = "TimeoutError";
       reject(error);
-      controller.abort();
     }, 30_000);
-    init?.signal?.addEventListener("abort", () => controller.abort());
-    fetch(input, { ...init, signal: controller.signal })
-      .then(resolve, reject)
-      .finally(() => clearTimeout(timer));
   });
+  const request = fetch(input, init).finally(() => clearTimeout(timer));
+  return Promise.race([request, timeout]);
 }
 
 const httpLink = new HttpLink({

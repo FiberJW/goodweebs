@@ -272,13 +272,28 @@ function MediaListStatusButton({
     UpdateStatusMutationVariables
   >({
     mutationDocument: UpdateStatusDocument,
-    makeUpdateFunction: (variables) => (cache) => {
-      if (!mediaListEntryId || !variables?.status) return;
+    makeUpdateFunction: (variables) => (cache, result) => {
+      if (mediaListEntryId && variables?.status) {
+        cache.modify({
+          id: cache.identify({ __typename: "MediaList", id: mediaListEntryId }),
+          fields: {
+            status: () => variables.status,
+          },
+        });
+        return;
+      }
 
+      // First add: link the fresh entry to the Media ourselves — the nested
+      // media.mediaListEntry in the mutation payload can come back null (the
+      // resolver doesn't reliably see the just-created entry), which would
+      // leave the details screen stuck on "Add to list" until a refetch.
+      const saved = result.data?.SaveMediaListEntry;
+      if (!saved?.id) return;
       cache.modify({
-        id: cache.identify({ __typename: "MediaList", id: mediaListEntryId }),
+        id: cache.identify({ __typename: "Media", id: animeId }),
         fields: {
-          status: () => variables.status,
+          mediaListEntry: (existing, { toReference }) =>
+            toReference({ __typename: "MediaList", id: saved.id }) ?? existing,
         },
       });
     },
