@@ -1,16 +1,22 @@
-# ponytail: accepts AniList's 500-entries-per-status cap; add chunk/perChunk
-# pagination via fetchMore if users with >500 entries in one status report gaps.
+# Chunked: first paint is one fast 50-entry request; later chunks stream in
+# via fetchMore on infinite scroll (app/(tabs)/anime.tsx). Sort is server-side
+# so appended chunks keep a stable order.
 query GetAnimeList(
   $userId: Int
   $status: MediaListStatus
   $sort: [MediaListSort]
+  $chunk: Int = 1
+  $perChunk: Int = 50
 ) {
   MediaListCollection(
     userId: $userId
     type: ANIME
     status: $status
     sort: $sort
+    chunk: $chunk
+    perChunk: $perChunk
   ) {
+    hasNextChunk
     lists {
       status
       name
