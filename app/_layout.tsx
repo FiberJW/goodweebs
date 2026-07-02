@@ -99,9 +99,14 @@ function RootLayout() {
   );
 }
 
-// Sentry.wrap enables app-start/native-crash instrumentation; harmless no-op
-// when init was skipped via opt-out. Skip on web (RN-only SDK surface).
-export default Platform.OS === "web" ? RootLayout : Sentry.wrap(RootLayout);
+// Sentry.wrap enables app-start/native-crash instrumentation. It must only
+// run when Sentry.init ran (wrap-before-init stalls the app on a black
+// screen), so it honors the same crash-reporting opt-out. Skip on web
+// (RN-only SDK surface).
+export default
+  Platform.OS === "web" || optedOut(StorageKeys.OPT_OUT_CRASH_REPORTING)
+    ? RootLayout
+    : Sentry.wrap(RootLayout);
 
 // eslint-disable-next-line react-doctor/no-multi-comp -- see RootLayout note above
 function InnerLayout() {

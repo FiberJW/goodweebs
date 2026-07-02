@@ -11,7 +11,7 @@ import * as Updates from "expo-updates";
 import Toast from "react-native-root-toast";
 
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
-import { mergeMediaListPages } from "yep/graphql/animeListChunks";
+import { mergeMediaListPages } from "yep/graphql/animeListPagination";
 
 const authLink = setContext(async (_, { headers }) => {
   // get the authentication token from local storage if it exists

@@ -5,7 +5,7 @@ import {
   mergeMediaListPages,
   nextPageToRequest,
   titleSortForLocale,
-} from "./animeListChunks";
+} from "./animeListPagination";
 import type { GetAnimeListQuery } from "./generated";
 
 

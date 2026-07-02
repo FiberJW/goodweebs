@@ -24,7 +24,7 @@ import {
   ANIME_LIST_PER_PAGE,
   nextPageToRequest,
   titleSortForLocale,
-} from "yep/graphql/animeListChunks";
+} from "yep/graphql/animeListPagination";
 import {
   useGetViewerQuery,
   useGetAnimeListQuery,
