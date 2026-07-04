@@ -1,0 +1,31 @@
+query GetTrendingAnime($page: Int = 1, $perPage: Int = 20) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+      total
+      currentPage
+      perPage
+      lastPage
+    }
+    media(format: TV, isAdult: false, type: ANIME, sort: [TRENDING_DESC]) {
+      ...AnimeFragment
+    }
+  }
+}
+
+query SearchAnime($search: String) {
+  Page {
+    pageInfo {
+      hasNextPage
+      total
+    }
+    media(
+      search: $search
+      format_not_in: [MANGA, MUSIC, NOVEL, ONE_SHOT]
+      isAdult: false
+      type: ANIME
+    ) {
+      ...AnimeFragment
+    }
+  }
+}

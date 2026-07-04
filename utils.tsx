@@ -83,63 +83,63 @@ export function assertUnreachable(_x: never): never {
 
 export function getReadableMediaRelation(mediaRelation: MediaRelation): string {
   switch (mediaRelation) {
-    case MediaRelation.Adaptation:
+    case "ADAPTATION":
       return String(fbs("Adaptation", "Media relation adaptation"));
-    case MediaRelation.Alternative:
+    case "ALTERNATIVE":
       return String(fbs("Alternative", "Media relation alternative"));
-    case MediaRelation.Prequel:
+    case "PREQUEL":
       return String(fbs("Prequel", "Media relation prequel"));
-    case MediaRelation.Parent:
+    case "PARENT":
       return String(fbs("Parent", "Media relation parent"));
-    case MediaRelation.Sequel:
+    case "SEQUEL":
       return String(fbs("Sequel", "Media relation sequel"));
-    case MediaRelation.Character:
+    case "CHARACTER":
       return String(fbs("Character", "Media relation character"));
-    case MediaRelation.SideStory:
+    case "SIDE_STORY":
       return String(fbs("Side story", "Media relation side story"));
-    case MediaRelation.Summary:
+    case "SUMMARY":
       return String(fbs("Summary", "Media relation summary"));
-    case MediaRelation.SpinOff:
+    case "SPIN_OFF":
       return String(fbs("Spin off", "Media relation spin off"));
-    case MediaRelation.Other:
+    case "OTHER":
       return String(fbs("Other", "Media relation other"));
-    case MediaRelation.Source:
+    case "SOURCE":
       return String(fbs("Source", "Media relation source"));
-    case MediaRelation.Compilation:
+    case "COMPILATION":
       return String(fbs("Compilation", "Media relation compilation"));
-    case MediaRelation.Contains:
+    case "CONTAINS":
       return String(fbs("Contains", "Media relation contains"));
   }
 }
 
 export function getMediaListStatusLabel(status: MediaListStatus): string {
   switch (status) {
-    case MediaListStatus.Current:
+    case "CURRENT":
       return String(fbs("Watching", "Media list status watching"));
-    case MediaListStatus.Paused:
+    case "PAUSED":
       return String(fbs("On hold", "Media list status on hold"));
-    case MediaListStatus.Planning:
+    case "PLANNING":
       return String(fbs("Plan to watch", "Media list status plan to watch"));
-    case MediaListStatus.Dropped:
+    case "DROPPED":
       return String(fbs("Dropped", "Media list status dropped"));
-    case MediaListStatus.Completed:
+    case "COMPLETED":
       return String(fbs("Completed", "Media list status completed"));
-    case MediaListStatus.Repeating:
+    case "REPEATING":
       return String(fbs("Repeating", "Media list status repeating"));
   }
 }
 
 export function getMediaStatusLabel(status: MediaStatus): string {
   switch (status) {
-    case MediaStatus.Finished:
+    case "FINISHED":
       return String(fbs("Finished", "Media status finished"));
-    case MediaStatus.Releasing:
+    case "RELEASING":
       return String(fbs("Currently releasing", "Media status currently releasing"));
-    case MediaStatus.NotYetReleased:
+    case "NOT_YET_RELEASED":
       return String(fbs("Not yet released", "Media status not yet released"));
-    case MediaStatus.Cancelled:
+    case "CANCELLED":
       return String(fbs("Cancelled", "Media status cancelled"));
-    case MediaStatus.Hiatus:
+    case "HIATUS":
       return String(fbs("On hiatus", "Media status on hiatus"));
   }
 }
@@ -192,7 +192,7 @@ export function getAiringStatusText(
   now: Date
 ): React.ReactNode | string | undefined {
   switch (media.status) {
-    case MediaStatus.Releasing:
+    case "RELEASING":
       return media.nextAiringEpisode
         ? `${String(fbs("EP", "Episode abbreviation"))} ${
             media.nextAiringEpisode?.episode
@@ -202,16 +202,16 @@ export function getAiringStatusText(
             }),
           )}`
         : String(fbs("Releasing", "Anime status releasing"));
-    case MediaStatus.NotYetReleased:
+    case "NOT_YET_RELEASED":
       return media.startDate
         ? getDateText(
             media.startDate,
             String(fbs("Starting", "Starting date label")),
           )
         : String(fbs("Not yet released", "Anime status not yet released"));
-    case MediaStatus.Hiatus:
+    case "HIATUS":
       return String(fbs("On hiatus", "Anime status on hiatus"));
-    case MediaStatus.Finished:
+    case "FINISHED":
       return media.endDate
         ? getDateText(
             media.endDate,
@@ -219,7 +219,7 @@ export function getAiringStatusText(
             { highlight: true },
           )
         : String(fbs("Finished", "Anime status finished"));
-    case MediaStatus.Cancelled:
+    case "CANCELLED":
       return media.endDate
         ? getDateText(
             media.endDate,

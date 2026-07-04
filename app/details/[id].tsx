@@ -289,7 +289,7 @@ export default function Details() {
       if (
         !value?.relationType ||
         !value.node ||
-        !(value.node.type === MediaType.Anime)
+        !(value.node.type === "ANIME")
       )
         return result;
 
@@ -446,7 +446,7 @@ export default function Details() {
                     value={studio}
                   />
                 ) : null}
-                {data?.Media?.status === MediaStatus.Releasing &&
+                {data?.Media?.status === "RELEASING" &&
                 data?.Media?.nextAiringEpisode ? (
                   <Info
                     label={String(
@@ -466,7 +466,7 @@ export default function Details() {
                     )}`}
                   />
                 ) : null}
-                {data?.Media?.status === MediaStatus.NotYetReleased &&
+                {data?.Media?.status === "NOT_YET_RELEASED" &&
                 data.Media.startDate &&
                 getDateText(data.Media.startDate) ? (
                   <Info
@@ -477,8 +477,8 @@ export default function Details() {
                   />
                 ) : null}
 
-                {(data?.Media?.status === MediaStatus.Finished ||
-                  data?.Media?.status === MediaStatus.Cancelled) &&
+                {(data?.Media?.status === "FINISHED" ||
+                  data?.Media?.status === "CANCELLED") &&
                 data?.Media?.endDate &&
                 getDateText(data.Media.endDate) ? (
                   <Info
@@ -567,7 +567,7 @@ export default function Details() {
             />
           </View>
           {data?.Media?.mediaListEntry &&
-          data.Media.status !== MediaStatus.NotYetReleased ? (
+          data.Media.status !== "NOT_YET_RELEASED" ? (
             <>
               <Stepper
                 label={String(fbs("Score", "Anime details score stepper label"))}

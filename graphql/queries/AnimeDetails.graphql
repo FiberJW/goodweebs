@@ -1,0 +1,5 @@
+query GetAnime($id: Int) {
+  Media(id: $id) {
+    ...AnimeFragment
+  }
+}

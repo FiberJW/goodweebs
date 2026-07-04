@@ -9,7 +9,7 @@ import { EmptyState } from "yep/components/EmptyState";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { LikeButton } from "yep/components/PosterAndTitle/LikeButton";
 import {
-  refetchGetCharacterQuery,
+  GetCharacterDocument,
   useToggleFavoriteMutation,
   useGetCharacterQuery,
 } from "yep/graphql/generated";
@@ -86,7 +86,7 @@ export default function Character() {
                           characterId: character?.id,
                         },
                         refetchQueries: [
-                          refetchGetCharacterQuery({ id: characterId }),
+                          { query: GetCharacterDocument, variables: { id: characterId } },
                         ],
                       });
                     } catch (error) {
