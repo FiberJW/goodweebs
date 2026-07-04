@@ -1,18 +1,12 @@
+import { Image, ImageBackground } from "expo-image";
+import * as WebBrowser from "expo-web-browser";
 import { fbs } from "fbtee";
 import React from "react";
-import {
-  Linking,
-  Image,
-  useWindowDimensions,
-  View,
-  StyleSheet,
-  Text,
-  ImageBackground,
-} from "react-native";
+import { useWindowDimensions, View, StyleSheet, Text } from "react-native";
 
 import { black, white80 } from "yep/colors";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import { MediaTrailerDataFragment } from "yep/graphql/generated";
+import type { MediaTrailerDataFragment } from "yep/graphql/generated";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
@@ -47,7 +41,8 @@ export function Trailer({ trailer: { id, site, thumbnail } }: Props) {
         {String(fbs("Trailer", "Trailer section title"))}
       </Text>
       <PressableOpacity
-        onPress={() => Linking.openURL(videoURL)}
+        // In-app browser sheet instead of bouncing the user out to Safari.
+        onPress={() => WebBrowser.openBrowserAsync(videoURL)}
         borderRadius={8}
       >
         <ImageBackground

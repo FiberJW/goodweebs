@@ -4,5 +4,14 @@ mutation UpdateStatus($mediaId: Int, $status: MediaListStatus) {
     progress
     status
     score(format: POINT_10)
+    media {
+      id
+      mediaListEntry {
+        id
+        progress
+        status
+        score(format: POINT_10)
+      }
+    }
   }
 }
