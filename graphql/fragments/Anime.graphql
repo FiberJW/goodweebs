@@ -34,8 +34,9 @@ fragment AnimeListEntryFragment on Media {
     day
   }
   nextAiringEpisode {
+    id
+    airingAt
     episode
-    timeUntilAiring
   }
   mediaListEntry {
     id
@@ -60,13 +61,6 @@ fragment AnimeRelationFragment on Media {
     medium
     color
   }
-}
-
-fragment StreamingLinkData on MediaStreamingEpisode {
-  title
-  thumbnail
-  url
-  site
 }
 
 fragment MediaExternalLinkData on MediaExternalLink {
@@ -100,7 +94,6 @@ fragment AnimeFragment on Media {
   }
   status
   genres
-  duration
   episodes
   description
   isFavourite
@@ -119,9 +112,6 @@ fragment AnimeFragment on Media {
   trailer {
     ...MediaTrailerData
   }
-  streamingEpisodes {
-    ...StreamingLinkData
-  }
   externalLinks {
     ...MediaExternalLinkData
   }
@@ -129,7 +119,6 @@ fragment AnimeFragment on Media {
     id
     airingAt
     episode
-    timeUntilAiring
   }
   mediaListEntry {
     id
@@ -147,13 +136,6 @@ fragment AnimeFragment on Media {
     }
   }
   characters {
-    edges {
-      id
-      role
-      node {
-        ...CharacterData
-      }
-    }
     nodes {
       ...CharacterData
     }

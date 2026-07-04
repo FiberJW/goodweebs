@@ -10,17 +10,23 @@ type ProgressButtonProps = {
   onPress: () => void;
   icon: ImageSourcePropType;
   disabled?: boolean;
+  accessibilityLabel: string;
 };
 
 export function ProgressButton({
   onPress,
   icon,
   disabled,
+  accessibilityLabel,
 }: ProgressButtonProps) {
   return (
     <PressableOpacity
       onPress={onPress}
       disabled={disabled}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      // Visual height is 32pt; pad the touch target to the 44pt minimum.
+      hitSlop={{ top: 6, bottom: 6 }}
       style={styles.container}
       borderRadius={100}
     >

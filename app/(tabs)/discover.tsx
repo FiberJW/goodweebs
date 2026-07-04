@@ -1,6 +1,6 @@
 import { NetworkStatus } from "@apollo/client";
 import { fbs } from "fbtee";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   RefreshControl,
   useWindowDimensions,
@@ -42,6 +42,13 @@ function renderDiscoverPoster({
 
 export default function Discover() {
   const [searchTerm, setSearchTerm] = useState("");
+  // Only the debounced copy hits the network: typing a title fires one query,
+  // not one per keystroke against AniList's degraded 30/min rate limit.
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  useEffect(() => {
+    const handle = setTimeout(() => setDebouncedSearchTerm(searchTerm), 300);
+    return () => clearTimeout(handle);
+  }, [searchTerm]);
   const { width: windowWidth } = useWindowDimensions();
 
   const posterWidth = (windowWidth - 16 * 4) / 3;
@@ -66,14 +73,18 @@ export default function Discover() {
     refetch: refetchSearch,
     networkStatus: searchNetworkStatus,
   } = useSearchAnimeQuery({
-    skip: searchTerm.trim().length === 0,
-    variables: { search: searchTerm },
+    skip: debouncedSearchTerm.trim().length === 0,
+    variables: { search: debouncedSearchTerm },
     notifyOnNetworkStatusChange: true,
   });
 
   const searchList = (searchData?.Page?.media ?? []).filter(notEmpty);
   const trendingList = (trendingData?.Page?.media ?? []).filter(notEmpty);
-  const isSearchLoading = showSearchResultsView && loadingSearchData;
+  // Treat the debounce window as loading so stale results / "No search
+  // results" don't flash while the user is still typing.
+  const isSearchLoading =
+    showSearchResultsView &&
+    (loadingSearchData || searchTerm.trim() !== debouncedSearchTerm.trim());
   const isSearchError = showSearchResultsView && Boolean(searchError);
   const isTrendingInitialLoading = !showSearchResultsView && loadingTrending;
   // Each RefreshControl tracks its OWN query's networkStatus; refetch(4) is set
@@ -83,7 +94,7 @@ export default function Discover() {
   const isSearchRefetching = searchNetworkStatus === NetworkStatus.refetch;
 
   async function refetchSearchResults() {
-    await refetchSearch({ search: searchTerm });
+    await refetchSearch({ search: debouncedSearchTerm });
   }
 
   return (
@@ -142,6 +153,8 @@ export default function Discover() {
             <FlatList
               contentContainerStyle={{ gap: 16 }}
               data={searchList}
+              keyboardShouldPersistTaps="handled"
+              keyboardDismissMode="on-drag"
               ListEmptyComponent={() =>
                 loadingSearchData ? null : (
                   <EmptyState
@@ -162,7 +175,7 @@ export default function Discover() {
                 <RefreshControl
                   refreshing={isSearchRefetching}
                   onRefresh={() => {
-                    refetchSearch({ search: searchTerm });
+                    refetchSearch({ search: debouncedSearchTerm });
                   }}
                   tintColor={darkTheme.text}
                   titleColor={darkTheme.text}

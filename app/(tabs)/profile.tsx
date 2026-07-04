@@ -140,7 +140,13 @@ export default function Profile() {
       <Header
         label={String(fbs("Profile", "Profile tab header label"))}
         rightSlot={
-          <PressableOpacity onPress={() => router.push("/settings")}>
+          <PressableOpacity
+            onPress={() => router.push("/settings")}
+            accessibilityRole="button"
+            accessibilityLabel={String(
+              fbs("Settings", "Settings button accessibility label"),
+            )}
+          >
             <Image
               style={{
                 tintColor: white,

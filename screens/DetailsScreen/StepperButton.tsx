@@ -1,4 +1,5 @@
 import { Image } from "expo-image";
+import { fbs } from "fbtee";
 import React from "react";
 import { StyleSheet } from "react-native";
 
@@ -16,6 +17,12 @@ export function StepperButton({ onPress, type, disabled }: Props) {
     <PressableOpacity
       disabled={disabled}
       onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={String(
+        type === "increment"
+          ? fbs("Increase", "Stepper increase button accessibility label")
+          : fbs("Decrease", "Stepper decrease button accessibility label"),
+      )}
       style={styles.container}
       borderRadius={32}
     >

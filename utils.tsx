@@ -1,5 +1,4 @@
 import { yellowDarkA } from "@radix-ui/colors";
-import { add } from "date-fns/add";
 import { differenceInDays } from "date-fns/differenceInDays";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import { fbs } from "fbtee";
@@ -180,17 +179,17 @@ export function getDateText(
 
 export function getAiringStatusText(
   media: AnimeListEntryFragmentFragment,
-  now: Date
 ): React.ReactNode | string | undefined {
   switch (media.status) {
     case "RELEASING":
-      return media.nextAiringEpisode
+      // airingAt is an absolute timestamp, so the countdown stays correct no
+      // matter how stale the cached response is (timeUntilAiring was only
+      // right at fetch time).
+      return media.nextAiringEpisode?.airingAt
         ? `${String(fbs("EP", "Episode abbreviation"))} ${
             media.nextAiringEpisode?.episode
           } ${String(fbs("airs in", "Airs in status text"))} ${formatDistanceToNow(
-            add(now, {
-              seconds: media.nextAiringEpisode?.timeUntilAiring ?? 0,
-            }),
+            new Date(media.nextAiringEpisode.airingAt * 1000),
           )}`
         : String(fbs("Releasing", "Anime status releasing"));
     case "NOT_YET_RELEASED":

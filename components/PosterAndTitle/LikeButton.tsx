@@ -1,4 +1,5 @@
 import { Image } from "expo-image";
+import { fbs } from "fbtee";
 import React, { useState } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 
@@ -28,6 +29,12 @@ export function LikeButton({ isLiked, onPress }: Props) {
   return (
     <PressableOpacity
       borderRadius={8}
+      accessibilityRole="button"
+      accessibilityLabel={String(
+        isLiked
+          ? fbs("Remove from favorites", "Unfavorite button accessibility label")
+          : fbs("Add to favorites", "Favorite button accessibility label"),
+      )}
       style={[
         styles.pressable,
         {

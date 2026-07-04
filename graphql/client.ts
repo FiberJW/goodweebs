@@ -1,4 +1,5 @@
 import { ApolloClient, InMemoryCache, ApolloLink } from "@apollo/client";
+import type { Reference } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { HttpLink } from "@apollo/client/link/http";
@@ -10,6 +11,7 @@ import * as Updates from "expo-updates";
 import Toast from "react-native-root-toast";
 
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
+import { mergeMediaListPages } from "yep/graphql/animeListPagination";
 
 const authLink = setContext(async (_, { headers }) => {
   // get the authentication token from local storage if it exists
@@ -30,8 +32,34 @@ const authLink = setContext(async (_, { headers }) => {
       {};
 });
 
+// AniList's burst limiter sometimes drops a connection without closing it; RN's
+// fetch then never settles, which pins RefreshControl spinners forever (and
+// Apollo dedupes any re-pull onto the same hung request, so the user can't
+// recover). Cap every request at 30s via Promise.race — deliberately WITHOUT
+// substituting our own AbortSignal into fetch (replacing RN fetch's signal
+// wedges its networking; a raced-out request is simply abandoned). Timeouts
+// reject with name "TimeoutError" (NOT "AbortError") so RetryLink retries them
+// while caller-initiated aborts (a debounced mutation superseding an in-flight
+// one) are still not retried.
+function fetchWithTimeout(
+  input: RequestInfo | URL,
+  init?: RequestInit,
+): Promise<Response> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => {
+      const error = new Error("AniList request timed out after 30s");
+      error.name = "TimeoutError";
+      reject(error);
+    }, 30_000);
+  });
+  const request = fetch(input, init).finally(() => clearTimeout(timer));
+  return Promise.race([request, timeout]);
+}
+
 const httpLink = new HttpLink({
   uri: "https://graphql.anilist.co",
+  fetch: fetchWithTimeout,
   // Apollo Client 3.13+ defaults Accept to
   // "application/graphql-response+json,application/json". AniList's API
   // degrades severely on that header (small queries take ~6s, large ones like
@@ -69,10 +97,12 @@ const retryLink = new RetryLink({
   attempts: {
     max: 3, // initial request + 2 retries
     retryIf: (error) => {
+      // Intentionally superseded by a newer debounced mutation — never replay.
+      if ((error as Error | null)?.name === "AbortError") return false;
       const status = (error as { statusCode?: number } | null)?.statusCode;
       if (status === 429) return true; // rate-limited: back off and retry
       if (typeof status === "number") return false; // 401/other 4xx/5xx: don't retry
-      return true; // no status code = transient network failure: retry
+      return true; // no status code = transient network failure/timeout: retry
     },
   },
 });
@@ -86,6 +116,44 @@ const retryLink = new RetryLink({
 // have to refetch color/medium.
 const cache = new InMemoryCache({
   typePolicies: {
+    Query: {
+      fields: {
+        // The anime list paginates Page.mediaList with fetchMore, so its Page
+        // container must be ONE cache object per (userId/status/sort) — pages
+        // merge inside it (see the Page.mediaList policy below) and its
+        // pageInfo.hasNextPage always reflects the newest page. Trending and
+        // search also use Page but never fetchMore; they keep the default
+        // args-keyed containers so their pageInfo never collides with ours.
+        Page: {
+          keyArgs: (args, { variables }) =>
+            variables?.userId != null && variables?.status != null
+              ? `animeList:${variables.userId}:${variables.status}:${JSON.stringify(variables.sort ?? null)}`
+              : JSON.stringify(args ?? {}),
+          merge: true,
+        },
+      },
+    },
+    Page: {
+      fields: {
+        // Append-merge for the anime list's pages. `page` lives on the parent
+        // Page field, so the reset signal comes from the operation variables:
+        // page 1 (or absent — a refetch/status change) replaces the list.
+        // Doing this at the cache layer (not fetchMore's updateQuery) keeps
+        // merges correct when a background cache-and-network refetch races an
+        // in-flight fetchMore, and dedupe makes repeated pages idempotent.
+        mediaList: {
+          keyArgs: ["userId", "type", "status", "sort"],
+          merge(existing, incoming, { variables, readField }) {
+            if (!existing || (variables?.page ?? 1) <= 1) return incoming;
+            return mergeMediaListPages(
+              existing as unknown[],
+              incoming as unknown[],
+              (entry) => readField("id", entry as Reference),
+            );
+          },
+        },
+      },
+    },
     Media: { fields: { coverImage: { merge: true } } },
     Character: { fields: { name: { merge: true } } },
   },
