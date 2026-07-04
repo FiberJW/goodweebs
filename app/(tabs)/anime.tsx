@@ -178,9 +178,13 @@ export default function Anime() {
     if (fetchingMoreRef.current || isRefetching) return;
     if (!data?.Page?.pageInfo?.hasNextPage) return;
     fetchingMoreRef.current = true;
-    fetchMore({ variables: { page: nextPageToRequest(data) } }).finally(() => {
-      fetchingMoreRef.current = false;
-    });
+    fetchMore({ variables: { page: nextPageToRequest(data) } })
+      .finally(() => {
+        fetchingMoreRef.current = false;
+      })
+      // Swallow the rejection (finally doesn't) — the hook's error/networkStatus
+      // already carries it; unhandled it would redbox in dev.
+      .catch(() => {});
   }
   const listRows = list.map((entry, index) => ({
     entry,

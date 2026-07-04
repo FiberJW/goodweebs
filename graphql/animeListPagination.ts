@@ -37,7 +37,9 @@ export function mergeMediaListPages<T>(
 }
 
 // Matches getTitle's display fallback (utils.tsx): ja_JP shows native titles,
-// everyone else shows english ?? romaji.
+// everyone else shows english ?? romaji. AniList coalesces null titles to
+// romaji server-side when sorting (verified against the live API), so
+// MEDIA_TITLE_ENGLISH already sorts by english ?? romaji.
 export function titleSortForLocale(locale: string | undefined): MediaListSort {
   return locale === "ja_JP" ? "MEDIA_TITLE_NATIVE" : "MEDIA_TITLE_ENGLISH";
 }
