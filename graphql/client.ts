@@ -12,6 +12,10 @@ import * as Updates from "expo-updates";
 import Toast from "react-native-root-toast";
 
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
+import {
+  mergeMediaListPages,
+  nextPageForCount,
+} from "yep/graphql/animeListPagination";
 
 const authLink = setContext(async (_, { headers }) => {
   // get the authentication token from local storage if it exists
@@ -115,6 +119,51 @@ const retryLink = new RetryLink({
 // have to refetch color/medium.
 const cache = new InMemoryCache({
   typePolicies: {
+    Query: {
+      fields: {
+        // The anime list paginates Page.mediaList with fetchMore, so its Page
+        // container must be ONE cache object per (userId/status/sort) — pages
+        // merge inside it (see the Page.mediaList policy below) and its
+        // pageInfo.hasNextPage always reflects the newest page. Trending and
+        // search also use Page but never fetchMore; they keep the default
+        // args-keyed containers so their pageInfo never collides with ours.
+        Page: {
+          keyArgs: (args, { variables }) =>
+            variables?.userId != null && variables?.status != null
+              ? `animeList:${variables.userId}:${variables.status}:${JSON.stringify(variables.sort ?? null)}`
+              : JSON.stringify(args ?? {}),
+          merge: true,
+        },
+      },
+    },
+    Page: {
+      fields: {
+        // Append-merge for the anime list's pages. `page` lives on the parent
+        // Page field, so the reset signal comes from the operation variables:
+        // page 1 (or absent — a refetch/status change) replaces the list.
+        // Doing this at the cache layer (not fetchMore's updateQuery) keeps
+        // merges correct when a background cache-and-network refetch races an
+        // in-flight fetchMore, and dedupe makes repeated pages idempotent.
+        mediaList: {
+          keyArgs: ["userId", "type", "status", "sort"],
+          merge(existing, incoming, { variables, readField }) {
+            if (!existing || (variables?.page ?? 1) <= 1) return incoming;
+            // A deep page can land AFTER a racing page-1 refetch already reset
+            // the container (pull-to-refresh while fetchMore is in flight).
+            // Appending it would leave a silent gap (rows 101-150 right after
+            // row 50), so drop any page that isn't the next contiguous one.
+            if ((variables?.page ?? 1) !== nextPageForCount(existing.length)) {
+              return existing;
+            }
+            return mergeMediaListPages(
+              existing as unknown[],
+              incoming as unknown[],
+              (entry) => readField("id", entry as Reference),
+            );
+          },
+        },
+      },
+    },
     Media: { fields: { coverImage: { merge: true } } },
     Character: { fields: { name: { merge: true } } },
   },

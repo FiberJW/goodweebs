@@ -4769,10 +4769,12 @@ export type GetAnimeListQueryVariables = Exact<{
   userId?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<MediaListStatus>;
   sort?: InputMaybe<Array<InputMaybe<MediaListSort>> | InputMaybe<MediaListSort>>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  perPage?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type GetAnimeListQuery = { __typename?: 'Query', MediaListCollection?: { __typename?: 'MediaListCollection', hasNextChunk?: boolean | null, lists?: Array<{ __typename?: 'MediaListGroup', status?: MediaListStatus | null, name?: string | null, entries?: Array<{ __typename?: 'MediaList', id: number, mediaId: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null, media?: { __typename?: 'Media', id: number, status?: MediaStatus | null, genres?: Array<string | null> | null, episodes?: number | null, description?: string | null, isFavourite: boolean, averageScore?: number | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, startDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, endDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, studios?: { __typename?: 'StudioConnection', nodes?: Array<{ __typename?: 'Studio', id: number, name: string } | null> | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null, trailer?: { __typename?: 'MediaTrailer', id?: string | null, thumbnail?: string | null, site?: string | null } | null, externalLinks?: Array<{ __typename?: 'MediaExternalLink', id: number, url?: string | null, site: string } | null> | null, nextAiringEpisode?: { __typename?: 'AiringSchedule', id: number, airingAt: number, episode: number } | null, mediaListEntry?: { __typename?: 'MediaList', id: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null } | null, relations?: { __typename?: 'MediaConnection', edges?: Array<{ __typename?: 'MediaEdge', id?: number | null, relationType?: MediaRelation | null, node?: { __typename?: 'Media', id: number, isFavourite: boolean, type?: MediaType | null, format?: MediaFormat | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null } | null } | null> | null } | null, characters?: { __typename?: 'CharacterConnection', nodes?: Array<{ __typename?: 'Character', id: number, isFavourite: boolean, description?: string | null, name?: { __typename?: 'CharacterName', first?: string | null, last?: string | null, full?: string | null, native?: string | null, alternative?: Array<string | null> | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null, medium?: string | null } | null } | null> | null } | null } | null } | null> | null } | null> | null } | null };
+export type GetAnimeListQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', pageInfo?: { __typename?: 'PageInfo', hasNextPage?: boolean | null } | null, mediaList?: Array<{ __typename?: 'MediaList', id: number, media?: { __typename?: 'Media', id: number, episodes?: number | null, status?: MediaStatus | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null } | null, startDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, endDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, nextAiringEpisode?: { __typename?: 'AiringSchedule', id: number, airingAt: number, episode: number } | null, mediaListEntry?: { __typename?: 'MediaList', id: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null } | null } | null } | null> | null } | null };
 
 export type GetTrendingAnimeQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -5217,26 +5219,20 @@ export type GetAnimeLazyQueryHookResult = ReturnType<typeof useGetAnimeLazyQuery
 export type GetAnimeSuspenseQueryHookResult = ReturnType<typeof useGetAnimeSuspenseQuery>;
 export type GetAnimeQueryResult = Apollo.QueryResult<GetAnimeQuery, GetAnimeQueryVariables>;
 export const GetAnimeListDocument = gql`
-    query GetAnimeList($userId: Int, $status: MediaListStatus, $sort: [MediaListSort]) {
-  MediaListCollection(userId: $userId, type: ANIME, status: $status, sort: $sort) {
-    lists {
-      status
-      name
-      entries {
-        id
-        mediaId
-        progress
-        status
-        score(format: POINT_10)
-        media {
-          ...AnimeFragment
-        }
+    query GetAnimeList($userId: Int, $status: MediaListStatus, $sort: [MediaListSort], $page: Int = 1, $perPage: Int = 50) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+    }
+    mediaList(userId: $userId, type: ANIME, status: $status, sort: $sort) {
+      id
+      media {
+        ...AnimeListEntryFragment
       }
     }
-    hasNextChunk
   }
 }
-    ${AnimeFragmentFragmentDoc}`;
+    ${AnimeListEntryFragmentFragmentDoc}`;
 
 /**
  * __useGetAnimeListQuery__
@@ -5253,6 +5249,8 @@ export const GetAnimeListDocument = gql`
  *      userId: // value for 'userId'
  *      status: // value for 'status'
  *      sort: // value for 'sort'
+ *      page: // value for 'page'
+ *      perPage: // value for 'perPage'
  *   },
  * });
  */

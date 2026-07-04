@@ -1,9 +1,16 @@
+import { NetworkStatus } from "@apollo/client";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
-import { sortBy } from "lodash";
-import React, { useState, useMemo } from "react";
-import { RefreshControl, View, StyleSheet, Text, FlatList } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  RefreshControl,
+  View,
+  StyleSheet,
+  Text,
+  FlatList,
+} from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
@@ -14,16 +21,84 @@ import {
 } from "yep/constants";
 import { AnimeListItemContainer } from "yep/containers/AnimeListItemContainer";
 import {
-  MediaListStatus,
+  ANIME_LIST_PER_PAGE,
+  nextPageToRequest,
+  titleSortForLocale,
+} from "yep/graphql/animeListPagination";
+import {
   useGetViewerQuery,
   useGetAnimeListQuery,
 } from "yep/graphql/generated";
+import type {
+  AnimeListEntryFragmentFragment,
+  MediaListStatus,
+} from "yep/graphql/generated";
 import { useAniListAuthRequest } from "yep/hooks/auth";
+import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { AnimeSkeleton } from "yep/screens/AnimeScreen/AnimeSkeleton";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
-import { getMediaListStatusLabel, notEmpty, useGetTitle } from "yep/utils";
+import { getMediaListStatusLabel, notEmpty } from "yep/utils";
+
+type StatusOption = {
+  label: string;
+  value: MediaListStatus;
+  isSelected: boolean;
+  onPress: () => void;
+};
+type AnimeListEntry = {
+  id: number;
+  progress?: number | null;
+  media?: AnimeListEntryFragmentFragment | null;
+};
+type AnimeListRow = {
+  entry: AnimeListEntry;
+  first: boolean;
+  last: boolean;
+};
+
+function keyExtractor({ entry }: AnimeListRow) {
+  return `${entry.id}`;
+}
+
+function statusOptionKeyExtractor({ value }: StatusOption) {
+  return `${value}`;
+}
+
+function renderStatusOption({
+  item: { label, isSelected, onPress },
+}: {
+  item: StatusOption;
+}) {
+  return (
+    <StatusChip label={label} onPress={onPress} isSelected={isSelected} />
+  );
+}
+
+function renderAnimeItem({
+  item: { entry, first, last },
+}: {
+  item: AnimeListRow;
+}) {
+  return (
+    <AnimeListItemContainer
+      seedData={{
+        id: entry.id,
+        progress: entry.media?.mediaListEntry?.progress ?? 0,
+        media: entry.media ?? null,
+      }}
+      first={first}
+      last={last}
+    />
+  );
+}
+
+function ListFooterSpinner() {
+  return (
+    <ActivityIndicator color={darkTheme.text} style={styles.footerSpinner} />
+  );
+}
 
 export default function Anime() {
   const [status, setStatus] = useState<MediaListStatus>(
@@ -32,44 +107,90 @@ export default function Anime() {
 
   const { accessToken, setAccessToken } = useAccessToken();
   const router = useRouter();
-  const getTitle = useGetTitle();
+  const { locale } = useLocaleContext();
 
   const [, , promptAsync] = useAniListAuthRequest();
-  const { loading: loadingViewer, data: viewerData } = useGetViewerQuery({
+  const { data: viewerData } = useGetViewerQuery({
     skip: !accessToken,
   });
 
   const {
-    loading: loadingAnimeList,
     data: animeListData,
     refetch,
+    fetchMore,
+    networkStatus,
   } = useGetAnimeListQuery({
     skip: !viewerData?.Viewer?.id || !accessToken,
     variables: {
       userId: viewerData?.Viewer?.id,
       status,
+      sort: [titleSortForLocale(locale)],
+      perPage: ANIME_LIST_PER_PAGE,
     },
     fetchPolicy: "cache-and-network",
     notifyOnNetworkStatusChange: true,
   });
 
-  const list = useMemo(
-    () =>
-      sortBy(
-        (animeListData?.MediaListCollection?.lists?.[0]?.entries ?? []).filter(
-          notEmpty,
-        ),
-        (m) => getTitle(m.media?.title),
-      ),
-    [animeListData, getTitle],
-  );
+  // Server-side sort (title sort matching the locale) so pages appended by
+  // fetchMore keep a stable order — a client re-sort would reshuffle rows
+  // mid-scroll. Page.mediaList is flat: no list groups, no custom-list
+  // duplicates.
+  const list = (animeListData?.Page?.mediaList ?? []).filter(notEmpty);
 
   const statusOptions = MediaListStatusWithLabel.map(({ value }) => ({
     label: getMediaListStatusLabel(value),
     value,
+    isSelected: status === value,
+    onPress: () => setStatus(value),
   }));
 
-  const refreshing = loadingViewer || loadingAnimeList;
+  // `refreshing` (initial-load state) drives the skeleton ListEmptyComponent.
+  // Gated on "logged in but no data yet" rather than the loading flags: this
+  // query's `loading` sticks at networkStatus 1 after the skip-flip on mount
+  // (see loadNextPage's comment), so an empty list would shimmer forever
+  // instead of showing the EmptyState. The RefreshControl is driven separately
+  // by networkStatus === refetch(4), which Apollo sets ONLY for an explicit
+  // refetch() (a user pull) and auto-resets to ready(7) when it settles.
+  const refreshing = Boolean(accessToken) && !animeListData;
+  const isRefetching = networkStatus === NetworkStatus.refetch;
+
+  const isFetchingMore = networkStatus === NetworkStatus.fetchMore;
+
+  // FlatList can hold a stale onEndReached closure (observed live: the UI
+  // rendered the merged list while the callback still computed the page from
+  // the previous data), so loadNextPage reads the latest data through a ref
+  // instead of its closure. The ref is written in an effect — not during
+  // render — to stay React Compiler-safe.
+  const animeListDataRef = useRef(animeListData);
+  const fetchingMoreRef = useRef(false);
+  useEffect(() => {
+    animeListDataRef.current = animeListData;
+  }, [animeListData]);
+
+  // Fire-and-forget, like onRefresh — never awaited. Guards on the
+  // pull-refresh state specifically, NOT the query's `loading`: it sticks at
+  // networkStatus 1 after the skip-flip on mount (Apollo 3.12 quirk), which
+  // would block fetchMore forever. The cache typePolicy (graphql/client.ts)
+  // owns the page merge (and drops non-contiguous pages from stale races), so
+  // no updateQuery here — and a duplicate page request merges idempotently.
+  function loadNextPage() {
+    const data = animeListDataRef.current;
+    if (fetchingMoreRef.current || isRefetching) return;
+    if (!data?.Page?.pageInfo?.hasNextPage) return;
+    fetchingMoreRef.current = true;
+    fetchMore({ variables: { page: nextPageToRequest(data) } })
+      .finally(() => {
+        fetchingMoreRef.current = false;
+      })
+      // Swallow the rejection (finally doesn't) — the hook's error/networkStatus
+      // already carries it; unhandled it would redbox in dev.
+      .catch(() => {});
+  }
+  const listRows = list.map((entry, index) => ({
+    entry,
+    first: index === 0,
+    last: index === list.length - 1,
+  }));
 
   return (
     <View
@@ -78,7 +199,9 @@ export default function Anime() {
       <Header label={String(fbs("Anime", "Anime tab header label"))} />
       <FlatList
         contentContainerStyle={{ padding: 16 }}
-        ListHeaderComponent={() => (
+        // An element (not an inline component) so FlatList doesn't remount the
+        // header — and reset the chip row's scroll — on every data/status change.
+        ListHeaderComponent={
           <View style={{ gap: 16, paddingBottom: 16 }}>
             <View>
               <FlatList
@@ -87,32 +210,34 @@ export default function Anime() {
                 horizontal
                 contentContainerStyle={{ gap: 8 }}
                 data={statusOptions}
-                keyExtractor={({ value }) => `${value}`}
-                renderItem={({ item: { label, value } }) => (
-                  <StatusChip
-                    label={label}
-                    key={value}
-                    onPress={() => setStatus(value)}
-                    isSelected={status === value}
-                  />
-                )}
+                keyExtractor={statusOptionKeyExtractor}
+                renderItem={renderStatusOption}
               />
             </View>
             <View style={styles.countAndSortRow}>
               <Text style={styles.count}>
-                <fbt desc="Anime list title count">
-                  <fbt:param name="count">{list.length}</fbt:param>{" "}
-                  <fbt:plural count={list.length} many="titles" name="titleCount">
-                    title
-                  </fbt:plural>
-                </fbt>
+                {String(
+                  fbs(
+                    [
+                      fbs.param("count", String(list.length), {
+                        number: list.length,
+                      }),
+                      " ",
+                      fbs.plural("title", list.length, {
+                        many: "titles",
+                        name: "titleCount",
+                      }),
+                    ],
+                    "Anime list title count",
+                  ),
+                )}
               </Text>
             </View>
           </View>
-        )}
+        }
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <View style={styles.animeListDivider} />}
-        data={list}
+        data={listRows}
         ListEmptyComponent={() =>
           refreshing ? (
             <AnimeSkeleton />
@@ -170,31 +295,26 @@ export default function Anime() {
             />
           )
         }
+        // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
         refreshControl={
           <RefreshControl
-            refreshing={refreshing}
-            onRefresh={async () => {
-              await refetch({
-                userId: viewerData?.Viewer?.id,
-                status,
-              });
+            refreshing={isRefetching}
+            onRefresh={() => {
+              // page: 1 explicitly — refetch merges partial variables over the
+              // current ones, which include the last fetchMore's page.
+              refetch({ userId: viewerData?.Viewer?.id, status, page: 1 }).catch(
+                () => {}, // error surfaces via the hook; unhandled it would redbox
+              );
             }}
             tintColor={darkTheme.text}
             titleColor={darkTheme.text}
           />
         }
-        keyExtractor={(item) => `${item.id}`}
-        renderItem={({ item, index }) => (
-          <AnimeListItemContainer
-            seedData={{
-              id: item.id,
-              progress: item.progress ?? 0,
-              media: item.media ?? null,
-            }}
-            first={index === 0}
-            last={index === list.length - 1}
-          />
-        )}
+        keyExtractor={keyExtractor}
+        renderItem={renderAnimeItem}
+        onEndReached={loadNextPage}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={isFetchingMore ? ListFooterSpinner : null}
       />
     </View>
   );
@@ -216,5 +336,8 @@ const styles = StyleSheet.create({
     fontFamily: Manrope.regular,
     fontSize: 12.8,
     color: darkTheme.listCount,
+  },
+  footerSpinner: {
+    paddingVertical: 16,
   },
 });
