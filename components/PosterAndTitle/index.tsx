@@ -1,9 +1,9 @@
+import { ImageBackground } from "expo-image";
 import React, { ReactNode } from "react";
 import {
   StyleSheet,
   useWindowDimensions,
   ViewStyle,
-  ImageBackground,
   Text,
   View,
 } from "react-native";
@@ -46,7 +46,7 @@ export function PosterAndTitle({ size, uri, title, style, children }: Props) {
   return (
     <View style={[styles.container, style]}>
       <ImageBackground
-        resizeMode="cover"
+        contentFit="cover"
         style={[styles.poster, { width: posterWidth, height: posterHeight }]}
         source={{ uri }}
       >

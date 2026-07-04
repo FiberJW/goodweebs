@@ -1,6 +1,6 @@
-import { useRouter } from "expo-router";
+import { NetworkStatus } from "@apollo/client";
 import { fbs } from "fbtee";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   RefreshControl,
   useWindowDimensions,
@@ -17,16 +17,39 @@ import {
   useGetTrendingAnimeQuery,
   useSearchAnimeQuery,
 } from "yep/graphql/generated";
+import type { MediaPosterFragmentFragment } from "yep/graphql/generated";
 import { DiscoverPoster } from "yep/screens/DiscoverScreen/DiscoverPoster";
 import { DiscoverSkeletonGrid } from "yep/screens/DiscoverScreen/DiscoverSkeleton";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { notEmpty } from "yep/utils";
 
+type ItemWithId = { id: number };
+
+function keyExtractor(item: ItemWithId) {
+  return `${item.id}`;
+}
+
+function renderDiscoverPoster({
+  item,
+  index,
+}: {
+  item: MediaPosterFragmentFragment;
+  index: number;
+}) {
+  return <DiscoverPoster item={item} index={index} />;
+}
+
 export default function Discover() {
   const [searchTerm, setSearchTerm] = useState("");
+  // Only the debounced copy hits the network: typing a title fires one query,
+  // not one per keystroke against AniList's degraded 30/min rate limit.
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  useEffect(() => {
+    const handle = setTimeout(() => setDebouncedSearchTerm(searchTerm), 300);
+    return () => clearTimeout(handle);
+  }, [searchTerm]);
   const { width: windowWidth } = useWindowDimensions();
-  const router = useRouter();
 
   const posterWidth = (windowWidth - 16 * 4) / 3;
   const posterHeight = posterWidth * 1.4285714286;
@@ -36,7 +59,8 @@ export default function Discover() {
   const {
     loading: loadingTrending,
     data: trendingData,
-    refetch: refetchTrendingOriginal,
+    refetch: refetchTrending,
+    networkStatus: trendingNetworkStatus,
   } = useGetTrendingAnimeQuery({
     variables: { perPage: 30 },
     notifyOnNetworkStatusChange: true,
@@ -47,24 +71,30 @@ export default function Discover() {
     error: searchError,
     loading: loadingSearchData,
     refetch: refetchSearch,
+    networkStatus: searchNetworkStatus,
   } = useSearchAnimeQuery({
-    skip: searchTerm.trim().length === 0,
-    variables: { search: searchTerm },
+    skip: debouncedSearchTerm.trim().length === 0,
+    variables: { search: debouncedSearchTerm },
     notifyOnNetworkStatusChange: true,
   });
 
   const searchList = (searchData?.Page?.media ?? []).filter(notEmpty);
   const trendingList = (trendingData?.Page?.media ?? []).filter(notEmpty);
-  const isSearchLoading = showSearchResultsView && loadingSearchData;
+  // Treat the debounce window as loading so stale results / "No search
+  // results" don't flash while the user is still typing.
+  const isSearchLoading =
+    showSearchResultsView &&
+    (loadingSearchData || searchTerm.trim() !== debouncedSearchTerm.trim());
   const isSearchError = showSearchResultsView && Boolean(searchError);
   const isTrendingInitialLoading = !showSearchResultsView && loadingTrending;
-
-  async function refetchTrending() {
-    await refetchTrendingOriginal();
-  }
+  // Each RefreshControl tracks its OWN query's networkStatus; refetch(4) is set
+  // only by an explicit pull, never on initial load(1) or a search-term change(2).
+  const isTrendingRefetching =
+    trendingNetworkStatus === NetworkStatus.refetch;
+  const isSearchRefetching = searchNetworkStatus === NetworkStatus.refetch;
 
   async function refetchSearchResults() {
-    await refetchSearch({ search: searchTerm });
+    await refetchSearch({ search: debouncedSearchTerm });
   }
 
   return (
@@ -110,14 +140,21 @@ export default function Discover() {
         ) : showSearchResultsView ? (
           <>
             <Text style={styles.listHeader}>
-              <fbt desc="Search results header">
-                Search results for:{" "}
-                <fbt:param name="searchTerm">{searchTerm}</fbt:param>
-              </fbt>
+              {String(
+                fbs(
+                  [
+                    "Search results for: ",
+                    fbs.param("searchTerm", searchTerm),
+                  ],
+                  "Search results header",
+                ),
+              )}
             </Text>
             <FlatList
               contentContainerStyle={{ gap: 16 }}
               data={searchList}
+              keyboardShouldPersistTaps="handled"
+              keyboardDismissMode="on-drag"
               ListEmptyComponent={() =>
                 loadingSearchData ? null : (
                   <EmptyState
@@ -133,22 +170,22 @@ export default function Discover() {
                   />
                 )
               }
+              // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
               refreshControl={
                 <RefreshControl
-                  refreshing={loadingSearchData}
+                  refreshing={isSearchRefetching}
+                  onRefresh={() => {
+                    refetchSearch({ search: debouncedSearchTerm }).catch(
+                      () => {},
+                    );
+                  }}
                   tintColor={darkTheme.text}
                   titleColor={darkTheme.text}
                 />
               }
               numColumns={3}
-              keyExtractor={(item) => `${item.id}`}
-              renderItem={({ item, index }) => (
-                <DiscoverPoster
-                  {...{ item, index, posterHeight, posterWidth }}
-                  onPress={() => router.push(`/details/${item.id}`)}
-                  key={item.id}
-                />
-              )}
+              keyExtractor={keyExtractor}
+              renderItem={renderDiscoverPoster}
             />
           </>
         ) : isTrendingInitialLoading ? (
@@ -162,11 +199,18 @@ export default function Discover() {
           <>
             {trendingList.length ? (
               <Text style={styles.listHeader}>
-                <fbt desc="Trending anime list header">
-                  Top{" "}
-                  <fbt:param name="count">{trendingList.length}</fbt:param>{" "}
-                  trending anime
-                </fbt>
+                {String(
+                  fbs(
+                    [
+                      "Top ",
+                      fbs.param("count", String(trendingList.length), {
+                        number: trendingList.length,
+                      }),
+                      " trending anime",
+                    ],
+                    "Trending anime list header",
+                  ),
+                )}
               </Text>
             ) : null}
             <FlatList
@@ -191,24 +235,19 @@ export default function Discover() {
                   />
                 )
               }
+              // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
               refreshControl={
                 <RefreshControl
-                  refreshing={loadingTrending}
-                  onRefresh={refetchTrending}
+                  refreshing={isTrendingRefetching}
+                  onRefresh={() => {
+                    refetchTrending().catch(() => {});
+                  }}
                   tintColor={darkTheme.text}
                   titleColor={darkTheme.text}
                 />
               }
-              keyExtractor={(item) => `${item.id}`}
-              renderItem={({ item, index }) => {
-                return (
-                  <DiscoverPoster
-                    {...{ item, index, posterHeight, posterWidth }}
-                    onPress={() => router.push(`/details/${item.id}`)}
-                    key={item.id}
-                  />
-                );
-              }}
+              keyExtractor={keyExtractor}
+              renderItem={renderDiscoverPoster}
             />
           </>
         )}

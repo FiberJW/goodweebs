@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { StyleSheet, View } from "react-native";
 
 import { SkeletonShimmerBlock } from "yep/components/SkeletonShimmerBlock";
@@ -11,9 +11,10 @@ type Props = {
 };
 
 export function ProfileSkeleton({ itemCount = 4 }: Props) {
-  const items = useMemo(() => Array.from({ length: itemCount }, (_, i) => i), [
-    itemCount,
-  ]);
+  const items = Array.from({ length: itemCount }, (_, index) => ({
+    id: `profile-skeleton-${index}`,
+    isLast: index === itemCount - 1,
+  }));
 
   return (
     <View style={styles.container}>
@@ -52,10 +53,10 @@ export function ProfileSkeleton({ itemCount = 4 }: Props) {
           width={190}
         />
         <View style={styles.horizontalList}>
-          {items.map((index) => (
+          {items.map((item) => (
             <View
-              key={`anime-${index}`}
-              style={index !== items.length - 1 ? styles.withRightSpacing : null}
+              key={`anime-${item.id}`}
+              style={!item.isLast ? styles.withRightSpacing : null}
             >
               <SkeletonShimmerBlock
                 borderRadius={8}
@@ -81,10 +82,10 @@ export function ProfileSkeleton({ itemCount = 4 }: Props) {
           width={230}
         />
         <View style={styles.horizontalList}>
-          {items.map((index) => (
+          {items.map((item) => (
             <View
-              key={`character-${index}`}
-              style={index !== items.length - 1 ? styles.withRightSpacing : null}
+              key={`character-${item.id}`}
+              style={!item.isLast ? styles.withRightSpacing : null}
             >
               <SkeletonShimmerBlock
                 borderRadius={8}

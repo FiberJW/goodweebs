@@ -1,15 +1,13 @@
 import { yellowDarkA } from "@radix-ui/colors";
-import { add } from "date-fns/add";
 import { differenceInDays } from "date-fns/differenceInDays";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import { fbs } from "fbtee";
-import { useCallback } from "react";
 import { Text } from "react-native";
 
-import {
+import type {
   MediaTitle,
   MediaRelation,
-  AnimeFragmentFragment,
+  AnimeListEntryFragmentFragment,
   MediaStatus,
   MediaListStatus,
   Maybe,
@@ -54,7 +52,7 @@ function getMonthName(month: number): string {
   }
 }
 
-export function getTitle(
+function getTitle(
   title: MediaTitle | undefined | null,
   locale?: string,
 ): string | undefined {
@@ -70,15 +68,7 @@ export function getTitle(
 export function useGetTitle() {
   const { locale } = useLocaleContext();
 
-  return useCallback(
-    (title: MediaTitle | undefined | null) => getTitle(title, locale),
-    [locale],
-  );
-}
-
-// for making sure TS exhaustively checks switches
-export function assertUnreachable(_x: never): never {
-  throw new Error("Didn't expect to get here");
+  return (title: MediaTitle | undefined | null) => getTitle(title, locale);
 }
 
 export function getReadableMediaRelation(mediaRelation: MediaRelation): string {
@@ -188,18 +178,18 @@ export function getDateText(
 }
 
 export function getAiringStatusText(
-  media: AnimeFragmentFragment,
-  now: Date
+  media: AnimeListEntryFragmentFragment,
 ): React.ReactNode | string | undefined {
   switch (media.status) {
     case "RELEASING":
-      return media.nextAiringEpisode
+      // airingAt is an absolute timestamp, so the countdown stays correct no
+      // matter how stale the cached response is (timeUntilAiring was only
+      // right at fetch time).
+      return media.nextAiringEpisode?.airingAt
         ? `${String(fbs("EP", "Episode abbreviation"))} ${
             media.nextAiringEpisode?.episode
           } ${String(fbs("airs in", "Airs in status text"))} ${formatDistanceToNow(
-            add(now, {
-              seconds: media.nextAiringEpisode?.timeUntilAiring ?? 0,
-            }),
+            new Date(media.nextAiringEpisode.airingAt * 1000),
           )}`
         : String(fbs("Releasing", "Anime status releasing"));
     case "NOT_YET_RELEASED":
@@ -229,7 +219,7 @@ export function getAiringStatusText(
   }
 }
 
-export function getProgress(media: AnimeFragmentFragment, progress: number) {
+export function getProgress(media: AnimeListEntryFragmentFragment, progress: number) {
   const episodeAbbreviation = String(
     fbs("EP", "Episode abbreviation in progress text"),
   );

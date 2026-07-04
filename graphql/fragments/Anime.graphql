@@ -1,3 +1,51 @@
+fragment MediaPosterFragment on Media {
+  id
+  title {
+    romaji
+    native
+    english
+  }
+  coverImage {
+    large
+    medium
+  }
+}
+
+fragment AnimeListEntryFragment on Media {
+  id
+  title {
+    romaji
+    native
+    english
+  }
+  coverImage {
+    large
+  }
+  episodes
+  status
+  startDate {
+    year
+    month
+    day
+  }
+  endDate {
+    year
+    month
+    day
+  }
+  nextAiringEpisode {
+    id
+    airingAt
+    episode
+  }
+  mediaListEntry {
+    id
+    progress
+    status
+    score(format: POINT_10)
+  }
+}
+
 fragment AnimeRelationFragment on Media {
   id
   isFavourite

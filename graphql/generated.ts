@@ -4703,6 +4703,10 @@ export type YearStats = {
   year?: Maybe<Scalars['Int']['output']>;
 };
 
+export type MediaPosterFragmentFragment = { __typename?: 'Media', id: number, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null } | null };
+
+export type AnimeListEntryFragmentFragment = { __typename?: 'Media', id: number, episodes?: number | null, status?: MediaStatus | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null } | null, startDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, endDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, nextAiringEpisode?: { __typename?: 'AiringSchedule', id: number, airingAt: number, episode: number } | null, mediaListEntry?: { __typename?: 'MediaList', id: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null } | null };
+
 export type AnimeRelationFragmentFragment = { __typename?: 'Media', id: number, isFavourite: boolean, type?: MediaType | null, format?: MediaFormat | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null };
 
 export type StreamingLinkDataFragment = { __typename?: 'MediaStreamingEpisode', title?: string | null, thumbnail?: string | null, url?: string | null, site?: string | null };
@@ -4778,14 +4782,14 @@ export type GetTrendingAnimeQueryVariables = Exact<{
 }>;
 
 
-export type GetTrendingAnimeQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', pageInfo?: { __typename?: 'PageInfo', hasNextPage?: boolean | null, total?: number | null, currentPage?: number | null, perPage?: number | null, lastPage?: number | null } | null, media?: Array<{ __typename?: 'Media', id: number, status?: MediaStatus | null, genres?: Array<string | null> | null, duration?: number | null, episodes?: number | null, description?: string | null, isFavourite: boolean, averageScore?: number | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, startDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, endDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, studios?: { __typename?: 'StudioConnection', nodes?: Array<{ __typename?: 'Studio', id: number, name: string } | null> | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null, trailer?: { __typename?: 'MediaTrailer', id?: string | null, thumbnail?: string | null, site?: string | null } | null, streamingEpisodes?: Array<{ __typename?: 'MediaStreamingEpisode', title?: string | null, thumbnail?: string | null, url?: string | null, site?: string | null } | null> | null, externalLinks?: Array<{ __typename?: 'MediaExternalLink', id: number, url?: string | null, site: string } | null> | null, nextAiringEpisode?: { __typename?: 'AiringSchedule', id: number, airingAt: number, episode: number, timeUntilAiring: number } | null, mediaListEntry?: { __typename?: 'MediaList', id: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null } | null, relations?: { __typename?: 'MediaConnection', edges?: Array<{ __typename?: 'MediaEdge', id?: number | null, relationType?: MediaRelation | null, node?: { __typename?: 'Media', id: number, isFavourite: boolean, type?: MediaType | null, format?: MediaFormat | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null } | null } | null> | null } | null, characters?: { __typename?: 'CharacterConnection', edges?: Array<{ __typename?: 'CharacterEdge', id?: number | null, role?: CharacterRole | null, node?: { __typename?: 'Character', id: number, isFavourite: boolean, description?: string | null, siteUrl?: string | null, name?: { __typename?: 'CharacterName', first?: string | null, last?: string | null, full?: string | null, native?: string | null, alternative?: Array<string | null> | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null, medium?: string | null } | null } | null } | null> | null, nodes?: Array<{ __typename?: 'Character', id: number, isFavourite: boolean, description?: string | null, siteUrl?: string | null, name?: { __typename?: 'CharacterName', first?: string | null, last?: string | null, full?: string | null, native?: string | null, alternative?: Array<string | null> | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null, medium?: string | null } | null } | null> | null } | null } | null> | null } | null };
+export type GetTrendingAnimeQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', pageInfo?: { __typename?: 'PageInfo', hasNextPage?: boolean | null, total?: number | null, currentPage?: number | null, perPage?: number | null, lastPage?: number | null } | null, media?: Array<{ __typename?: 'Media', id: number, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null } | null } | null> | null } | null };
 
 export type SearchAnimeQueryVariables = Exact<{
   search?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type SearchAnimeQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', pageInfo?: { __typename?: 'PageInfo', hasNextPage?: boolean | null, total?: number | null } | null, media?: Array<{ __typename?: 'Media', id: number, status?: MediaStatus | null, genres?: Array<string | null> | null, duration?: number | null, episodes?: number | null, description?: string | null, isFavourite: boolean, averageScore?: number | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, startDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, endDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, studios?: { __typename?: 'StudioConnection', nodes?: Array<{ __typename?: 'Studio', id: number, name: string } | null> | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null, trailer?: { __typename?: 'MediaTrailer', id?: string | null, thumbnail?: string | null, site?: string | null } | null, streamingEpisodes?: Array<{ __typename?: 'MediaStreamingEpisode', title?: string | null, thumbnail?: string | null, url?: string | null, site?: string | null } | null> | null, externalLinks?: Array<{ __typename?: 'MediaExternalLink', id: number, url?: string | null, site: string } | null> | null, nextAiringEpisode?: { __typename?: 'AiringSchedule', id: number, airingAt: number, episode: number, timeUntilAiring: number } | null, mediaListEntry?: { __typename?: 'MediaList', id: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null } | null, relations?: { __typename?: 'MediaConnection', edges?: Array<{ __typename?: 'MediaEdge', id?: number | null, relationType?: MediaRelation | null, node?: { __typename?: 'Media', id: number, isFavourite: boolean, type?: MediaType | null, format?: MediaFormat | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null } | null } | null> | null } | null, characters?: { __typename?: 'CharacterConnection', edges?: Array<{ __typename?: 'CharacterEdge', id?: number | null, role?: CharacterRole | null, node?: { __typename?: 'Character', id: number, isFavourite: boolean, description?: string | null, siteUrl?: string | null, name?: { __typename?: 'CharacterName', first?: string | null, last?: string | null, full?: string | null, native?: string | null, alternative?: Array<string | null> | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null, medium?: string | null } | null } | null } | null> | null, nodes?: Array<{ __typename?: 'Character', id: number, isFavourite: boolean, description?: string | null, siteUrl?: string | null, name?: { __typename?: 'CharacterName', first?: string | null, last?: string | null, full?: string | null, native?: string | null, alternative?: Array<string | null> | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null, medium?: string | null } | null } | null> | null } | null } | null> | null } | null };
+export type SearchAnimeQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', pageInfo?: { __typename?: 'PageInfo', hasNextPage?: boolean | null, total?: number | null } | null, media?: Array<{ __typename?: 'Media', id: number, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null } | null } | null> | null } | null };
 
 export type GetCharacterQueryVariables = Exact<{
   id?: InputMaybe<Scalars['Int']['input']>;
@@ -4799,6 +4803,56 @@ export type GetViewerQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetViewerQuery = { __typename?: 'Query', Viewer?: { __typename?: 'User', id: number, name: string, bannerImage?: string | null, avatar?: { __typename?: 'UserAvatar', large?: string | null, medium?: string | null } | null, favourites?: { __typename?: 'Favourites', anime?: { __typename?: 'MediaConnection', nodes?: Array<{ __typename?: 'Media', id: number, title?: { __typename?: 'MediaTitle', english?: string | null, romaji?: string | null, native?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null } | null } | null> | null } | null, characters?: { __typename?: 'CharacterConnection', nodes?: Array<{ __typename?: 'Character', id: number, name?: { __typename?: 'CharacterName', full?: string | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null, medium?: string | null } | null } | null> | null } | null } | null, statistics?: { __typename?: 'UserStatisticTypes', anime?: { __typename?: 'UserStatistics', count: number, minutesWatched: number } | null, manga?: { __typename?: 'UserStatistics', count: number, chaptersRead: number } | null } | null } | null };
 
+export const MediaPosterFragmentFragmentDoc = gql`
+    fragment MediaPosterFragment on Media {
+  id
+  title {
+    romaji
+    native
+    english
+  }
+  coverImage {
+    large
+    medium
+  }
+}
+    `;
+export const AnimeListEntryFragmentFragmentDoc = gql`
+    fragment AnimeListEntryFragment on Media {
+  id
+  title {
+    romaji
+    native
+    english
+  }
+  coverImage {
+    large
+  }
+  episodes
+  status
+  startDate {
+    year
+    month
+    day
+  }
+  endDate {
+    year
+    month
+    day
+  }
+  nextAiringEpisode {
+    id
+    airingAt
+    episode
+  }
+  mediaListEntry {
+    id
+    progress
+    status
+    score(format: POINT_10)
+  }
+}
+    `;
 export const MediaTrailerDataFragmentDoc = gql`
     fragment MediaTrailerData on MediaTrailer {
   id
@@ -5247,11 +5301,11 @@ export const GetTrendingAnimeDocument = gql`
       lastPage
     }
     media(format: TV, isAdult: false, type: ANIME, sort: [TRENDING_DESC]) {
-      ...AnimeFragment
+      ...MediaPosterFragment
     }
   }
 }
-    ${AnimeFragmentFragmentDoc}`;
+    ${MediaPosterFragmentFragmentDoc}`;
 
 /**
  * __useGetTrendingAnimeQuery__
@@ -5302,11 +5356,11 @@ export const SearchAnimeDocument = gql`
       isAdult: false
       type: ANIME
     ) {
-      ...AnimeFragment
+      ...MediaPosterFragment
     }
   }
 }
-    ${AnimeFragmentFragmentDoc}`;
+    ${MediaPosterFragmentFragmentDoc}`;
 
 /**
  * __useSearchAnimeQuery__

@@ -1,5 +1,6 @@
+import { Image } from "expo-image";
 import React from "react";
-import { StyleSheet, View, ViewStyle, Text, Image } from "react-native";
+import { StyleSheet, View, ViewStyle, Text } from "react-native";
 
 import { Button } from "yep/components/Button";
 import { darkTheme } from "yep/themes";
@@ -17,7 +18,7 @@ export function EmptyState({ title, description, style, cta }: Props) {
     <View style={[styles.container, style]}>
       <Image
         source={require("yep/assets/icons/muted-logo.png")}
-        resizeMode="contain"
+        contentFit="contain"
         style={styles.icon}
       />
       <Text style={styles.title}>{title}</Text>
@@ -44,6 +45,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   icon: {
+    height: 113,
     marginBottom: 24,
     width: 80,
   },

@@ -1,23 +1,23 @@
+import { useRouter } from "expo-router";
 import React from "react";
 
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import { AnimeFragmentFragment } from "yep/graphql/generated";
+import type { MediaPosterFragmentFragment } from "yep/graphql/generated";
 import { useGetTitle } from "yep/utils";
 
 export function DiscoverPoster({
   item,
   index,
-  onPress,
 }: {
-  item: AnimeFragmentFragment;
+  item: MediaPosterFragmentFragment;
   index: number;
-  onPress?: () => void;
 }) {
+  const router = useRouter();
   const getTitle = useGetTitle();
 
   return (
-    <PressableOpacity onPress={onPress}>
+    <PressableOpacity onPress={() => router.push(`/details/${item.id}`)}>
       <PosterAndTitle
         uri={item.coverImage?.large ?? item.coverImage?.medium ?? ""}
         size="large"

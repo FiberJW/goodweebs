@@ -8,7 +8,7 @@ query GetTrendingAnime($page: Int = 1, $perPage: Int = 20) {
       lastPage
     }
     media(format: TV, isAdult: false, type: ANIME, sort: [TRENDING_DESC]) {
-      ...AnimeFragment
+      ...MediaPosterFragment
     }
   }
 }
@@ -25,7 +25,7 @@ query SearchAnime($search: String) {
       isAdult: false
       type: ANIME
     ) {
-      ...AnimeFragment
+      ...MediaPosterFragment
     }
   }
 }

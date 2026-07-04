@@ -29,10 +29,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
     position: "absolute",
-    shadowColor: yellowDarkA.yellowA11,
-    shadowOffset: { height: 0, width: 0 },
-    shadowOpacity: 0.75,
-    shadowRadius: 4,
+    boxShadow: `0 0 4px ${yellowDarkA.yellowA11}`,
     top: -4,
   },
   text: {

@@ -1,11 +1,11 @@
+import { NetworkStatus } from "@apollo/client";
+import { Image, ImageBackground } from "expo-image";
 import { useRouter } from "expo-router";
 import { fbs } from "fbtee";
 import React, { PropsWithChildren } from "react";
 import {
-  ImageBackground,
   RefreshControl,
   View,
-  Image,
   ScrollView,
   Text,
   FlatList,
@@ -24,6 +24,83 @@ import { notEmpty, useGetTitle } from "yep/utils";
 
 type StatProps = { label: string; value: number };
 
+type ItemWithId = { id: number };
+type FavoriteAnimeItem = {
+  id: number;
+  title?: {
+    english?: string | null;
+    romaji?: string | null;
+    native?: string | null;
+  } | null;
+  coverImage?: { large?: string | null; medium?: string | null } | null;
+};
+type FavoriteCharacterItem = {
+  id: number;
+  name?: { full?: string | null } | null;
+  image?: { large?: string | null; medium?: string | null } | null;
+};
+
+function keyExtractor(item: ItemWithId) {
+  return `${item.id}`;
+}
+
+function renderFavoriteAnime({ item }: { item: FavoriteAnimeItem }) {
+  return <FavoriteAnimeListItem item={item} />;
+}
+
+function renderFavoriteCharacter({ item }: { item: FavoriteCharacterItem }) {
+  return <FavoriteCharacterListItem item={item} />;
+}
+
+function FavoriteAnimeListItem({ item }: { item: FavoriteAnimeItem }) {
+  const router = useRouter();
+  const getTitle = useGetTitle();
+
+  return (
+    <View style={styles.favoriteContainer}>
+      <PressableOpacity onPress={() => router.push(`/details/${item.id}`)}>
+        <PosterAndTitle
+          size="profile"
+          uri={item?.coverImage?.large ?? ""}
+          title={getTitle(item.title)}
+        />
+      </PressableOpacity>
+    </View>
+  );
+}
+
+function FavoriteCharacterListItem({ item }: { item: FavoriteCharacterItem }) {
+  const router = useRouter();
+
+  return (
+    <View style={styles.favoriteContainer}>
+      <PressableOpacity onPress={() => router.push(`/character/${item.id}`)}>
+        <PosterAndTitle
+          size="profile"
+          uri={item?.image?.large ?? ""}
+          title={item.name?.full ?? undefined}
+        />
+      </PressableOpacity>
+    </View>
+  );
+}
+
+function OptionalBackgroundImage({
+  bannerImage,
+  children,
+}: PropsWithChildren<{ bannerImage?: string | null }>) {
+  return bannerImage ? (
+    <ImageBackground
+      source={{ uri: bannerImage }}
+      style={{ borderRadius: 8, overflow: "hidden" }}
+    >
+      {children}
+    </ImageBackground>
+  ) : (
+    <>{children}</>
+  );
+}
+
 function Stat({ label, value }: StatProps) {
   return (
     <View style={styles.statContainer}>
@@ -39,12 +116,15 @@ function Stat({ label, value }: StatProps) {
 
 export default function Profile() {
   const router = useRouter();
-  const getTitle = useGetTitle();
   const {
     loading: loadingViewer,
     data: viewerData,
     refetch,
+    networkStatus,
   } = useGetViewerQuery({ notifyOnNetworkStatusChange: true });
+  // RefreshControl spins only for a user-pull refetch (networkStatus 4), not on
+  // initial load (1) — fixes the spinner showing under the skeleton on mount.
+  const isRefetching = networkStatus === NetworkStatus.refetch;
   const animeList = (viewerData?.Viewer?.favourites?.anime?.nodes ?? []).filter(
     notEmpty,
   );
@@ -53,22 +133,6 @@ export default function Profile() {
   ).filter(notEmpty);
   const shouldShowInitialProfileLoading = loadingViewer && !viewerData?.Viewer;
 
-  type AnimeItem = (typeof animeList)[number];
-  type CharacterItem = (typeof characterList)[number];
-
-  function OptionalBackgroundImage({ children }: PropsWithChildren) {
-    return viewerData?.Viewer?.bannerImage ? (
-      <ImageBackground
-        source={{ uri: viewerData.Viewer.bannerImage }}
-        style={{ borderRadius: 8, overflow: "hidden" }}
-      >
-        {children}
-      </ImageBackground>
-    ) : (
-      <>{children}</>
-    );
-  }
-
   return (
     <View
       style={[styles.outerContainer, { backgroundColor: darkTheme.background }]}
@@ -76,7 +140,13 @@ export default function Profile() {
       <Header
         label={String(fbs("Profile", "Profile tab header label"))}
         rightSlot={
-          <PressableOpacity onPress={() => router.push("/settings")}>
+          <PressableOpacity
+            onPress={() => router.push("/settings")}
+            accessibilityRole="button"
+            accessibilityLabel={String(
+              fbs("Settings", "Settings button accessibility label"),
+            )}
+          >
             <Image
               style={{
                 tintColor: white,
@@ -90,10 +160,13 @@ export default function Profile() {
       />
       <ScrollView
         contentContainerStyle={styles.innerContainerContent}
+        // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
         refreshControl={
           <RefreshControl
-            refreshing={loadingViewer}
-            onRefresh={() => refetch()}
+            refreshing={isRefetching}
+            onRefresh={() => {
+              refetch().catch(() => {});
+            }}
             tintColor={white}
             titleColor={white}
           />
@@ -104,7 +177,7 @@ export default function Profile() {
           <ProfileSkeleton />
         ) : viewerData?.Viewer ? (
           <View style={styles.everythingButTheCTA}>
-            <OptionalBackgroundImage>
+            <OptionalBackgroundImage bannerImage={viewerData.Viewer.bannerImage}>
               <View
                 style={[
                   styles.userInfoAndStatsContainer,
@@ -163,21 +236,9 @@ export default function Profile() {
                   ]}
                   horizontal
                   showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item: AnimeItem) => `${item.id}`}
+                  keyExtractor={keyExtractor}
                   data={animeList}
-                  renderItem={({ item }: { item: AnimeItem }) => (
-                    <View style={styles.favoriteContainer}>
-                      <PressableOpacity
-                        onPress={() => router.push(`/details/${item.id}`)}
-                      >
-                        <PosterAndTitle
-                          size="profile"
-                          uri={item?.coverImage?.large ?? ""}
-                          title={getTitle(item.title)}
-                        />
-                      </PressableOpacity>
-                    </View>
-                  )}
+                  renderItem={renderFavoriteAnime}
                 />
               </View>
             ) : null}
@@ -198,21 +259,9 @@ export default function Profile() {
                     styles.listContentContainer,
                     { gap: 8 },
                   ]}
-                  keyExtractor={(item: CharacterItem) => `${item.id}`}
+                  keyExtractor={keyExtractor}
                   data={characterList}
-                  renderItem={({ item }: { item: CharacterItem }) => (
-                    <View style={styles.favoriteContainer}>
-                      <PressableOpacity
-                        onPress={() => router.push(`/character/${item.id}`)}
-                      >
-                        <PosterAndTitle
-                          size="profile"
-                          uri={item?.image?.large ?? ""}
-                          title={item.name?.full ?? undefined}
-                        />
-                      </PressableOpacity>
-                    </View>
-                  )}
+                  renderItem={renderFavoriteCharacter}
                 />
               </View>
             ) : null}

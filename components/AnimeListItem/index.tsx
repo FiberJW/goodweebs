@@ -1,14 +1,10 @@
 import { useRouter } from "expo-router";
+import { fbs } from "fbtee";
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
 import { black15, white12_5, white5, white95 } from "yep/colors";
-import {
-  AnimeFragmentFragment,
-  MediaStatus,
-  MediaListStatus,
-} from "yep/graphql/generated";
-import { useNow } from "yep/hooks/helpers";
+import type { AnimeListEntryFragmentFragment } from "yep/graphql/generated";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { getAiringStatusText, getProgress, useGetTitle } from "yep/utils";
@@ -24,7 +20,7 @@ type Props = {
   onDecrement: () => void;
   progress: number;
   disabled?: boolean;
-  media: AnimeFragmentFragment;
+  media: AnimeListEntryFragmentFragment;
   first: boolean;
   last: boolean;
 };
@@ -39,12 +35,10 @@ export function AnimeListItem({
   last,
 }: Props) {
   const router = useRouter();
-  const now = useNow();
   const getTitle = useGetTitle();
 
   const isAiringAndCurrentlyWatching =
-    media.status === "RELEASING" &&
-    media.mediaListEntry?.status === "CURRENT";
+    media.status === "RELEASING" && media.mediaListEntry?.status === "CURRENT";
 
   const episodesBehind =
     isAiringAndCurrentlyWatching &&
@@ -52,7 +46,7 @@ export function AnimeListItem({
       ? media.nextAiringEpisode.episode - 1 - progress
       : 0;
 
-  const airingStatus = getAiringStatusText(media, now);
+  const airingStatus = getAiringStatusText(media);
 
   return (
     <PressableOpacity
@@ -106,6 +100,12 @@ export function AnimeListItem({
             <ProgressButton
               disabled={Boolean(disabled) || progress === 0}
               icon={require("yep/assets/icons/progress-decrement.png")}
+              accessibilityLabel={String(
+                fbs(
+                  "Decrease episode progress",
+                  "Decrease episode progress button accessibility label",
+                ),
+              )}
               onPress={() => {
                 onDecrement();
               }}
@@ -117,6 +117,17 @@ export function AnimeListItem({
                   ? require("yep/assets/icons/progress-complete.png")
                   : require("yep/assets/icons/progress-increment.png")
               }
+              accessibilityLabel={String(
+                progress === (media.episodes ?? 0) - 1
+                  ? fbs(
+                      "Complete series",
+                      "Complete series button accessibility label",
+                    )
+                  : fbs(
+                      "Increase episode progress",
+                      "Increase episode progress button accessibility label",
+                    ),
+              )}
               onPress={() => {
                 onIncrement();
               }}
