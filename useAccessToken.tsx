@@ -3,22 +3,32 @@ import React, { useState, createContext, use, useEffect } from "react";
 
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 
-type AccessTokenContextValue = {
-  accessToken?: string;
-  checkedForToken: boolean;
-  setAccessToken: (accountName?: string) => void;
-};
+const missingContext = Symbol("missingContext");
 
-const AccessTokenContext = createContext<AccessTokenContextValue | null>(null);
+const AccessTokenContext = createContext<
+  string | undefined | typeof missingContext
+>(missingContext);
+const CheckedForTokenContext = createContext<boolean | typeof missingContext>(
+  missingContext,
+);
+const SetAccessTokenContext = createContext<
+  React.Dispatch<React.SetStateAction<string | undefined>> | typeof missingContext
+>(missingContext);
 
 export function useAccessToken() {
-  const context = use(AccessTokenContext);
+  const accessToken = use(AccessTokenContext);
+  const checkedForToken = use(CheckedForTokenContext);
+  const setAccessToken = use(SetAccessTokenContext);
 
-  if (context === null) {
+  if (
+    accessToken === missingContext ||
+    checkedForToken === missingContext ||
+    setAccessToken === missingContext
+  ) {
     throw new Error("useAccessToken must be used within a AccessTokenProvider");
   }
 
-  return context;
+  return { accessToken, checkedForToken, setAccessToken };
 }
 
 export function AccessTokenProvider({
@@ -30,25 +40,23 @@ export function AccessTokenProvider({
   const [checkedForToken, setCheckedForToken] = useState(false);
 
   useEffect(function fetchToken() {
-    (async () => {
-      try {
-        const token = await SecureStore.getItemAsync(
-          ANILIST_ACCESS_TOKEN_STORAGE
-        );
+    SecureStore.getItemAsync(ANILIST_ACCESS_TOKEN_STORAGE)
+      .then((token) => {
         if (token) {
           setAccessToken(token);
         }
-      } finally {
+      })
+      .catch(() => {})
+      .finally(() => {
         setCheckedForToken(true);
-      }
-    })();
-  });
+      });
+  }, []);
 
   return (
-    <AccessTokenContext
-      value={{ accessToken, setAccessToken, checkedForToken }}
-    >
-      {children}
-    </AccessTokenContext>
+    <SetAccessTokenContext value={setAccessToken}>
+      <CheckedForTokenContext value={checkedForToken}>
+        <AccessTokenContext value={accessToken}>{children}</AccessTokenContext>
+      </CheckedForTokenContext>
+    </SetAccessTokenContext>
   );
 }

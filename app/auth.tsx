@@ -1,8 +1,9 @@
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView, Image, Alert } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { aniListBlue } from "yep/colors";
@@ -41,7 +42,7 @@ export default function AuthScreen() {
         <ScrollView
           style={styles.innerContainer}
           contentContainerStyle={{
-            flex: 1,
+            flexGrow: 1,
             justifyContent: "space-between",
             alignItems: "center",
           }}
