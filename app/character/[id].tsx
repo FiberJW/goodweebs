@@ -87,11 +87,15 @@ export default function Character() {
                         variables: {
                           characterId: character?.id,
                         },
+                        // Includes "GetViewer" because per-call refetchQueries
+                        // REPLACES the hook-level list (Apollo shallow-merges
+                        // mutate options), it doesn't extend it.
                         refetchQueries: [
                           {
                             query: GetCharacterDocument,
                             variables: { id: characterId },
                           },
+                          "GetViewer",
                         ],
                       });
                     } catch (error) {

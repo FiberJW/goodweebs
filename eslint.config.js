@@ -16,7 +16,7 @@ module.exports = defineConfig([
     },
     rules: reactHooks.configs.recommended.rules,
   },
-  globalIgnores(["dist/*", "graphql/generated.ts", "graphql/generated.tsx"]),
+  globalIgnores(["dist/*", "graphql/generated.ts"]),
   {
     rules: {
       "react-compiler/react-compiler": "error",

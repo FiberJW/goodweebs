@@ -280,13 +280,13 @@ function MediaListStatusButton({
             status: () => variables.status,
           },
         });
-        return;
       }
 
-      // First add: link the fresh entry to the Media ourselves — the nested
+      // Always (re-)link the entry to the Media ourselves — the nested
       // media.mediaListEntry in the mutation payload can come back null (the
-      // resolver doesn't reliably see the just-created entry), which would
-      // leave the details screen stuck on "Add to list" until a refetch.
+      // resolver doesn't reliably see the entry), and that null normalizes
+      // into the cache clobbering the existing link, which would leave the
+      // details screen stuck on "Add to list" until a refetch.
       const saved = result.data?.SaveMediaListEntry;
       if (!saved?.id) return;
       cache.modify({

@@ -110,12 +110,11 @@ export default function Anime() {
   const { locale } = useLocaleContext();
 
   const [, , promptAsync] = useAniListAuthRequest();
-  const { loading: loadingViewer, data: viewerData } = useGetViewerQuery({
+  const { data: viewerData } = useGetViewerQuery({
     skip: !accessToken,
   });
 
   const {
-    loading: loadingAnimeList,
     data: animeListData,
     refetch,
     fetchMore,
@@ -146,12 +145,13 @@ export default function Anime() {
   }));
 
   // `refreshing` (initial-load state) drives the skeleton ListEmptyComponent.
-  // The RefreshControl is driven separately by networkStatus === refetch(4),
-  // which Apollo sets ONLY for an explicit refetch() (a user pull) — never on
-  // initial load (1), a status-chip variable change (2), or background fetches.
-  // It auto-resets to ready(7) when the refetch settles, so the spinner clears
-  // without any awaited promise or manual state.
-  const refreshing = loadingViewer || loadingAnimeList;
+  // Gated on "logged in but no data yet" rather than the loading flags: this
+  // query's `loading` sticks at networkStatus 1 after the skip-flip on mount
+  // (see loadNextPage's comment), so an empty list would shimmer forever
+  // instead of showing the EmptyState. The RefreshControl is driven separately
+  // by networkStatus === refetch(4), which Apollo sets ONLY for an explicit
+  // refetch() (a user pull) and auto-resets to ready(7) when it settles.
+  const refreshing = Boolean(accessToken) && !animeListData;
   const isRefetching = networkStatus === NetworkStatus.refetch;
 
   const isFetchingMore = networkStatus === NetworkStatus.fetchMore;
@@ -168,10 +168,10 @@ export default function Anime() {
   }, [animeListData]);
 
   // Fire-and-forget, like onRefresh — never awaited. Guards on the
-  // pull-refresh state specifically, NOT `refreshing` (loadingViewer ||
-  // loadingAnimeList): this query's `loading` sticks at networkStatus 1 after
-  // the skip-flip on mount (Apollo 3.12 quirk), which would block fetchMore
-  // forever. The cache typePolicy (graphql/client.ts) owns the page merge, so
+  // pull-refresh state specifically, NOT the query's `loading`: it sticks at
+  // networkStatus 1 after the skip-flip on mount (Apollo 3.12 quirk), which
+  // would block fetchMore forever. The cache typePolicy (graphql/client.ts)
+  // owns the page merge (and drops non-contiguous pages from stale races), so
   // no updateQuery here — and a duplicate page request merges idempotently.
   function loadNextPage() {
     const data = animeListDataRef.current;

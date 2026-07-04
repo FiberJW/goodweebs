@@ -12,7 +12,10 @@ import * as Updates from "expo-updates";
 import Toast from "react-native-root-toast";
 
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
-import { mergeMediaListPages } from "yep/graphql/animeListPagination";
+import {
+  mergeMediaListPages,
+  nextPageForCount,
+} from "yep/graphql/animeListPagination";
 
 const authLink = setContext(async (_, { headers }) => {
   // get the authentication token from local storage if it exists
@@ -68,13 +71,6 @@ const httpLink = new HttpLink({
   headers: { accept: "application/json" },
 });
 
-// These embedded value-objects have no `id`, so when the same normalized parent
-// (e.g. a Media) is written by two queries selecting different sub-fields —
-// AnimeFragment's coverImage { large medium color } vs the lean list/poster
-// fragments' coverImage { large } — Apollo would overwrite the cached copy and
-// drop the missing fields (and warn). `merge: true` shallow-merges instead, so
-// the richer cached data survives a leaner write and the details screen doesn't
-// have to refetch color/medium.
 // AniList enforces a per-minute rate limit (https://docs.anilist.co/guide/rate-limiting
 // — normally 90/min, currently degraded to 30/min) plus a burst limiter. Exceeding
 // either returns a 429 with a `Retry-After` header, or drops/truncates the
@@ -152,6 +148,13 @@ const cache = new InMemoryCache({
           keyArgs: ["userId", "type", "status", "sort"],
           merge(existing, incoming, { variables, readField }) {
             if (!existing || (variables?.page ?? 1) <= 1) return incoming;
+            // A deep page can land AFTER a racing page-1 refetch already reset
+            // the container (pull-to-refresh while fetchMore is in flight).
+            // Appending it would leave a silent gap (rows 101-150 right after
+            // row 50), so drop any page that isn't the next contiguous one.
+            if ((variables?.page ?? 1) !== nextPageForCount(existing.length)) {
+              return existing;
+            }
             return mergeMediaListPages(
               existing as unknown[],
               incoming as unknown[],

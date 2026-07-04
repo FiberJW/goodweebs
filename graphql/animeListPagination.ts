@@ -5,12 +5,18 @@ export const ANIME_LIST_PER_PAGE = 50;
 
 // The next page is derived from how many entries are loaded (instead of
 // tracked in state), so it self-heals when a refetch or status change resets
-// the cache back to page 1.
+// the cache back to page 1. Ceil (not floor): when a page merge nets fewer
+// than perPage new entries (an entry shifted across a page boundary between
+// fetches, so dedupe dropped a duplicate), floor would re-request the same
+// page forever; ceil advances past it, guaranteeing progress.
+export function nextPageForCount(loaded: number): number {
+  return Math.ceil(loaded / ANIME_LIST_PER_PAGE) + 1;
+}
+
 export function nextPageToRequest(
   data: GetAnimeListQuery | undefined,
 ): number {
-  const loaded = (data?.Page?.mediaList ?? []).length;
-  return Math.floor(loaded / ANIME_LIST_PER_PAGE) + 1;
+  return nextPageForCount((data?.Page?.mediaList ?? []).length);
 }
 
 // Cache-layer page merge for Page.mediaList (wired up in graphql/client.ts).
