@@ -302,7 +302,9 @@ export default function Anime() {
             onRefresh={() => {
               // page: 1 explicitly — refetch merges partial variables over the
               // current ones, which include the last fetchMore's page.
-              refetch({ userId: viewerData?.Viewer?.id, status, page: 1 });
+              refetch({ userId: viewerData?.Viewer?.id, status, page: 1 }).catch(
+                () => {}, // error surfaces via the hook; unhandled it would redbox
+              );
             }}
             tintColor={darkTheme.text}
             titleColor={darkTheme.text}

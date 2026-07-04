@@ -598,7 +598,12 @@ function ExternalLinksSection({ links }: { links?: ExternalLinkData[] }) {
       <View style={{ height: 16 }} />
       <View style={{ gap: 8 }}>
         {links.map((link) => (
-          <ExternalLink key={link.id} {...link} />
+          <ExternalLink
+            key={link.id}
+            id={link.id}
+            url={link.url}
+            site={link.site}
+          />
         ))}
       </View>
     </>
@@ -690,7 +695,7 @@ export default function Details() {
         <RefreshControl
           refreshing={isRefetching}
           onRefresh={() => {
-            refetch({ id: animeId });
+            refetch({ id: animeId }).catch(() => {});
           }}
           tintColor={darkTheme.text}
           titleColor={darkTheme.text}

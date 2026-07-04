@@ -175,7 +175,9 @@ export default function Discover() {
                 <RefreshControl
                   refreshing={isSearchRefetching}
                   onRefresh={() => {
-                    refetchSearch({ search: debouncedSearchTerm });
+                    refetchSearch({ search: debouncedSearchTerm }).catch(
+                      () => {},
+                    );
                   }}
                   tintColor={darkTheme.text}
                   titleColor={darkTheme.text}
@@ -238,7 +240,7 @@ export default function Discover() {
                 <RefreshControl
                   refreshing={isTrendingRefetching}
                   onRefresh={() => {
-                    refetchTrending();
+                    refetchTrending().catch(() => {});
                   }}
                   tintColor={darkTheme.text}
                   titleColor={darkTheme.text}

@@ -164,7 +164,9 @@ export default function Profile() {
         refreshControl={
           <RefreshControl
             refreshing={isRefetching}
-            onRefresh={() => refetch()}
+            onRefresh={() => {
+              refetch().catch(() => {});
+            }}
             tintColor={white}
             titleColor={white}
           />

@@ -4,6 +4,7 @@ import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { HttpLink } from "@apollo/client/link/http";
 import { RetryLink } from "@apollo/client/link/retry";
+import { getMainDefinition } from "@apollo/client/utilities";
 import * as Sentry from "@sentry/react-native";
 import { persistCache, LocalStorageWrapper } from "apollo3-cache-persist";
 import * as SecureStore from "expo-secure-store";
@@ -96,13 +97,19 @@ const retryLink = new RetryLink({
   },
   attempts: {
     max: 3, // initial request + 2 retries
-    retryIf: (error) => {
+    retryIf: (error, operation) => {
       // Intentionally superseded by a newer debounced mutation — never replay.
       if ((error as Error | null)?.name === "AbortError") return false;
       const status = (error as { statusCode?: number } | null)?.statusCode;
-      if (status === 429) return true; // rate-limited: back off and retry
+      if (status === 429) return true; // rate-limited: not processed, safe for all ops
       if (typeof status === "number") return false; // 401/other 4xx/5xx: don't retry
-      return true; // no status code = transient network failure/timeout: retry
+      // No status code = ambiguous network drop/timeout: the server may have
+      // already applied the write, so replaying a non-idempotent mutation
+      // (e.g. ToggleFavourite) could double-apply it. Only queries retry here.
+      const def = getMainDefinition(operation.query);
+      return !(
+        def.kind === "OperationDefinition" && def.operation === "mutation"
+      );
     },
   },
 });
