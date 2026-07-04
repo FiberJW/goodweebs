@@ -87,5 +87,8 @@
     "typescript": "~5.9.2"
   },
   "private": true,
-  "name": "goodweebs"
+  "name": "goodweebs",
+  "overrides": {
+    "ws": "^8.12.1"
+  }
 }
