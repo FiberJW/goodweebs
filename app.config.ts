@@ -24,11 +24,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   icon: IS_DEV ? "./assets/launch/icon-dev.png" : "./assets/launch/icon.png",
   scheme,
   backgroundColor: "#010209",
-  splash: {
-    image: "./assets/launch/splash.png",
-    resizeMode: "cover",
-    backgroundColor: "#010209",
-  },
   owner: "fiberjw",
   updates: {
     fallbackToCacheTimeout: 30000,
@@ -76,6 +71,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     "expo-router",
+    [
+      "expo-splash-screen",
+      {
+        image: "./assets/launch/splash.png",
+        resizeMode: "cover",
+        backgroundColor: "#010209",
+      },
+    ],
     "expo-image",
     [
       "expo-font",
