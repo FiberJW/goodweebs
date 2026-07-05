@@ -136,6 +136,9 @@ export default function Anime() {
   // mid-scroll. Page.mediaList is flat: no list groups, no custom-list
   // duplicates.
   const list = (animeListData?.Page?.mediaList ?? []).filter(notEmpty);
+  // Header count shows the category's full size, not the loaded-page count —
+  // pagination caps `list` at the pages fetched so far.
+  const totalCount = animeListData?.Page?.pageInfo?.total ?? list.length;
 
   const statusOptions = MediaListStatusWithLabel.map(({ value }) => ({
     label: getMediaListStatusLabel(value),
@@ -219,11 +222,11 @@ export default function Anime() {
                 {String(
                   fbs(
                     [
-                      fbs.param("count", String(list.length), {
-                        number: list.length,
+                      fbs.param("count", String(totalCount), {
+                        number: totalCount,
                       }),
                       " ",
-                      fbs.plural("title", list.length, {
+                      fbs.plural("title", totalCount, {
                         many: "titles",
                         name: "titleCount",
                       }),

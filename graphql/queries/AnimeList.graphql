@@ -14,6 +14,7 @@ query GetAnimeList(
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       hasNextPage
+      total
     }
     mediaList(userId: $userId, type: ANIME, status: $status, sort: $sort) {
       id
