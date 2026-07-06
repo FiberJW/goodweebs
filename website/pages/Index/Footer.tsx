@@ -1,5 +1,6 @@
+import { Image } from "expo-image";
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 import { useBreakpoints } from "yep/hooks/helpers";
 import { websiteTheme } from "yep/themes";
