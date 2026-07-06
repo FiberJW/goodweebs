@@ -23,6 +23,7 @@ import { DiscoverPoster } from "yep/screens/DiscoverScreen/DiscoverPoster";
 import { DiscoverSkeletonGrid } from "yep/screens/DiscoverScreen/DiscoverSkeleton";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
+import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { notEmpty, isLiquidGlass } from "yep/utils";
 
 type ItemWithId = { id: number };
@@ -101,6 +102,7 @@ export default function Discover() {
   // Liquid glass: the search field lives in the native header (adopted by the
   // search tab's glass circle), replacing the in-screen SearchBox below.
   const navigation = useNavigation();
+  const { locale } = useLocaleContext();
   useEffect(() => {
     if (!isLiquidGlass) return;
     navigation.setOptions({
@@ -115,7 +117,9 @@ export default function Discover() {
         hideNavigationBar: false,
       },
     });
-  }, [navigation]);
+    // `locale` re-runs this so the placeholder follows in-app language
+    // changes (fbs strings resolve at call time).
+  }, [navigation, locale]);
 
   return (
     <View
