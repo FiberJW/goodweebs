@@ -1,5 +1,4 @@
 import { useApolloClient } from "@apollo/client";
-import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
 import React from "react";
@@ -41,9 +40,9 @@ export default function Settings() {
     usePersistedState<boolean>(StorageKeys.SHOULD_PERSIST_SCORE_VISIBILITY);
 
   const client = useApolloClient();
-  const { setAccessToken, accessToken } = useAccessToken();
+  const { setAccessToken, setContinuedWithoutLogin, accessToken } =
+    useAccessToken();
   const insets = useSafeAreaInsets();
-  const router = useRouter();
 
   return (
     <ScrollView
@@ -201,8 +200,10 @@ export default function Settings() {
                       await SecureStore.deleteItemAsync(
                         ANILIST_ACCESS_TOKEN_STORAGE,
                       );
+                      // Clearing both flips the Protected guard; RN swaps this
+                      // screen (and the tabs) out for auth automatically.
+                      setContinuedWithoutLogin(false);
                       setAccessToken(undefined);
-                      router.replace("/auth");
                       // clearStore (not resetStore): resetStore refetches every
                       // active query unauthenticated, spraying error toasts
                       // over the login screen.

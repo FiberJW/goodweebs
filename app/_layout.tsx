@@ -113,7 +113,14 @@ export default
 
 // eslint-disable-next-line react-doctor/no-multi-comp -- see RootLayout note above
 function InnerLayout() {
-  const { checkedForToken } = useAccessToken();
+  const { checkedForToken, accessToken, continuedWithoutLogin } =
+    useAccessToken();
+  // A signed-in user OR a guest may browse the tabs; only a signed-out
+  // non-guest sees the auth screen. Stack.Protected removes the disallowed
+  // screens, so React Navigation resets to the available one whenever this
+  // flips (login, logout, "continue without logging in") — no imperative
+  // router.replace, and deep links into a guarded area are redirected too.
+  const canBrowse = !!accessToken || continuedWithoutLogin;
 
   const [client, setClient] =
     React.useState<ApolloClient<NormalizedCacheObject> | null>(null);
@@ -174,44 +181,48 @@ function InnerLayout() {
             }}
           >
             <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="auth" options={{ headerShown: false }} />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="settings"
-              options={{
-                title: String(fbs("Settings", "Settings screen title")),
-                headerTitleStyle: {
-                  fontFamily: Manrope.semiBold,
-                  fontSize: 16,
-                  color: darkTheme.text,
-                },
-                headerBackButtonDisplayMode: "minimal",
-              }}
-            />
-            <Stack.Screen
-              name="details/[id]"
-              options={{
-                title: "",
-                headerTitleStyle: {
-                  fontFamily: Manrope.semiBold,
-                  fontSize: 16,
-                  color: darkTheme.text,
-                },
-                headerBackButtonDisplayMode: "minimal",
-              }}
-            />
-            <Stack.Screen
-              name="character/[id]"
-              options={{
-                title: "",
-                headerTitleStyle: {
-                  fontFamily: Manrope.semiBold,
-                  fontSize: 16,
-                  color: darkTheme.text,
-                },
-                headerBackButtonDisplayMode: "minimal",
-              }}
-            />
+            <Stack.Protected guard={canBrowse}>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="settings"
+                options={{
+                  title: String(fbs("Settings", "Settings screen title")),
+                  headerTitleStyle: {
+                    fontFamily: Manrope.semiBold,
+                    fontSize: 16,
+                    color: darkTheme.text,
+                  },
+                  headerBackButtonDisplayMode: "minimal",
+                }}
+              />
+              <Stack.Screen
+                name="details/[id]"
+                options={{
+                  title: "",
+                  headerTitleStyle: {
+                    fontFamily: Manrope.semiBold,
+                    fontSize: 16,
+                    color: darkTheme.text,
+                  },
+                  headerBackButtonDisplayMode: "minimal",
+                }}
+              />
+              <Stack.Screen
+                name="character/[id]"
+                options={{
+                  title: "",
+                  headerTitleStyle: {
+                    fontFamily: Manrope.semiBold,
+                    fontSize: 16,
+                    color: darkTheme.text,
+                  },
+                  headerBackButtonDisplayMode: "minimal",
+                }}
+              />
+            </Stack.Protected>
+            <Stack.Protected guard={!canBrowse}>
+              <Stack.Screen name="auth" options={{ headerShown: false }} />
+            </Stack.Protected>
           </Stack>
         </ActionSheetProvider>
       </ApolloProvider>

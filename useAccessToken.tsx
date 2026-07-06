@@ -7,6 +7,14 @@ type AccessTokenContextValue = {
   accessToken: string | undefined;
   checkedForToken: boolean;
   setAccessToken: React.Dispatch<React.SetStateAction<string | undefined>>;
+  /**
+   * Guest mode: the user tapped "continue without logging in". In-memory only
+   * (not persisted) so a cold launch returns them to the auth screen, matching
+   * the previous behavior. Drives the Stack.Protected guard alongside the
+   * token so guests can still browse the tabs.
+   */
+  continuedWithoutLogin: boolean;
+  setContinuedWithoutLogin: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const AccessTokenContext = createContext<AccessTokenContextValue | null>(null);
@@ -28,6 +36,7 @@ export function AccessTokenProvider({
 }) {
   const [accessToken, setAccessToken] = useState<string | undefined>();
   const [checkedForToken, setCheckedForToken] = useState(false);
+  const [continuedWithoutLogin, setContinuedWithoutLogin] = useState(false);
 
   useEffect(function fetchToken() {
     SecureStore.getItemAsync(ANILIST_ACCESS_TOKEN_STORAGE)
@@ -43,8 +52,16 @@ export function AccessTokenProvider({
   }, []);
 
   return (
-    // eslint-disable-next-line react-doctor/jsx-no-constructed-context-values -- React Compiler memoizes the value object
-    <AccessTokenContext value={{ accessToken, checkedForToken, setAccessToken }}>
+    <AccessTokenContext
+      // eslint-disable-next-line react-doctor/jsx-no-constructed-context-values -- React Compiler memoizes the value object
+      value={{
+        accessToken,
+        checkedForToken,
+        setAccessToken,
+        continuedWithoutLogin,
+        setContinuedWithoutLogin,
+      }}
+    >
       {children}
     </AccessTokenContext>
   );

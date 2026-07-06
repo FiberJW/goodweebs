@@ -2,7 +2,7 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
-import React, { useEffect } from "react";
+import React from "react";
 import { View, Text, StyleSheet, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -16,25 +16,12 @@ import { useAccessToken } from "yep/useAccessToken";
 
 export default function AuthScreen() {
   const [, , promptAsync] = useAniListAuthRequest();
-  const { setAccessToken } = useAccessToken();
+  const { setAccessToken, setContinuedWithoutLogin } = useAccessToken();
   const router = useRouter();
 
-  useEffect(
-    function navigateIfAccessTokenExists() {
-      (async () => {
-        try {
-          const token = await SecureStore.getItemAsync(
-            ANILIST_ACCESS_TOKEN_STORAGE
-          );
-
-          if (token) {
-            router.replace("/(tabs)/anime");
-          }
-        } catch {}
-      })();
-    },
-    [router]
-  );
+  // No "navigate if a token already exists" effect: the Stack.Protected guard
+  // in the root layout owns that — setting the token below flips the guard and
+  // React Navigation swaps this screen out for the tabs automatically.
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: darkTheme.background }}>
@@ -74,12 +61,12 @@ export default function AuthScreen() {
 
                 if (result.type === "error" || result.type === "success") {
                   if (result.params.access_token) {
-                    setAccessToken(result.params.access_token);
                     await SecureStore.setItemAsync(
                       ANILIST_ACCESS_TOKEN_STORAGE,
                       result.params.access_token
                     );
-                    router.replace("/(tabs)/anime");
+                    // Flips the Protected guard; RN swaps in the tabs.
+                    setAccessToken(result.params.access_token);
                   }
                 }
               }}
@@ -108,7 +95,12 @@ export default function AuthScreen() {
                       ),
                     },
                     {
-                      onPress: () => router.replace("/(tabs)/discover"),
+                      onPress: () => {
+                        // Opens the tabs via the guard, then lands on Discover
+                        // (guests browse there) rather than the anime anchor.
+                        setContinuedWithoutLogin(true);
+                        router.replace("/(tabs)/discover");
+                      },
                       text: String(
                         fbs(
                           "OK",

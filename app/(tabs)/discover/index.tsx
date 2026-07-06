@@ -19,11 +19,11 @@ import {
   useSearchAnimeQuery,
 } from "yep/graphql/generated";
 import type { MediaPosterFragmentFragment } from "yep/graphql/generated";
+import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { DiscoverPoster } from "yep/screens/DiscoverScreen/DiscoverPoster";
 import { DiscoverSkeletonGrid } from "yep/screens/DiscoverScreen/DiscoverSkeleton";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { notEmpty, isLiquidGlass } from "yep/utils";
 
 type ItemWithId = { id: number };

@@ -1,19 +1,17 @@
 import { Redirect } from "expo-router";
-import { View } from "react-native";
 
-import { darkTheme } from "yep/themes";
 import { useAccessToken } from "yep/useAccessToken";
 
+// The root Stack stays unmounted (splash up) until the token read finishes, so
+// this resolves to the right entry synchronously on first paint — no post-mount
+// redirect, no slide-in. Targets match the Stack.Protected guards, so the
+// redirect can never point at an unavailable screen (which would loop).
 export default function Index() {
-  const { accessToken, checkedForToken } = useAccessToken();
+  const { accessToken, continuedWithoutLogin } = useAccessToken();
 
-  if (!checkedForToken) {
-    return <View style={{ flex: 1, backgroundColor: darkTheme.background }} />;
-  }
-
-  if (accessToken) {
-    return <Redirect href="/(tabs)/anime" />;
-  }
-
-  return <Redirect href="/auth" />;
+  return accessToken || continuedWithoutLogin ? (
+    <Redirect href="/(tabs)/anime" />
+  ) : (
+    <Redirect href="/auth" />
+  );
 }
