@@ -24,6 +24,18 @@ const appId = (() => {
   return "com.fiberjw.goodweebs";
 })();
 
+const icon = (() => {
+  if (IS_DEV) return "./assets/launch/icon-dev.png";
+  if (IS_PREVIEW) return "./assets/launch/icon-preview.png";
+  return "./assets/launch/icon.png";
+})();
+
+const androidForegroundImage = (() => {
+  if (IS_DEV) return "./assets/launch/android-foreground-dev.png";
+  if (IS_PREVIEW) return "./assets/launch/icon-preview.png";
+  return "./assets/launch/android-foreground.png";
+})();
+
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name,
@@ -31,7 +43,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   slug: "goodweebs",
   platforms: ["ios", "android", "web"],
   orientation: "portrait",
-  icon: IS_DEV ? "./assets/launch/icon-dev.png" : "./assets/launch/icon.png",
+  icon,
   scheme,
   backgroundColor: "#010209",
   owner: "fiberjw",
@@ -67,9 +79,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     adaptiveIcon: {
       backgroundColor: "#651FFF",
       backgroundImage: "./assets/launch/android-background.png",
-      foregroundImage: IS_DEV
-        ? "./assets/launch/android-foreground-dev.png"
-        : "./assets/launch/android-foreground.png",
+      foregroundImage: androidForegroundImage,
     },
   },
   web: {
