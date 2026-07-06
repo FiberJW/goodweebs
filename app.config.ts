@@ -1,17 +1,39 @@
 import { ExpoConfig, ConfigContext } from "expo/config";
 
-const IS_DEV = [process.env.APP_VARIANT].includes("development");
+const APP_VARIANT = process.env.APP_VARIANT;
+const IS_DEV = APP_VARIANT === "development";
+const IS_PREVIEW = APP_VARIANT === "preview";
 
 const name = (() => {
   if (IS_DEV) return "Goodweebs (Dev)";
+  if (IS_PREVIEW) return "Goodweebs (Preview)";
   if (process.env.EXPO_STAGING) return "Goodweebs (Staging)";
   return "Goodweebs";
 })();
 
 const scheme = (() => {
   if (IS_DEV) return "goodweebs-dev";
+  if (IS_PREVIEW) return "goodweebs-preview";
   if (process.env.EXPO_STAGING) return "goodweebs-staging";
   return "goodweebs";
+})();
+
+const appId = (() => {
+  if (IS_DEV) return "com.fiberjw.goodweebs.dev";
+  if (IS_PREVIEW) return "com.fiberjw.goodweebs.preview";
+  return "com.fiberjw.goodweebs";
+})();
+
+const icon = (() => {
+  if (IS_DEV) return "./assets/launch/icon-dev.png";
+  if (IS_PREVIEW) return "./assets/launch/icon-preview.png";
+  return "./assets/launch/icon.png";
+})();
+
+const androidForegroundImage = (() => {
+  if (IS_DEV) return "./assets/launch/android-foreground-dev.png";
+  if (IS_PREVIEW) return "./assets/launch/icon-preview.png";
+  return "./assets/launch/android-foreground.png";
 })();
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
@@ -21,7 +43,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   slug: "goodweebs",
   platforms: ["ios", "android", "web"],
   orientation: "portrait",
-  icon: IS_DEV ? "./assets/launch/icon-dev.png" : "./assets/launch/icon.png",
+  icon,
   scheme,
   backgroundColor: "#010209",
   owner: "fiberjw",
@@ -37,9 +59,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       "aps-environment": "development",
     },
     supportsTablet: true,
-    bundleIdentifier: IS_DEV
-      ? "com.fiberjw.goodweebs.dev"
-      : "com.fiberjw.goodweebs",
+    bundleIdentifier: appId,
     config: {
       usesNonExemptEncryption: false,
     },
@@ -54,14 +74,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
   },
   android: {
-    package: IS_DEV ? "com.fiberjw.goodweebs.dev" : "com.fiberjw.goodweebs",
+    package: appId,
     permissions: [],
     adaptiveIcon: {
       backgroundColor: "#651FFF",
       backgroundImage: "./assets/launch/android-background.png",
-      foregroundImage: IS_DEV
-        ? "./assets/launch/android-foreground-dev.png"
-        : "./assets/launch/android-foreground.png",
+      foregroundImage: androidForegroundImage,
     },
   },
   web: {
