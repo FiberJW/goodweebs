@@ -110,6 +110,9 @@ export default function Discover() {
         onChangeText: (e: { nativeEvent: { text: string } }) =>
           setSearchTerm(e.nativeEvent.text),
         onCancelButtonPress: () => setSearchTerm(""),
+        // Keep the (empty) nav bar in place while searching so the in-screen
+        // Header doesn't jump.
+        hideNavigationBar: false,
       },
     });
   }, [navigation]);
@@ -118,25 +121,19 @@ export default function Discover() {
     <View
       style={[styles.outerContainer, { backgroundColor: darkTheme.background }]}
     >
+      <Header label={String(fbs("Discover", "Discover tab header label"))} />
       {!isLiquidGlass ? (
-        <>
-          <Header
-            label={String(fbs("Discover", "Discover tab header label"))}
-          />
-          <SearchBox
-            value={searchTerm}
-            onChangeText={(text) => setSearchTerm(text)}
-            placeholder={String(
-              fbs("Search anime", "Search input placeholder"),
-            )}
-            onCancelPress={() => {
-              setSearchTerm("");
-            }}
-            onClearPress={() => {
-              setSearchTerm("");
-            }}
-          />
-        </>
+        <SearchBox
+          value={searchTerm}
+          onChangeText={(text) => setSearchTerm(text)}
+          placeholder={String(fbs("Search anime", "Search input placeholder"))}
+          onCancelPress={() => {
+            setSearchTerm("");
+          }}
+          onClearPress={() => {
+            setSearchTerm("");
+          }}
+        />
       ) : null}
       <View style={styles.innerContainer}>
         {isSearchLoading ? (

@@ -22,7 +22,16 @@ function NativeTabsLayout() {
     // Pre-26 the native bar defaults to a transparent scroll-edge appearance
     // (items float over content), so pin the old JS bar's background there.
     <NativeTabs
-      tintColor={goodweebsPurple}
+      tintColor={isLiquidGlass ? goodweebsPurple : darkTheme.text}
+      iconColor={isLiquidGlass ? undefined : darkTheme.listItemBackground}
+      labelStyle={
+        isLiquidGlass
+          ? undefined
+          : {
+              default: { color: darkTheme.listItemBackground },
+              selected: { color: darkTheme.text },
+            }
+      }
       backgroundColor={isLiquidGlass ? undefined : darkTheme.navBackground}
       disableTransparentOnScrollEdge={!isLiquidGlass}
     >
