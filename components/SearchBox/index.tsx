@@ -1,3 +1,4 @@
+import { Image } from "expo-image";
 import { fbs } from "fbtee";
 import React, { useState, useRef } from "react";
 import {
@@ -5,7 +6,6 @@ import {
   TextInput,
   StyleSheet,
   View,
-  Image,
   Text,
 } from "react-native";
 
@@ -43,7 +43,14 @@ export function SearchBox({
           placeholderTextColor={darkTheme.inputPlaceholder}
         />
         {(textInputProps.value?.length ?? 0) > 0 ? (
-          <PressableOpacity onPress={onClearPress}>
+          <PressableOpacity
+            onPress={onClearPress}
+            accessibilityRole="button"
+            accessibilityLabel={String(
+              fbs("Clear search", "Clear search button accessibility label"),
+            )}
+            hitSlop={12}
+          >
             <Image
               style={styles.clearIcon}
               source={require("yep/assets/icons/clear.png")}

@@ -38,13 +38,15 @@ export function SkeletonShimmerBlock({
   );
 
   useEffect(() => {
-    animationProgress.value = withRepeat(
+    animationProgress.set(
+      withRepeat(
       withTiming(1, {
         duration: SHIMMER_DURATION_MS,
         easing: Easing.inOut(Easing.ease),
       }),
       -1,
       false,
+      ),
     );
   }, [animationProgress]);
 
@@ -55,7 +57,7 @@ export function SkeletonShimmerBlock({
       transform: [
         {
           translateX:
-            animationProgress.value * travelDistance - SHIMMER_STRIP_WIDTH,
+            animationProgress.get() * travelDistance - SHIMMER_STRIP_WIDTH,
         },
       ],
     };

@@ -1,6 +1,6 @@
+import { Image } from "expo-image";
 import { Tabs } from "expo-router";
 import React from "react";
-import { Image } from "react-native";
 
 import { darkTheme } from "yep/themes";
 import { useAccessToken } from "yep/useAccessToken";

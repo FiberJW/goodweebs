@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { StyleSheet, View } from "react-native";
 
 import { SkeletonShimmerBlock } from "yep/components/SkeletonShimmerBlock";
@@ -9,15 +9,15 @@ type Props = {
 };
 
 export function AnimeSkeleton({ rowCount = 8 }: Props) {
-  const rows = useMemo(
-    () => Array.from({ length: rowCount }, (_, i) => i),
-    [rowCount],
-  );
+  const rows = Array.from({ length: rowCount }, (_, index) => ({
+    id: `anime-skeleton-${index}`,
+    isLast: index === rowCount - 1,
+  }));
 
   return (
     <View style={styles.list}>
-      {rows.map((index) => (
-        <View key={index}>
+      {rows.map((row) => (
+        <View key={row.id}>
           <View style={styles.row}>
             <SkeletonShimmerBlock borderRadius={8} height={80} width={56} />
             <View style={styles.titleColumn}>
@@ -45,7 +45,7 @@ export function AnimeSkeleton({ rowCount = 8 }: Props) {
               </View>
             </View>
           </View>
-          {index !== rows.length - 1 ? <View style={styles.divider} /> : null}
+          {!row.isLast ? <View style={styles.divider} /> : null}
         </View>
       ))}
     </View>
