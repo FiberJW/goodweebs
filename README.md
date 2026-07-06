@@ -38,6 +38,6 @@ Right now, I'm making it right :)
 
 ### Releasing this app
 
-To create a production build with [EAS Build](https://docs.expo.dev/build/introduction/), run `bun run build:prod`.
+To create a production build with [EAS Build](https://docs.expo.dev/build/introduction/), run `bun run build:production`.
 
-To push an update to those production builds using [EAS Update](https://docs.expo.dev/eas-update/introduction/), run `bun run publish:prod`.
+To push an update to those production builds using [EAS Update](https://docs.expo.dev/eas-update/introduction/), run `bun run update:production`.
