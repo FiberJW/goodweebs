@@ -117,8 +117,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       {
         android: {
           // compileSdk/targetSdk pins dropped: RN 0.86 defaults to 36.
-          // ponytail: minSdk 35 is a deliberate pre-existing experiment
-          // (commit "try minsdk 35") — drop it to widen the install base.
+          // minSdk 35 is intentionally kept — a deliberate pre-existing
+          // experiment (commit "try minsdk 35"). Note it limits installs to
+          // Android 15+; delete it if that was never the intent.
           minSdkVersion: 35,
         },
       },
