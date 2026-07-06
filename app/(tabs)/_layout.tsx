@@ -22,13 +22,18 @@ function NativeTabsLayout() {
         <NativeTabs.Trigger.Label>
           {String(fbs("Anime", "Anime tab label"))}
         </NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="play.tv" />
+        {/* template rendering: monochrome glyph tinted like an SF symbol —
+            also keeps icon/selectedIcon the same native type (RNScreens
+            throws on a mismatch when tintColor makes selected a template). */}
+        <NativeTabs.Trigger.Icon
+          src={require("yep/assets/icons/navigation/anime-tab.png")}
+          renderingMode="template"
+        />
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="discover" role="search">
         <NativeTabs.Trigger.Label>
           {String(fbs("Discover", "Discover tab label"))}
         </NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="magnifyingglass" />
       </NativeTabs.Trigger>
       {/* Always visible: flipping `hidden` remounts the whole navigator
           (wiping every tab's state) and crashes in dev if the profile tab is
@@ -37,7 +42,10 @@ function NativeTabsLayout() {
         <NativeTabs.Trigger.Label>
           {String(fbs("Profile", "Profile tab label"))}
         </NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="person.crop.circle" />
+        <NativeTabs.Trigger.Icon
+          src={require("yep/assets/icons/navigation/profile-tab.png")}
+          renderingMode="template"
+        />
       </NativeTabs.Trigger>
     </NativeTabs>
   );
