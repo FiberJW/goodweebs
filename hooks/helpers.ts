@@ -8,8 +8,10 @@ import {
 } from "@apollo/client";
 import { DocumentNode } from "graphql";
 import debounce from "lodash/debounce";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useWindowDimensions } from "react-native";
+
+import { nextPageForCount } from "yep/graphql/animeListPagination";
 
 export function useDebouncedMutation<
   MutationData = any,
@@ -168,4 +170,50 @@ export function usePersistedState<T>(
   }
 
   return [storageItem, updateStorageItem];
+}
+
+// Fire-and-forget infinite-scroll pager shared by the paginated FlatLists
+// (anime list, discover search). FlatList can hold a stale onEndReached
+// closure (observed live on the anime list: the UI rendered the merged list
+// while the callback still computed the page from the previous data), so all
+// reads go through a ref written in an effect — not during render — to stay
+// React Compiler-safe. Guards on `paused` (pull-refresh state), NOT the
+// query's `loading`: it sticks at networkStatus 1 after a skip-flip on mount
+// (Apollo 3.12 quirk), which would block fetchMore forever. The cache
+// typePolicy (graphql/client.ts) owns the page merge (and drops
+// non-contiguous pages from stale races) — no updateQuery, and a duplicate
+// page request merges idempotently.
+export function useLoadNextPage({
+  loadedCount,
+  hasNextPage,
+  paused,
+  perPage,
+  fetchMore,
+}: {
+  loadedCount: number;
+  hasNextPage: boolean | null | undefined;
+  paused: boolean;
+  perPage: number;
+  fetchMore: (options: { variables: { page: number } }) => Promise<unknown>;
+}) {
+  const stateRef = useRef({ loadedCount, hasNextPage, paused });
+  const inFlightRef = useRef(false);
+  useEffect(() => {
+    stateRef.current = { loadedCount, hasNextPage, paused };
+  });
+
+  return function loadNextPage() {
+    const state = stateRef.current;
+    if (inFlightRef.current || state.paused || !state.hasNextPage) return;
+    inFlightRef.current = true;
+    fetchMore({
+      variables: { page: nextPageForCount(state.loadedCount, perPage) },
+    })
+      .finally(() => {
+        inFlightRef.current = false;
+      })
+      // Swallow the rejection (finally doesn't) — the query hook's
+      // error/networkStatus already carries it; unhandled it would redbox.
+      .catch(() => {});
+  };
 }

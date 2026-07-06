@@ -13,18 +13,22 @@ import {
 
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
+import { ListFooterSpinner } from "yep/components/ListFooterSpinner";
 import { SearchBox } from "yep/components/SearchBox";
 import {
   useGetTrendingAnimeQuery,
   useSearchAnimeQuery,
 } from "yep/graphql/generated";
 import type { MediaPosterFragmentFragment } from "yep/graphql/generated";
+import { useLoadNextPage } from "yep/hooks/helpers";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { DiscoverPoster } from "yep/screens/DiscoverScreen/DiscoverPoster";
 import { DiscoverSkeletonGrid } from "yep/screens/DiscoverScreen/DiscoverSkeleton";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { notEmpty, isLiquidGlass } from "yep/utils";
+
+const TRENDING_PER_PAGE = 30;
 
 type ItemWithId = { id: number };
 
@@ -62,9 +66,10 @@ export default function Discover() {
     loading: loadingTrending,
     data: trendingData,
     refetch: refetchTrending,
+    fetchMore: fetchMoreTrending,
     networkStatus: trendingNetworkStatus,
   } = useGetTrendingAnimeQuery({
-    variables: { perPage: 30 },
+    variables: { perPage: TRENDING_PER_PAGE },
     notifyOnNetworkStatusChange: true,
   });
 
@@ -88,12 +93,25 @@ export default function Discover() {
     showSearchResultsView &&
     (loadingSearchData || searchTerm.trim() !== debouncedSearchTerm.trim());
   const isSearchError = showSearchResultsView && Boolean(searchError);
-  const isTrendingInitialLoading = !showSearchResultsView && loadingTrending;
+  const isTrendingFetchingMore =
+    trendingNetworkStatus === NetworkStatus.fetchMore;
+  // Skeleton for the initial load only — not while a further page appends
+  // (the footer spinner covers that).
+  const isTrendingInitialLoading =
+    !showSearchResultsView && loadingTrending && !isTrendingFetchingMore;
   // Each RefreshControl tracks its OWN query's networkStatus; refetch(4) is set
   // only by an explicit pull, never on initial load(1) or a search-term change(2).
   const isTrendingRefetching =
     trendingNetworkStatus === NetworkStatus.refetch;
   const isSearchRefetching = searchNetworkStatus === NetworkStatus.refetch;
+
+  const loadNextTrendingPage = useLoadNextPage({
+    loadedCount: (trendingData?.Page?.media ?? []).length,
+    hasNextPage: trendingData?.Page?.pageInfo?.hasNextPage,
+    paused: isTrendingRefetching,
+    perPage: TRENDING_PER_PAGE,
+    fetchMore: fetchMoreTrending,
+  });
 
   async function refetchSearchResults() {
     await refetchSearch({ search: debouncedSearchTerm });
@@ -234,22 +252,16 @@ export default function Discover() {
               ListHeaderComponent={
                 trendingList.length ? (
                   <Text style={styles.listHeader}>
-                    {String(
-                      fbs(
-                        [
-                          "Top ",
-                          fbs.param("count", String(trendingList.length), {
-                            number: trendingList.length,
-                          }),
-                          " trending anime",
-                        ],
-                        "Trending anime list header",
-                      ),
-                    )}
+                    {String(fbs("Trending anime", "Trending anime list header"))}
                   </Text>
                 ) : null
               }
               data={trendingList}
+              onEndReached={loadNextTrendingPage}
+              onEndReachedThreshold={0.5}
+              ListFooterComponent={
+                isTrendingFetchingMore ? <ListFooterSpinner /> : null
+              }
               numColumns={3}
               ListEmptyComponent={() =>
                 loadingTrending ? null : (

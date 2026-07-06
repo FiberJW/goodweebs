@@ -1,4 +1,4 @@
-import type { GetAnimeListQuery, MediaListSort } from "./generated";
+import type { MediaListSort } from "./generated";
 
 export const ANIME_LIST_PER_PAGE = 50;
 
@@ -9,14 +9,11 @@ export const ANIME_LIST_PER_PAGE = 50;
 // than perPage new entries (an entry shifted across a page boundary between
 // fetches, so dedupe dropped a duplicate), floor would re-request the same
 // page forever; ceil advances past it, guaranteeing progress.
-export function nextPageForCount(loaded: number): number {
-  return Math.ceil(loaded / ANIME_LIST_PER_PAGE) + 1;
-}
-
-export function nextPageToRequest(
-  data: GetAnimeListQuery | undefined,
+export function nextPageForCount(
+  loaded: number,
+  perPage: number = ANIME_LIST_PER_PAGE,
 ): number {
-  return nextPageForCount((data?.Page?.mediaList ?? []).length);
+  return Math.ceil(loaded / perPage) + 1;
 }
 
 // Cache-layer page merge for Page.mediaList (wired up in graphql/client.ts).

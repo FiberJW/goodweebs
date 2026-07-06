@@ -121,26 +121,27 @@ const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        // The anime list paginates Page.mediaList with fetchMore, so its Page
-        // container must be ONE cache object per (userId/status/sort) — pages
-        // merge inside it (see the Page.mediaList policy below) and its
-        // pageInfo.hasNextPage always reflects the newest page. Trending and
-        // search also use Page but never fetchMore; they keep the default
-        // args-keyed containers so their pageInfo never collides with ours.
+        // Paginated lists (the anime list, discover trending) fetchMore over
+        // Page, so a Page container must be ONE cache object per query
+        // identity, never per page — pages merge inside it (see the field
+        // policies below) and pageInfo.hasNextPage always reflects the newest
+        // page. Hence `page` is excluded from every container key.
         Page: {
-          keyArgs: (args, { variables }) =>
-            variables?.userId != null && variables?.status != null
-              ? `animeList:${variables.userId}:${variables.status}:${JSON.stringify(variables.sort ?? null)}`
-              : JSON.stringify(args ?? {}),
+          keyArgs: (args, { variables }) => {
+            if (variables?.userId != null && variables?.status != null) {
+              return `animeList:${variables.userId}:${variables.status}:${JSON.stringify(variables.sort ?? null)}`;
+            }
+            return JSON.stringify({ ...args, page: undefined });
+          },
           merge: true,
         },
       },
     },
     Page: {
       fields: {
-        // Append-merge for the anime list's pages. `page` lives on the parent
-        // Page field, so the reset signal comes from the operation variables:
-        // page 1 (or absent — a refetch/status change) replaces the list.
+        // Append-merge for paginated pages. `page` lives on the parent Page
+        // field, so the reset signal comes from the operation variables:
+        // page 1 (or absent — a refetch/term change) replaces the list.
         // Doing this at the cache layer (not fetchMore's updateQuery) keeps
         // merges correct when a background cache-and-network refetch races an
         // in-flight fetchMore, and dedupe makes repeated pages idempotent.
@@ -152,7 +153,29 @@ const cache = new InMemoryCache({
             // the container (pull-to-refresh while fetchMore is in flight).
             // Appending it would leave a silent gap (rows 101-150 right after
             // row 50), so drop any page that isn't the next contiguous one.
-            if ((variables?.page ?? 1) !== nextPageForCount(existing.length)) {
+            if (
+              (variables?.page ?? 1) !==
+              nextPageForCount(existing.length, variables?.perPage)
+            ) {
+              return existing;
+            }
+            return mergeMediaListPages(
+              existing as unknown[],
+              incoming as unknown[],
+              (entry) => readField("id", entry as Reference),
+            );
+          },
+        },
+        // Same append-merge for Page.media (discover trending paginates;
+        // search never passes page>1, so its writes always replace).
+        media: {
+          keyArgs: ["search", "type", "sort", "format", "format_not_in", "isAdult"],
+          merge(existing, incoming, { variables, readField }) {
+            if (!existing || (variables?.page ?? 1) <= 1) return incoming;
+            if (
+              (variables?.page ?? 1) !==
+              nextPageForCount(existing.length, variables?.perPage)
+            ) {
               return existing;
             }
             return mergeMediaListPages(

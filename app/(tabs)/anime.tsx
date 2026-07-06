@@ -2,9 +2,8 @@ import { NetworkStatus } from "@apollo/client";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
-  ActivityIndicator,
   RefreshControl,
   View,
   StyleSheet,
@@ -14,6 +13,7 @@ import {
 
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
+import { ListFooterSpinner } from "yep/components/ListFooterSpinner";
 import { StatusChip } from "yep/components/StatusChip";
 import {
   ANILIST_ACCESS_TOKEN_STORAGE,
@@ -22,7 +22,6 @@ import {
 import { AnimeListItemContainer } from "yep/containers/AnimeListItemContainer";
 import {
   ANIME_LIST_PER_PAGE,
-  nextPageToRequest,
   titleSortForLocale,
 } from "yep/graphql/animeListPagination";
 import {
@@ -34,6 +33,7 @@ import type {
   MediaListStatus,
 } from "yep/graphql/generated";
 import { useAniListAuthRequest } from "yep/hooks/auth";
+import { useLoadNextPage } from "yep/hooks/helpers";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { AnimeSkeleton } from "yep/screens/AnimeScreen/AnimeSkeleton";
 import { darkTheme } from "yep/themes";
@@ -91,12 +91,6 @@ function renderAnimeItem({
       first={first}
       last={last}
     />
-  );
-}
-
-function ListFooterSpinner() {
-  return (
-    <ActivityIndicator color={darkTheme.text} style={styles.footerSpinner} />
   );
 }
 
@@ -159,36 +153,15 @@ export default function Anime() {
 
   const isFetchingMore = networkStatus === NetworkStatus.fetchMore;
 
-  // FlatList can hold a stale onEndReached closure (observed live: the UI
-  // rendered the merged list while the callback still computed the page from
-  // the previous data), so loadNextPage reads the latest data through a ref
-  // instead of its closure. The ref is written in an effect — not during
-  // render — to stay React Compiler-safe.
-  const animeListDataRef = useRef(animeListData);
-  const fetchingMoreRef = useRef(false);
-  useEffect(() => {
-    animeListDataRef.current = animeListData;
-  }, [animeListData]);
-
-  // Fire-and-forget, like onRefresh — never awaited. Guards on the
-  // pull-refresh state specifically, NOT the query's `loading`: it sticks at
-  // networkStatus 1 after the skip-flip on mount (Apollo 3.12 quirk), which
-  // would block fetchMore forever. The cache typePolicy (graphql/client.ts)
-  // owns the page merge (and drops non-contiguous pages from stale races), so
-  // no updateQuery here — and a duplicate page request merges idempotently.
-  function loadNextPage() {
-    const data = animeListDataRef.current;
-    if (fetchingMoreRef.current || isRefetching) return;
-    if (!data?.Page?.pageInfo?.hasNextPage) return;
-    fetchingMoreRef.current = true;
-    fetchMore({ variables: { page: nextPageToRequest(data) } })
-      .finally(() => {
-        fetchingMoreRef.current = false;
-      })
-      // Swallow the rejection (finally doesn't) — the hook's error/networkStatus
-      // already carries it; unhandled it would redbox in dev.
-      .catch(() => {});
-  }
+  const loadNextPage = useLoadNextPage({
+    // Raw length (not the notEmpty-filtered list): the cache merge dedupes by
+    // id over the raw array, so the page math must match it.
+    loadedCount: (animeListData?.Page?.mediaList ?? []).length,
+    hasNextPage: animeListData?.Page?.pageInfo?.hasNextPage,
+    paused: isRefetching,
+    perPage: ANIME_LIST_PER_PAGE,
+    fetchMore,
+  });
   const listRows = list.map((entry, index) => ({
     entry,
     first: index === 0,
@@ -342,8 +315,5 @@ const styles = StyleSheet.create({
     fontFamily: Manrope.regular,
     fontSize: 12.8,
     color: darkTheme.listCount,
-  },
-  footerSpinner: {
-    paddingVertical: 16,
   },
 });

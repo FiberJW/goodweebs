@@ -4782,7 +4782,7 @@ export type GetTrendingAnimeQueryVariables = Exact<{
 }>;
 
 
-export type GetTrendingAnimeQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', pageInfo?: { __typename?: 'PageInfo', hasNextPage?: boolean | null, total?: number | null, currentPage?: number | null, perPage?: number | null, lastPage?: number | null } | null, media?: Array<{ __typename?: 'Media', id: number, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null } | null } | null> | null } | null };
+export type GetTrendingAnimeQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', pageInfo?: { __typename?: 'PageInfo', hasNextPage?: boolean | null } | null, media?: Array<{ __typename?: 'Media', id: number, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null } | null } | null> | null } | null };
 
 export type SearchAnimeQueryVariables = Exact<{
   search?: InputMaybe<Scalars['String']['input']>;
@@ -5279,10 +5279,6 @@ export const GetTrendingAnimeDocument = gql`
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       hasNextPage
-      total
-      currentPage
-      perPage
-      lastPage
     }
     media(format: TV, isAdult: false, type: ANIME, sort: [TRENDING_DESC]) {
       ...MediaPosterFragment
