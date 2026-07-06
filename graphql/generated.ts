@@ -4786,10 +4786,12 @@ export type GetTrendingAnimeQuery = { __typename?: 'Query', Page?: { __typename?
 
 export type SearchAnimeQueryVariables = Exact<{
   search?: InputMaybe<Scalars['String']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  perPage?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type SearchAnimeQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', pageInfo?: { __typename?: 'PageInfo', hasNextPage?: boolean | null, total?: number | null } | null, media?: Array<{ __typename?: 'Media', id: number, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null } | null } | null> | null } | null };
+export type SearchAnimeQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', pageInfo?: { __typename?: 'PageInfo', hasNextPage?: boolean | null } | null, media?: Array<{ __typename?: 'Media', id: number, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null } | null } | null> | null } | null };
 
 export type GetCharacterQueryVariables = Exact<{
   id?: InputMaybe<Scalars['Int']['input']>;
@@ -5324,11 +5326,10 @@ export type GetTrendingAnimeLazyQueryHookResult = ReturnType<typeof useGetTrendi
 export type GetTrendingAnimeSuspenseQueryHookResult = ReturnType<typeof useGetTrendingAnimeSuspenseQuery>;
 export type GetTrendingAnimeQueryResult = Apollo.QueryResult<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>;
 export const SearchAnimeDocument = gql`
-    query SearchAnime($search: String) {
-  Page {
+    query SearchAnime($search: String, $page: Int = 1, $perPage: Int = 30) {
+  Page(page: $page, perPage: $perPage) {
     pageInfo {
       hasNextPage
-      total
     }
     media(
       search: $search
@@ -5355,6 +5356,8 @@ export const SearchAnimeDocument = gql`
  * const { data, loading, error } = useSearchAnimeQuery({
  *   variables: {
  *      search: // value for 'search'
+ *      page: // value for 'page'
+ *      perPage: // value for 'perPage'
  *   },
  * });
  */

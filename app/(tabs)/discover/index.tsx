@@ -29,6 +29,7 @@ import { Manrope } from "yep/typefaces";
 import { notEmpty, isLiquidGlass } from "yep/utils";
 
 const TRENDING_PER_PAGE = 30;
+const SEARCH_PER_PAGE = 30;
 
 type ItemWithId = { id: number };
 
@@ -78,32 +79,47 @@ export default function Discover() {
     error: searchError,
     loading: loadingSearchData,
     refetch: refetchSearch,
+    fetchMore: fetchMoreSearch,
     networkStatus: searchNetworkStatus,
   } = useSearchAnimeQuery({
     skip: debouncedSearchTerm.trim().length === 0,
-    variables: { search: debouncedSearchTerm },
+    variables: { search: debouncedSearchTerm, perPage: SEARCH_PER_PAGE },
     notifyOnNetworkStatusChange: true,
   });
 
   const searchList = (searchData?.Page?.media ?? []).filter(notEmpty);
   const trendingList = (trendingData?.Page?.media ?? []).filter(notEmpty);
-  // Treat the debounce window as loading so stale results / "No search
-  // results" don't flash while the user is still typing.
-  const isSearchLoading =
-    showSearchResultsView &&
-    (loadingSearchData || searchTerm.trim() !== debouncedSearchTerm.trim());
-  const isSearchError = showSearchResultsView && Boolean(searchError);
+  // Each RefreshControl tracks its OWN query's networkStatus; refetch(4) is
+  // set only by an explicit pull, never on initial load(1) or a search-term
+  // change(2). fetchMore(3) drives the footer spinners.
+  const isTrendingRefetching =
+    trendingNetworkStatus === NetworkStatus.refetch;
+  const isSearchRefetching = searchNetworkStatus === NetworkStatus.refetch;
   const isTrendingFetchingMore =
     trendingNetworkStatus === NetworkStatus.fetchMore;
+  const isSearchFetchingMore =
+    searchNetworkStatus === NetworkStatus.fetchMore;
+  // Treat the debounce window as loading so stale results / "No search
+  // results" don't flash while the user is still typing. Skeleton for the
+  // initial load / a new term only — not while a further page appends (the
+  // footer spinner covers that).
+  const isSearchLoading =
+    showSearchResultsView &&
+    ((loadingSearchData && !isSearchFetchingMore) ||
+      searchTerm.trim() !== debouncedSearchTerm.trim());
+  const isSearchError = showSearchResultsView && Boolean(searchError);
   // Skeleton for the initial load only — not while a further page appends
   // (the footer spinner covers that).
   const isTrendingInitialLoading =
     !showSearchResultsView && loadingTrending && !isTrendingFetchingMore;
-  // Each RefreshControl tracks its OWN query's networkStatus; refetch(4) is set
-  // only by an explicit pull, never on initial load(1) or a search-term change(2).
-  const isTrendingRefetching =
-    trendingNetworkStatus === NetworkStatus.refetch;
-  const isSearchRefetching = searchNetworkStatus === NetworkStatus.refetch;
+
+  const loadNextSearchPage = useLoadNextPage({
+    loadedCount: (searchData?.Page?.media ?? []).length,
+    hasNextPage: searchData?.Page?.pageInfo?.hasNextPage,
+    paused: isSearchRefetching,
+    perPage: SEARCH_PER_PAGE,
+    fetchMore: fetchMoreSearch,
+  });
 
   const loadNextTrendingPage = useLoadNextPage({
     loadedCount: (trendingData?.Page?.media ?? []).length,
@@ -202,6 +218,11 @@ export default function Discover() {
                 </Text>
               }
               data={searchList}
+              onEndReached={loadNextSearchPage}
+              onEndReachedThreshold={0.5}
+              ListFooterComponent={
+                isSearchFetchingMore ? <ListFooterSpinner /> : null
+              }
               keyboardShouldPersistTaps="handled"
               keyboardDismissMode="on-drag"
               ListEmptyComponent={() =>

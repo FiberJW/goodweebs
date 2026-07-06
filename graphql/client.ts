@@ -131,6 +131,11 @@ const cache = new InMemoryCache({
             if (variables?.userId != null && variables?.status != null) {
               return `animeList:${variables.userId}:${variables.status}:${JSON.stringify(variables.sort ?? null)}`;
             }
+            // Search containers are per-term: pageInfo.hasNextPage must track
+            // the term (and not collide with trending's container).
+            if (variables?.search != null) {
+              return `search:${variables.search}`;
+            }
             return JSON.stringify({ ...args, page: undefined });
           },
           merge: true,
@@ -166,8 +171,7 @@ const cache = new InMemoryCache({
             );
           },
         },
-        // Same append-merge for Page.media (discover trending paginates;
-        // search never passes page>1, so its writes always replace).
+        // Same append-merge for Page.media (discover trending and search).
         media: {
           keyArgs: ["search", "type", "sort", "format", "format_not_in", "isAdult"],
           merge(existing, incoming, { variables, readField }) {

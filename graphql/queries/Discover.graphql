@@ -9,11 +9,10 @@ query GetTrendingAnime($page: Int = 1, $perPage: Int = 20) {
   }
 }
 
-query SearchAnime($search: String) {
-  Page {
+query SearchAnime($search: String, $page: Int = 1, $perPage: Int = 30) {
+  Page(page: $page, perPage: $perPage) {
     pageInfo {
       hasNextPage
-      total
     }
     media(
       search: $search
