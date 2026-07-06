@@ -4,24 +4,14 @@ import {
   ANIME_LIST_PER_PAGE,
   mergeMediaListPages,
   nextPageForCount,
-  nextPageToRequest,
   titleSortForLocale,
 } from "./animeListPagination";
-import type { GetAnimeListQuery } from "./generated";
 
 
 function entry(id: number) {
   return { id, media: null };
 }
 
-function page(ids: number[], hasNextPage = false): GetAnimeListQuery {
-  return {
-    Page: {
-      pageInfo: { hasNextPage },
-      mediaList: ids.map(entry),
-    },
-  } as GetAnimeListQuery;
-}
 
 describe("mergeMediaListPages", () => {
   test("appends the next page's entries in order", () => {
@@ -54,28 +44,6 @@ describe("mergeMediaListPages", () => {
         (e) => e.__ref,
       ),
     ).toEqual(["MediaList:1", "MediaList:2"]);
-  });
-});
-
-describe("nextPageToRequest", () => {
-  test("is 1 with no data", () => {
-    expect(nextPageToRequest(undefined)).toBe(1);
-  });
-
-  test("advances once a full page is loaded", () => {
-    const ids = Array.from({ length: ANIME_LIST_PER_PAGE }, (_, i) => i + 1);
-    expect(nextPageToRequest(page(ids))).toBe(2);
-  });
-
-  test("advances past a partially-merged page instead of re-requesting it", () => {
-    // A dedupe shortfall (entry shifted across a page boundary between
-    // fetches) leaves loaded < a multiple of perPage; re-requesting the same
-    // page would dedupe to zero new rows forever.
-    const ids = Array.from(
-      { length: ANIME_LIST_PER_PAGE * 2 - 1 },
-      (_, i) => i + 1,
-    );
-    expect(nextPageToRequest(page(ids))).toBe(3);
   });
 });
 

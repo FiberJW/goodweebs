@@ -1,6 +1,7 @@
 import { NetworkStatus } from "@apollo/client";
 import { Image, ImageBackground } from "expo-image";
 import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
 import React, { PropsWithChildren } from "react";
 import {
@@ -13,13 +14,17 @@ import {
 } from "react-native";
 
 import { black50, white } from "yep/colors";
+import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
+import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { useGetViewerQuery } from "yep/graphql/generated";
+import { useAniListAuthRequest } from "yep/hooks/auth";
 import { ProfileSkeleton } from "yep/screens/ProfileScreen/ProfileSkeleton";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
+import { useAccessToken } from "yep/useAccessToken";
 import { notEmpty, useGetTitle } from "yep/utils";
 
 type StatProps = { label: string; value: number };
@@ -116,12 +121,19 @@ function Stat({ label, value }: StatProps) {
 
 export default function Profile() {
   const router = useRouter();
+  // The profile tab stays visible while logged out on iOS (hiding a native
+  // tab trigger remounts the navigator), so this screen gates auth itself.
+  const { accessToken, setAccessToken } = useAccessToken();
+  const [, , promptAsync] = useAniListAuthRequest();
   const {
     loading: loadingViewer,
     data: viewerData,
     refetch,
     networkStatus,
-  } = useGetViewerQuery({ notifyOnNetworkStatusChange: true });
+  } = useGetViewerQuery({
+    skip: !accessToken,
+    notifyOnNetworkStatusChange: true,
+  });
   // RefreshControl spins only for a user-pull refetch (networkStatus 4), not on
   // initial load (1) — fixes the spinner showing under the skeleton on mount.
   const isRefetching = networkStatus === NetworkStatus.refetch;
@@ -159,6 +171,7 @@ export default function Profile() {
         }
       />
       <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={styles.innerContainerContent}
         // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
         refreshControl={
@@ -173,7 +186,35 @@ export default function Profile() {
         }
         showsVerticalScrollIndicator={false}
       >
-        {shouldShowInitialProfileLoading ? (
+        {!accessToken ? (
+          <EmptyState
+            title={String(fbs("Log in", "Profile empty state login title"))}
+            description={String(
+              fbs(
+                "Start tracking your anime by using an AniList account!",
+                "Profile empty state login description",
+              ),
+            )}
+            cta={{
+              label: String(
+                fbs("Log in", "Profile empty state login call to action"),
+              ),
+              onPress: async () => {
+                const result = await promptAsync();
+
+                if (result.type === "error" || result.type === "success") {
+                  if (result.params.access_token) {
+                    setAccessToken(result.params.access_token);
+                    await SecureStore.setItemAsync(
+                      ANILIST_ACCESS_TOKEN_STORAGE,
+                      result.params.access_token,
+                    );
+                  }
+                }
+              },
+            }}
+          />
+        ) : shouldShowInitialProfileLoading ? (
           <ProfileSkeleton />
         ) : viewerData?.Viewer ? (
           <View style={styles.everythingButTheCTA}>

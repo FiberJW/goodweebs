@@ -1,4 +1,5 @@
 import { NetworkStatus } from "@apollo/client";
+import { useNavigation } from "expo-router";
 import { fbs } from "fbtee";
 import React, { useEffect, useState } from "react";
 import {
@@ -12,17 +13,23 @@ import {
 
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
+import { ListFooterSpinner } from "yep/components/ListFooterSpinner";
 import { SearchBox } from "yep/components/SearchBox";
 import {
   useGetTrendingAnimeQuery,
   useSearchAnimeQuery,
 } from "yep/graphql/generated";
 import type { MediaPosterFragmentFragment } from "yep/graphql/generated";
+import { useLoadNextPage } from "yep/hooks/helpers";
+import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { DiscoverPoster } from "yep/screens/DiscoverScreen/DiscoverPoster";
 import { DiscoverSkeletonGrid } from "yep/screens/DiscoverScreen/DiscoverSkeleton";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { notEmpty } from "yep/utils";
+import { notEmpty, isLiquidGlass } from "yep/utils";
+
+const TRENDING_PER_PAGE = 30;
+const SEARCH_PER_PAGE = 30;
 
 type ItemWithId = { id: number };
 
@@ -60,9 +67,10 @@ export default function Discover() {
     loading: loadingTrending,
     data: trendingData,
     refetch: refetchTrending,
+    fetchMore: fetchMoreTrending,
     networkStatus: trendingNetworkStatus,
   } = useGetTrendingAnimeQuery({
-    variables: { perPage: 30 },
+    variables: { perPage: TRENDING_PER_PAGE },
     notifyOnNetworkStatusChange: true,
   });
 
@@ -71,48 +79,100 @@ export default function Discover() {
     error: searchError,
     loading: loadingSearchData,
     refetch: refetchSearch,
+    fetchMore: fetchMoreSearch,
     networkStatus: searchNetworkStatus,
   } = useSearchAnimeQuery({
     skip: debouncedSearchTerm.trim().length === 0,
-    variables: { search: debouncedSearchTerm },
+    variables: { search: debouncedSearchTerm, perPage: SEARCH_PER_PAGE },
     notifyOnNetworkStatusChange: true,
   });
 
   const searchList = (searchData?.Page?.media ?? []).filter(notEmpty);
   const trendingList = (trendingData?.Page?.media ?? []).filter(notEmpty);
-  // Treat the debounce window as loading so stale results / "No search
-  // results" don't flash while the user is still typing.
-  const isSearchLoading =
-    showSearchResultsView &&
-    (loadingSearchData || searchTerm.trim() !== debouncedSearchTerm.trim());
-  const isSearchError = showSearchResultsView && Boolean(searchError);
-  const isTrendingInitialLoading = !showSearchResultsView && loadingTrending;
-  // Each RefreshControl tracks its OWN query's networkStatus; refetch(4) is set
-  // only by an explicit pull, never on initial load(1) or a search-term change(2).
+  // Each RefreshControl tracks its OWN query's networkStatus; refetch(4) is
+  // set only by an explicit pull, never on initial load(1) or a search-term
+  // change(2). fetchMore(3) drives the footer spinners.
   const isTrendingRefetching =
     trendingNetworkStatus === NetworkStatus.refetch;
   const isSearchRefetching = searchNetworkStatus === NetworkStatus.refetch;
+  const isTrendingFetchingMore =
+    trendingNetworkStatus === NetworkStatus.fetchMore;
+  const isSearchFetchingMore =
+    searchNetworkStatus === NetworkStatus.fetchMore;
+  // Treat the debounce window as loading so stale results / "No search
+  // results" don't flash while the user is still typing. Skeleton for the
+  // initial load / a new term only — not while a further page appends (the
+  // footer spinner covers that).
+  const isSearchLoading =
+    showSearchResultsView &&
+    ((loadingSearchData && !isSearchFetchingMore) ||
+      searchTerm.trim() !== debouncedSearchTerm.trim());
+  const isSearchError = showSearchResultsView && Boolean(searchError);
+  // Skeleton for the initial load only — not while a further page appends
+  // (the footer spinner covers that).
+  const isTrendingInitialLoading =
+    !showSearchResultsView && loadingTrending && !isTrendingFetchingMore;
+
+  const loadNextSearchPage = useLoadNextPage({
+    loadedCount: (searchData?.Page?.media ?? []).length,
+    hasNextPage: searchData?.Page?.pageInfo?.hasNextPage,
+    paused: isSearchRefetching,
+    perPage: SEARCH_PER_PAGE,
+    fetchMore: fetchMoreSearch,
+  });
+
+  const loadNextTrendingPage = useLoadNextPage({
+    loadedCount: (trendingData?.Page?.media ?? []).length,
+    hasNextPage: trendingData?.Page?.pageInfo?.hasNextPage,
+    paused: isTrendingRefetching,
+    perPage: TRENDING_PER_PAGE,
+    fetchMore: fetchMoreTrending,
+  });
 
   async function refetchSearchResults() {
     await refetchSearch({ search: debouncedSearchTerm });
   }
+
+  // Liquid glass: the search field lives in the native header (adopted by the
+  // search tab's glass circle), replacing the in-screen SearchBox below.
+  const navigation = useNavigation();
+  const { locale } = useLocaleContext();
+  useEffect(() => {
+    if (!isLiquidGlass) return;
+    navigation.setOptions({
+      headerSearchBarOptions: {
+        placeholder: String(fbs("Search anime", "Search input placeholder")),
+        hideWhenScrolling: false,
+        onChangeText: (e: { nativeEvent: { text: string } }) =>
+          setSearchTerm(e.nativeEvent.text),
+        onCancelButtonPress: () => setSearchTerm(""),
+        // Keep the (empty) nav bar in place while searching so the in-screen
+        // Header doesn't jump.
+        hideNavigationBar: false,
+      },
+    });
+    // `locale` re-runs this so the placeholder follows in-app language
+    // changes (fbs strings resolve at call time).
+  }, [navigation, locale]);
 
   return (
     <View
       style={[styles.outerContainer, { backgroundColor: darkTheme.background }]}
     >
       <Header label={String(fbs("Discover", "Discover tab header label"))} />
-      <SearchBox
-        value={searchTerm}
-        onChangeText={(text) => setSearchTerm(text)}
-        placeholder={String(fbs("Search anime", "Search input placeholder"))}
-        onCancelPress={() => {
-          setSearchTerm("");
-        }}
-        onClearPress={() => {
-          setSearchTerm("");
-        }}
-      />
+      {!isLiquidGlass ? (
+        <SearchBox
+          value={searchTerm}
+          onChangeText={(text) => setSearchTerm(text)}
+          placeholder={String(fbs("Search anime", "Search input placeholder"))}
+          onCancelPress={() => {
+            setSearchTerm("");
+          }}
+          onClearPress={() => {
+            setSearchTerm("");
+          }}
+        />
+      ) : null}
       <View style={styles.innerContainer}>
         {isSearchLoading ? (
           <DiscoverSkeletonGrid
@@ -139,20 +199,30 @@ export default function Discover() {
           />
         ) : showSearchResultsView ? (
           <>
-            <Text style={styles.listHeader}>
-              {String(
-                fbs(
-                  [
-                    "Search results for: ",
-                    fbs.param("searchTerm", searchTerm),
-                  ],
-                  "Search results header",
-                ),
-              )}
-            </Text>
             <FlatList
+              contentInsetAdjustmentBehavior="automatic"
               contentContainerStyle={{ gap: 16 }}
+              // An element (not an inline component) so FlatList doesn't
+              // remount it on every data change.
+              ListHeaderComponent={
+                <Text style={styles.listHeader}>
+                  {String(
+                    fbs(
+                      [
+                        "Search results for: ",
+                        fbs.param("searchTerm", searchTerm),
+                      ],
+                      "Search results header",
+                    ),
+                  )}
+                </Text>
+              }
               data={searchList}
+              onEndReached={loadNextSearchPage}
+              onEndReachedThreshold={0.5}
+              ListFooterComponent={
+                isSearchFetchingMore ? <ListFooterSpinner /> : null
+              }
               keyboardShouldPersistTaps="handled"
               keyboardDismissMode="on-drag"
               ListEmptyComponent={() =>
@@ -197,25 +267,22 @@ export default function Discover() {
           />
         ) : (
           <>
-            {trendingList.length ? (
-              <Text style={styles.listHeader}>
-                {String(
-                  fbs(
-                    [
-                      "Top ",
-                      fbs.param("count", String(trendingList.length), {
-                        number: trendingList.length,
-                      }),
-                      " trending anime",
-                    ],
-                    "Trending anime list header",
-                  ),
-                )}
-              </Text>
-            ) : null}
             <FlatList
+              contentInsetAdjustmentBehavior="automatic"
               contentContainerStyle={{ gap: 16 }}
+              ListHeaderComponent={
+                trendingList.length ? (
+                  <Text style={styles.listHeader}>
+                    {String(fbs("Trending anime", "Trending anime list header"))}
+                  </Text>
+                ) : null
+              }
               data={trendingList}
+              onEndReached={loadNextTrendingPage}
+              onEndReachedThreshold={0.5}
+              ListFooterComponent={
+                isTrendingFetchingMore ? <ListFooterSpinner /> : null
+              }
               numColumns={3}
               ListEmptyComponent={() =>
                 loadingTrending ? null : (
