@@ -35,7 +35,10 @@ function optedOut(key: StorageKeys) {
 }
 
 if (Platform.OS !== "web") {
-  if (!optedOut(StorageKeys.OPT_OUT_ANALYTICS)) {
+  // Production only, per vexo's docs — and empirically: vexo 1.5.7's native
+  // session-replay ScreenRecorder runs in dev builds and retains snapshot
+  // frames at ~25 MB/s (a 60 GB simulator process after 40 minutes).
+  if (!__DEV__ && !optedOut(StorageKeys.OPT_OUT_ANALYTICS)) {
     vexo("e6f94c3b-f7d3-4edd-b48c-baad9bfd42b5");
   }
   // Module scope (not a post-mount effect) so errors thrown before first
@@ -128,7 +131,9 @@ function InnerLayout() {
   }, []);
 
   useEffect(function initializeAnalytics() {
-    if (!optedOut(StorageKeys.OPT_OUT_ANALYTICS)) {
+    // Production only: like vexo, LogRocket's session replay captures the
+    // screen continuously — in dev it queues captures unboundedly.
+    if (!__DEV__ && !optedOut(StorageKeys.OPT_OUT_ANALYTICS)) {
       LogRocket.init("iltgzt/goodweebs", {
         updateId: Updates.isEmbeddedLaunch ? null : Updates.updateId,
         expoChannel: Updates.channel,

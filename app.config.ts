@@ -24,11 +24,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   icon: IS_DEV ? "./assets/launch/icon-dev.png" : "./assets/launch/icon.png",
   scheme,
   backgroundColor: "#010209",
-  splash: {
-    image: "./assets/launch/splash.png",
-    resizeMode: "cover",
-    backgroundColor: "#010209",
-  },
   owner: "fiberjw",
   updates: {
     fallbackToCacheTimeout: 30000,
@@ -76,6 +71,18 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     "expo-router",
+    [
+      "expo-splash-screen",
+      {
+        image: "./assets/launch/splash.png",
+        resizeMode: "cover",
+        backgroundColor: "#010209",
+        // The old top-level splash config used the legacy full-screen
+        // storyboard; without this the plugin renders the art as a ~100pt
+        // centered logo instead of cover.
+        enableFullScreenImage_legacy: true,
+      },
+    ],
     "expo-image",
     [
       "expo-font",
@@ -109,11 +116,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       "expo-build-properties",
       {
         android: {
-          // SDK 55 deps (e.g. androidx.core:core:1.17.0) require compileSdk 36;
-          // pinning to 35 fails :app:checkReleaseAarMetadata.
-          compileSdkVersion: 36,
-          targetSdkVersion: 36,
-          buildToolsVersion: "36.0.0",
+          // compileSdk/targetSdk pins dropped: RN 0.86 defaults to 36.
+          // minSdk 35 is intentionally kept — a deliberate pre-existing
+          // experiment (commit "try minsdk 35"). Note it limits installs to
+          // Android 15+; delete it if that was never the intent.
           minSdkVersion: 35,
         },
       },
