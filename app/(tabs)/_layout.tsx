@@ -8,6 +8,7 @@ import { Platform } from "react-native";
 import { goodweebsPurple } from "yep/colors";
 import { darkTheme } from "yep/themes";
 import { useAccessToken } from "yep/useAccessToken";
+import { isLiquidGlass } from "yep/utils";
 
 // iOS gets the system tab bar (liquid glass on iOS 26); Android keeps the
 // existing custom JS tab bar until we design a native Material one.
@@ -17,7 +18,14 @@ export default function TabsLayout() {
 
 function NativeTabsLayout() {
   return (
-    <NativeTabs tintColor={goodweebsPurple}>
+    // On iOS 26 the system draws the liquid-glass bar — leave it unstyled.
+    // Pre-26 the native bar defaults to a transparent scroll-edge appearance
+    // (items float over content), so pin the old JS bar's background there.
+    <NativeTabs
+      tintColor={goodweebsPurple}
+      backgroundColor={isLiquidGlass ? undefined : darkTheme.navBackground}
+      disableTransparentOnScrollEdge={!isLiquidGlass}
+    >
       <NativeTabs.Trigger name="anime">
         <NativeTabs.Trigger.Label>
           {String(fbs("Anime", "Anime tab label"))}
