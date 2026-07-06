@@ -151,6 +151,7 @@ export default function Discover() {
               )}
             </Text>
             <FlatList
+              contentInsetAdjustmentBehavior="automatic"
               contentContainerStyle={{ gap: 16 }}
               data={searchList}
               keyboardShouldPersistTaps="handled"
@@ -214,6 +215,7 @@ export default function Discover() {
               </Text>
             ) : null}
             <FlatList
+              contentInsetAdjustmentBehavior="automatic"
               contentContainerStyle={{ gap: 16 }}
               data={trendingList}
               numColumns={3}

@@ -16,8 +16,6 @@ export default function TabsLayout() {
 }
 
 function NativeTabsLayout() {
-  const { accessToken } = useAccessToken();
-
   return (
     <NativeTabs tintColor={goodweebsPurple}>
       <NativeTabs.Trigger name="anime">
@@ -32,9 +30,10 @@ function NativeTabsLayout() {
         </NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf="magnifyingglass" />
       </NativeTabs.Trigger>
-      {/* hidden remounts the navigator when it flips (login/logout), which
-          matches the old href:null reset behavior. */}
-      <NativeTabs.Trigger name="profile" hidden={!accessToken}>
+      {/* Always visible: flipping `hidden` remounts the whole navigator
+          (wiping every tab's state) and crashes in dev if the profile tab is
+          focused during logout — the screen gates logged-out users instead. */}
+      <NativeTabs.Trigger name="profile">
         <NativeTabs.Trigger.Label>
           {String(fbs("Profile", "Profile tab label"))}
         </NativeTabs.Trigger.Label>

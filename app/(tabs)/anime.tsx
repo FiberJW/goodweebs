@@ -201,6 +201,9 @@ export default function Anime() {
     >
       <Header label={String(fbs("Anime", "Anime tab header label"))} />
       <FlatList
+        // iOS native tabs float over content; automatic insets keep the last
+        // rows scrollable clear of the glass bar (no-op on Android's JS tabs).
+        contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={{ padding: 16 }}
         // An element (not an inline component) so FlatList doesn't remount the
         // header — and reset the chip row's scroll — on every data/status change.
