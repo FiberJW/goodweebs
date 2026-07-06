@@ -272,6 +272,11 @@ function MediaListStatusButton({
     UpdateStatusMutationVariables
   >({
     mutationDocument: UpdateStatusDocument,
+    // A status change moves the entry between the anime tab's per-status
+    // Page.mediaList cache containers; patching MediaList.status alone leaves
+    // it listed under the old chip until a manual refresh, so refetch the
+    // active list (resets it to page 1 and fixes pageInfo.total).
+    refetchQueries: ["GetAnimeList"],
     makeUpdateFunction: (variables) => (cache, result) => {
       if (mediaListEntryId && variables?.status) {
         cache.modify({

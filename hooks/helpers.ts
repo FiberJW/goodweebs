@@ -17,9 +17,11 @@ export function useDebouncedMutation<
 >({
   mutationDocument,
   makeUpdateFunction,
+  refetchQueries,
   wait = 500,
 }: {
   mutationDocument: DocumentNode;
+  refetchQueries?: string[];
   makeUpdateFunction?: (
     variables?: MutationVariables,
   ) => MutationUpdaterFunction<
@@ -109,6 +111,7 @@ export function useDebouncedMutation<
       variables,
       context,
       update,
+      refetchQueries,
     });
   };
 
