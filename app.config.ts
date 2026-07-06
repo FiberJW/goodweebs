@@ -39,7 +39,7 @@ const androidForegroundImage = (() => {
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name,
-  version: "0.0.18",
+  version: "0.0.19",
   slug: "goodweebs",
   platforms: ["ios", "android", "web"],
   orientation: "portrait",
@@ -95,6 +95,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         image: "./assets/launch/splash.png",
         resizeMode: "cover",
         backgroundColor: "#010209",
+        // TODO: use the new non-fullscreen splash
         // The old top-level splash config used the legacy full-screen
         // storyboard; without this the plugin renders the art as a ~100pt
         // centered logo instead of cover.

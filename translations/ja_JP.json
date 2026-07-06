@@ -853,18 +853,6 @@
       ],
       "types": []
     },
-    "qGcxPyRxzHw/d3rzpy1SoA==": {
-      "description": "Trending anime list header",
-      "status": "translated",
-      "tokens": [],
-      "translations": [
-        {
-          "translation": "トレンドアニメ トップ{count}",
-          "variations": {}
-        }
-      ],
-      "types": []
-    },
     "ZXu86w8CXXSsTOhPH8jZDA==": {
       "description": "Trending loading error title",
       "status": "translated",
@@ -1580,6 +1568,210 @@
       "translations": [
         {
           "translation": "話",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "wUKJE2p3A/yWPp7h+ju7Qg==": {
+      "description": "Stepper increase button accessibility label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Increase",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "cNsncnRpJUNYGgPH4RrGgA==": {
+      "description": "Stepper decrease button accessibility label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Decrease",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "Wpsvu3xct4HrM1YCyqNFVw==": {
+      "description": "Clear search button accessibility label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Clear search",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "X+xvC9lPVkSUrgG8DIeomw==": {
+      "description": "Unfavorite button accessibility label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Remove from favorites",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "KMGzlgbPmgk/fcHYZ1ZS0w==": {
+      "description": "Favorite button accessibility label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Add to favorites",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "4uaRrzCcDjvbrP08tb7DWw==": {
+      "description": "Decrease episode progress button accessibility label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Decrease episode progress",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "Syu7PbM5VFz730XvwduimA==": {
+      "description": "Complete series button accessibility label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Complete series",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "M0G7nzy+/iWCsOjwyUHWwA==": {
+      "description": "Increase episode progress button accessibility label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Increase episode progress",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "E/3LPY7At9JBlS1uNWcmYA==": {
+      "description": "Anime not found empty response description",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "We ran into an unexpected error loading the requested anime.",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "aKcGjfDxW0YDtwje2qaB3g==": {
+      "description": "Anime tab label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Anime",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "ta3k5+7UU4Gm3Hnq6mLZnA==": {
+      "description": "Discover tab label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Discover",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "5JJKhGIrQEBoIXi/kEGgDw==": {
+      "description": "Profile tab label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Profile",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "atbaEg5K2xLZwJBXH/ZnhQ==": {
+      "description": "Settings button accessibility label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Settings",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "8CVy3LRE9k6jq0z7TUEnLQ==": {
+      "description": "Profile empty state login title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Log in",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "gv9ChQyYTax1fLdMnlKjxw==": {
+      "description": "Profile empty state login description",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Start tracking your anime by using an AniList account!",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "OYpdrpWfL9K6otTMvk5UPA==": {
+      "description": "Profile empty state login call to action",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Log in",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "UZO2n78kKspPv2dv0P7XIg==": {
+      "description": "Trending anime list header",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Trending anime",
           "variations": {}
         }
       ],
