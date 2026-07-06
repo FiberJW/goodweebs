@@ -2,7 +2,7 @@ import { yellowDarkA } from "@radix-ui/colors";
 import { differenceInDays } from "date-fns/differenceInDays";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import { fbs } from "fbtee";
-import { Text } from "react-native";
+import { Platform, Text } from "react-native";
 
 import type {
   MediaTitle,
@@ -14,6 +14,11 @@ import type {
   FuzzyDate,
 } from "./graphql/generated";
 import { useLocaleContext } from "./i18n/LocaleContext";
+
+// iOS 26+ ships the liquid-glass system chrome (native tab bar morphing into
+// the search field, glass headers). Older iOS keeps our in-screen equivalents.
+export const isLiquidGlass =
+  Platform.OS === "ios" && Number.parseInt(String(Platform.Version), 10) >= 26;
 
 export function notEmpty<TValue>(
   value: TValue | null | undefined

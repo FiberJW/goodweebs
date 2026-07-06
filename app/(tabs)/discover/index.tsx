@@ -1,4 +1,5 @@
 import { NetworkStatus } from "@apollo/client";
+import { useNavigation } from "expo-router";
 import { fbs } from "fbtee";
 import React, { useEffect, useState } from "react";
 import {
@@ -22,7 +23,7 @@ import { DiscoverPoster } from "yep/screens/DiscoverScreen/DiscoverPoster";
 import { DiscoverSkeletonGrid } from "yep/screens/DiscoverScreen/DiscoverSkeleton";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { notEmpty } from "yep/utils";
+import { notEmpty, isLiquidGlass } from "yep/utils";
 
 type ItemWithId = { id: number };
 
@@ -97,22 +98,46 @@ export default function Discover() {
     await refetchSearch({ search: debouncedSearchTerm });
   }
 
+  // Liquid glass: the search field lives in the native header (adopted by the
+  // search tab's glass circle), replacing the in-screen SearchBox below.
+  const navigation = useNavigation();
+  useEffect(() => {
+    if (!isLiquidGlass) return;
+    navigation.setOptions({
+      headerSearchBarOptions: {
+        placeholder: String(fbs("Search anime", "Search input placeholder")),
+        hideWhenScrolling: false,
+        onChangeText: (e: { nativeEvent: { text: string } }) =>
+          setSearchTerm(e.nativeEvent.text),
+        onCancelButtonPress: () => setSearchTerm(""),
+      },
+    });
+  }, [navigation]);
+
   return (
     <View
       style={[styles.outerContainer, { backgroundColor: darkTheme.background }]}
     >
-      <Header label={String(fbs("Discover", "Discover tab header label"))} />
-      <SearchBox
-        value={searchTerm}
-        onChangeText={(text) => setSearchTerm(text)}
-        placeholder={String(fbs("Search anime", "Search input placeholder"))}
-        onCancelPress={() => {
-          setSearchTerm("");
-        }}
-        onClearPress={() => {
-          setSearchTerm("");
-        }}
-      />
+      {!isLiquidGlass ? (
+        <>
+          <Header
+            label={String(fbs("Discover", "Discover tab header label"))}
+          />
+          <SearchBox
+            value={searchTerm}
+            onChangeText={(text) => setSearchTerm(text)}
+            placeholder={String(
+              fbs("Search anime", "Search input placeholder"),
+            )}
+            onCancelPress={() => {
+              setSearchTerm("");
+            }}
+            onClearPress={() => {
+              setSearchTerm("");
+            }}
+          />
+        </>
+      ) : null}
       <View style={styles.innerContainer}>
         {isSearchLoading ? (
           <DiscoverSkeletonGrid
@@ -139,20 +164,24 @@ export default function Discover() {
           />
         ) : showSearchResultsView ? (
           <>
-            <Text style={styles.listHeader}>
-              {String(
-                fbs(
-                  [
-                    "Search results for: ",
-                    fbs.param("searchTerm", searchTerm),
-                  ],
-                  "Search results header",
-                ),
-              )}
-            </Text>
             <FlatList
               contentInsetAdjustmentBehavior="automatic"
               contentContainerStyle={{ gap: 16 }}
+              // An element (not an inline component) so FlatList doesn't
+              // remount it on every data change.
+              ListHeaderComponent={
+                <Text style={styles.listHeader}>
+                  {String(
+                    fbs(
+                      [
+                        "Search results for: ",
+                        fbs.param("searchTerm", searchTerm),
+                      ],
+                      "Search results header",
+                    ),
+                  )}
+                </Text>
+              }
               data={searchList}
               keyboardShouldPersistTaps="handled"
               keyboardDismissMode="on-drag"
@@ -198,25 +227,27 @@ export default function Discover() {
           />
         ) : (
           <>
-            {trendingList.length ? (
-              <Text style={styles.listHeader}>
-                {String(
-                  fbs(
-                    [
-                      "Top ",
-                      fbs.param("count", String(trendingList.length), {
-                        number: trendingList.length,
-                      }),
-                      " trending anime",
-                    ],
-                    "Trending anime list header",
-                  ),
-                )}
-              </Text>
-            ) : null}
             <FlatList
               contentInsetAdjustmentBehavior="automatic"
               contentContainerStyle={{ gap: 16 }}
+              ListHeaderComponent={
+                trendingList.length ? (
+                  <Text style={styles.listHeader}>
+                    {String(
+                      fbs(
+                        [
+                          "Top ",
+                          fbs.param("count", String(trendingList.length), {
+                            number: trendingList.length,
+                          }),
+                          " trending anime",
+                        ],
+                        "Trending anime list header",
+                      ),
+                    )}
+                  </Text>
+                ) : null
+              }
               data={trendingList}
               numColumns={3}
               ListEmptyComponent={() =>
