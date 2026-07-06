@@ -4,21 +4,21 @@ import React, { useState, createContext, use, useEffect } from "react";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 
 type AccessTokenContextValue = {
-  accessToken?: string;
+  accessToken: string | undefined;
   checkedForToken: boolean;
-  setAccessToken: (accountName?: string) => void;
+  setAccessToken: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
 const AccessTokenContext = createContext<AccessTokenContextValue | null>(null);
 
 export function useAccessToken() {
-  const context = use(AccessTokenContext);
+  const value = use(AccessTokenContext);
 
-  if (context === null) {
+  if (!value) {
     throw new Error("useAccessToken must be used within a AccessTokenProvider");
   }
 
-  return context;
+  return value;
 }
 
 export function AccessTokenProvider({
@@ -30,24 +30,21 @@ export function AccessTokenProvider({
   const [checkedForToken, setCheckedForToken] = useState(false);
 
   useEffect(function fetchToken() {
-    (async () => {
-      try {
-        const token = await SecureStore.getItemAsync(
-          ANILIST_ACCESS_TOKEN_STORAGE
-        );
+    SecureStore.getItemAsync(ANILIST_ACCESS_TOKEN_STORAGE)
+      .then((token) => {
         if (token) {
           setAccessToken(token);
         }
-      } finally {
+      })
+      .catch(() => {})
+      .finally(() => {
         setCheckedForToken(true);
-      }
-    })();
-  });
+      });
+  }, []);
 
   return (
-    <AccessTokenContext
-      value={{ accessToken, setAccessToken, checkedForToken }}
-    >
+    // eslint-disable-next-line react-doctor/jsx-no-constructed-context-values -- React Compiler memoizes the value object
+    <AccessTokenContext value={{ accessToken, checkedForToken, setAccessToken }}>
       {children}
     </AccessTokenContext>
   );

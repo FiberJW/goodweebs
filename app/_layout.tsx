@@ -13,7 +13,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import * as Updates from "expo-updates";
 import { fbs } from "fbtee";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Platform, StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { RootSiblingParent } from "react-native-root-siblings";
@@ -28,8 +28,26 @@ import { LINESeedJP, Manrope } from "yep/typefaces";
 import { StorageKeys } from "../hooks/helpers";
 import { AccessTokenProvider, useAccessToken } from "../useAccessToken";
 
+// localStorage is synchronous here thanks to the expo-sqlite polyfill above.
+function optedOut(key: StorageKeys) {
+  const value = localStorage.getItem(key);
+  return Boolean(value && JSON.parse(value) === true);
+}
+
 if (Platform.OS !== "web") {
-  vexo("e6f94c3b-f7d3-4edd-b48c-baad9bfd42b5");
+  if (!optedOut(StorageKeys.OPT_OUT_ANALYTICS)) {
+    vexo("e6f94c3b-f7d3-4edd-b48c-baad9bfd42b5");
+  }
+  // Module scope (not a post-mount effect) so errors thrown before first
+  // render — e.g. a failed persisted-cache restore in createClient — are
+  // captured instead of dropped.
+  if (!optedOut(StorageKeys.OPT_OUT_CRASH_REPORTING)) {
+    Sentry.init({
+      dsn: "https://b2756b0df548451d98707d024aff00d1@o58038.ingest.sentry.io/5248224",
+      debug: __DEV__,
+      enabled: !__DEV__,
+    });
+  }
   enableScreens();
   SplashScreen.preventAutoHideAsync();
 }
@@ -60,7 +78,8 @@ function WebLayout() {
   );
 }
 
-export default function RootLayout() {
+// eslint-disable-next-line react-doctor/no-multi-comp -- expo-router layout: root + platform variants live together; RootLayout is declared (not export-default'd inline) so Sentry.wrap can wrap it below
+function RootLayout() {
   if (Platform.OS === "web") {
     return (
       <LocaleProvider>
@@ -80,6 +99,16 @@ export default function RootLayout() {
   );
 }
 
+// Sentry.wrap enables app-start/native-crash instrumentation. It must only
+// run when Sentry.init ran (wrap-before-init stalls the app on a black
+// screen), so it honors the same crash-reporting opt-out. Skip on web
+// (RN-only SDK surface).
+export default
+  Platform.OS === "web" || optedOut(StorageKeys.OPT_OUT_CRASH_REPORTING)
+    ? RootLayout
+    : Sentry.wrap(RootLayout);
+
+// eslint-disable-next-line react-doctor/no-multi-comp -- see RootLayout note above
 function InnerLayout() {
   const { checkedForToken } = useAccessToken();
 
@@ -88,29 +117,18 @@ function InnerLayout() {
 
   useEffect(function createClientWithPersistedCache() {
     (async () => {
-      const client = await createClient();
-      setClient(client);
+      try {
+        const client = await createClient();
+        setClient(client);
+      } catch (error) {
+        Sentry.captureException(error);
+        console.error("[Failed to create Apollo client]:", error);
+      }
     })();
   }, []);
 
   useEffect(function initializeAnalytics() {
-    const sentryOptOut = localStorage.getItem(
-      StorageKeys.OPT_OUT_CRASH_REPORTING
-    );
-
-    if (!(sentryOptOut && JSON.parse(sentryOptOut) === true)) {
-      Sentry.init({
-        dsn: "https://b2756b0df548451d98707d024aff00d1@o58038.ingest.sentry.io/5248224",
-        debug: __DEV__,
-        enabled: !__DEV__,
-      });
-    }
-
-    const logRocketOptOut = localStorage.getItem(
-      StorageKeys.OPT_OUT_ANALYTICS
-    );
-
-    if (!(logRocketOptOut && JSON.parse(logRocketOptOut) === true)) {
+    if (!optedOut(StorageKeys.OPT_OUT_ANALYTICS)) {
       LogRocket.init("iltgzt/goodweebs", {
         updateId: Updates.isEmbeddedLaunch ? null : Updates.updateId,
         expoChannel: Updates.channel,
@@ -120,11 +138,11 @@ function InnerLayout() {
 
   const appIsReady = checkedForToken && !!client;
 
-  const onLayoutRootView = useCallback(async () => {
+  async function onLayoutRootView() {
     if (appIsReady) {
       await SplashScreen.hideAsync();
     }
-  }, [appIsReady]);
+  }
 
   if (!appIsReady) {
     return null;

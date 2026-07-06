@@ -203,7 +203,10 @@ export default function Settings() {
                       );
                       setAccessToken(undefined);
                       router.replace("/auth");
-                      await client.resetStore();
+                      // clearStore (not resetStore): resetStore refetches every
+                      // active query unauthenticated, spraying error toasts
+                      // over the login screen.
+                      await client.clearStore();
                     },
                   },
                 ],
