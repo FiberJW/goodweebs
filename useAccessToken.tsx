@@ -3,32 +3,22 @@ import React, { useState, createContext, use, useEffect } from "react";
 
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 
-const missingContext = Symbol("missingContext");
+type AccessTokenContextValue = {
+  accessToken: string | undefined;
+  checkedForToken: boolean;
+  setAccessToken: React.Dispatch<React.SetStateAction<string | undefined>>;
+};
 
-const AccessTokenContext = createContext<
-  string | undefined | typeof missingContext
->(missingContext);
-const CheckedForTokenContext = createContext<boolean | typeof missingContext>(
-  missingContext,
-);
-const SetAccessTokenContext = createContext<
-  React.Dispatch<React.SetStateAction<string | undefined>> | typeof missingContext
->(missingContext);
+const AccessTokenContext = createContext<AccessTokenContextValue | null>(null);
 
 export function useAccessToken() {
-  const accessToken = use(AccessTokenContext);
-  const checkedForToken = use(CheckedForTokenContext);
-  const setAccessToken = use(SetAccessTokenContext);
+  const value = use(AccessTokenContext);
 
-  if (
-    accessToken === missingContext ||
-    checkedForToken === missingContext ||
-    setAccessToken === missingContext
-  ) {
+  if (!value) {
     throw new Error("useAccessToken must be used within a AccessTokenProvider");
   }
 
-  return { accessToken, checkedForToken, setAccessToken };
+  return value;
 }
 
 export function AccessTokenProvider({
@@ -53,10 +43,9 @@ export function AccessTokenProvider({
   }, []);
 
   return (
-    <SetAccessTokenContext value={setAccessToken}>
-      <CheckedForTokenContext value={checkedForToken}>
-        <AccessTokenContext value={accessToken}>{children}</AccessTokenContext>
-      </CheckedForTokenContext>
-    </SetAccessTokenContext>
+    // eslint-disable-next-line react-doctor/jsx-no-constructed-context-values -- React Compiler memoizes the value object
+    <AccessTokenContext value={{ accessToken, checkedForToken, setAccessToken }}>
+      {children}
+    </AccessTokenContext>
   );
 }
