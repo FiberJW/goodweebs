@@ -4,12 +4,17 @@ import {
   AuthRequestPromptOptions,
   AuthSessionResult,
 } from "expo-auth-session";
+import Constants from "expo-constants";
 import { useState } from "react";
 
 import { CLIENT_ID } from "yep/constants";
 
+const appScheme = Array.isArray(Constants.expoConfig?.scheme)
+  ? Constants.expoConfig?.scheme[0]
+  : Constants.expoConfig?.scheme;
+
 const redirectUri = makeRedirectUri({
-  scheme: __DEV__ ? "goodweebs-dev" : "goodweebs",
+  scheme: appScheme ?? (__DEV__ ? "goodweebs-dev" : "goodweebs"),
   path: "redirect",
 });
 

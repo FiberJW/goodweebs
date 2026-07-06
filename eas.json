@@ -29,6 +29,9 @@
       },
       "android": {
         "resourceClass": "medium"
+      },
+      "env": {
+        "APP_VARIANT": "preview"
       }
     },
     "production": {
