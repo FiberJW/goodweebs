@@ -24,11 +24,11 @@ export function RelatedAnimeList({
     // filter out non-anime relations
     // TODO: add back in when DetailScreen can support Characters/People, Manga, and Studios
     [
-      MediaRelation.Adaptation,
-      MediaRelation.Character,
-      MediaRelation.Other,
-      MediaRelation.Source,
-      MediaRelation.Contains,
+      "ADAPTATION",
+      "CHARACTER",
+      "OTHER",
+      "SOURCE",
+      "CONTAINS",
     ].includes(relationType)
   ) {
     return null;

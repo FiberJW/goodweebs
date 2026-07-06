@@ -4,10 +4,10 @@ import React, { useState, useEffect } from "react";
 import { AnimeListItem } from "yep/components/AnimeListItem";
 import {
   AnimeFragmentFragment,
+  UpdateProgressDocument,
   UpdateProgressMutation,
   UpdateProgressMutationVariables,
 } from "yep/graphql/generated";
-import { UpdateProgress } from "yep/graphql/mutations/UpdateProgress";
 import { useDebouncedMutation } from "yep/hooks/helpers";
 
 type Props = {
@@ -37,7 +37,7 @@ export function AnimeListItemContainer({ seedData, first, last }: Props) {
     UpdateProgressMutation,
     UpdateProgressMutationVariables
   >({
-    mutationDocument: UpdateProgress,
+    mutationDocument: UpdateProgressDocument,
     makeUpdateFunction: (variables) => (cache) => {
       if (!mediaListEntryId || variables?.progress === undefined) return;
 

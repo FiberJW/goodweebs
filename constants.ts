@@ -1,6 +1,6 @@
 import Constants, { ExecutionEnvironment } from "expo-constants";
 
-import { MediaListStatus } from "yep/graphql/generated";
+import type { MediaListStatus } from "yep/graphql/generated";
 
 // AniList Client IDs and their redirect URIs based on https://docs.expo.dev/guides/authentication/#redirect-uri-patterns
 enum AniListClientID {
@@ -26,9 +26,9 @@ export const ANILIST_ACCESS_TOKEN_STORAGE = `com.fiberjw.goodweebs.${CLIENT_ID}.
 export const MediaListStatusWithLabel: {
   value: MediaListStatus;
 }[] = [
-  { value: MediaListStatus.Current },
-  { value: MediaListStatus.Paused },
-  { value: MediaListStatus.Planning },
-  { value: MediaListStatus.Dropped },
-  { value: MediaListStatus.Completed },
+  { value: "CURRENT" },
+  { value: "PAUSED" },
+  { value: "PLANNING" },
+  { value: "DROPPED" },
+  { value: "COMPLETED" },
 ];

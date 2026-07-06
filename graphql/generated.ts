@@ -176,25 +176,23 @@ export type ActivityReplySubscribedNotification = {
 };
 
 /** Activity sort enums */
-export enum ActivitySort {
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Pinned = 'PINNED'
-}
+export type ActivitySort =
+  | 'ID'
+  | 'ID_DESC'
+  | 'PINNED';
 
 /** Activity type enum. */
-export enum ActivityType {
+export type ActivityType =
   /** A anime list update activity */
-  AnimeList = 'ANIME_LIST',
+  | 'ANIME_LIST'
   /** A manga list update activity */
-  MangaList = 'MANGA_LIST',
+  | 'MANGA_LIST'
   /** Anime & Manga list update, only used in query arguments */
-  MediaList = 'MEDIA_LIST',
+  | 'MEDIA_LIST'
   /** A text message activity sent to another user */
-  Message = 'MESSAGE',
+  | 'MESSAGE'
   /** A text activity */
-  Text = 'TEXT'
-}
+  | 'TEXT';
 
 /** Activity union type */
 export type ActivityUnion = ListActivity | MessageActivity | TextActivity;
@@ -269,16 +267,15 @@ export type AiringScheduleInput = {
 };
 
 /** Airing schedule sort enums */
-export enum AiringSort {
-  Episode = 'EPISODE',
-  EpisodeDesc = 'EPISODE_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  MediaId = 'MEDIA_ID',
-  MediaIdDesc = 'MEDIA_ID_DESC',
-  Time = 'TIME',
-  TimeDesc = 'TIME_DESC'
-}
+export type AiringSort =
+  | 'EPISODE'
+  | 'EPISODE_DESC'
+  | 'ID'
+  | 'ID_DESC'
+  | 'MEDIA_ID'
+  | 'MEDIA_ID_DESC'
+  | 'TIME'
+  | 'TIME_DESC';
 
 export type AniChartHighlightInput = {
   highlight?: InputMaybe<Scalars['String']['input']>;
@@ -431,27 +428,25 @@ export type CharacterNameInput = {
 };
 
 /** The role the character plays in the media */
-export enum CharacterRole {
+export type CharacterRole =
   /** A background character in the media */
-  Background = 'BACKGROUND',
+  | 'BACKGROUND'
   /** A primary character role in the media */
-  Main = 'MAIN',
+  | 'MAIN'
   /** A supporting character role in the media */
-  Supporting = 'SUPPORTING'
-}
+  | 'SUPPORTING';
 
 /** Character sort enums */
-export enum CharacterSort {
-  Favourites = 'FAVOURITES',
-  FavouritesDesc = 'FAVOURITES_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
+export type CharacterSort =
+  | 'FAVOURITES'
+  | 'FAVOURITES_DESC'
+  | 'ID'
+  | 'ID_DESC'
   /** Order manually decided by moderators */
-  Relevance = 'RELEVANCE',
-  Role = 'ROLE',
-  RoleDesc = 'ROLE_DESC',
-  SearchMatch = 'SEARCH_MATCH'
-}
+  | 'RELEVANCE'
+  | 'ROLE'
+  | 'ROLE_DESC'
+  | 'SEARCH_MATCH';
 
 /** A submission for a character that features in an anime or manga */
 export type CharacterSubmission = {
@@ -496,6 +491,25 @@ export type CharacterSubmissionEdge = {
   voiceActors?: Maybe<Array<Maybe<Staff>>>;
 };
 
+/** Notification for when a character submission is accepted, partially accepted, or rejected */
+export type CharacterSubmissionUpdateNotification = {
+  __typename?: 'CharacterSubmissionUpdateNotification';
+  /** The character that was modified. */
+  character?: Maybe<Character>;
+  /** The notification context text */
+  contexts?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** The time the notification was created at */
+  createdAt?: Maybe<Scalars['Int']['output']>;
+  /** The id of the Notification */
+  id: Scalars['Int']['output'];
+  /** The notes of the submission */
+  notes?: Maybe<Scalars['String']['output']>;
+  /** The status of the submission */
+  status?: Maybe<Scalars['String']['output']>;
+  /** The type of notification */
+  type?: Maybe<NotificationType>;
+};
+
 /** Deleted data type */
 export type Deleted = {
   __typename?: 'Deleted';
@@ -503,17 +517,15 @@ export type Deleted = {
   deleted?: Maybe<Scalars['Boolean']['output']>;
 };
 
-export enum ExternalLinkMediaType {
-  Anime = 'ANIME',
-  Manga = 'MANGA',
-  Staff = 'STAFF'
-}
+export type ExternalLinkMediaType =
+  | 'ANIME'
+  | 'MANGA'
+  | 'STAFF';
 
-export enum ExternalLinkType {
-  Info = 'INFO',
-  Social = 'SOCIAL',
-  Streaming = 'STREAMING'
-}
+export type ExternalLinkType =
+  | 'INFO'
+  | 'SOCIAL'
+  | 'STREAMING';
 
 /** User's favourite anime, manga, characters, staff & studios */
 export type Favourites = {
@@ -620,7 +632,7 @@ export type GenreStats = {
   timeWatched?: Maybe<Scalars['Int']['output']>;
 };
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPage = {
   __typename?: 'InternalPage';
   activities?: Maybe<Array<Maybe<ActivityUnion>>>;
@@ -653,7 +665,7 @@ export type InternalPage = {
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageActivitiesArgs = {
   createdAt?: InputMaybe<Scalars['Int']['input']>;
   createdAt_greater?: InputMaybe<Scalars['Int']['input']>;
@@ -685,14 +697,14 @@ export type InternalPageActivitiesArgs = {
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageActivityRepliesArgs = {
   activityId?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageAiringSchedulesArgs = {
   airingAt?: InputMaybe<Scalars['Int']['input']>;
   airingAt_greater?: InputMaybe<Scalars['Int']['input']>;
@@ -716,7 +728,7 @@ export type InternalPageAiringSchedulesArgs = {
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageCharacterSubmissionsArgs = {
   assigneeId?: InputMaybe<Scalars['Int']['input']>;
   characterId?: InputMaybe<Scalars['Int']['input']>;
@@ -726,7 +738,7 @@ export type InternalPageCharacterSubmissionsArgs = {
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageCharactersArgs = {
   id?: InputMaybe<Scalars['Int']['input']>;
   id_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
@@ -738,28 +750,28 @@ export type InternalPageCharactersArgs = {
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageFollowersArgs = {
   sort?: InputMaybe<Array<InputMaybe<UserSort>>>;
   userId: Scalars['Int']['input'];
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageFollowingArgs = {
   sort?: InputMaybe<Array<InputMaybe<UserSort>>>;
   userId: Scalars['Int']['input'];
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageLikesArgs = {
   likeableId?: InputMaybe<Scalars['Int']['input']>;
   type?: InputMaybe<LikeableType>;
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageMediaArgs = {
   averageScore?: InputMaybe<Scalars['Int']['input']>;
   averageScore_greater?: InputMaybe<Scalars['Int']['input']>;
@@ -833,7 +845,7 @@ export type InternalPageMediaArgs = {
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageMediaListArgs = {
   compareWithAuthList?: InputMaybe<Scalars['Boolean']['input']>;
   completedAt?: InputMaybe<Scalars['FuzzyDateInt']['input']>;
@@ -863,7 +875,7 @@ export type InternalPageMediaListArgs = {
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageMediaSubmissionsArgs = {
   assigneeId?: InputMaybe<Scalars['Int']['input']>;
   mediaId?: InputMaybe<Scalars['Int']['input']>;
@@ -875,7 +887,7 @@ export type InternalPageMediaSubmissionsArgs = {
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageMediaTrendsArgs = {
   averageScore?: InputMaybe<Scalars['Int']['input']>;
   averageScore_greater?: InputMaybe<Scalars['Int']['input']>;
@@ -905,14 +917,17 @@ export type InternalPageMediaTrendsArgs = {
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageModActionsArgs = {
   modId?: InputMaybe<Scalars['Int']['input']>;
+  modId_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  modId_not?: InputMaybe<Scalars['Int']['input']>;
+  modId_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   userId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageNotificationsArgs = {
   resetNotificationCount?: InputMaybe<Scalars['Boolean']['input']>;
   type?: InputMaybe<NotificationType>;
@@ -920,7 +935,7 @@ export type InternalPageNotificationsArgs = {
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageRecommendationsArgs = {
   id?: InputMaybe<Scalars['Int']['input']>;
   mediaId?: InputMaybe<Scalars['Int']['input']>;
@@ -934,14 +949,14 @@ export type InternalPageRecommendationsArgs = {
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageReportsArgs = {
   reportedId?: InputMaybe<Scalars['Int']['input']>;
   reporterId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageReviewsArgs = {
   id?: InputMaybe<Scalars['Int']['input']>;
   mediaId?: InputMaybe<Scalars['Int']['input']>;
@@ -951,7 +966,7 @@ export type InternalPageReviewsArgs = {
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageRevisionHistoryArgs = {
   characterId?: InputMaybe<Scalars['Int']['input']>;
   mediaId?: InputMaybe<Scalars['Int']['input']>;
@@ -961,7 +976,7 @@ export type InternalPageRevisionHistoryArgs = {
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageStaffArgs = {
   id?: InputMaybe<Scalars['Int']['input']>;
   id_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
@@ -973,7 +988,7 @@ export type InternalPageStaffArgs = {
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageStaffSubmissionsArgs = {
   assigneeId?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<InputMaybe<SubmissionSort>>>;
@@ -983,7 +998,7 @@ export type InternalPageStaffSubmissionsArgs = {
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageStudiosArgs = {
   id?: InputMaybe<Scalars['Int']['input']>;
   id_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
@@ -994,7 +1009,7 @@ export type InternalPageStudiosArgs = {
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageThreadCommentsArgs = {
   id?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<InputMaybe<ThreadCommentSort>>>;
@@ -1003,7 +1018,7 @@ export type InternalPageThreadCommentsArgs = {
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageThreadsArgs = {
   categoryId?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
@@ -1017,13 +1032,13 @@ export type InternalPageThreadsArgs = {
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageUserBlockSearchArgs = {
   search?: InputMaybe<Scalars['String']['input']>;
 };
 
 
-/** Page of data (Used for internal use only) */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type InternalPageUsersArgs = {
   id?: InputMaybe<Scalars['Int']['input']>;
   isModerator?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1033,12 +1048,11 @@ export type InternalPageUsersArgs = {
 };
 
 /** Types that can be liked */
-export enum LikeableType {
-  Activity = 'ACTIVITY',
-  ActivityReply = 'ACTIVITY_REPLY',
-  Thread = 'THREAD',
-  ThreadComment = 'THREAD_COMMENT'
-}
+export type LikeableType =
+  | 'ACTIVITY'
+  | 'ACTIVITY_REPLY'
+  | 'THREAD'
+  | 'THREAD_COMMENT';
 
 /** Likeable union type */
 export type LikeableUnion = ActivityReply | ListActivity | MessageActivity | TextActivity | Thread | ThreadComment;
@@ -1448,28 +1462,27 @@ export type MediaExternalLinkInput = {
 };
 
 /** The format the media was released in */
-export enum MediaFormat {
+export type MediaFormat =
   /** Professionally published manga with more than one chapter */
-  Manga = 'MANGA',
+  | 'MANGA'
   /** Anime movies with a theatrical release */
-  Movie = 'MOVIE',
+  | 'MOVIE'
   /** Short anime released as a music video */
-  Music = 'MUSIC',
+  | 'MUSIC'
   /** Written books released as a series of light novels */
-  Novel = 'NOVEL',
+  | 'NOVEL'
   /** (Original Net Animation) Anime that have been originally released online or are only available through streaming services. */
-  Ona = 'ONA',
+  | 'ONA'
   /** Manga with just one chapter */
-  OneShot = 'ONE_SHOT',
+  | 'ONE_SHOT'
   /** (Original Video Animation) Anime that have been released directly on DVD/Blu-ray without originally going through a theatrical release or television broadcast */
-  Ova = 'OVA',
+  | 'OVA'
   /** Special episodes that have been included in DVD/Blu-ray releases, picture dramas, pilots, etc */
-  Special = 'SPECIAL',
+  | 'SPECIAL'
   /** Anime broadcast on television */
-  Tv = 'TV',
+  | 'TV'
   /** Anime which are under 15 minutes in length and broadcast on television */
-  TvShort = 'TV_SHORT'
-}
+  | 'TV_SHORT';
 
 /** List of anime or manga */
 export type MediaList = {
@@ -1612,54 +1625,52 @@ export type MediaListOptionsInput = {
 };
 
 /** Media list sort enums */
-export enum MediaListSort {
-  AddedTime = 'ADDED_TIME',
-  AddedTimeDesc = 'ADDED_TIME_DESC',
-  FinishedOn = 'FINISHED_ON',
-  FinishedOnDesc = 'FINISHED_ON_DESC',
-  MediaId = 'MEDIA_ID',
-  MediaIdDesc = 'MEDIA_ID_DESC',
-  MediaPopularity = 'MEDIA_POPULARITY',
-  MediaPopularityDesc = 'MEDIA_POPULARITY_DESC',
-  MediaTitleEnglish = 'MEDIA_TITLE_ENGLISH',
-  MediaTitleEnglishDesc = 'MEDIA_TITLE_ENGLISH_DESC',
-  MediaTitleNative = 'MEDIA_TITLE_NATIVE',
-  MediaTitleNativeDesc = 'MEDIA_TITLE_NATIVE_DESC',
-  MediaTitleRomaji = 'MEDIA_TITLE_ROMAJI',
-  MediaTitleRomajiDesc = 'MEDIA_TITLE_ROMAJI_DESC',
-  Priority = 'PRIORITY',
-  PriorityDesc = 'PRIORITY_DESC',
-  Progress = 'PROGRESS',
-  ProgressDesc = 'PROGRESS_DESC',
-  ProgressVolumes = 'PROGRESS_VOLUMES',
-  ProgressVolumesDesc = 'PROGRESS_VOLUMES_DESC',
-  Repeat = 'REPEAT',
-  RepeatDesc = 'REPEAT_DESC',
-  Score = 'SCORE',
-  ScoreDesc = 'SCORE_DESC',
-  StartedOn = 'STARTED_ON',
-  StartedOnDesc = 'STARTED_ON_DESC',
-  Status = 'STATUS',
-  StatusDesc = 'STATUS_DESC',
-  UpdatedTime = 'UPDATED_TIME',
-  UpdatedTimeDesc = 'UPDATED_TIME_DESC'
-}
+export type MediaListSort =
+  | 'ADDED_TIME'
+  | 'ADDED_TIME_DESC'
+  | 'FINISHED_ON'
+  | 'FINISHED_ON_DESC'
+  | 'MEDIA_ID'
+  | 'MEDIA_ID_DESC'
+  | 'MEDIA_POPULARITY'
+  | 'MEDIA_POPULARITY_DESC'
+  | 'MEDIA_TITLE_ENGLISH'
+  | 'MEDIA_TITLE_ENGLISH_DESC'
+  | 'MEDIA_TITLE_NATIVE'
+  | 'MEDIA_TITLE_NATIVE_DESC'
+  | 'MEDIA_TITLE_ROMAJI'
+  | 'MEDIA_TITLE_ROMAJI_DESC'
+  | 'PRIORITY'
+  | 'PRIORITY_DESC'
+  | 'PROGRESS'
+  | 'PROGRESS_DESC'
+  | 'PROGRESS_VOLUMES'
+  | 'PROGRESS_VOLUMES_DESC'
+  | 'REPEAT'
+  | 'REPEAT_DESC'
+  | 'SCORE'
+  | 'SCORE_DESC'
+  | 'STARTED_ON'
+  | 'STARTED_ON_DESC'
+  | 'STATUS'
+  | 'STATUS_DESC'
+  | 'UPDATED_TIME'
+  | 'UPDATED_TIME_DESC';
 
 /** Media list watching/reading status enum. */
-export enum MediaListStatus {
+export type MediaListStatus =
   /** Finished watching/reading */
-  Completed = 'COMPLETED',
+  | 'COMPLETED'
   /** Currently watching/reading */
-  Current = 'CURRENT',
+  | 'CURRENT'
   /** Stopped watching/reading before completing */
-  Dropped = 'DROPPED',
+  | 'DROPPED'
   /** Paused watching/reading */
-  Paused = 'PAUSED',
+  | 'PAUSED'
   /** Planning to watch/read */
-  Planning = 'PLANNING',
+  | 'PLANNING'
   /** Re-watching/reading */
-  Repeating = 'REPEATING'
-}
+  | 'REPEATING';
 
 /** A user's list options for anime or manga lists */
 export type MediaListTypeOptions = {
@@ -1724,128 +1735,123 @@ export type MediaRank = {
 };
 
 /** The type of ranking */
-export enum MediaRankType {
+export type MediaRankType =
   /** Ranking is based on the media's popularity */
-  Popular = 'POPULAR',
+  | 'POPULAR'
   /** Ranking is based on the media's ratings/score */
-  Rated = 'RATED'
-}
+  | 'RATED';
 
 /** Type of relation media has to its parent. */
-export enum MediaRelation {
+export type MediaRelation =
   /** An adaption of this media into a different format */
-  Adaptation = 'ADAPTATION',
+  | 'ADAPTATION'
   /** An alternative version of the same media */
-  Alternative = 'ALTERNATIVE',
+  | 'ALTERNATIVE'
   /** Shares at least 1 character */
-  Character = 'CHARACTER',
+  | 'CHARACTER'
   /** Version 2 only. */
-  Compilation = 'COMPILATION',
+  | 'COMPILATION'
   /** Version 2 only. */
-  Contains = 'CONTAINS',
+  | 'CONTAINS'
   /** Other */
-  Other = 'OTHER',
+  | 'OTHER'
   /** The media a side story is from */
-  Parent = 'PARENT',
+  | 'PARENT'
   /** Released before the relation */
-  Prequel = 'PREQUEL',
+  | 'PREQUEL'
   /** Released after the relation */
-  Sequel = 'SEQUEL',
+  | 'SEQUEL'
   /** A side story of the parent media */
-  SideStory = 'SIDE_STORY',
+  | 'SIDE_STORY'
   /** Version 2 only. The source material the media was adapted from */
-  Source = 'SOURCE',
+  | 'SOURCE'
   /** An alternative version of the media with a different primary focus */
-  SpinOff = 'SPIN_OFF',
+  | 'SPIN_OFF'
   /** A shortened and summarized version */
-  Summary = 'SUMMARY'
-}
+  | 'SUMMARY';
 
-export enum MediaSeason {
-  /** Months September to November */
-  Fall = 'FALL',
-  /** Months March to May */
-  Spring = 'SPRING',
-  /** Months June to August */
-  Summer = 'SUMMER',
-  /** Months December to February */
-  Winter = 'WINTER'
-}
+export type MediaSeason =
+  /** Predominantly started airing between October and November */
+  | 'FALL'
+  /** Predominantly started airing between April and June */
+  | 'SPRING'
+  /** Predominantly started airing between July and September */
+  | 'SUMMER'
+  /** Predominantly started airing between January and March */
+  | 'WINTER';
 
 /** Media sort enums */
-export enum MediaSort {
-  Chapters = 'CHAPTERS',
-  ChaptersDesc = 'CHAPTERS_DESC',
-  Duration = 'DURATION',
-  DurationDesc = 'DURATION_DESC',
-  EndDate = 'END_DATE',
-  EndDateDesc = 'END_DATE_DESC',
-  Episodes = 'EPISODES',
-  EpisodesDesc = 'EPISODES_DESC',
-  Favourites = 'FAVOURITES',
-  FavouritesDesc = 'FAVOURITES_DESC',
-  Format = 'FORMAT',
-  FormatDesc = 'FORMAT_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Popularity = 'POPULARITY',
-  PopularityDesc = 'POPULARITY_DESC',
-  Score = 'SCORE',
-  ScoreDesc = 'SCORE_DESC',
-  SearchMatch = 'SEARCH_MATCH',
-  StartDate = 'START_DATE',
-  StartDateDesc = 'START_DATE_DESC',
-  Status = 'STATUS',
-  StatusDesc = 'STATUS_DESC',
-  TitleEnglish = 'TITLE_ENGLISH',
-  TitleEnglishDesc = 'TITLE_ENGLISH_DESC',
-  TitleNative = 'TITLE_NATIVE',
-  TitleNativeDesc = 'TITLE_NATIVE_DESC',
-  TitleRomaji = 'TITLE_ROMAJI',
-  TitleRomajiDesc = 'TITLE_ROMAJI_DESC',
-  Trending = 'TRENDING',
-  TrendingDesc = 'TRENDING_DESC',
-  Type = 'TYPE',
-  TypeDesc = 'TYPE_DESC',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
-  Volumes = 'VOLUMES',
-  VolumesDesc = 'VOLUMES_DESC'
-}
+export type MediaSort =
+  | 'CHAPTERS'
+  | 'CHAPTERS_DESC'
+  | 'DURATION'
+  | 'DURATION_DESC'
+  | 'END_DATE'
+  | 'END_DATE_DESC'
+  | 'EPISODES'
+  | 'EPISODES_DESC'
+  | 'FAVOURITES'
+  | 'FAVOURITES_DESC'
+  | 'FORMAT'
+  | 'FORMAT_DESC'
+  | 'ID'
+  | 'ID_DESC'
+  | 'POPULARITY'
+  | 'POPULARITY_DESC'
+  | 'SCORE'
+  | 'SCORE_DESC'
+  | 'SEARCH_MATCH'
+  | 'START_DATE'
+  | 'START_DATE_DESC'
+  | 'STATUS'
+  | 'STATUS_DESC'
+  | 'TITLE_ENGLISH'
+  | 'TITLE_ENGLISH_DESC'
+  | 'TITLE_NATIVE'
+  | 'TITLE_NATIVE_DESC'
+  | 'TITLE_ROMAJI'
+  | 'TITLE_ROMAJI_DESC'
+  | 'TRENDING'
+  | 'TRENDING_DESC'
+  | 'TYPE'
+  | 'TYPE_DESC'
+  | 'UPDATED_AT'
+  | 'UPDATED_AT_DESC'
+  | 'VOLUMES'
+  | 'VOLUMES_DESC';
 
 /** Source type the media was adapted from */
-export enum MediaSource {
+export type MediaSource =
   /** Version 2+ only. Japanese Anime */
-  Anime = 'ANIME',
+  | 'ANIME'
   /** Version 3 only. Comics excluding manga */
-  Comic = 'COMIC',
+  | 'COMIC'
   /** Version 2+ only. Self-published works */
-  Doujinshi = 'DOUJINSHI',
+  | 'DOUJINSHI'
   /** Version 3 only. Games excluding video games */
-  Game = 'GAME',
+  | 'GAME'
   /** Written work published in volumes */
-  LightNovel = 'LIGHT_NOVEL',
+  | 'LIGHT_NOVEL'
   /** Version 3 only. Live action media such as movies or TV show */
-  LiveAction = 'LIVE_ACTION',
+  | 'LIVE_ACTION'
   /** Asian comic book */
-  Manga = 'MANGA',
+  | 'MANGA'
   /** Version 3 only. Multimedia project */
-  MultimediaProject = 'MULTIMEDIA_PROJECT',
+  | 'MULTIMEDIA_PROJECT'
   /** Version 2+ only. Written works not published in volumes */
-  Novel = 'NOVEL',
+  | 'NOVEL'
   /** An original production not based of another work */
-  Original = 'ORIGINAL',
+  | 'ORIGINAL'
   /** Other */
-  Other = 'OTHER',
+  | 'OTHER'
   /** Version 3 only. Picture book */
-  PictureBook = 'PICTURE_BOOK',
+  | 'PICTURE_BOOK'
   /** Video game */
-  VideoGame = 'VIDEO_GAME',
+  | 'VIDEO_GAME'
   /** Video game driven primary by text and narrative */
-  VisualNovel = 'VISUAL_NOVEL',
+  | 'VISUAL_NOVEL'
   /** Version 3 only. Written works published online */
-  WebNovel = 'WEB_NOVEL'
-}
+  | 'WEB_NOVEL';
 
 /** A media's statistics */
 export type MediaStats = {
@@ -1857,18 +1863,17 @@ export type MediaStats = {
 };
 
 /** The current releasing status of the media */
-export enum MediaStatus {
+export type MediaStatus =
   /** Ended before the work could be finished */
-  Cancelled = 'CANCELLED',
+  | 'CANCELLED'
   /** Has completed and is no longer being released */
-  Finished = 'FINISHED',
+  | 'FINISHED'
   /** Version 2 only. Is currently paused from releasing and will resume at a later date */
-  Hiatus = 'HIATUS',
+  | 'HIATUS'
   /** To be released at a later date */
-  NotYetReleased = 'NOT_YET_RELEASED',
+  | 'NOT_YET_RELEASED'
   /** Currently releasing */
-  Releasing = 'RELEASING'
-}
+  | 'RELEASING';
 
 /** Data and links to legal streaming episodes on external sites */
 export type MediaStreamingEpisode = {
@@ -1939,6 +1944,27 @@ export type MediaSubmissionEdge = {
   studio?: Maybe<Studio>;
   voiceActor?: Maybe<Staff>;
   voiceActorSubmission?: Maybe<Staff>;
+};
+
+/** Notification for when a media submission is accepted, partially accepted, or rejected */
+export type MediaSubmissionUpdateNotification = {
+  __typename?: 'MediaSubmissionUpdateNotification';
+  /** The notification context text */
+  contexts?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** The time the notification was created at */
+  createdAt?: Maybe<Scalars['Int']['output']>;
+  /** The id of the Notification */
+  id: Scalars['Int']['output'];
+  /** The media that was created or modified. If this submission was to create a new media and it was rejected, this will be null. */
+  media?: Maybe<Media>;
+  /** The notes of the submission */
+  notes?: Maybe<Scalars['String']['output']>;
+  /** The status of the submission */
+  status?: Maybe<Scalars['String']['output']>;
+  /** The title of the media that was submitted. If this submission was to edit an existing media, this will be null. */
+  submittedTitle?: Maybe<Scalars['String']['output']>;
+  /** The type of notification */
+  type?: Maybe<NotificationType>;
 };
 
 /** A tag that describes a theme or element of the media */
@@ -2054,30 +2080,28 @@ export type MediaTrendEdge = {
 };
 
 /** Media trend sort enums */
-export enum MediaTrendSort {
-  Date = 'DATE',
-  DateDesc = 'DATE_DESC',
-  Episode = 'EPISODE',
-  EpisodeDesc = 'EPISODE_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  MediaId = 'MEDIA_ID',
-  MediaIdDesc = 'MEDIA_ID_DESC',
-  Popularity = 'POPULARITY',
-  PopularityDesc = 'POPULARITY_DESC',
-  Score = 'SCORE',
-  ScoreDesc = 'SCORE_DESC',
-  Trending = 'TRENDING',
-  TrendingDesc = 'TRENDING_DESC'
-}
+export type MediaTrendSort =
+  | 'DATE'
+  | 'DATE_DESC'
+  | 'EPISODE'
+  | 'EPISODE_DESC'
+  | 'ID'
+  | 'ID_DESC'
+  | 'MEDIA_ID'
+  | 'MEDIA_ID_DESC'
+  | 'POPULARITY'
+  | 'POPULARITY_DESC'
+  | 'SCORE'
+  | 'SCORE_DESC'
+  | 'TRENDING'
+  | 'TRENDING_DESC';
 
 /** Media type enum, anime or manga. */
-export enum MediaType {
+export type MediaType =
   /** Japanese Anime */
-  Anime = 'ANIME',
+  | 'ANIME'
   /** Asian comic */
-  Manga = 'MANGA'
-}
+  | 'MANGA';
 
 /** User message activity */
 export type MessageActivity = {
@@ -2090,6 +2114,8 @@ export type MessageActivity = {
   isLiked?: Maybe<Scalars['Boolean']['output']>;
   /** If the activity is locked and can receive replies */
   isLocked?: Maybe<Scalars['Boolean']['output']>;
+  /** If the activity is pinned to the top of the users activity feed */
+  isPinned?: Maybe<Scalars['Boolean']['output']>;
   /** If the message is private and only viewable to the sender and recipients */
   isPrivate?: Maybe<Scalars['Boolean']['output']>;
   /** If the currently authenticated user is subscribed to the activity */
@@ -2137,50 +2163,48 @@ export type ModAction = {
   user?: Maybe<User>;
 };
 
-export enum ModActionType {
-  Anon = 'ANON',
-  Ban = 'BAN',
-  Delete = 'DELETE',
-  Edit = 'EDIT',
-  Expire = 'EXPIRE',
-  Note = 'NOTE',
-  Report = 'REPORT',
-  Reset = 'RESET'
-}
+export type ModActionType =
+  | 'ANON'
+  | 'BAN'
+  | 'DELETE'
+  | 'EDIT'
+  | 'EXPIRE'
+  | 'NOTE'
+  | 'REPORT'
+  | 'RESET';
 
 /** Mod role enums */
-export enum ModRole {
+export type ModRole =
   /** An AniList administrator */
-  Admin = 'ADMIN',
+  | 'ADMIN'
   /** An anime data moderator */
-  AnimeData = 'ANIME_DATA',
+  | 'ANIME_DATA'
   /** A character data moderator */
-  CharacterData = 'CHARACTER_DATA',
+  | 'CHARACTER_DATA'
   /** A community moderator */
-  Community = 'COMMUNITY',
+  | 'COMMUNITY'
   /** An AniList developer */
-  Developer = 'DEVELOPER',
+  | 'DEVELOPER'
   /** A discord community moderator */
-  DiscordCommunity = 'DISCORD_COMMUNITY',
+  | 'DISCORD_COMMUNITY'
   /** A lead anime data moderator */
-  LeadAnimeData = 'LEAD_ANIME_DATA',
+  | 'LEAD_ANIME_DATA'
   /** A lead community moderator */
-  LeadCommunity = 'LEAD_COMMUNITY',
+  | 'LEAD_COMMUNITY'
   /** A head developer of AniList */
-  LeadDeveloper = 'LEAD_DEVELOPER',
+  | 'LEAD_DEVELOPER'
   /** A lead manga data moderator */
-  LeadMangaData = 'LEAD_MANGA_DATA',
+  | 'LEAD_MANGA_DATA'
   /** A lead social media moderator */
-  LeadSocialMedia = 'LEAD_SOCIAL_MEDIA',
+  | 'LEAD_SOCIAL_MEDIA'
   /** A manga data moderator */
-  MangaData = 'MANGA_DATA',
+  | 'MANGA_DATA'
   /** A retired moderator */
-  Retired = 'RETIRED',
+  | 'RETIRED'
   /** A social media moderator */
-  SocialMedia = 'SOCIAL_MEDIA',
+  | 'SOCIAL_MEDIA'
   /** A staff data moderator */
-  StaffData = 'STAFF_DATA'
-}
+  | 'STAFF_DATA';
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -2501,47 +2525,52 @@ export type NotificationOptionInput = {
 };
 
 /** Notification type enum */
-export enum NotificationType {
+export type NotificationType =
   /** A user has liked your activity */
-  ActivityLike = 'ACTIVITY_LIKE',
+  | 'ACTIVITY_LIKE'
   /** A user has mentioned you in their activity */
-  ActivityMention = 'ACTIVITY_MENTION',
+  | 'ACTIVITY_MENTION'
   /** A user has sent you message */
-  ActivityMessage = 'ACTIVITY_MESSAGE',
+  | 'ACTIVITY_MESSAGE'
   /** A user has replied to your activity */
-  ActivityReply = 'ACTIVITY_REPLY',
+  | 'ACTIVITY_REPLY'
   /** A user has liked your activity reply */
-  ActivityReplyLike = 'ACTIVITY_REPLY_LIKE',
+  | 'ACTIVITY_REPLY_LIKE'
   /** A user has replied to activity you have also replied to */
-  ActivityReplySubscribed = 'ACTIVITY_REPLY_SUBSCRIBED',
+  | 'ACTIVITY_REPLY_SUBSCRIBED'
   /** An anime you are currently watching has aired */
-  Airing = 'AIRING',
+  | 'AIRING'
+  /** A user's character submission has been accepted, partially accepted, or rejected */
+  | 'CHARACTER_SUBMISSION_UPDATE'
   /** A user has followed you */
-  Following = 'FOLLOWING',
+  | 'FOLLOWING'
   /** An anime or manga has had a data change that affects how a user may track it in their lists */
-  MediaDataChange = 'MEDIA_DATA_CHANGE',
+  | 'MEDIA_DATA_CHANGE'
   /** An anime or manga on the user's list has been deleted from the site */
-  MediaDeletion = 'MEDIA_DELETION',
+  | 'MEDIA_DELETION'
   /** Anime or manga entries on the user's list have been merged into a single entry */
-  MediaMerge = 'MEDIA_MERGE',
+  | 'MEDIA_MERGE'
+  /** A user's submission has been accepted, partially accepted, or rejected */
+  | 'MEDIA_SUBMISSION_UPDATE'
   /** A new anime or manga has been added to the site where its related media is on the user's list */
-  RelatedMediaAddition = 'RELATED_MEDIA_ADDITION',
+  | 'RELATED_MEDIA_ADDITION'
+  /** A user's staff submission has been accepted, partially accepted, or rejected */
+  | 'STAFF_SUBMISSION_UPDATE'
   /** A user has liked your forum comment */
-  ThreadCommentLike = 'THREAD_COMMENT_LIKE',
+  | 'THREAD_COMMENT_LIKE'
   /** A user has mentioned you in a forum comment */
-  ThreadCommentMention = 'THREAD_COMMENT_MENTION',
+  | 'THREAD_COMMENT_MENTION'
   /** A user has replied to your forum comment */
-  ThreadCommentReply = 'THREAD_COMMENT_REPLY',
+  | 'THREAD_COMMENT_REPLY'
   /** A user has liked your forum thread */
-  ThreadLike = 'THREAD_LIKE',
+  | 'THREAD_LIKE'
   /** A user has commented in one of your subscribed forum threads */
-  ThreadSubscribed = 'THREAD_SUBSCRIBED'
-}
+  | 'THREAD_SUBSCRIBED';
 
 /** Notification union type */
-export type NotificationUnion = ActivityLikeNotification | ActivityMentionNotification | ActivityMessageNotification | ActivityReplyLikeNotification | ActivityReplyNotification | ActivityReplySubscribedNotification | AiringNotification | FollowingNotification | MediaDataChangeNotification | MediaDeletionNotification | MediaMergeNotification | RelatedMediaAdditionNotification | ThreadCommentLikeNotification | ThreadCommentMentionNotification | ThreadCommentReplyNotification | ThreadCommentSubscribedNotification | ThreadLikeNotification;
+export type NotificationUnion = ActivityLikeNotification | ActivityMentionNotification | ActivityMessageNotification | ActivityReplyLikeNotification | ActivityReplyNotification | ActivityReplySubscribedNotification | AiringNotification | CharacterSubmissionUpdateNotification | FollowingNotification | MediaDataChangeNotification | MediaDeletionNotification | MediaMergeNotification | MediaSubmissionUpdateNotification | RelatedMediaAdditionNotification | StaffSubmissionUpdateNotification | ThreadCommentLikeNotification | ThreadCommentMentionNotification | ThreadCommentReplyNotification | ThreadCommentSubscribedNotification | ThreadLikeNotification;
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type Page = {
   __typename?: 'Page';
   activities?: Maybe<Array<Maybe<ActivityUnion>>>;
@@ -2567,7 +2596,7 @@ export type Page = {
 };
 
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type PageActivitiesArgs = {
   createdAt?: InputMaybe<Scalars['Int']['input']>;
   createdAt_greater?: InputMaybe<Scalars['Int']['input']>;
@@ -2599,14 +2628,14 @@ export type PageActivitiesArgs = {
 };
 
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type PageActivityRepliesArgs = {
   activityId?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type PageAiringSchedulesArgs = {
   airingAt?: InputMaybe<Scalars['Int']['input']>;
   airingAt_greater?: InputMaybe<Scalars['Int']['input']>;
@@ -2630,7 +2659,7 @@ export type PageAiringSchedulesArgs = {
 };
 
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type PageCharactersArgs = {
   id?: InputMaybe<Scalars['Int']['input']>;
   id_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
@@ -2642,28 +2671,28 @@ export type PageCharactersArgs = {
 };
 
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type PageFollowersArgs = {
   sort?: InputMaybe<Array<InputMaybe<UserSort>>>;
   userId: Scalars['Int']['input'];
 };
 
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type PageFollowingArgs = {
   sort?: InputMaybe<Array<InputMaybe<UserSort>>>;
   userId: Scalars['Int']['input'];
 };
 
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type PageLikesArgs = {
   likeableId?: InputMaybe<Scalars['Int']['input']>;
   type?: InputMaybe<LikeableType>;
 };
 
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type PageMediaArgs = {
   averageScore?: InputMaybe<Scalars['Int']['input']>;
   averageScore_greater?: InputMaybe<Scalars['Int']['input']>;
@@ -2737,7 +2766,7 @@ export type PageMediaArgs = {
 };
 
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type PageMediaListArgs = {
   compareWithAuthList?: InputMaybe<Scalars['Boolean']['input']>;
   completedAt?: InputMaybe<Scalars['FuzzyDateInt']['input']>;
@@ -2767,7 +2796,7 @@ export type PageMediaListArgs = {
 };
 
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type PageMediaTrendsArgs = {
   averageScore?: InputMaybe<Scalars['Int']['input']>;
   averageScore_greater?: InputMaybe<Scalars['Int']['input']>;
@@ -2797,7 +2826,7 @@ export type PageMediaTrendsArgs = {
 };
 
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type PageNotificationsArgs = {
   resetNotificationCount?: InputMaybe<Scalars['Boolean']['input']>;
   type?: InputMaybe<NotificationType>;
@@ -2805,7 +2834,7 @@ export type PageNotificationsArgs = {
 };
 
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type PageRecommendationsArgs = {
   id?: InputMaybe<Scalars['Int']['input']>;
   mediaId?: InputMaybe<Scalars['Int']['input']>;
@@ -2819,7 +2848,7 @@ export type PageRecommendationsArgs = {
 };
 
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type PageReviewsArgs = {
   id?: InputMaybe<Scalars['Int']['input']>;
   mediaId?: InputMaybe<Scalars['Int']['input']>;
@@ -2829,7 +2858,7 @@ export type PageReviewsArgs = {
 };
 
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type PageStaffArgs = {
   id?: InputMaybe<Scalars['Int']['input']>;
   id_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
@@ -2841,7 +2870,7 @@ export type PageStaffArgs = {
 };
 
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type PageStudiosArgs = {
   id?: InputMaybe<Scalars['Int']['input']>;
   id_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
@@ -2852,7 +2881,7 @@ export type PageStudiosArgs = {
 };
 
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type PageThreadCommentsArgs = {
   id?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<InputMaybe<ThreadCommentSort>>>;
@@ -2861,7 +2890,7 @@ export type PageThreadCommentsArgs = {
 };
 
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type PageThreadsArgs = {
   categoryId?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
@@ -2875,7 +2904,7 @@ export type PageThreadsArgs = {
 };
 
 
-/** Page of data */
+/** Page of data. Limited to a max depth of 5000 entries. This is calculated as the page parameter multiplied by the perPage parameter. */
 export type PageUsersArgs = {
   id?: InputMaybe<Scalars['Int']['input']>;
   isModerator?: InputMaybe<Scalars['Boolean']['input']>;
@@ -2918,9 +2947,9 @@ export type Query = {
   Character?: Maybe<Character>;
   /** ExternalLinkSource collection query */
   ExternalLinkSourceCollection?: Maybe<Array<Maybe<MediaExternalLink>>>;
-  /** Follow query */
+  /** Follower query */
   Follower?: Maybe<User>;
-  /** Follow query */
+  /** Following query */
   Following?: Maybe<User>;
   /** Collection of all the possible media genres */
   GenreCollection?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
@@ -3341,19 +3370,17 @@ export type RecommendationEdge = {
 };
 
 /** Recommendation rating enums */
-export enum RecommendationRating {
-  NoRating = 'NO_RATING',
-  RateDown = 'RATE_DOWN',
-  RateUp = 'RATE_UP'
-}
+export type RecommendationRating =
+  | 'NO_RATING'
+  | 'RATE_DOWN'
+  | 'RATE_UP';
 
 /** Recommendation sort enums */
-export enum RecommendationSort {
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Rating = 'RATING',
-  RatingDesc = 'RATING_DESC'
-}
+export type RecommendationSort =
+  | 'ID'
+  | 'ID_DESC'
+  | 'RATING'
+  | 'RATING_DESC';
 
 /** Notification for when new media is added to the site */
 export type RelatedMediaAdditionNotification = {
@@ -3441,25 +3468,23 @@ export type ReviewEdge = {
 };
 
 /** Review rating enums */
-export enum ReviewRating {
-  DownVote = 'DOWN_VOTE',
-  NoVote = 'NO_VOTE',
-  UpVote = 'UP_VOTE'
-}
+export type ReviewRating =
+  | 'DOWN_VOTE'
+  | 'NO_VOTE'
+  | 'UP_VOTE';
 
 /** Review sort enums */
-export enum ReviewSort {
-  CreatedAt = 'CREATED_AT',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Rating = 'RATING',
-  RatingDesc = 'RATING_DESC',
-  Score = 'SCORE',
-  ScoreDesc = 'SCORE_DESC',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtDesc = 'UPDATED_AT_DESC'
-}
+export type ReviewSort =
+  | 'CREATED_AT'
+  | 'CREATED_AT_DESC'
+  | 'ID'
+  | 'ID_DESC'
+  | 'RATING'
+  | 'RATING_DESC'
+  | 'SCORE'
+  | 'SCORE_DESC'
+  | 'UPDATED_AT'
+  | 'UPDATED_AT_DESC';
 
 /** Feed of mod edit activity */
 export type RevisionHistory = {
@@ -3487,10 +3512,9 @@ export type RevisionHistory = {
 };
 
 /** Revision history actions */
-export enum RevisionHistoryAction {
-  Create = 'CREATE',
-  Edit = 'EDIT'
-}
+export type RevisionHistoryAction =
+  | 'CREATE'
+  | 'EDIT';
 
 /** A user's list score distribution. */
 export type ScoreDistribution = {
@@ -3501,18 +3525,17 @@ export type ScoreDistribution = {
 };
 
 /** Media list scoring type */
-export enum ScoreFormat {
+export type ScoreFormat =
   /** An integer from 0-3. Should be represented in Smileys. 0 => No Score, 1 => :(, 2 => :|, 3 => :) */
-  Point_3 = 'POINT_3',
+  | 'POINT_3'
   /** An integer from 0-5. Should be represented in Stars */
-  Point_5 = 'POINT_5',
+  | 'POINT_5'
   /** An integer from 0-10 */
-  Point_10 = 'POINT_10',
+  | 'POINT_10'
   /** A float from 0-10 with 1 decimal place */
-  Point_10Decimal = 'POINT_10_DECIMAL',
+  | 'POINT_10_DECIMAL'
   /** An integer from 0-100 */
-  Point_100 = 'POINT_100'
-}
+  | 'POINT_100';
 
 export type SiteStatistics = {
   __typename?: 'SiteStatistics';
@@ -3599,14 +3622,13 @@ export type SiteTrendEdge = {
 };
 
 /** Site trend sort enums */
-export enum SiteTrendSort {
-  Change = 'CHANGE',
-  ChangeDesc = 'CHANGE_DESC',
-  Count = 'COUNT',
-  CountDesc = 'COUNT_DESC',
-  Date = 'DATE',
-  DateDesc = 'DATE_DESC'
-}
+export type SiteTrendSort =
+  | 'CHANGE'
+  | 'CHANGE_DESC'
+  | 'COUNT'
+  | 'COUNT_DESC'
+  | 'DATE'
+  | 'DATE_DESC';
 
 /** Voice actors or production staff */
 export type Staff = {
@@ -3730,28 +3752,27 @@ export type StaffImage = {
 };
 
 /** The primary language of the voice actor */
-export enum StaffLanguage {
+export type StaffLanguage =
   /** English */
-  English = 'ENGLISH',
+  | 'ENGLISH'
   /** French */
-  French = 'FRENCH',
+  | 'FRENCH'
   /** German */
-  German = 'GERMAN',
+  | 'GERMAN'
   /** Hebrew */
-  Hebrew = 'HEBREW',
+  | 'HEBREW'
   /** Hungarian */
-  Hungarian = 'HUNGARIAN',
+  | 'HUNGARIAN'
   /** Italian */
-  Italian = 'ITALIAN',
+  | 'ITALIAN'
   /** Japanese */
-  Japanese = 'JAPANESE',
+  | 'JAPANESE'
   /** Korean */
-  Korean = 'KOREAN',
+  | 'KOREAN'
   /** Portuguese */
-  Portuguese = 'PORTUGUESE',
+  | 'PORTUGUESE'
   /** Spanish */
-  Spanish = 'SPANISH'
-}
+  | 'SPANISH';
 
 /** The names of the staff member */
 export type StaffName = {
@@ -3798,19 +3819,18 @@ export type StaffRoleType = {
 };
 
 /** Staff sort enums */
-export enum StaffSort {
-  Favourites = 'FAVOURITES',
-  FavouritesDesc = 'FAVOURITES_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Language = 'LANGUAGE',
-  LanguageDesc = 'LANGUAGE_DESC',
+export type StaffSort =
+  | 'FAVOURITES'
+  | 'FAVOURITES_DESC'
+  | 'ID'
+  | 'ID_DESC'
+  | 'LANGUAGE'
+  | 'LANGUAGE_DESC'
   /** Order manually decided by moderators */
-  Relevance = 'RELEVANCE',
-  Role = 'ROLE',
-  RoleDesc = 'ROLE_DESC',
-  SearchMatch = 'SEARCH_MATCH'
-}
+  | 'RELEVANCE'
+  | 'ROLE'
+  | 'ROLE_DESC'
+  | 'SEARCH_MATCH';
 
 /** User's staff statistics */
 export type StaffStats = {
@@ -3843,6 +3863,25 @@ export type StaffSubmission = {
   submission?: Maybe<Staff>;
   /** Submitter for the submission */
   submitter?: Maybe<User>;
+};
+
+/** Notification for when a staff submission is accepted, partially accepted, or rejected */
+export type StaffSubmissionUpdateNotification = {
+  __typename?: 'StaffSubmissionUpdateNotification';
+  /** The notification context text */
+  contexts?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** The time the notification was created at */
+  createdAt?: Maybe<Scalars['Int']['output']>;
+  /** The id of the Notification */
+  id: Scalars['Int']['output'];
+  /** The notes of the submission */
+  notes?: Maybe<Scalars['String']['output']>;
+  /** The staff that was modified. */
+  staff?: Maybe<Staff>;
+  /** The status of the submission */
+  status?: Maybe<Scalars['String']['output']>;
+  /** The type of notification */
+  type?: Maybe<NotificationType>;
 };
 
 /** The distribution of the watching/reading status of media or a user's list */
@@ -3904,15 +3943,14 @@ export type StudioEdge = {
 };
 
 /** Studio sort enums */
-export enum StudioSort {
-  Favourites = 'FAVOURITES',
-  FavouritesDesc = 'FAVOURITES_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Name = 'NAME',
-  NameDesc = 'NAME_DESC',
-  SearchMatch = 'SEARCH_MATCH'
-}
+export type StudioSort =
+  | 'FAVOURITES'
+  | 'FAVOURITES_DESC'
+  | 'ID'
+  | 'ID_DESC'
+  | 'NAME'
+  | 'NAME_DESC'
+  | 'SEARCH_MATCH';
 
 /** User's studio statistics */
 export type StudioStats = {
@@ -3925,18 +3963,16 @@ export type StudioStats = {
 };
 
 /** Submission sort enums */
-export enum SubmissionSort {
-  Id = 'ID',
-  IdDesc = 'ID_DESC'
-}
+export type SubmissionSort =
+  | 'ID'
+  | 'ID_DESC';
 
 /** Submission status */
-export enum SubmissionStatus {
-  Accepted = 'ACCEPTED',
-  PartiallyAccepted = 'PARTIALLY_ACCEPTED',
-  Pending = 'PENDING',
-  Rejected = 'REJECTED'
-}
+export type SubmissionStatus =
+  | 'ACCEPTED'
+  | 'PARTIALLY_ACCEPTED'
+  | 'PENDING'
+  | 'REJECTED';
 
 /** User's tag statistics */
 export type TagStats = {
@@ -4162,10 +4198,9 @@ export type ThreadCommentReplyNotification = {
 };
 
 /** Thread comments sort enums */
-export enum ThreadCommentSort {
-  Id = 'ID',
-  IdDesc = 'ID_DESC'
-}
+export type ThreadCommentSort =
+  | 'ID'
+  | 'ID_DESC';
 
 /** Notification for when a user replies to a subscribed forum thread */
 export type ThreadCommentSubscribedNotification = {
@@ -4214,24 +4249,23 @@ export type ThreadLikeNotification = {
 };
 
 /** Thread sort enums */
-export enum ThreadSort {
-  CreatedAt = 'CREATED_AT',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  IsSticky = 'IS_STICKY',
-  RepliedAt = 'REPLIED_AT',
-  RepliedAtDesc = 'REPLIED_AT_DESC',
-  ReplyCount = 'REPLY_COUNT',
-  ReplyCountDesc = 'REPLY_COUNT_DESC',
-  SearchMatch = 'SEARCH_MATCH',
-  Title = 'TITLE',
-  TitleDesc = 'TITLE_DESC',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
-  ViewCount = 'VIEW_COUNT',
-  ViewCountDesc = 'VIEW_COUNT_DESC'
-}
+export type ThreadSort =
+  | 'CREATED_AT'
+  | 'CREATED_AT_DESC'
+  | 'ID'
+  | 'ID_DESC'
+  | 'IS_STICKY'
+  | 'REPLIED_AT'
+  | 'REPLIED_AT_DESC'
+  | 'REPLY_COUNT'
+  | 'REPLY_COUNT_DESC'
+  | 'SEARCH_MATCH'
+  | 'TITLE'
+  | 'TITLE_DESC'
+  | 'UPDATED_AT'
+  | 'UPDATED_AT_DESC'
+  | 'VIEW_COUNT'
+  | 'VIEW_COUNT_DESC';
 
 /** A user */
 export type User = {
@@ -4429,27 +4463,25 @@ export type UserScoreStatistic = {
 };
 
 /** User sort enums */
-export enum UserSort {
-  ChaptersRead = 'CHAPTERS_READ',
-  ChaptersReadDesc = 'CHAPTERS_READ_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  SearchMatch = 'SEARCH_MATCH',
-  Username = 'USERNAME',
-  UsernameDesc = 'USERNAME_DESC',
-  WatchedTime = 'WATCHED_TIME',
-  WatchedTimeDesc = 'WATCHED_TIME_DESC'
-}
+export type UserSort =
+  | 'CHAPTERS_READ'
+  | 'CHAPTERS_READ_DESC'
+  | 'ID'
+  | 'ID_DESC'
+  | 'SEARCH_MATCH'
+  | 'USERNAME'
+  | 'USERNAME_DESC'
+  | 'WATCHED_TIME'
+  | 'WATCHED_TIME_DESC';
 
 /** The language the user wants to see staff and character names in */
-export enum UserStaffNameLanguage {
+export type UserStaffNameLanguage =
   /** The staff or character's name in their native language */
-  Native = 'NATIVE',
+  | 'NATIVE'
   /** The romanization of the staff or character's native name */
-  Romaji = 'ROMAJI',
+  | 'ROMAJI'
   /** The romanization of the staff or character's native name, with western name ordering */
-  RomajiWestern = 'ROMAJI_WESTERN'
-}
+  | 'ROMAJI_WESTERN';
 
 export type UserStaffStatistic = {
   __typename?: 'UserStaffStatistic';
@@ -4573,16 +4605,15 @@ export type UserStatisticsVoiceActorsArgs = {
 };
 
 /** User statistics sort enum */
-export enum UserStatisticsSort {
-  Count = 'COUNT',
-  CountDesc = 'COUNT_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  MeanScore = 'MEAN_SCORE',
-  MeanScoreDesc = 'MEAN_SCORE_DESC',
-  Progress = 'PROGRESS',
-  ProgressDesc = 'PROGRESS_DESC'
-}
+export type UserStatisticsSort =
+  | 'COUNT'
+  | 'COUNT_DESC'
+  | 'ID'
+  | 'ID_DESC'
+  | 'MEAN_SCORE'
+  | 'MEAN_SCORE_DESC'
+  | 'PROGRESS'
+  | 'PROGRESS_DESC';
 
 /** A user's statistics */
 export type UserStats = {
@@ -4639,20 +4670,19 @@ export type UserTagStatistic = {
 };
 
 /** The language the user wants to see media titles in */
-export enum UserTitleLanguage {
+export type UserTitleLanguage =
   /** The official english title */
-  English = 'ENGLISH',
+  | 'ENGLISH'
   /** The official english title, stylised by media creator */
-  EnglishStylised = 'ENGLISH_STYLISED',
+  | 'ENGLISH_STYLISED'
   /** Official title in it's native language */
-  Native = 'NATIVE',
+  | 'NATIVE'
   /** Official title in it's native language, stylised by media creator */
-  NativeStylised = 'NATIVE_STYLISED',
+  | 'NATIVE_STYLISED'
   /** The romanization of the native language title */
-  Romaji = 'ROMAJI',
+  | 'ROMAJI'
   /** The romanization of the native language title, stylised by media creator */
-  RomajiStylised = 'ROMAJI_STYLISED'
-}
+  | 'ROMAJI_STYLISED';
 
 export type UserVoiceActorStatistic = {
   __typename?: 'UserVoiceActorStatistic';
@@ -4741,31 +4771,6 @@ export type GetAnimeListQueryVariables = Exact<{
 
 
 export type GetAnimeListQuery = { __typename?: 'Query', MediaListCollection?: { __typename?: 'MediaListCollection', hasNextChunk?: boolean | null, lists?: Array<{ __typename?: 'MediaListGroup', status?: MediaListStatus | null, name?: string | null, entries?: Array<{ __typename?: 'MediaList', id: number, mediaId: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null, media?: { __typename?: 'Media', id: number, status?: MediaStatus | null, genres?: Array<string | null> | null, duration?: number | null, episodes?: number | null, description?: string | null, isFavourite: boolean, averageScore?: number | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, startDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, endDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, studios?: { __typename?: 'StudioConnection', nodes?: Array<{ __typename?: 'Studio', id: number, name: string } | null> | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null, trailer?: { __typename?: 'MediaTrailer', id?: string | null, thumbnail?: string | null, site?: string | null } | null, streamingEpisodes?: Array<{ __typename?: 'MediaStreamingEpisode', title?: string | null, thumbnail?: string | null, url?: string | null, site?: string | null } | null> | null, externalLinks?: Array<{ __typename?: 'MediaExternalLink', id: number, url?: string | null, site: string } | null> | null, nextAiringEpisode?: { __typename?: 'AiringSchedule', id: number, airingAt: number, episode: number, timeUntilAiring: number } | null, mediaListEntry?: { __typename?: 'MediaList', id: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null } | null, relations?: { __typename?: 'MediaConnection', edges?: Array<{ __typename?: 'MediaEdge', id?: number | null, relationType?: MediaRelation | null, node?: { __typename?: 'Media', id: number, isFavourite: boolean, type?: MediaType | null, format?: MediaFormat | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null } | null } | null> | null } | null, characters?: { __typename?: 'CharacterConnection', edges?: Array<{ __typename?: 'CharacterEdge', id?: number | null, role?: CharacterRole | null, node?: { __typename?: 'Character', id: number, isFavourite: boolean, description?: string | null, siteUrl?: string | null, name?: { __typename?: 'CharacterName', first?: string | null, last?: string | null, full?: string | null, native?: string | null, alternative?: Array<string | null> | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null, medium?: string | null } | null } | null } | null> | null, nodes?: Array<{ __typename?: 'Character', id: number, isFavourite: boolean, description?: string | null, siteUrl?: string | null, name?: { __typename?: 'CharacterName', first?: string | null, last?: string | null, full?: string | null, native?: string | null, alternative?: Array<string | null> | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null, medium?: string | null } | null } | null> | null } | null } | null } | null> | null } | null> | null } | null };
-
-export type AiringNotificationFragmentFragment = { __typename?: 'AiringNotification', id: number, type?: NotificationType | null, animeId: number, episode: number, contexts?: Array<string | null> | null, createdAt?: number | null, media?: { __typename?: 'Media', id: number, isFavourite: boolean, type?: MediaType | null, format?: MediaFormat | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null } | null };
-
-export type GetAnimeNotificationsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetAnimeNotificationsQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', pageInfo?: { __typename?: 'PageInfo', total?: number | null, perPage?: number | null, currentPage?: number | null, lastPage?: number | null, hasNextPage?: boolean | null } | null, notifications?: Array<
-      | { __typename: 'ActivityLikeNotification' }
-      | { __typename: 'ActivityMentionNotification' }
-      | { __typename: 'ActivityMessageNotification' }
-      | { __typename: 'ActivityReplyLikeNotification' }
-      | { __typename: 'ActivityReplyNotification' }
-      | { __typename: 'ActivityReplySubscribedNotification' }
-      | { __typename: 'AiringNotification', id: number, type?: NotificationType | null, animeId: number, episode: number, contexts?: Array<string | null> | null, createdAt?: number | null, media?: { __typename?: 'Media', id: number, isFavourite: boolean, type?: MediaType | null, format?: MediaFormat | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null } | null }
-      | { __typename: 'FollowingNotification' }
-      | { __typename: 'MediaDataChangeNotification' }
-      | { __typename: 'MediaDeletionNotification' }
-      | { __typename: 'MediaMergeNotification' }
-      | { __typename: 'RelatedMediaAdditionNotification' }
-      | { __typename: 'ThreadCommentLikeNotification' }
-      | { __typename: 'ThreadCommentMentionNotification' }
-      | { __typename: 'ThreadCommentReplyNotification' }
-      | { __typename: 'ThreadCommentSubscribedNotification' }
-      | { __typename: 'ThreadLikeNotification' }
-     | null> | null } | null };
 
 export type GetTrendingAnimeQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -4951,19 +4956,6 @@ export const FavouritesDataFragmentDoc = gql`
   }
 }
     `;
-export const AiringNotificationFragmentFragmentDoc = gql`
-    fragment AiringNotificationFragment on AiringNotification {
-  id
-  type
-  animeId
-  episode
-  contexts
-  createdAt
-  media {
-    ...AnimeRelationFragment
-  }
-}
-    ${AnimeRelationFragmentFragmentDoc}`;
 export const RemoveFromListDocument = gql`
     mutation RemoveFromList($id: Int!) {
   DeleteMediaListEntry(id: $id) {
@@ -5185,9 +5177,6 @@ export type GetAnimeQueryHookResult = ReturnType<typeof useGetAnimeQuery>;
 export type GetAnimeLazyQueryHookResult = ReturnType<typeof useGetAnimeLazyQuery>;
 export type GetAnimeSuspenseQueryHookResult = ReturnType<typeof useGetAnimeSuspenseQuery>;
 export type GetAnimeQueryResult = Apollo.QueryResult<GetAnimeQuery, GetAnimeQueryVariables>;
-export function refetchGetAnimeQuery(variables?: GetAnimeQueryVariables) {
-      return { query: GetAnimeDocument, variables: variables }
-    }
 export const GetAnimeListDocument = gql`
     query GetAnimeList($userId: Int, $status: MediaListStatus, $sort: [MediaListSort]) {
   MediaListCollection(userId: $userId, type: ANIME, status: $status, sort: $sort) {
@@ -5247,64 +5236,6 @@ export type GetAnimeListQueryHookResult = ReturnType<typeof useGetAnimeListQuery
 export type GetAnimeListLazyQueryHookResult = ReturnType<typeof useGetAnimeListLazyQuery>;
 export type GetAnimeListSuspenseQueryHookResult = ReturnType<typeof useGetAnimeListSuspenseQuery>;
 export type GetAnimeListQueryResult = Apollo.QueryResult<GetAnimeListQuery, GetAnimeListQueryVariables>;
-export function refetchGetAnimeListQuery(variables?: GetAnimeListQueryVariables) {
-      return { query: GetAnimeListDocument, variables: variables }
-    }
-export const GetAnimeNotificationsDocument = gql`
-    query GetAnimeNotifications {
-  Page(page: 1, perPage: 100) {
-    pageInfo {
-      total
-      perPage
-      currentPage
-      lastPage
-      hasNextPage
-    }
-    notifications(type: AIRING) {
-      __typename
-      ...AiringNotificationFragment
-    }
-  }
-}
-    ${AiringNotificationFragmentFragmentDoc}`;
-
-/**
- * __useGetAnimeNotificationsQuery__
- *
- * To run a query within a React component, call `useGetAnimeNotificationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAnimeNotificationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAnimeNotificationsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetAnimeNotificationsQuery(baseOptions?: Apollo.QueryHookOptions<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>(GetAnimeNotificationsDocument, options);
-      }
-export function useGetAnimeNotificationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>(GetAnimeNotificationsDocument, options);
-        }
-// @ts-ignore
-export function useGetAnimeNotificationsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>): Apollo.UseSuspenseQueryResult<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>;
-export function useGetAnimeNotificationsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>): Apollo.UseSuspenseQueryResult<GetAnimeNotificationsQuery | undefined, GetAnimeNotificationsQueryVariables>;
-export function useGetAnimeNotificationsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>(GetAnimeNotificationsDocument, options);
-        }
-export type GetAnimeNotificationsQueryHookResult = ReturnType<typeof useGetAnimeNotificationsQuery>;
-export type GetAnimeNotificationsLazyQueryHookResult = ReturnType<typeof useGetAnimeNotificationsLazyQuery>;
-export type GetAnimeNotificationsSuspenseQueryHookResult = ReturnType<typeof useGetAnimeNotificationsSuspenseQuery>;
-export type GetAnimeNotificationsQueryResult = Apollo.QueryResult<GetAnimeNotificationsQuery, GetAnimeNotificationsQueryVariables>;
-export function refetchGetAnimeNotificationsQuery(variables?: GetAnimeNotificationsQueryVariables) {
-      return { query: GetAnimeNotificationsDocument, variables: variables }
-    }
 export const GetTrendingAnimeDocument = gql`
     query GetTrendingAnime($page: Int = 1, $perPage: Int = 20) {
   Page(page: $page, perPage: $perPage) {
@@ -5358,9 +5289,6 @@ export type GetTrendingAnimeQueryHookResult = ReturnType<typeof useGetTrendingAn
 export type GetTrendingAnimeLazyQueryHookResult = ReturnType<typeof useGetTrendingAnimeLazyQuery>;
 export type GetTrendingAnimeSuspenseQueryHookResult = ReturnType<typeof useGetTrendingAnimeSuspenseQuery>;
 export type GetTrendingAnimeQueryResult = Apollo.QueryResult<GetTrendingAnimeQuery, GetTrendingAnimeQueryVariables>;
-export function refetchGetTrendingAnimeQuery(variables?: GetTrendingAnimeQueryVariables) {
-      return { query: GetTrendingAnimeDocument, variables: variables }
-    }
 export const SearchAnimeDocument = gql`
     query SearchAnime($search: String) {
   Page {
@@ -5415,9 +5343,6 @@ export type SearchAnimeQueryHookResult = ReturnType<typeof useSearchAnimeQuery>;
 export type SearchAnimeLazyQueryHookResult = ReturnType<typeof useSearchAnimeLazyQuery>;
 export type SearchAnimeSuspenseQueryHookResult = ReturnType<typeof useSearchAnimeSuspenseQuery>;
 export type SearchAnimeQueryResult = Apollo.QueryResult<SearchAnimeQuery, SearchAnimeQueryVariables>;
-export function refetchSearchAnimeQuery(variables?: SearchAnimeQueryVariables) {
-      return { query: SearchAnimeDocument, variables: variables }
-    }
 export const GetCharacterDocument = gql`
     query GetCharacter($id: Int) {
   Character(id: $id) {
@@ -5461,9 +5386,6 @@ export type GetCharacterQueryHookResult = ReturnType<typeof useGetCharacterQuery
 export type GetCharacterLazyQueryHookResult = ReturnType<typeof useGetCharacterLazyQuery>;
 export type GetCharacterSuspenseQueryHookResult = ReturnType<typeof useGetCharacterSuspenseQuery>;
 export type GetCharacterQueryResult = Apollo.QueryResult<GetCharacterQuery, GetCharacterQueryVariables>;
-export function refetchGetCharacterQuery(variables?: GetCharacterQueryVariables) {
-      return { query: GetCharacterDocument, variables: variables }
-    }
 export const GetViewerDocument = gql`
     query GetViewer {
   Viewer {
@@ -5550,6 +5472,3 @@ export type GetViewerQueryHookResult = ReturnType<typeof useGetViewerQuery>;
 export type GetViewerLazyQueryHookResult = ReturnType<typeof useGetViewerLazyQuery>;
 export type GetViewerSuspenseQueryHookResult = ReturnType<typeof useGetViewerSuspenseQuery>;
 export type GetViewerQueryResult = Apollo.QueryResult<GetViewerQuery, GetViewerQueryVariables>;
-export function refetchGetViewerQuery(variables?: GetViewerQueryVariables) {
-      return { query: GetViewerDocument, variables: variables }
-    }

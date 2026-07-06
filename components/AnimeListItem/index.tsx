@@ -43,8 +43,8 @@ export function AnimeListItem({
   const getTitle = useGetTitle();
 
   const isAiringAndCurrentlyWatching =
-    media.status === MediaStatus.Releasing &&
-    media.mediaListEntry?.status === MediaListStatus.Current;
+    media.status === "RELEASING" &&
+    media.mediaListEntry?.status === "CURRENT";
 
   const episodesBehind =
     isAiringAndCurrentlyWatching &&
@@ -101,7 +101,7 @@ export function AnimeListItem({
             {getProgress(media, progress)}
           </Text>
         </View>
-        {media.status !== MediaStatus.NotYetReleased ? (
+        {media.status !== "NOT_YET_RELEASED" ? (
           <View style={styles.progressButtonGroup}>
             <ProgressButton
               disabled={Boolean(disabled) || progress === 0}
