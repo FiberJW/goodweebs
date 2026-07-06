@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, FlatList, StyleSheet } from "react-native";
 
-import {
+import type {
   AnimeRelationFragmentFragment,
   MediaRelation,
 } from "yep/graphql/generated";
@@ -16,6 +16,26 @@ type RelatedListProps = {
   relationType: MediaRelation;
 };
 
+const filteredMediaRelations: MediaRelation[] = [
+  "ADAPTATION",
+  "CHARACTER",
+  "OTHER",
+  "SOURCE",
+  "CONTAINS",
+];
+
+function keyExtractor(item: AnimeRelationFragmentFragment) {
+  return `${item.id}`;
+}
+
+function renderRelatedAnimeItem({
+  item,
+}: {
+  item: AnimeRelationFragmentFragment;
+}) {
+  return <RelatedAnimeItem anime={item} />;
+}
+
 export function RelatedAnimeList({
   relationType,
   relations,
@@ -23,13 +43,7 @@ export function RelatedAnimeList({
   if (
     // filter out non-anime relations
     // TODO: add back in when DetailScreen can support Characters/People, Manga, and Studios
-    [
-      "ADAPTATION",
-      "CHARACTER",
-      "OTHER",
-      "SOURCE",
-      "CONTAINS",
-    ].includes(relationType)
+    filteredMediaRelations.includes(relationType)
   ) {
     return null;
   }
@@ -43,11 +57,9 @@ export function RelatedAnimeList({
         style={styles.relatedListFlatList}
         contentContainerStyle={{ gap: 8 }}
         horizontal
-        keyExtractor={(item) => `${item.id}`}
+        keyExtractor={keyExtractor}
         data={relations}
-        renderItem={({ item }) => {
-          return <RelatedAnimeItem anime={item} />;
-        }}
+        renderItem={renderRelatedAnimeItem}
       />
     </>
   );

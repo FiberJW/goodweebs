@@ -28,7 +28,7 @@ import {
   officialSiteFallback,
 } from "yep/colors";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import { MediaExternalLinkDataFragment } from "yep/graphql/generated";
+import type { MediaExternalLinkDataFragment } from "yep/graphql/generated";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 

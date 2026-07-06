@@ -7,24 +7,9 @@ import {
   ApolloCache,
 } from "@apollo/client";
 import { DocumentNode } from "graphql";
-import { debounce } from "lodash";
-import { useRef, useEffect, useState } from "react";
+import debounce from "lodash/debounce";
+import { useState } from "react";
 import { useWindowDimensions } from "react-native";
-
-export function useNow(interval: "second" | "minute" = "minute") {
-  const [now, setNow] = useState(new Date());
-
-  useEffect(() => {
-    const handle = setInterval(
-      () => setNow(new Date()),
-      interval === "second" ? 1 * 1000 : 60 * 1000,
-    );
-
-    return () => clearInterval(handle);
-  }, [interval]);
-
-  return now;
-}
 
 export function useDebouncedMutation<
   MutationData = any,
@@ -49,9 +34,18 @@ export function useDebouncedMutation<
     mutationDocument,
   );
 
-  const abortController = useRef<AbortController>(null);
-  const debouncedMutation = useRef(
-    debounce(
+  const [mutationQueue] = useState(() => {
+    let abortController: AbortController | null = null;
+    // lodash's debounced function returns the *previous* run's result
+    // (undefined on the first call), so we can't await it directly. Instead we
+    // track the callers awaiting the next run and settle them all together when
+    // the coalesced mutation actually resolves/rejects.
+    let waiters: {
+      resolve: (value: FetchResult<MutationData> | undefined) => void;
+      reject: (error: unknown) => void;
+    }[] = [];
+
+    const run = debounce(
       async (
         mutationFunc: ({
           variables,
@@ -61,17 +55,45 @@ export function useDebouncedMutation<
         variables?: MutationVariables,
       ) => {
         const controller = new AbortController();
-        abortController.current = controller;
-        await mutationFunc({
-          variables,
-          context: { fetchOptions: { signal: controller.signal } },
-        });
+        abortController = controller;
+        const settle = waiters;
+        waiters = [];
+        try {
+          const result = await mutationFunc({
+            variables,
+            context: { fetchOptions: { signal: controller.signal } },
+          });
+          settle.forEach((w) => w.resolve(result));
+        } catch (error) {
+          // An aborted request was intentionally superseded, not a failure.
+          if (controller.signal.aborted) {
+            settle.forEach((w) => w.resolve(undefined));
+          } else {
+            settle.forEach((w) => w.reject(error));
+          }
+        }
       },
       wait,
-    ),
-  );
+    );
 
-  const abortLatest = () => abortController.current?.abort();
+    return {
+      abortLatest: () => abortController?.abort(),
+      schedule: (
+        mutationFunc: ({
+          variables,
+        }: MutationFunctionOptions<MutationData, MutationVariables>) => Promise<
+          FetchResult<MutationData>
+        >,
+        variables?: MutationVariables,
+      ) =>
+        new Promise<FetchResult<MutationData> | undefined>(
+          (resolve, reject) => {
+            waiters.push({ resolve, reject });
+            run(mutationFunc, variables);
+          },
+        ),
+    };
+  });
 
   const mutationWithOptimisticUI = async ({
     variables,
@@ -91,8 +113,8 @@ export function useDebouncedMutation<
   };
 
   return async (newVariables?: MutationVariables) => {
-    abortLatest();
-    return await debouncedMutation.current(
+    mutationQueue.abortLatest();
+    return await mutationQueue.schedule(
       mutationWithOptimisticUI,
       newVariables,
     );

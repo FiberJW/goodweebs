@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Image, StyleSheet } from "react-native";
+import { Image } from "expo-image";
+import { fbs } from "fbtee";
+import React, { useState } from "react";
+import { ActivityIndicator, StyleSheet } from "react-native";
 
 import { favoritedBackground, notFavoritedBackground, white } from "yep/colors";
 
@@ -14,23 +16,25 @@ type Props = {
 };
 
 export function LikeButton({ isLiked, onPress }: Props) {
-  const [loading, setLoading] = useState(false);
+  const [loadingForLiked, setLoadingForLiked] = useState<boolean | null>(null);
+  const loading = loadingForLiked === isLiked;
 
   async function handleOnPress() {
-    setLoading(true);
-    await onPress();
+    setLoadingForLiked(isLiked);
+    await onPress().finally(() => {
+      setLoadingForLiked(null);
+    });
   }
-
-  useEffect(
-    function setLoadingToFalseAfterIsLikedChanges() {
-      setLoading(false);
-    },
-    [isLiked]
-  );
 
   return (
     <PressableOpacity
       borderRadius={8}
+      accessibilityRole="button"
+      accessibilityLabel={String(
+        isLiked
+          ? fbs("Remove from favorites", "Unfavorite button accessibility label")
+          : fbs("Add to favorites", "Favorite button accessibility label"),
+      )}
       style={[
         styles.pressable,
         {

@@ -2,18 +2,21 @@
 const { defineConfig, globalIgnores } = require("eslint/config");
 const expoConfig = require("eslint-config-expo/flat");
 const reactCompiler = require("eslint-plugin-react-compiler");
+const reactDoctor = require("eslint-plugin-react-doctor").default;
 const reactHooks = require("eslint-plugin-react-hooks");
 
 module.exports = defineConfig([
   expoConfig,
   reactCompiler.configs.recommended,
+  reactDoctor.configs.recommended,
+  reactDoctor.configs["react-native"],
   {
     plugins: {
       "react-hooks": reactHooks,
     },
     rules: reactHooks.configs.recommended.rules,
   },
-  globalIgnores(["dist/*", "graphql/generated.tsx"]),
+  globalIgnores(["dist/*", "graphql/generated.ts"]),
   {
     rules: {
       "react-compiler/react-compiler": "error",

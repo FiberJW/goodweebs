@@ -3,7 +3,7 @@ import React from "react";
 
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import { AnimeRelationFragmentFragment } from "yep/graphql/generated";
+import type { AnimeRelationFragmentFragment } from "yep/graphql/generated";
 import { useGetTitle } from "yep/utils";
 
 type RelatedItemProps = {

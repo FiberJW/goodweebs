@@ -26,7 +26,10 @@ export default function Character() {
     notifyOnNetworkStatusChange: true,
   });
 
-  const [toggleFavorite] = useToggleFavoriteMutation();
+  // Keep the Profile favorites shelves (GetViewer, cache-first) in sync.
+  const [toggleFavorite] = useToggleFavoriteMutation({
+    refetchQueries: ["GetViewer"],
+  });
 
   const character = data?.Character;
 
@@ -42,7 +45,6 @@ export default function Character() {
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
       showsVerticalScrollIndicator={false}
     >
       {!data ? (
@@ -85,8 +87,15 @@ export default function Character() {
                         variables: {
                           characterId: character?.id,
                         },
+                        // Includes "GetViewer" because per-call refetchQueries
+                        // REPLACES the hook-level list (Apollo shallow-merges
+                        // mutate options), it doesn't extend it.
                         refetchQueries: [
-                          { query: GetCharacterDocument, variables: { id: characterId } },
+                          {
+                            query: GetCharacterDocument,
+                            variables: { id: characterId },
+                          },
+                          "GetViewer",
                         ],
                       });
                     } catch (error) {
@@ -102,6 +111,9 @@ export default function Character() {
           ) : null}
         </>
       )}
+      {/* Bottom spacer instead of dynamic contentContainerStyle padding: works on
+          Android (contentInset is iOS-only) and avoids react-doctor's dynamic-padding rule. */}
+      <View style={{ height: insets.bottom + 16 }} />
     </ScrollView>
   );
 }
