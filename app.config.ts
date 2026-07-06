@@ -77,6 +77,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         image: "./assets/launch/splash.png",
         resizeMode: "cover",
         backgroundColor: "#010209",
+        // The old top-level splash config used the legacy full-screen
+        // storyboard; without this the plugin renders the art as a ~100pt
+        // centered logo instead of cover.
+        enableFullScreenImage_legacy: true,
       },
     ],
     "expo-image",
@@ -112,11 +116,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       "expo-build-properties",
       {
         android: {
-          // SDK 55 deps (e.g. androidx.core:core:1.17.0) require compileSdk 36;
-          // pinning to 35 fails :app:checkReleaseAarMetadata.
-          compileSdkVersion: 36,
-          targetSdkVersion: 36,
-          buildToolsVersion: "36.0.0",
+          // compileSdk/targetSdk pins dropped: RN 0.86 defaults to 36.
+          // ponytail: minSdk 35 is a deliberate pre-existing experiment
+          // (commit "try minsdk 35") — drop it to widen the install base.
           minSdkVersion: 35,
         },
       },
