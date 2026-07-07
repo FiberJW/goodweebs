@@ -140,6 +140,7 @@ export enum StorageKeys {
   SHOULD_PERSIST_SCORE_VISIBILITY = "SHOULD_PERSIST_SCORE_VISIBILITY",
   OPT_OUT_CRASH_REPORTING = "OPT_OUT_CRASH_REPORTING",
   OPT_OUT_ANALYTICS = "OPT_OUT_ANALYTICS",
+  ANILIST_VIEWER_ID = "ANILIST_VIEWER_ID",
 }
 
 const defaultValues: { [key in StorageKeys]: any } = {
@@ -148,6 +149,7 @@ const defaultValues: { [key in StorageKeys]: any } = {
   [StorageKeys.SHOULD_PERSIST_SCORE_VISIBILITY]: true,
   [StorageKeys.OPT_OUT_CRASH_REPORTING]: false,
   [StorageKeys.OPT_OUT_ANALYTICS]: false,
+  [StorageKeys.ANILIST_VIEWER_ID]: null,
 };
 
 export function usePersistedState<T>(

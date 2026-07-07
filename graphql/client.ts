@@ -16,6 +16,7 @@ import {
   mergeMediaListPages,
   nextPageForCount,
 } from "yep/graphql/animeListPagination";
+import { StorageKeys } from "yep/hooks/helpers";
 
 const authLink = setContext(async (_, { headers }) => {
   // get the authentication token from local storage if it exists
@@ -232,6 +233,9 @@ export async function createClient() {
                     await SecureStore.deleteItemAsync(
                       ANILIST_ACCESS_TOKEN_STORAGE,
                     );
+                    // Matches the Settings logout: a stale viewer id would
+                    // fetch the previous user's list on the next login.
+                    localStorage.removeItem(StorageKeys.ANILIST_VIEWER_ID);
                     Toast.show("You've been logged out. Please log in again.", {
                       duration: Toast.durations.LONG,
                       position: Toast.positions.TOP,
