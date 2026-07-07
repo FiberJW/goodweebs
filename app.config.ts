@@ -39,7 +39,7 @@ const androidForegroundImage = (() => {
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name,
-  version: "0.0.22",
+  version: "0.0.23",
   slug: "goodweebs",
   platforms: ["ios", "android", "web"],
   orientation: "portrait",

@@ -2,6 +2,7 @@ import * as SecureStore from "expo-secure-store";
 import React, { useState, createContext, use, useEffect } from "react";
 
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
+import { primeAccessToken } from "yep/graphql/client";
 
 type AccessTokenContextValue = {
   accessToken: string | undefined;
@@ -41,6 +42,9 @@ export function AccessTokenProvider({
   useEffect(function fetchToken() {
     SecureStore.getItemAsync(ANILIST_ACCESS_TOKEN_STORAGE)
       .then((token) => {
+        // Prime even when null so the auth link's lazy read never has to
+        // touch the Keychain again this session.
+        primeAccessToken(token);
         if (token) {
           setAccessToken(token);
         }

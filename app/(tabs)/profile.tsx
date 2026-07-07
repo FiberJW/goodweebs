@@ -19,6 +19,7 @@ import { Header } from "yep/components/Header";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
+import { primeAccessToken } from "yep/graphql/client";
 import { useGetViewerQuery } from "yep/graphql/generated";
 import { useAniListAuthRequest } from "yep/hooks/auth";
 import { ProfileSkeleton } from "yep/screens/ProfileScreen/ProfileSkeleton";
@@ -204,6 +205,10 @@ export default function Profile() {
 
                 if (result.type === "error" || result.type === "success") {
                   if (result.params.access_token) {
+                    // Prime BEFORE setAccessToken: the state flip un-skips
+                    // GetViewer immediately and the auth link must already
+                    // see the token (SecureStore may not have written yet).
+                    primeAccessToken(result.params.access_token);
                     setAccessToken(result.params.access_token);
                     await SecureStore.setItemAsync(
                       ANILIST_ACCESS_TOKEN_STORAGE,

@@ -16,6 +16,7 @@ import { Button } from "yep/components/Button";
 import { CheckboxRow } from "yep/components/CheckboxRow";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
+import { primeAccessToken } from "yep/graphql/client";
 import { StorageKeys, usePersistedState } from "yep/hooks/helpers";
 import {
   availableLanguages,
@@ -200,6 +201,7 @@ export default function Settings() {
                       await SecureStore.deleteItemAsync(
                         ANILIST_ACCESS_TOKEN_STORAGE,
                       );
+                      primeAccessToken(null);
                       // A different account may log in next; a stale viewer id
                       // would fetch the previous user's list.
                       localStorage.removeItem(StorageKeys.ANILIST_VIEWER_ID);

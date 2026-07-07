@@ -18,11 +18,29 @@ import {
 } from "yep/graphql/animeListPagination";
 import { StorageKeys } from "yep/hooks/helpers";
 
-const authLink = setContext(async (_, { headers }) => {
-  // get the authentication token from local storage if it exists
-  const token = await SecureStore.getItemAsync(ANILIST_ACCESS_TOKEN_STORAGE);
+// authLink runs on EVERY GraphQL operation, and a SecureStore read is a
+// Keychain (disk + crypto) hit per request — wasted work during
+// cache-and-network refreshes and pagination bursts. Mirror the token in
+// memory: SecureStore stays the durable copy, this is just the hot path.
+// Login/logout paths call primeAccessToken to keep the mirror in sync; the
+// lazy read in authLink covers anything that didn't. `undefined` means "not
+// read yet", `null` means "read, no token".
+let cachedAccessToken: string | null | undefined;
 
-  const Authorization = token ? `Bearer ${token}` : undefined;
+export function primeAccessToken(token: string | null) {
+  cachedAccessToken = token;
+}
+
+const authLink = setContext(async (_, { headers }) => {
+  if (cachedAccessToken === undefined) {
+    cachedAccessToken = await SecureStore.getItemAsync(
+      ANILIST_ACCESS_TOKEN_STORAGE,
+    );
+  }
+
+  const Authorization = cachedAccessToken
+    ? `Bearer ${cachedAccessToken}`
+    : undefined;
 
   // return the headers to the context so httpLink can read them
   return Authorization
@@ -233,6 +251,7 @@ export async function createClient() {
                     await SecureStore.deleteItemAsync(
                       ANILIST_ACCESS_TOKEN_STORAGE,
                     );
+                    primeAccessToken(null);
                     // Matches the Settings logout: a stale viewer id would
                     // fetch the previous user's list on the next login.
                     localStorage.removeItem(StorageKeys.ANILIST_VIEWER_ID);
