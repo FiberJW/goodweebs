@@ -2,9 +2,8 @@ import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 
 import { AnimeListItem } from "yep/components/AnimeListItem";
-import {
-  UpdateProgressDocument,
-} from "yep/graphql/generated";
+import { MangaListItem } from "yep/components/MangaListItem";
+import { UpdateProgressDocument } from "yep/graphql/generated";
 import type {
   AnimeListEntryFragmentFragment,
   UpdateProgressMutation,
@@ -28,7 +27,8 @@ type ProgressOverride = {
   progress: number;
 };
 
-export function AnimeListItemContainer({ seedData, first, last }: Props) {
+export function MediaListItemContainer({ seedData, first, last }: Props) {
+  const media = seedData.media;
   const mediaListEntryId = seedData.media?.mediaListEntry?.id;
   const cacheProgress = seedData.media?.mediaListEntry?.progress ?? 0;
   const progressUpperBound = getMaxProgress(seedData.media);
@@ -102,12 +102,16 @@ export function AnimeListItemContainer({ seedData, first, last }: Props) {
     }
   }
 
+  if (!media) return null;
+
+  const ListItem = media.type === "MANGA" ? MangaListItem : AnimeListItem;
+
   return (
-    <AnimeListItem
+    <ListItem
       progress={displayProgress}
       onIncrement={() => changeProgress("inc")}
       onDecrement={() => changeProgress("dec")}
-      media={seedData.media as AnimeListEntryFragmentFragment}
+      media={media}
       first={first}
       last={last}
     />

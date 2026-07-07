@@ -2,54 +2,27 @@ import { NetworkStatus } from "@apollo/client";
 import { useNavigation } from "expo-router";
 import { fbs } from "fbtee";
 import React, { useEffect, useState } from "react";
-import {
-  RefreshControl,
-  useWindowDimensions,
-  StyleSheet,
-  View,
-  FlatList,
-  Text,
-} from "react-native";
+import { useWindowDimensions, StyleSheet, View } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
-import { ListFooterSpinner } from "yep/components/ListFooterSpinner";
 import { SearchBox } from "yep/components/SearchBox";
 import { StatusChip } from "yep/components/StatusChip";
 import {
   useGetTrendingMediaQuery,
   useSearchMediaQuery,
 } from "yep/graphql/generated";
-import type {
-  MediaPosterFragmentFragment,
-  MediaType,
-} from "yep/graphql/generated";
+import type { MediaType } from "yep/graphql/generated";
 import { useLoadNextPage } from "yep/hooks/helpers";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
-import { DiscoverPoster } from "yep/screens/DiscoverScreen/DiscoverPoster";
+import { DiscoverSearchResults } from "yep/screens/DiscoverScreen/DiscoverSearchResults";
 import { DiscoverSkeletonGrid } from "yep/screens/DiscoverScreen/DiscoverSkeleton";
+import { DiscoverTrendingResults } from "yep/screens/DiscoverScreen/DiscoverTrendingResults";
 import { darkTheme } from "yep/themes";
-import { Manrope } from "yep/typefaces";
 import { notEmpty, isLiquidGlass } from "yep/utils";
 
 const TRENDING_PER_PAGE = 30;
 const SEARCH_PER_PAGE = 30;
-
-type ItemWithId = { id: number };
-
-function keyExtractor(item: ItemWithId) {
-  return `${item.id}`;
-}
-
-function renderDiscoverPoster({
-  item,
-  index,
-}: {
-  item: MediaPosterFragmentFragment;
-  index: number;
-}) {
-  return <DiscoverPoster item={item} index={index} />;
-}
 
 export default function Discover() {
   // One toggle scopes both trending and search results to anime or manga.
@@ -145,8 +118,12 @@ export default function Discover() {
     fetchMore: fetchMoreTrending,
   });
 
-  async function refetchSearchResults() {
-    await refetchSearch({ search: debouncedSearchTerm });
+  function refreshSearchResults() {
+    refetchSearch({ search: debouncedSearchTerm }).catch(() => {});
+  }
+
+  function refreshTrendingResults() {
+    refetchTrending().catch(() => {});
   }
 
   // Liquid glass: the search field lives in the native header (adopted by the
@@ -228,70 +205,19 @@ export default function Discover() {
             )}
             cta={{
               label: String(fbs("Retry", "Search retry button label")),
-              onPress: refetchSearchResults,
+              onPress: refreshSearchResults,
             }}
           />
         ) : showSearchResultsView ? (
-          <>
-            <FlatList
-              contentInsetAdjustmentBehavior="automatic"
-              contentContainerStyle={{ gap: 16 }}
-              // An element (not an inline component) so FlatList doesn't
-              // remount it on every data change.
-              ListHeaderComponent={
-                <Text style={styles.listHeader}>
-                  {String(
-                    fbs(
-                      [
-                        "Search results for: ",
-                        fbs.param("searchTerm", searchTerm),
-                      ],
-                      "Search results header",
-                    ),
-                  )}
-                </Text>
-              }
-              data={searchList}
-              onEndReached={loadNextSearchPage}
-              onEndReachedThreshold={0.5}
-              ListFooterComponent={
-                isSearchFetchingMore ? <ListFooterSpinner /> : null
-              }
-              keyboardShouldPersistTaps="handled"
-              keyboardDismissMode="on-drag"
-              ListEmptyComponent={() =>
-                loadingSearchData ? null : (
-                  <EmptyState
-                    title={String(
-                      fbs("No search results", "No search results title"),
-                    )}
-                    description={String(
-                      fbs(
-                        "You may have misspelled what you were looking for, or this title isn't listed on AniList.",
-                        "No search results description",
-                      ),
-                    )}
-                  />
-                )
-              }
-              // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
-              refreshControl={
-                <RefreshControl
-                  refreshing={isSearchRefetching}
-                  onRefresh={() => {
-                    refetchSearch({ search: debouncedSearchTerm }).catch(
-                      () => {},
-                    );
-                  }}
-                  tintColor={darkTheme.text}
-                  titleColor={darkTheme.text}
-                />
-              }
-              numColumns={3}
-              keyExtractor={keyExtractor}
-              renderItem={renderDiscoverPoster}
-            />
-          </>
+          <DiscoverSearchResults
+            data={searchList}
+            searchTerm={searchTerm}
+            loading={loadingSearchData}
+            isFetchingMore={isSearchFetchingMore}
+            isRefetching={isSearchRefetching}
+            onEndReached={loadNextSearchPage}
+            onRefresh={refreshSearchResults}
+          />
         ) : isTrendingInitialLoading ? (
           <DiscoverSkeletonGrid
             {...{
@@ -300,63 +226,15 @@ export default function Discover() {
             }}
           />
         ) : (
-          <>
-            <FlatList
-              contentInsetAdjustmentBehavior="automatic"
-              contentContainerStyle={{ gap: 16 }}
-              ListHeaderComponent={
-                trendingList.length ? (
-                  <Text style={styles.listHeader}>
-                    {mediaType === "MANGA"
-                      ? String(
-                          fbs("Trending manga", "Trending manga list header"),
-                        )
-                      : String(
-                          fbs("Trending anime", "Trending anime list header"),
-                        )}
-                  </Text>
-                ) : null
-              }
-              data={trendingList}
-              onEndReached={loadNextTrendingPage}
-              onEndReachedThreshold={0.5}
-              ListFooterComponent={
-                isTrendingFetchingMore ? <ListFooterSpinner /> : null
-              }
-              numColumns={3}
-              ListEmptyComponent={() =>
-                loadingTrending ? null : (
-                  <EmptyState
-                    title={String(
-                      fbs(
-                        "Unexpected loading error",
-                        "Trending loading error title",
-                      ),
-                    )}
-                    description={String(
-                      fbs(
-                        "Swipe down to try again",
-                        "Trending loading error description",
-                      ),
-                    )}
-                  />
-                )
-              }
-              // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
-              refreshControl={
-                <RefreshControl
-                  refreshing={isTrendingRefetching}
-                  onRefresh={() => {
-                    refetchTrending().catch(() => {});
-                  }}
-                  tintColor={darkTheme.text}
-                  titleColor={darkTheme.text}
-                />
-              }
-              keyExtractor={keyExtractor}
-              renderItem={renderDiscoverPoster}
-            />
-          </>
+          <DiscoverTrendingResults
+            data={trendingList}
+            mediaType={mediaType}
+            loading={loadingTrending}
+            isFetchingMore={isTrendingFetchingMore}
+            isRefetching={isTrendingRefetching}
+            onEndReached={loadNextTrendingPage}
+            onRefresh={refreshTrendingResults}
+          />
         )}
       </View>
     </View>
@@ -367,12 +245,6 @@ const styles = StyleSheet.create({
   innerContainer: {
     flex: 1,
     padding: 16,
-  },
-  listHeader: {
-    color: darkTheme.text,
-    fontFamily: Manrope.semiBold,
-    fontSize: 20,
-    marginBottom: 16,
   },
   mediaTypeRow: {
     flexDirection: "row",

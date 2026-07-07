@@ -19,7 +19,7 @@ import {
   ANILIST_ACCESS_TOKEN_STORAGE,
   MediaListStatusWithLabel,
 } from "yep/constants";
-import { AnimeListItemContainer } from "yep/containers/AnimeListItemContainer";
+import { MediaListItemContainer } from "yep/containers/MediaListItemContainer";
 import {
   ANIME_LIST_PER_PAGE,
   titleSortForLocale,
@@ -93,7 +93,7 @@ function renderMediaItem({
   item: MediaListRow;
 }) {
   return (
-    <AnimeListItemContainer
+    <MediaListItemContainer
       seedData={{
         id: entry.id,
         progress: entry.media?.mediaListEntry?.progress ?? 0,
@@ -105,14 +105,24 @@ function renderMediaItem({
   );
 }
 
-// The anime and manga tabs are the same screen pointed at a different
-// MediaType: same chips, rows, pagination, and auth states — only the copy
-// and the list query's `type` differ.
-export function MediaListScreen({ mediaType }: { mediaType: MediaType }) {
+type Props = {
+  mediaType: MediaType;
+  headerLabel: string;
+  loggedOutDescription: string;
+  emptyListDescription: string;
+  discoverCtaLabel: string;
+};
+
+export function MediaListScreen({
+  mediaType,
+  headerLabel,
+  loggedOutDescription,
+  emptyListDescription,
+  discoverCtaLabel,
+}: Props) {
   const [status, setStatus] = useState<MediaListStatus>(
     MediaListStatusWithLabel[0].value,
   );
-  const isManga = mediaType === "MANGA";
 
   const { accessToken, setAccessToken } = useAccessToken();
   const router = useRouter();
@@ -204,13 +214,7 @@ export function MediaListScreen({ mediaType }: { mediaType: MediaType }) {
     <View
       style={[styles.outerContainer, { backgroundColor: darkTheme.background }]}
     >
-      <Header
-        label={
-          isManga
-            ? String(fbs("Manga", "Manga tab header label"))
-            : String(fbs("Anime", "Anime tab header label"))
-        }
-      />
+      <Header label={headerLabel} />
       <FlatList
         // iOS native tabs float over content; automatic insets keep the last
         // rows scrollable clear of the glass bar (no-op on Android's JS tabs).
@@ -267,51 +271,15 @@ export function MediaListScreen({ mediaType }: { mediaType: MediaType }) {
               }
               description={
                 !accessToken
-                  ? isManga
-                    ? String(
-                        fbs(
-                          "Start tracking your manga by using an AniList account!",
-                          "Manga empty state login description",
-                        ),
-                      )
-                    : String(
-                        fbs(
-                          "Start tracking your anime by using an AniList account!",
-                          "Anime empty state login description",
-                        ),
-                      )
-                  : isManga
-                    ? String(
-                        fbs(
-                          "Explore the world of manga by adding some series to your list!",
-                          "Manga empty state list description",
-                        ),
-                      )
-                    : String(
-                        fbs(
-                          "Explore the world of anime by adding some shows to your list!",
-                          "Anime empty state list description",
-                        ),
-                      )
+                  ? loggedOutDescription
+                  : emptyListDescription
               }
               cta={{
                 label: !accessToken
                   ? String(
                       fbs("Log in", "Anime empty state login call to action"),
                     )
-                  : isManga
-                    ? String(
-                        fbs(
-                          "Discover new manga",
-                          "Manga empty state discover call to action",
-                        ),
-                      )
-                    : String(
-                        fbs(
-                          "Discover new anime",
-                          "Anime empty state discover call to action",
-                        ),
-                      ),
+                  : discoverCtaLabel,
                 onPress: async () => {
                   if (!accessToken) {
                     const result = await promptAsync();

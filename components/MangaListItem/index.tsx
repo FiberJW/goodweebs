@@ -2,7 +2,7 @@ import React from "react";
 
 import type { AnimeListEntryFragmentFragment } from "yep/graphql/generated";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
-import { getAiringStatusText } from "yep/utils";
+import { getAiringStatusText, getVolumesProgress } from "yep/utils";
 
 import { MediaListItem } from "../MediaListItem";
 
@@ -16,7 +16,7 @@ type Props = {
   last: boolean;
 };
 
-export function AnimeListItem({
+export function MangaListItem({
   progress,
   media,
   disabled,
@@ -26,13 +26,6 @@ export function AnimeListItem({
   last,
 }: Props) {
   const { locale } = useLocaleContext();
-  const isAiringAndCurrentlyWatching =
-    media.status === "RELEASING" && media.mediaListEntry?.status === "CURRENT";
-  const episodesBehind =
-    isAiringAndCurrentlyWatching &&
-    media.nextAiringEpisode?.episode !== undefined
-      ? media.nextAiringEpisode.episode - 1 - progress
-      : 0;
 
   return (
     <MediaListItem
@@ -44,7 +37,7 @@ export function AnimeListItem({
       first={first}
       last={last}
       airingStatus={getAiringStatusText(media, locale)}
-      episodesBehind={episodesBehind}
+      secondaryProgress={getVolumesProgress(media)}
     />
   );
 }
