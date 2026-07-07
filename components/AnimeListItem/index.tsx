@@ -4,11 +4,18 @@ import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
 import { black15, white12_5, white5, white95 } from "yep/colors";
+import { DEFAULT_SCORE_FORMAT } from "yep/constants";
+import { useGetViewerQuery } from "yep/graphql/generated";
 import type { AnimeListEntryFragmentFragment } from "yep/graphql/generated";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { getAiringStatusText, getProgress, useGetTitle } from "yep/utils";
+import {
+  formatScore,
+  getAiringStatusText,
+  getProgress,
+  useGetTitle,
+} from "yep/utils";
 
 import { PosterAndTitle } from "../PosterAndTitle";
 import { PressableOpacity } from "../PressableOpacity";
@@ -38,6 +45,10 @@ export function AnimeListItem({
   const router = useRouter();
   const getTitle = useGetTitle();
   const { locale } = useLocaleContext();
+  // cache-only: the anime tab already fetched the viewer for the bell badge.
+  const { data: viewerData } = useGetViewerQuery({ fetchPolicy: "cache-only" });
+  const scoreFormat =
+    viewerData?.Viewer?.mediaListOptions?.scoreFormat ?? DEFAULT_SCORE_FORMAT;
 
   const isAiringAndCurrentlyWatching =
     media.status === "RELEASING" && media.mediaListEntry?.status === "CURRENT";
@@ -74,9 +85,16 @@ export function AnimeListItem({
           size="small"
         >
           {media.mediaListEntry?.score ? (
-            <View style={styles.scoreContainer}>
+            <View
+              style={[
+                styles.scoreContainer,
+                // The emoji is its own bubble — a white pill behind it just
+                // looks like a dirty sticker.
+                scoreFormat === "POINT_3" && styles.scoreContainerEmoji,
+              ]}
+            >
               <Text style={styles.scoreText}>
-                ★ {media.mediaListEntry.score}
+                {formatScore(media.mediaListEntry.score, scoreFormat)}
               </Text>
             </View>
           ) : null}
@@ -185,6 +203,10 @@ const styles = StyleSheet.create({
     paddingVertical: 1,
     position: "absolute",
     right: 4,
+  },
+  scoreContainerEmoji: {
+    backgroundColor: "transparent",
+    borderWidth: 0,
   },
   scoreText: {
     color: darkTheme.textInverted,

@@ -14,8 +14,25 @@ import type {
   MediaListStatus,
   Maybe,
   FuzzyDate,
+  ScoreFormat,
 } from "./graphql/generated";
 import { useLocaleContext } from "./i18n/LocaleContext";
+
+// Matches AniList's own display: denominator for point scales, a star for the
+// 5-star scale, and smiley faces (not numbers) for the 3-point scale.
+export function formatScore(score: number, format: ScoreFormat): string {
+  switch (format) {
+    case "POINT_100":
+      return `${score}/100`;
+    case "POINT_10_DECIMAL":
+    case "POINT_10":
+      return `${score}/10`;
+    case "POINT_5":
+      return `${score}/5 ★`;
+    case "POINT_3":
+      return ["—", "🙁", "😐", "🙂"][score] ?? "🙂";
+  }
+}
 
 // iOS 26+ ships the liquid-glass system chrome (native tab bar morphing into
 // the search field, glass headers). Older iOS keeps our in-screen equivalents.

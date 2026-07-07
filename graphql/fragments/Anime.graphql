@@ -43,7 +43,7 @@ fragment AnimeListEntryFragment on Media {
     id
     progress
     status
-    score(format: POINT_10)
+    score
   }
 }
 
@@ -125,7 +125,7 @@ fragment AnimeFragment on Media {
     id
     progress
     status
-    score(format: POINT_10)
+    score
   }
   relations {
     edges {

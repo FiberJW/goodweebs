@@ -1683,11 +1683,11 @@
     },
     "aKcGjfDxW0YDtwje2qaB3g==": {
       "description": "Anime tab label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Anime",
+          "translation": "アニメ",
           "variations": {}
         }
       ],
@@ -1695,11 +1695,11 @@
     },
     "ta3k5+7UU4Gm3Hnq6mLZnA==": {
       "description": "Discover tab label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Discover",
+          "translation": "発見",
           "variations": {}
         }
       ],
@@ -1707,11 +1707,11 @@
     },
     "5JJKhGIrQEBoIXi/kEGgDw==": {
       "description": "Profile tab label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Profile",
+          "translation": "プロフィール",
           "variations": {}
         }
       ],
@@ -1772,6 +1772,138 @@
       "translations": [
         {
           "translation": "Trending anime",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "Lycx1rakjnxtvWbUHm+z7A==": {
+      "description": "Notifications screen title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "通知",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "pvQqAoXghsPswM44l2/Cmw==": {
+      "description": "Notifications error title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Could not load notifications",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "V+SAxGUcRfKYQNE0BJc/GQ==": {
+      "description": "Notifications empty state title",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "No notifications",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "G7FgFF+q8qlfRK7KVNfAkQ==": {
+      "description": "Notifications empty state description",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Airing episodes and newly added related anime will show up here.",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "xrH5Nt9aaKYo20gXZd9esw==": {
+      "description": "100 point score format label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "100点満点 (55/100)",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "OW8l8pz9k48ojgLt/mwqmA==": {
+      "description": "10 point decimal score format label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "10点満点・小数 (5.5/10)",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "3yrysrPbiDH4WGHMjVLLEg==": {
+      "description": "10 point score format label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "10点満点 (5/10)",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "US/5wvmBSVIRjmY8vHJcUA==": {
+      "description": "5 star score format label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "5つ星 (3/5)",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "GA5KE4n2iivsdR4cdhdjKQ==": {
+      "description": "3 point smiley score format label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "3段階スマイリー :)",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "VhOC3TsipFVP1Wi7bL2/Ug==": {
+      "description": "Rating style section title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "評価方式",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "rTXZ8UCkzDUjS40HurILpA==": {
+      "description": "Notifications button accessibility label",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Notifications",
           "variations": {}
         }
       ],

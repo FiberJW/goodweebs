@@ -1,6 +1,6 @@
 import Constants, { ExecutionEnvironment } from "expo-constants";
 
-import type { MediaListStatus } from "yep/graphql/generated";
+import type { MediaListStatus, ScoreFormat } from "yep/graphql/generated";
 
 // AniList Client IDs and their redirect URIs based on https://docs.expo.dev/guides/authentication/#redirect-uri-patterns
 enum AniListClientID {
@@ -22,6 +22,22 @@ export const CLIENT_ID = (() => {
 })();
 
 export const ANILIST_ACCESS_TOKEN_STORAGE = `com.fiberjw.goodweebs.${CLIENT_ID}.access_token`;
+
+export const DEFAULT_SCORE_FORMAT: ScoreFormat = "POINT_10";
+
+// Stepper bounds/step per AniList score format; the server stores raw 0–100
+// and interprets `score` in the viewer's format, so no client-side conversion.
+// ponytail: POINT_10_DECIMAL steps by 0.5, not 0.1 — 0.1 makes the stepper unusable.
+export const ScoreFormatConfig: Record<
+  ScoreFormat,
+  { max: number; step: number }
+> = {
+  POINT_100: { max: 100, step: 1 },
+  POINT_10_DECIMAL: { max: 10, step: 0.5 },
+  POINT_10: { max: 10, step: 1 },
+  POINT_5: { max: 5, step: 1 },
+  POINT_3: { max: 3, step: 1 },
+};
 
 export const MediaListStatusWithLabel: {
   value: MediaListStatus;
