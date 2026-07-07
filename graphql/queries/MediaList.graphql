@@ -4,8 +4,9 @@
 # other statuses and hasNextChunk goes false while entries remain — so we
 # paginate the flat Page.mediaList API instead. Sort is server-side so pages
 # appended by fetchMore keep a stable order.
-query GetAnimeList(
+query GetMediaList(
   $userId: Int
+  $type: MediaType!
   $status: MediaListStatus
   $sort: [MediaListSort]
   $page: Int = 1
@@ -16,7 +17,7 @@ query GetAnimeList(
       hasNextPage
       total
     }
-    mediaList(userId: $userId, type: ANIME, status: $status, sort: $sort) {
+    mediaList(userId: $userId, type: $type, status: $status, sort: $sort) {
       id
       media {
         ...AnimeListEntryFragment

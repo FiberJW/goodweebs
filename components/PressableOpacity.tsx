@@ -36,7 +36,9 @@ export function PressableOpacity({
             Platform.OS !== "android" ? activeOpacity ?? 0.2 : 1;
 
           const nativeStyle = {
-            opacity: pressed ? pressedOpacity : 1,
+            // `disabled` blocks onPress but NOT the pressed state, so a
+            // disabled control would still dim on touch without the guard.
+            opacity: pressed && !disabled ? pressedOpacity : 1,
             borderRadius,
             ...(disabled && useDisabledOpacity && { opacity: 0.4 }),
           };
@@ -47,7 +49,9 @@ export function PressableOpacity({
           return [nativeStyle, pressedStyles];
         }}
         disabled={disabled}
-        android_ripple={{ color: white, borderless: false }}
+        android_ripple={
+          disabled ? undefined : { color: white, borderless: false }
+        }
         {...rest}
       />
     </BorderRadiusContainer>

@@ -12,6 +12,7 @@ import type {
   AnimeListEntryFragmentFragment,
   MediaStatus,
   MediaListStatus,
+  MediaType,
   Maybe,
   FuzzyDate,
   ScoreFormat,
@@ -145,20 +146,30 @@ export function getReadableMediaRelation(mediaRelation: MediaRelation): string {
   }
 }
 
-export function getMediaListStatusLabel(status: MediaListStatus): string {
+export function getMediaListStatusLabel(
+  status: MediaListStatus,
+  mediaType: MediaType | null | undefined = "ANIME",
+): string {
+  const isManga = mediaType === "MANGA";
   switch (status) {
     case "CURRENT":
-      return String(fbs("Watching", "Media list status watching"));
+      return isManga
+        ? String(fbs("Reading", "Media list status reading"))
+        : String(fbs("Watching", "Media list status watching"));
     case "PAUSED":
       return String(fbs("On hold", "Media list status on hold"));
     case "PLANNING":
-      return String(fbs("Plan to watch", "Media list status plan to watch"));
+      return isManga
+        ? String(fbs("Plan to read", "Media list status plan to read"))
+        : String(fbs("Plan to watch", "Media list status plan to watch"));
     case "DROPPED":
       return String(fbs("Dropped", "Media list status dropped"));
     case "COMPLETED":
       return String(fbs("Completed", "Media list status completed"));
     case "REPEATING":
-      return String(fbs("Repeating", "Media list status repeating"));
+      return isManga
+        ? String(fbs("Rereading", "Media list status rereading"))
+        : String(fbs("Repeating", "Media list status repeating"));
   }
 }
 
@@ -272,12 +283,42 @@ export function getAiringStatusText(
   }
 }
 
-export function getProgress(media: AnimeListEntryFragmentFragment, progress: number) {
-  const episodeAbbreviation = String(
-    fbs("EP", "Episode abbreviation in progress text"),
-  );
+// Where a progress counter tops out: chapters for manga, episodes for anime.
+// null/undefined means AniList doesn't know the total (ongoing series).
+export function getMaxProgress(
+  media:
+    | {
+        type?: MediaType | null;
+        episodes?: number | null;
+        chapters?: number | null;
+      }
+    | null
+    | undefined,
+): number | null | undefined {
+  return media?.type === "MANGA" ? media?.chapters : media?.episodes;
+}
 
-  return media.episodes
-    ? `${progress}/${media.episodes} ${episodeAbbreviation}`
-    : `${progress} ${episodeAbbreviation}`;
+// Manga-only companion to getProgress: volume progress straight from the
+// cache (the list row's steppers only drive chapters, so no optimistic value).
+export function getVolumesProgress(media: AnimeListEntryFragmentFragment) {
+  const volumeAbbreviation = String(
+    fbs("VOL", "Volume abbreviation in progress text"),
+  );
+  const progressVolumes = media.mediaListEntry?.progressVolumes ?? 0;
+
+  return media.volumes
+    ? `${progressVolumes}/${media.volumes} ${volumeAbbreviation}`
+    : `${progressVolumes} ${volumeAbbreviation}`;
+}
+
+export function getProgress(media: AnimeListEntryFragmentFragment, progress: number) {
+  const unitAbbreviation =
+    media.type === "MANGA"
+      ? String(fbs("CH", "Chapter abbreviation in progress text"))
+      : String(fbs("EP", "Episode abbreviation in progress text"));
+  const maxProgress = getMaxProgress(media);
+
+  return maxProgress
+    ? `${progress}/${maxProgress} ${unitAbbreviation}`
+    : `${progress} ${unitAbbreviation}`;
 }

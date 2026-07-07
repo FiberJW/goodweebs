@@ -3,10 +3,14 @@ import type { ApolloCache, Reference } from "@apollo/client";
 import { GetViewerDocument } from "yep/graphql/generated";
 import type { GetViewerQuery } from "yep/graphql/generated";
 
-type FavoriteTarget = { animeId: number } | { characterId: number };
+type FavoriteTarget =
+  | { animeId: number }
+  | { mangaId: number }
+  | { characterId: number };
 
 type FavouritesShelves = {
   anime?: { nodes?: readonly Reference[] | null } | null;
+  manga?: { nodes?: readonly Reference[] | null } | null;
   characters?: { nodes?: readonly Reference[] | null } | null;
 } | null;
 
@@ -23,9 +27,14 @@ export function applyFavoriteToCache(
   target: FavoriteTarget,
   isFavourite: boolean,
 ) {
-  const isAnime = "animeId" in target;
-  const id = isAnime ? target.animeId : target.characterId;
-  const __typename = isAnime ? "Media" : "Character";
+  const isMedia = "animeId" in target || "mangaId" in target;
+  const id =
+    "animeId" in target
+      ? target.animeId
+      : "mangaId" in target
+        ? target.mangaId
+        : target.characterId;
+  const __typename = isMedia ? "Media" : "Character";
 
   cache.modify({
     id: cache.identify({ __typename, id }),
@@ -40,7 +49,8 @@ export function applyFavoriteToCache(
   })?.Viewer?.id;
   if (!viewerId) return;
 
-  const shelf = isAnime ? "anime" : "characters";
+  const shelf =
+    "animeId" in target ? "anime" : "mangaId" in target ? "manga" : "characters";
   cache.modify({
     id: cache.identify({ __typename: "User", id: viewerId }),
     fields: {

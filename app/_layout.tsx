@@ -210,20 +210,6 @@ function InnerLayout() {
                 }}
               />
               <Stack.Screen
-                name="notifications"
-                options={{
-                  title: String(
-                    fbs("Notifications", "Notifications screen title"),
-                  ),
-                  headerTitleStyle: {
-                    fontFamily: Manrope.semiBold,
-                    fontSize: 16,
-                    color: darkTheme.text,
-                  },
-                  headerBackButtonDisplayMode: "minimal",
-                }}
-              />
-              <Stack.Screen
                 name="details/[id]"
                 options={{
                   title: "",

@@ -11,6 +11,7 @@ import type {
   UpdateProgressMutationVariables,
 } from "yep/graphql/generated";
 import { useDebouncedMutation } from "yep/hooks/helpers";
+import { getMaxProgress } from "yep/utils";
 
 type Props = {
   seedData: {
@@ -30,7 +31,7 @@ type ProgressOverride = {
 export function AnimeListItemContainer({ seedData, first, last }: Props) {
   const mediaListEntryId = seedData.media?.mediaListEntry?.id;
   const cacheProgress = seedData.media?.mediaListEntry?.progress ?? 0;
-  const progressUpperBound = seedData.media?.episodes;
+  const progressUpperBound = getMaxProgress(seedData.media);
 
   const [progressOverride, setProgressOverride] =
     useState<ProgressOverride | null>(null);

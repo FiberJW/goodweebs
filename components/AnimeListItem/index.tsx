@@ -13,7 +13,9 @@ import { Manrope } from "yep/typefaces";
 import {
   formatScore,
   getAiringStatusText,
+  getMaxProgress,
   getProgress,
+  getVolumesProgress,
   useGetTitle,
 } from "yep/utils";
 
@@ -119,16 +121,24 @@ export function AnimeListItem({
           <Text style={styles.episodeProgress}>
             {getProgress(media, progress)}
           </Text>
+          {/* Manga tracks two units; the +/- buttons only drive chapters, so
+              volumes render as a read-only second line (editable on details). */}
+          {media.type === "MANGA" ? (
+            <Text style={styles.volumeProgress}>
+              {getVolumesProgress(media)}
+            </Text>
+          ) : null}
         </View>
-        {media.status !== "NOT_YET_RELEASED" ? (
-          <View style={styles.progressButtonGroup}>
+        {/* Unreleased titles still allow progress edits — early screenings,
+            pre-serialization chapters, and AniList data lag are all real. */}
+        <View style={styles.progressButtonGroup}>
             <ProgressButton
               disabled={Boolean(disabled) || progress === 0}
               icon={require("yep/assets/icons/progress-decrement.png")}
               accessibilityLabel={String(
                 fbs(
-                  "Decrease episode progress",
-                  "Decrease episode progress button accessibility label",
+                  "Decrease progress",
+                  "Decrease progress button accessibility label",
                 ),
               )}
               onPress={() => {
@@ -136,21 +146,21 @@ export function AnimeListItem({
               }}
             />
             <ProgressButton
-              disabled={Boolean(disabled) || progress === media.episodes}
+              disabled={Boolean(disabled) || progress === getMaxProgress(media)}
               icon={
-                progress === (media.episodes ?? 0) - 1
+                progress === (getMaxProgress(media) ?? 0) - 1
                   ? require("yep/assets/icons/progress-complete.png")
                   : require("yep/assets/icons/progress-increment.png")
               }
               accessibilityLabel={String(
-                progress === (media.episodes ?? 0) - 1
+                progress === (getMaxProgress(media) ?? 0) - 1
                   ? fbs(
                       "Complete series",
                       "Complete series button accessibility label",
                     )
                   : fbs(
-                      "Increase episode progress",
-                      "Increase episode progress button accessibility label",
+                      "Increase progress",
+                      "Increase progress button accessibility label",
                     ),
               )}
               onPress={() => {
@@ -158,7 +168,6 @@ export function AnimeListItem({
               }}
             />
           </View>
-        ) : null}
       </View>
     </PressableOpacity>
   );
@@ -178,6 +187,12 @@ const styles = StyleSheet.create({
     color: darkTheme.text,
     fontFamily: Manrope.semiBold,
     fontSize: 16,
+    textAlign: "right",
+  },
+  volumeProgress: {
+    color: darkTheme.footnote,
+    fontFamily: Manrope.semiBold,
+    fontSize: 12.8,
     textAlign: "right",
   },
   episodeProgressContainer: {

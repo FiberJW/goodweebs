@@ -1,5 +1,5 @@
-mutation ToggleFavorite($animeId: Int, $characterId: Int) {
-  ToggleFavourite(animeId: $animeId, characterId: $characterId) {
+mutation ToggleFavorite($animeId: Int, $mangaId: Int, $characterId: Int) {
+  ToggleFavourite(animeId: $animeId, mangaId: $mangaId, characterId: $characterId) {
     ...FavouritesData
   }
 }

@@ -164,17 +164,22 @@ const cache = new InMemoryCache({
         Page: {
           keyArgs: (args, { variables }) => {
             if (variables?.userId != null && variables?.status != null) {
-              return `animeList:${variables.userId}:${variables.status}:${JSON.stringify(variables.sort ?? null)}`;
+              return `mediaList:${variables.type}:${variables.userId}:${variables.status}:${JSON.stringify(variables.sort ?? null)}`;
             }
-            // Search containers are per-term: pageInfo.hasNextPage must track
-            // the term (and not collide with trending's container).
+            // Search containers are per-type-and-term: pageInfo.hasNextPage
+            // must track the term (and not collide with trending's container).
             if (variables?.search != null) {
-              return `search:${variables.search}`;
+              return `search:${variables.type}:${variables.search}`;
             }
             // The notifications screen: one container, keyed apart from
             // trending/search so their pageInfo never clobbers each other.
             if (variables?.reset != null) {
               return "notifications";
+            }
+            // Trending: one container per media type (the discover toggle
+            // flips between them, and each paginates independently).
+            if (variables?.type != null) {
+              return `trending:${variables.type}`;
             }
             return JSON.stringify({ ...args, page: undefined });
           },
@@ -232,7 +237,14 @@ const cache = new InMemoryCache({
         },
         // Same append-merge for Page.media (discover trending and search).
         media: {
-          keyArgs: ["search", "type", "sort", "format", "format_not_in", "isAdult"],
+          keyArgs: [
+            "search",
+            "type",
+            "sort",
+            "format_in",
+            "format_not_in",
+            "isAdult",
+          ],
           merge(existing, incoming, { variables, readField }) {
             if (!existing || (variables?.page ?? 1) <= 1) return incoming;
             if (

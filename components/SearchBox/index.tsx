@@ -38,6 +38,10 @@ export function SearchBox({
           style={styles.searchInput}
           {...textInputProps}
           ref={inputRef}
+          // Titles are proper nouns ("Yotsuba&!", "Oshi no Ko") — iOS
+          // autocorrect mangles them mid-search.
+          autoCorrect={false}
+          spellCheck={false}
           keyboardAppearance="dark"
           onFocus={() => setIsCancelButtonVisible(true)}
           placeholderTextColor={darkTheme.inputPlaceholder}

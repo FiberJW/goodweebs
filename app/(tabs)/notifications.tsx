@@ -11,6 +11,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { EmptyState } from "yep/components/EmptyState";
+import { Header } from "yep/components/Header";
 import {
   useGetNotificationsQuery,
   useGetViewerQuery,
@@ -21,6 +22,7 @@ import {
   NotificationRowData,
 } from "yep/screens/NotificationsScreen/NotificationRow";
 import { darkTheme } from "yep/themes";
+import { useAccessToken } from "yep/useAccessToken";
 
 const NOTIFICATIONS_PER_PAGE = 25;
 
@@ -43,6 +45,7 @@ function renderNotification({ item }: { item: NotificationListRow }) {
 export default function Notifications() {
   const insets = useSafeAreaInsets();
   const { cache } = useApolloClient();
+  const { accessToken } = useAccessToken();
   const { data: viewerData } = useGetViewerQuery({
     fetchPolicy: "cache-only",
   });
@@ -50,6 +53,9 @@ export default function Notifications() {
 
   const { data, loading, error, refetch, fetchMore, networkStatus } =
     useGetNotificationsQuery({
+      // The tab stays visible for guests (NativeTabs remounts crash if
+      // triggers flip — see the tabs layout); the screen gates instead.
+      skip: !accessToken,
       variables: { page: 1, perPage: NOTIFICATIONS_PER_PAGE, reset: true },
       fetchPolicy: "cache-and-network",
       notifyOnNetworkStatusChange: true,
@@ -77,15 +83,15 @@ export default function Notifications() {
     fetchMore,
   });
 
-  // Anime only: related-media additions can reference manga, and rows
-  // without media have nothing to link to. The generated union also carries
-  // empty members for every other notification type — narrow those away.
+  // Anime and manga rows both link to /details/[id]; rows without media have
+  // nothing to link to. The generated union also carries empty members for
+  // every other notification type — narrow those away.
   const rows = (data?.Page?.notifications ?? []).flatMap((notification) => {
     if (
       notification &&
       (notification.__typename === "AiringNotification" ||
         notification.__typename === "RelatedMediaAdditionNotification") &&
-      notification.media?.type === "ANIME"
+      notification.media
     ) {
       return [{ ...notification, media: notification.media }];
     }
@@ -99,7 +105,22 @@ export default function Notifications() {
 
   return (
     <View style={styles.container}>
-      {!data && loading ? (
+      <Header
+        label={String(fbs("Notifications", "Notifications tab header label"))}
+      />
+      {!accessToken ? (
+        <EmptyState
+          title={String(
+            fbs("Log in", "Notifications empty state login title"),
+          )}
+          description={String(
+            fbs(
+              "Notifications show up here once you log in with your AniList account.",
+              "Notifications empty state login description",
+            ),
+          )}
+        />
+      ) : !data && loading ? (
         <ActivityIndicator
           color={darkTheme.text}
           size="large"
@@ -128,7 +149,7 @@ export default function Notifications() {
               )}
               description={String(
                 fbs(
-                  "Airing episodes and newly added related anime will show up here.",
+                  "Airing episodes and newly added related anime and manga will show up here.",
                   "Notifications empty state description",
                 ),
               )}
@@ -164,7 +185,7 @@ export default function Notifications() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { backgroundColor: darkTheme.background, flex: 1 },
   divider: {
     backgroundColor: darkTheme.listItemBorder,
     height: StyleSheet.hairlineWidth,

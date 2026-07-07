@@ -16,14 +16,6 @@ type RelatedListProps = {
   relationType: MediaRelation;
 };
 
-const filteredMediaRelations: MediaRelation[] = [
-  "ADAPTATION",
-  "CHARACTER",
-  "OTHER",
-  "SOURCE",
-  "CONTAINS",
-];
-
 function keyExtractor(item: AnimeRelationFragmentFragment) {
   return `${item.id}`;
 }
@@ -40,14 +32,6 @@ export function RelatedAnimeList({
   relationType,
   relations,
 }: RelatedListProps) {
-  if (
-    // filter out non-anime relations
-    // TODO: add back in when DetailScreen can support Characters/People, Manga, and Studios
-    filteredMediaRelations.includes(relationType)
-  ) {
-    return null;
-  }
-
   return (
     <>
       <Text style={styles.relatedListHeader}>

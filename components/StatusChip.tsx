@@ -10,12 +10,17 @@ type Props = {
   label: string;
   onPress: () => void;
   isSelected?: boolean;
+  disabled?: boolean;
 };
 
-export function StatusChip({ label, onPress, isSelected }: Props) {
+export function StatusChip({ label, onPress, isSelected, disabled }: Props) {
   return (
     <PressableOpacity
       onPress={onPress}
+      disabled={disabled}
+      // The selected chip's white fill already reads as "active" — the 0.4
+      // disabled dim would make it look unavailable instead.
+      useDisabledOpacity={false}
       style={[
         styles.container,
         isSelected

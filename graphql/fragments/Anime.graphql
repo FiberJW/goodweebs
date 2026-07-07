@@ -13,6 +13,7 @@ fragment MediaPosterFragment on Media {
 
 fragment AnimeListEntryFragment on Media {
   id
+  type
   title {
     romaji
     native
@@ -23,6 +24,8 @@ fragment AnimeListEntryFragment on Media {
     medium
   }
   episodes
+  chapters
+  volumes
   status
   startDate {
     year
@@ -42,6 +45,7 @@ fragment AnimeListEntryFragment on Media {
   mediaListEntry {
     id
     progress
+    progressVolumes
     status
     score
   }
@@ -78,6 +82,7 @@ fragment MediaTrailerData on MediaTrailer {
 
 fragment AnimeFragment on Media {
   id
+  type
   title {
     romaji
     native
@@ -96,6 +101,8 @@ fragment AnimeFragment on Media {
   status
   genres
   episodes
+  chapters
+  volumes
   description
   isFavourite
   studios(isMain: true) {
@@ -124,6 +131,7 @@ fragment AnimeFragment on Media {
   mediaListEntry {
     id
     progress
+    progressVolumes
     status
     score
   }

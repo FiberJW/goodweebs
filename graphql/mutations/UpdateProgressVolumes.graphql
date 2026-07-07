@@ -1,0 +1,9 @@
+mutation UpdateProgressVolumes($id: Int, $progressVolumes: Int) {
+  SaveMediaListEntry(id: $id, progressVolumes: $progressVolumes) {
+    id
+    progress
+    progressVolumes
+    status
+    score(format: POINT_10)
+  }
+}

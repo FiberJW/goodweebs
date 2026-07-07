@@ -32,6 +32,7 @@ import {
   useGetAnimeQuery,
   useGetViewerQuery,
   UpdateProgressDocument,
+  UpdateProgressVolumesDocument,
   UpdateScoreDocument,
   UpdateStatusDocument,
   useToggleFavoriteMutation,
@@ -44,6 +45,8 @@ import type {
   RemoveFromListMutationVariables,
   UpdateProgressMutation,
   UpdateProgressMutationVariables,
+  UpdateProgressVolumesMutation,
+  UpdateProgressVolumesMutationVariables,
   UpdateScoreMutation,
   UpdateScoreMutationVariables,
   UpdateStatusMutation,
@@ -67,6 +70,7 @@ import {
   formatScore,
   getDateFnsLocale,
   getDateText,
+  getMaxProgress,
   getMediaListStatusLabel,
   getMediaStatusLabel,
   notEmpty,
@@ -106,14 +110,14 @@ function Info({ label, value }: InfoProps) {
 }
 
 function PosterInfoSection({
-  animeId,
+  mediaId,
   media,
   shouldShowScoreToggleUI,
   showScore,
   setShowScore,
   studio,
 }: {
-  animeId: number;
+  mediaId: number;
   media: DetailsMedia;
   shouldShowScoreToggleUI: boolean;
   showScore: boolean;
@@ -138,12 +142,16 @@ function PosterInfoSection({
               // Flip the heart (and patch the Profile shelf) in cache before
               // the request so the tap feels instant; revert on failure. The
               // global onError link already toasts the error.
+              const target =
+                media.type === "MANGA"
+                  ? { mangaId: mediaId }
+                  : { animeId: mediaId };
               const next = !media.isFavourite;
-              applyFavoriteToCache(cache, { animeId }, next);
+              applyFavoriteToCache(cache, target, next);
               try {
-                await toggleFavorite({ variables: { animeId: media.id } });
+                await toggleFavorite({ variables: target });
               } catch (error) {
-                applyFavoriteToCache(cache, { animeId }, !next);
+                applyFavoriteToCache(cache, target, !next);
                 console.error(error);
               }
             }}
@@ -152,7 +160,14 @@ function PosterInfoSection({
       </PosterAndTitle>
       <View style={styles.infoTable}>
         <View style={styles.infoRow}>
-          {media.episodes ? (
+          {media.type === "MANGA" ? (
+            media.chapters ? (
+              <Info
+                label={String(fbs("Chapters", "Manga details chapters label"))}
+                value={`${media.chapters}`}
+              />
+            ) : null
+          ) : media.episodes ? (
             <Info
               label={String(fbs("Episodes", "Anime details episodes label"))}
               value={`${media.episodes}`}
@@ -249,11 +264,11 @@ function PosterInfoSection({
 }
 
 function MediaListStatusButton({
-  animeId,
+  mediaId,
   media,
   statusOptions,
 }: {
-  animeId: number;
+  mediaId: number;
   media: DetailsMedia;
   statusOptions: StatusOption[];
 }) {
@@ -267,11 +282,11 @@ function MediaListStatusButton({
     UpdateStatusMutationVariables
   >({
     mutationDocument: UpdateStatusDocument,
-    // A status change moves the entry between the anime tab's per-status
+    // A status change moves the entry between the list tabs' per-status
     // Page.mediaList cache containers; patching MediaList.status alone leaves
     // it listed under the old chip until a manual refresh, so refetch the
     // active list (resets it to page 1 and fixes pageInfo.total).
-    refetchQueries: ["GetAnimeList"],
+    refetchQueries: ["GetMediaList"],
     makeUpdateFunction: (variables) => (cache, result) => {
       if (mediaListEntryId && variables?.status) {
         cache.modify({
@@ -290,7 +305,7 @@ function MediaListStatusButton({
       const saved = result.data?.SaveMediaListEntry;
       if (!saved?.id) return;
       cache.modify({
-        id: cache.identify({ __typename: "Media", id: animeId }),
+        id: cache.identify({ __typename: "Media", id: mediaId }),
         fields: {
           mediaListEntry: (existing, { toReference }) =>
             toReference({ __typename: "MediaList", id: saved.id }) ?? existing,
@@ -309,7 +324,7 @@ function MediaListStatusButton({
       if (!mediaListEntryId) return;
 
       cache.modify({
-        id: cache.identify({ __typename: "Media", id: animeId }),
+        id: cache.identify({ __typename: "Media", id: mediaId }),
         fields: {
           mediaListEntry: () => null,
         },
@@ -330,7 +345,7 @@ function MediaListStatusButton({
         loading={loadingStatus}
         label={
           mediaListEntry?.status
-            ? getMediaListStatusLabel(mediaListEntry.status)
+            ? getMediaListStatusLabel(mediaListEntry.status, media.type)
             : String(fbs("Add to list", "Anime details add to list button"))
         }
         onPress={() => {
@@ -413,9 +428,11 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
   const scoreFormat =
     viewerData?.Viewer?.mediaListOptions?.scoreFormat ?? DEFAULT_SCORE_FORMAT;
   const { max: maxScore, step: scoreStep } = ScoreFormatConfig[scoreFormat];
+  const isManga = media.type === "MANGA";
   const cacheScore = media.mediaListEntry?.score ?? 0;
   const cacheProgress = media.mediaListEntry?.progress ?? 0;
-  const progressUpperBound = media.episodes;
+  const cacheVolumes = media.mediaListEntry?.progressVolumes ?? 0;
+  const progressUpperBound = getMaxProgress(media);
   const [scoreOverride, setScoreOverride] = useState<{
     cacheScore: number;
     score: number;
@@ -423,6 +440,10 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
   const [progressOverride, setProgressOverride] = useState<{
     cacheProgress: number;
     progress: number;
+  } | null>(null);
+  const [volumesOverride, setVolumesOverride] = useState<{
+    cacheVolumes: number;
+    volumes: number;
   } | null>(null);
   // Drop a stale optimistic override once the cache moves off the value it was
   // captured against, so a later cache value equal to the pre-tap snapshot
@@ -437,12 +458,20 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
     setProgressOverride(null);
     activeProgressOverride = null;
   }
+  let activeVolumesOverride = volumesOverride;
+  if (volumesOverride && volumesOverride.cacheVolumes !== cacheVolumes) {
+    setVolumesOverride(null);
+    activeVolumesOverride = null;
+  }
   const displayScore = activeScoreOverride
     ? activeScoreOverride.score
     : cacheScore;
   const displayProgress = activeProgressOverride
     ? activeProgressOverride.progress
     : cacheProgress;
+  const displayVolumes = activeVolumesOverride
+    ? activeVolumesOverride.volumes
+    : cacheVolumes;
 
   const updateScore = useDebouncedMutation<
     UpdateScoreMutation,
@@ -474,6 +503,24 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
         id: cache.identify({ __typename: "MediaList", id: mediaListEntryId }),
         fields: {
           progress: () => variables.progress,
+        },
+      });
+    },
+    wait: 0,
+  });
+
+  const updateProgressVolumes = useDebouncedMutation<
+    UpdateProgressVolumesMutation,
+    UpdateProgressVolumesMutationVariables
+  >({
+    mutationDocument: UpdateProgressVolumesDocument,
+    makeUpdateFunction: (variables) => (cache) => {
+      if (!mediaListEntryId || variables?.progressVolumes === undefined) return;
+
+      cache.modify({
+        id: cache.identify({ __typename: "MediaList", id: mediaListEntryId }),
+        fields: {
+          progressVolumes: () => variables.progressVolumes,
         },
       });
     },
@@ -537,7 +584,34 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
     }
   }
 
-  if (!media.mediaListEntry || media.status === "NOT_YET_RELEASED") return null;
+  async function changeVolumes(type: "inc" | "dec") {
+    if (!mediaListEntryId) return;
+
+    const unclamped = type === "inc" ? displayVolumes + 1 : displayVolumes - 1;
+    const clamped = Math.max(unclamped, 0);
+    const nextVolumes =
+      typeof media.volumes === "number"
+        ? Math.min(clamped, media.volumes)
+        : clamped;
+    if (nextVolumes === displayVolumes) return;
+    setVolumesOverride({ cacheVolumes, volumes: nextVolumes });
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    try {
+      await updateProgressVolumes({
+        id: mediaListEntryId,
+        progressVolumes: nextVolumes,
+      });
+    } catch (error) {
+      // Revert the optimistic value — a failed mutation never moves the cache.
+      setVolumesOverride(null);
+      console.error(error);
+    }
+  }
+
+  // Unreleased titles still allow progress edits — early screenings,
+  // pre-serialization chapters, and AniList data lag are all real.
+  if (!media.mediaListEntry) return null;
 
   return (
     <>
@@ -563,13 +637,38 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
             source={require("yep/assets/icons/progress.png")}
           />
         }
-        label={String(fbs("Progress", "Anime details progress stepper label"))}
+        label={
+          isManga
+            ? String(fbs("Chapters", "Manga details chapters stepper label"))
+            : String(fbs("Progress", "Anime details progress stepper label"))
+        }
         value={displayProgress}
-        upperBound={media.episodes ?? undefined}
+        upperBound={getMaxProgress(media) ?? undefined}
         lowerBound={0}
         onIncrement={() => changeProgress("inc")}
         onDecrement={() => changeProgress("dec")}
       />
+      {isManga ? (
+        <Stepper
+          icon={
+            <Image
+              style={{
+                height: 24,
+                width: 24,
+                marginRight: 4,
+                tintColor: darkTheme.text,
+              }}
+              source={require("yep/assets/icons/navigation/book.png")}
+            />
+          }
+          label={String(fbs("Volumes", "Manga details volumes stepper label"))}
+          value={displayVolumes}
+          upperBound={media.volumes ?? undefined}
+          lowerBound={0}
+          onIncrement={() => changeVolumes("inc")}
+          onDecrement={() => changeVolumes("dec")}
+        />
+      ) : null}
     </>
   );
 }
@@ -623,7 +722,7 @@ function ExternalLinksSection({ links }: { links?: ExternalLinkData[] }) {
 
 export default function Details() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const animeId = parseInt(id, 10);
+  const mediaId = parseInt(id, 10);
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const [shouldShowScoreToggleUI] = usePersistedState<boolean>(
@@ -634,7 +733,7 @@ export default function Details() {
   );
   const [showScore, setShowScore] = usePersistedState<boolean>(
     StorageKeys.SHOW_SCORE_FOR_MEDIA,
-    { id: String(animeId), doNotPersist: !shouldPersistScoreVisibility },
+    { id: String(mediaId), doNotPersist: !shouldPersistScoreVisibility },
   );
 
   useEffect(() => {
@@ -646,7 +745,7 @@ export default function Details() {
   const getTitle = useGetTitle();
 
   const { loading, data, refetch, error, networkStatus } = useGetAnimeQuery({
-    variables: { id: animeId },
+    variables: { id: mediaId },
     notifyOnNetworkStatusChange: true,
   });
   // Only a user pull (explicit refetch) sets networkStatus to refetch(4); the
@@ -672,12 +771,9 @@ export default function Details() {
   >(
     relations,
     function (result, value, _key) {
-      if (
-        !value?.relationType ||
-        !value.node ||
-        value.node.type !== "ANIME"
-      )
-        return result;
+      // Anime and manga relations both open in this details screen now, so
+      // nothing is filtered by type.
+      if (!value?.relationType || !value.node) return result;
 
       if (result[value?.relationType]) {
         result[value?.relationType]!.push(value.node);
@@ -693,7 +789,7 @@ export default function Details() {
   const externalLinks = media?.externalLinks?.filter(notEmpty);
   const studio = (media?.studios?.nodes ?? [])[0]?.name;
   const statusOptions = MediaListStatusWithLabel.map(({ value }) => ({
-    label: getMediaListStatusLabel(value),
+    label: getMediaListStatusLabel(value, media?.type),
     value,
   }));
 
@@ -706,7 +802,7 @@ export default function Details() {
         <RefreshControl
           refreshing={isRefetching}
           onRefresh={() => {
-            refetch({ id: animeId }).catch(() => {});
+            refetch({ id: mediaId }).catch(() => {});
           }}
           tintColor={darkTheme.text}
           titleColor={darkTheme.text}
@@ -718,11 +814,13 @@ export default function Details() {
           <DetailsSkeleton />
         ) : error ? (
           <EmptyState
-            title={String(fbs("Could not find anime", "Anime not found error title"))}
+            title={String(
+              fbs("Could not find this title", "Media not found error title"),
+            )}
             description={`${String(
               fbs(
-                "We ran into an unexpected error loading the requested anime:",
-                "Anime not found error description prefix",
+                "We ran into an unexpected error loading the requested title:",
+                "Media not found error description prefix",
               ),
             )} ${error?.message}`}
           />
@@ -730,7 +828,7 @@ export default function Details() {
       ) : media ? (
         <>
           <PosterInfoSection
-            animeId={animeId}
+            mediaId={mediaId}
             media={media}
             shouldShowScoreToggleUI={shouldShowScoreToggleUI}
             showScore={showScore}
@@ -738,7 +836,7 @@ export default function Details() {
             studio={studio}
           />
           <MediaListStatusButton
-            animeId={animeId}
+            mediaId={mediaId}
             media={media}
             statusOptions={statusOptions}
           />
@@ -760,11 +858,13 @@ export default function Details() {
         </>
       ) : (
         <EmptyState
-          title={String(fbs("Could not find anime", "Anime not found error title"))}
+          title={String(
+            fbs("Could not find this title", "Media not found error title"),
+          )}
           description={String(
             fbs(
-              "We ran into an unexpected error loading the requested anime.",
-              "Anime not found empty response description",
+              "We ran into an unexpected error loading the requested title.",
+              "Media not found empty response description",
             ),
           )}
         />

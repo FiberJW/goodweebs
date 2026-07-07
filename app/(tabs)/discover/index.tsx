@@ -15,11 +15,15 @@ import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
 import { ListFooterSpinner } from "yep/components/ListFooterSpinner";
 import { SearchBox } from "yep/components/SearchBox";
+import { StatusChip } from "yep/components/StatusChip";
 import {
-  useGetTrendingAnimeQuery,
-  useSearchAnimeQuery,
+  useGetTrendingMediaQuery,
+  useSearchMediaQuery,
 } from "yep/graphql/generated";
-import type { MediaPosterFragmentFragment } from "yep/graphql/generated";
+import type {
+  MediaPosterFragmentFragment,
+  MediaType,
+} from "yep/graphql/generated";
 import { useLoadNextPage } from "yep/hooks/helpers";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { DiscoverPoster } from "yep/screens/DiscoverScreen/DiscoverPoster";
@@ -48,6 +52,8 @@ function renderDiscoverPoster({
 }
 
 export default function Discover() {
+  // One toggle scopes both trending and search results to anime or manga.
+  const [mediaType, setMediaType] = useState<MediaType>("ANIME");
   const [searchTerm, setSearchTerm] = useState("");
   // Only the debounced copy hits the network: typing a title fires one query,
   // not one per keystroke against AniList's degraded 30/min rate limit.
@@ -69,8 +75,14 @@ export default function Discover() {
     refetch: refetchTrending,
     fetchMore: fetchMoreTrending,
     networkStatus: trendingNetworkStatus,
-  } = useGetTrendingAnimeQuery({
-    variables: { perPage: TRENDING_PER_PAGE },
+  } = useGetTrendingMediaQuery({
+    variables: {
+      perPage: TRENDING_PER_PAGE,
+      type: mediaType,
+      // TV-only trending for anime (the old behavior); manga trends across
+      // every format.
+      formatIn: mediaType === "ANIME" ? ["TV"] : undefined,
+    },
     notifyOnNetworkStatusChange: true,
   });
 
@@ -81,9 +93,13 @@ export default function Discover() {
     refetch: refetchSearch,
     fetchMore: fetchMoreSearch,
     networkStatus: searchNetworkStatus,
-  } = useSearchAnimeQuery({
+  } = useSearchMediaQuery({
     skip: debouncedSearchTerm.trim().length === 0,
-    variables: { search: debouncedSearchTerm, perPage: SEARCH_PER_PAGE },
+    variables: {
+      search: debouncedSearchTerm,
+      type: mediaType,
+      perPage: SEARCH_PER_PAGE,
+    },
     notifyOnNetworkStatusChange: true,
   });
 
@@ -141,7 +157,9 @@ export default function Discover() {
     if (!isLiquidGlass) return;
     navigation.setOptions({
       headerSearchBarOptions: {
-        placeholder: String(fbs("Search anime", "Search input placeholder")),
+        placeholder: String(
+          fbs("Search anime & manga", "Search input placeholder"),
+        ),
         hideWhenScrolling: false,
         onChangeText: (e: { nativeEvent: { text: string } }) =>
           setSearchTerm(e.nativeEvent.text),
@@ -164,7 +182,9 @@ export default function Discover() {
         <SearchBox
           value={searchTerm}
           onChangeText={(text) => setSearchTerm(text)}
-          placeholder={String(fbs("Search anime", "Search input placeholder"))}
+          placeholder={String(
+            fbs("Search anime & manga", "Search input placeholder"),
+          )}
           onCancelPress={() => {
             setSearchTerm("");
           }}
@@ -174,6 +194,20 @@ export default function Discover() {
         />
       ) : null}
       <View style={styles.innerContainer}>
+        <View style={styles.mediaTypeRow}>
+          <StatusChip
+            label={String(fbs("Anime", "Discover anime toggle label"))}
+            isSelected={mediaType === "ANIME"}
+            disabled={mediaType === "ANIME"}
+            onPress={() => setMediaType("ANIME")}
+          />
+          <StatusChip
+            label={String(fbs("Manga", "Discover manga toggle label"))}
+            isSelected={mediaType === "MANGA"}
+            disabled={mediaType === "MANGA"}
+            onPress={() => setMediaType("MANGA")}
+          />
+        </View>
         {isSearchLoading ? (
           <DiscoverSkeletonGrid
             {...{
@@ -233,7 +267,7 @@ export default function Discover() {
                     )}
                     description={String(
                       fbs(
-                        "You may have misspelled what you were looking for, or this anime isn't listed on AniList.",
+                        "You may have misspelled what you were looking for, or this title isn't listed on AniList.",
                         "No search results description",
                       ),
                     )}
@@ -273,7 +307,13 @@ export default function Discover() {
               ListHeaderComponent={
                 trendingList.length ? (
                   <Text style={styles.listHeader}>
-                    {String(fbs("Trending anime", "Trending anime list header"))}
+                    {mediaType === "MANGA"
+                      ? String(
+                          fbs("Trending manga", "Trending manga list header"),
+                        )
+                      : String(
+                          fbs("Trending anime", "Trending anime list header"),
+                        )}
                   </Text>
                 ) : null
               }
@@ -332,6 +372,11 @@ const styles = StyleSheet.create({
     color: darkTheme.text,
     fontFamily: Manrope.semiBold,
     fontSize: 20,
+    marginBottom: 16,
+  },
+  mediaTypeRow: {
+    flexDirection: "row",
+    gap: 8,
     marginBottom: 16,
   },
   outerContainer: {
