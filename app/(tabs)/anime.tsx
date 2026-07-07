@@ -1,4 +1,5 @@
 import { NetworkStatus } from "@apollo/client";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
@@ -11,9 +12,11 @@ import {
   FlatList,
 } from "react-native";
 
+import { white } from "yep/colors";
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
 import { ListFooterSpinner } from "yep/components/ListFooterSpinner";
+import { PressableOpacity } from "yep/components/PressableOpacity";
 import { StatusChip } from "yep/components/StatusChip";
 import {
   ANILIST_ACCESS_TOKEN_STORAGE,
@@ -112,6 +115,7 @@ export default function Anime() {
   const { data: viewerData } = useGetViewerQuery({
     skip: !accessToken,
   });
+  const unreadCount = viewerData?.Viewer?.unreadNotificationCount ?? 0;
 
   // The viewer id is stable per account, so persist it: on a cold start the
   // list query below can fire immediately instead of serializing behind a full
@@ -192,7 +196,45 @@ export default function Anime() {
     <View
       style={[styles.outerContainer, { backgroundColor: darkTheme.background }]}
     >
-      <Header label={String(fbs("Anime", "Anime tab header label"))} />
+      <Header
+        label={String(fbs("Anime", "Anime tab header label"))}
+        rightSlot={
+          accessToken ? (
+            <PressableOpacity
+              onPress={() => router.push("/notifications")}
+              accessibilityRole="button"
+              accessibilityLabel={String(
+                fbs(
+                  "Notifications",
+                  "Notifications button accessibility label",
+                ),
+              )}
+            >
+              <Image
+                style={{
+                  tintColor: white,
+                  height: 24,
+                  width: 24,
+                  // Dim the bell when there's nothing new.
+                  opacity: unreadCount > 0 ? 1 : 0.5,
+                }}
+                source={
+                  unreadCount > 0
+                    ? require("yep/assets/icons/navigation/bell.png")
+                    : require("yep/assets/icons/navigation/bell-outline.png")
+                }
+              />
+              {unreadCount > 0 ? (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </Text>
+                </View>
+              ) : null}
+            </PressableOpacity>
+          ) : undefined
+        }
+      />
       <FlatList
         // iOS native tabs float over content; automatic insets keep the last
         // rows scrollable clear of the glass bar (no-op on Android's JS tabs).
@@ -327,6 +369,23 @@ export default function Anime() {
 const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
+  },
+  badge: {
+    alignItems: "center",
+    backgroundColor: darkTheme.accent,
+    borderRadius: 9,
+    height: 18,
+    justifyContent: "center",
+    minWidth: 18,
+    paddingHorizontal: 4,
+    position: "absolute",
+    right: -8,
+    top: -6,
+  },
+  badgeText: {
+    color: darkTheme.text,
+    fontFamily: Manrope.semiBold,
+    fontSize: 10,
   },
   animeListDivider: {
     height: StyleSheet.hairlineWidth,

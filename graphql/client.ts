@@ -144,6 +144,15 @@ const retryLink = new RetryLink({
 // the richer cached data survives a leaner write and the details screen doesn't
 // have to refetch color/medium.
 const cache = new InMemoryCache({
+  // The notifications list is a union (NotificationUnion); the cache needs
+  // the concrete object types to match inline fragments on reads. Only the
+  // members we query are listed — add more if the query grows.
+  possibleTypes: {
+    NotificationUnion: [
+      "AiringNotification",
+      "RelatedMediaAdditionNotification",
+    ],
+  },
   typePolicies: {
     Query: {
       fields: {
@@ -161,6 +170,11 @@ const cache = new InMemoryCache({
             // the term (and not collide with trending's container).
             if (variables?.search != null) {
               return `search:${variables.search}`;
+            }
+            // The notifications screen: one container, keyed apart from
+            // trending/search so their pageInfo never clobbers each other.
+            if (variables?.reset != null) {
+              return "notifications";
             }
             return JSON.stringify({ ...args, page: undefined });
           },
@@ -184,6 +198,25 @@ const cache = new InMemoryCache({
             // the container (pull-to-refresh while fetchMore is in flight).
             // Appending it would leave a silent gap (rows 101-150 right after
             // row 50), so drop any page that isn't the next contiguous one.
+            if (
+              (variables?.page ?? 1) !==
+              nextPageForCount(existing.length, variables?.perPage)
+            ) {
+              return existing;
+            }
+            return mergeMediaListPages(
+              existing as unknown[],
+              incoming as unknown[],
+              (entry) => readField("id", entry as Reference),
+            );
+          },
+        },
+        // Same append-merge as mediaList/media: page 1 replaces, deeper
+        // pages must be contiguous, dedupe by id.
+        notifications: {
+          keyArgs: ["type_in"],
+          merge(existing, incoming, { variables, readField }) {
+            if (!existing || (variables?.page ?? 1) <= 1) return incoming;
             if (
               (variables?.page ?? 1) !==
               nextPageForCount(existing.length, variables?.perPage)
