@@ -3,10 +3,10 @@ import React from "react";
 
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import type { CharacterDataFragment } from "yep/graphql/generated";
+import type { CharacterListItemDataFragment } from "yep/graphql/generated";
 
 type Props = {
-  character: CharacterDataFragment;
+  character: CharacterListItemDataFragment;
 };
 
 export function CharacterItem({ character }: Props) {

@@ -137,7 +137,7 @@ fragment AnimeFragment on Media {
   }
   characters {
     nodes {
-      ...CharacterData
+      ...CharacterListItemData
     }
   }
 }

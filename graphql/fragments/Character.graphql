@@ -1,3 +1,16 @@
+# Lean selection for character rails (details screen): the row renders only the
+# poster + full name, so don't pull description/native/alternative for ~25
+# characters per anime — CharacterData (below) stays on the character screen.
+fragment CharacterListItemData on Character {
+  id
+  name {
+    full
+  }
+  image {
+    large
+  }
+}
+
 fragment CharacterData on Character {
   id
   isFavourite
