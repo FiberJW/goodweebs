@@ -4499,6 +4499,38 @@
                 "deprecationReason": null
               },
               {
+                "name": "countryOfOrigin_in",
+                "description": "Filter by the media's country of origin (max 10,000 items)",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "CountryCode",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "countryOfOrigin_not_in",
+                "description": "Filter by the media's country of origin (max 10,000 items)",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "CountryCode",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
                 "name": "duration",
                 "description": "Filter by the media's episode length",
                 "type": {
@@ -13625,7 +13657,7 @@
               },
               {
                 "name": "text",
-                "description": "The reply text",
+                "description": "The reply text (Min: 2, Max: 8000)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -13687,7 +13719,7 @@
             "args": [
               {
                 "name": "advancedScores",
-                "description": "Array of advanced scores",
+                "description": "Array of advanced scores (Min: 0, Max: 100)",
                 "type": {
                   "kind": "LIST",
                   "name": null,
@@ -13767,7 +13799,7 @@
               },
               {
                 "name": "notes",
-                "description": "Text notes",
+                "description": "Text notes (Min: 0, Max: 6000)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -13779,7 +13811,7 @@
               },
               {
                 "name": "priority",
-                "description": "Priority of planning",
+                "description": "Priority of planning (Min: 0, Max: 255)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -13803,7 +13835,7 @@
               },
               {
                 "name": "progress",
-                "description": "The amount of episodes/chapters consumed by the user",
+                "description": "The amount of episodes/chapters consumed by the user (Min: 0)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -13815,7 +13847,7 @@
               },
               {
                 "name": "progressVolumes",
-                "description": "The amount of volumes read by the user",
+                "description": "The amount of volumes read by the user (Min: 0)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -13827,7 +13859,7 @@
               },
               {
                 "name": "repeat",
-                "description": "The amount of times the user has rewatched/read the media",
+                "description": "The amount of times the user has rewatched/read the media (Min: 0, Max: 1000)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -13839,7 +13871,7 @@
               },
               {
                 "name": "score",
-                "description": "The score of the media in the user's chosen scoring method",
+                "description": "The score of the media in the user's chosen scoring method (Min: 0, Max: 100)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Float",
@@ -13851,7 +13883,7 @@
               },
               {
                 "name": "scoreRaw",
-                "description": "The score of the media in 100 point",
+                "description": "The score of the media in 100 point (Min: 0, Max: 100)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -13936,7 +13968,7 @@
               },
               {
                 "name": "message",
-                "description": "The activity message text",
+                "description": "The activity message text (Min: 2, Max: 10000)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -14034,7 +14066,7 @@
             "args": [
               {
                 "name": "body",
-                "description": "The main review text. Min:2200 characters",
+                "description": "The main review text (Min: 2600)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -14082,7 +14114,7 @@
               },
               {
                 "name": "score",
-                "description": "A short summary/preview of the review. Min:20, Max:120 characters",
+                "description": "The score of the review (Min: 0, Max: 100)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -14094,7 +14126,7 @@
               },
               {
                 "name": "summary",
-                "description": "A short summary/preview of the review. Min:20, Max:120 characters",
+                "description": "A short summary/preview of the review (Min: 20, Max: 120)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -14143,7 +14175,7 @@
               },
               {
                 "name": "text",
-                "description": "The activity text",
+                "description": "The activity text (Min: 5, Max: 10000)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -14168,7 +14200,7 @@
             "args": [
               {
                 "name": "body",
-                "description": "The main text body of the thread",
+                "description": "The main text body of the thread (Max: 30000)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -14248,7 +14280,7 @@
               },
               {
                 "name": "title",
-                "description": "The title of the thread",
+                "description": "The title of the thread (Min: 6, Max: 120)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -14273,7 +14305,7 @@
             "args": [
               {
                 "name": "comment",
-                "description": "The comment markdown text",
+                "description": "The comment markdown text (Min: 1, Max: 12000)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -14896,7 +14928,7 @@
             "args": [
               {
                 "name": "advancedScores",
-                "description": "Array of advanced scores",
+                "description": "Array of advanced scores (Min: 0, Max: 100)",
                 "type": {
                   "kind": "LIST",
                   "name": null,
@@ -14952,7 +14984,7 @@
               },
               {
                 "name": "notes",
-                "description": "Text notes",
+                "description": "Text notes (Min: 0, Max: 6000)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -14964,7 +14996,7 @@
               },
               {
                 "name": "priority",
-                "description": "Priority of planning",
+                "description": "Priority of planning (Min: 0, Max: 255)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -14988,7 +15020,7 @@
               },
               {
                 "name": "progress",
-                "description": "The amount of episodes/chapters consumed by the user",
+                "description": "The amount of episodes/chapters consumed by the user (Min: 0)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -15000,7 +15032,7 @@
               },
               {
                 "name": "progressVolumes",
-                "description": "The amount of volumes read by the user",
+                "description": "The amount of volumes read by the user (Min: 0)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -15012,7 +15044,7 @@
               },
               {
                 "name": "repeat",
-                "description": "The amount of times the user has rewatched/read the media",
+                "description": "The amount of times the user has rewatched/read the media (Min: 0, Max: 1000)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -15024,7 +15056,7 @@
               },
               {
                 "name": "score",
-                "description": "The score of the media in the user's chosen scoring method",
+                "description": "The score of the media in the user's chosen scoring method (Min: 0, Max: 100)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Float",
@@ -15036,7 +15068,7 @@
               },
               {
                 "name": "scoreRaw",
-                "description": "The score of the media in 100 point",
+                "description": "The score of the media in 100 point (Min: 0, Max: 100)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -15101,7 +15133,7 @@
               },
               {
                 "name": "activityMergeTime",
-                "description": "Minutes between activity for them to be merged together. 0 is Never, Above 2 weeks (20160 mins) is Always.",
+                "description": "Minutes between activity for them to be merged together. 0 is Never, Above 2 weeks (20160 mins) is Always. (Min: 0)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -15165,7 +15197,7 @@
               },
               {
                 "name": "donatorBadge",
-                "description": "Profile highlight color",
+                "description": "Profile highlight color (Max: 24)",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -16670,6 +16702,38 @@
                   "kind": "SCALAR",
                   "name": "CountryCode",
                   "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "countryOfOrigin_in",
+                "description": "Filter by the media's country of origin (max 10,000 items)",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "CountryCode",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "countryOfOrigin_not_in",
+                "description": "Filter by the media's country of origin (max 10,000 items)",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "CountryCode",
+                    "ofType": null
+                  }
                 },
                 "defaultValue": null,
                 "isDeprecated": false,
@@ -20174,6 +20238,38 @@
                   "kind": "SCALAR",
                   "name": "CountryCode",
                   "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "countryOfOrigin_in",
+                "description": "Filter by the media's country of origin (max 10,000 items)",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "CountryCode",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "countryOfOrigin_not_in",
+                "description": "Filter by the media's country of origin (max 10,000 items)",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "CountryCode",
+                    "ofType": null
+                  }
                 },
                 "defaultValue": null,
                 "isDeprecated": false,
@@ -27987,7 +28083,7 @@
           },
           {
             "name": "bans",
-            "description": null,
+            "description": "List of active bans. Mod-only",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -28263,7 +28359,7 @@
       {
         "kind": "OBJECT",
         "name": "UserActivityHistory",
-        "description": "A user's activity history stats.",
+        "description": "A user's activity history stats for the previous 6 months. Refreshes only periodically",
         "isOneOf": null,
         "fields": [
           {

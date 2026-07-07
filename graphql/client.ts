@@ -192,7 +192,7 @@ const cache = new InMemoryCache({
       },
     },
     Media: { fields: { coverImage: { merge: true } } },
-    Character: { fields: { name: { merge: true } } },
+    Character: { fields: { name: { merge: true }, image: { merge: true } } },
   },
 });
 

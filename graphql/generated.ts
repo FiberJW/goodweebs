@@ -781,6 +781,8 @@ export type InternalPageMediaArgs = {
   chapters_greater?: InputMaybe<Scalars['Int']['input']>;
   chapters_lesser?: InputMaybe<Scalars['Int']['input']>;
   countryOfOrigin?: InputMaybe<Scalars['CountryCode']['input']>;
+  countryOfOrigin_in?: InputMaybe<Array<InputMaybe<Scalars['CountryCode']['input']>>>;
+  countryOfOrigin_not_in?: InputMaybe<Array<InputMaybe<Scalars['CountryCode']['input']>>>;
   duration?: InputMaybe<Scalars['Int']['input']>;
   duration_greater?: InputMaybe<Scalars['Int']['input']>;
   duration_lesser?: InputMaybe<Scalars['Int']['input']>;
@@ -2702,6 +2704,8 @@ export type PageMediaArgs = {
   chapters_greater?: InputMaybe<Scalars['Int']['input']>;
   chapters_lesser?: InputMaybe<Scalars['Int']['input']>;
   countryOfOrigin?: InputMaybe<Scalars['CountryCode']['input']>;
+  countryOfOrigin_in?: InputMaybe<Array<InputMaybe<Scalars['CountryCode']['input']>>>;
+  countryOfOrigin_not_in?: InputMaybe<Array<InputMaybe<Scalars['CountryCode']['input']>>>;
   duration?: InputMaybe<Scalars['Int']['input']>;
   duration_greater?: InputMaybe<Scalars['Int']['input']>;
   duration_lesser?: InputMaybe<Scalars['Int']['input']>;
@@ -3101,6 +3105,8 @@ export type QueryMediaArgs = {
   chapters_greater?: InputMaybe<Scalars['Int']['input']>;
   chapters_lesser?: InputMaybe<Scalars['Int']['input']>;
   countryOfOrigin?: InputMaybe<Scalars['CountryCode']['input']>;
+  countryOfOrigin_in?: InputMaybe<Array<InputMaybe<Scalars['CountryCode']['input']>>>;
+  countryOfOrigin_not_in?: InputMaybe<Array<InputMaybe<Scalars['CountryCode']['input']>>>;
   duration?: InputMaybe<Scalars['Int']['input']>;
   duration_greater?: InputMaybe<Scalars['Int']['input']>;
   duration_lesser?: InputMaybe<Scalars['Int']['input']>;
@@ -4276,6 +4282,7 @@ export type User = {
   avatar?: Maybe<UserAvatar>;
   /** The user's banner images */
   bannerImage?: Maybe<Scalars['String']['output']>;
+  /** List of active bans. Mod-only */
   bans?: Maybe<Scalars['Json']['output']>;
   /** When the user's account was created. (Does not exist for accounts created before 2020) */
   createdAt?: Maybe<Scalars['Int']['output']>;
@@ -4335,7 +4342,7 @@ export type UserFavouritesArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
 };
 
-/** A user's activity history stats. */
+/** A user's activity history stats for the previous 6 months. Refreshes only periodically */
 export type UserActivityHistory = {
   __typename?: 'UserActivityHistory';
   /** The amount of activity on the day */
@@ -4713,7 +4720,9 @@ export type MediaExternalLinkDataFragment = { __typename?: 'MediaExternalLink', 
 
 export type MediaTrailerDataFragment = { __typename?: 'MediaTrailer', id?: string | null, thumbnail?: string | null, site?: string | null };
 
-export type AnimeFragmentFragment = { __typename?: 'Media', id: number, status?: MediaStatus | null, genres?: Array<string | null> | null, episodes?: number | null, description?: string | null, isFavourite: boolean, averageScore?: number | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, startDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, endDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, studios?: { __typename?: 'StudioConnection', nodes?: Array<{ __typename?: 'Studio', id: number, name: string } | null> | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null, trailer?: { __typename?: 'MediaTrailer', id?: string | null, thumbnail?: string | null, site?: string | null } | null, externalLinks?: Array<{ __typename?: 'MediaExternalLink', id: number, url?: string | null, site: string } | null> | null, nextAiringEpisode?: { __typename?: 'AiringSchedule', id: number, airingAt: number, episode: number } | null, mediaListEntry?: { __typename?: 'MediaList', id: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null } | null, relations?: { __typename?: 'MediaConnection', edges?: Array<{ __typename?: 'MediaEdge', id?: number | null, relationType?: MediaRelation | null, node?: { __typename?: 'Media', id: number, isFavourite: boolean, type?: MediaType | null, format?: MediaFormat | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null } | null } | null> | null } | null, characters?: { __typename?: 'CharacterConnection', nodes?: Array<{ __typename?: 'Character', id: number, isFavourite: boolean, description?: string | null, name?: { __typename?: 'CharacterName', first?: string | null, last?: string | null, full?: string | null, native?: string | null, alternative?: Array<string | null> | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null, medium?: string | null } | null } | null> | null } | null };
+export type AnimeFragmentFragment = { __typename?: 'Media', id: number, status?: MediaStatus | null, genres?: Array<string | null> | null, episodes?: number | null, description?: string | null, isFavourite: boolean, averageScore?: number | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, startDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, endDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, studios?: { __typename?: 'StudioConnection', nodes?: Array<{ __typename?: 'Studio', id: number, name: string } | null> | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null, trailer?: { __typename?: 'MediaTrailer', id?: string | null, thumbnail?: string | null, site?: string | null } | null, externalLinks?: Array<{ __typename?: 'MediaExternalLink', id: number, url?: string | null, site: string } | null> | null, nextAiringEpisode?: { __typename?: 'AiringSchedule', id: number, airingAt: number, episode: number } | null, mediaListEntry?: { __typename?: 'MediaList', id: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null } | null, relations?: { __typename?: 'MediaConnection', edges?: Array<{ __typename?: 'MediaEdge', id?: number | null, relationType?: MediaRelation | null, node?: { __typename?: 'Media', id: number, isFavourite: boolean, type?: MediaType | null, format?: MediaFormat | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null } | null } | null> | null } | null, characters?: { __typename?: 'CharacterConnection', nodes?: Array<{ __typename?: 'Character', id: number, name?: { __typename?: 'CharacterName', full?: string | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null } | null } | null> | null } | null };
+
+export type CharacterListItemDataFragment = { __typename?: 'Character', id: number, name?: { __typename?: 'CharacterName', full?: string | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null } | null };
 
 export type CharacterDataFragment = { __typename?: 'Character', id: number, isFavourite: boolean, description?: string | null, name?: { __typename?: 'CharacterName', first?: string | null, last?: string | null, full?: string | null, native?: string | null, alternative?: Array<string | null> | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null, medium?: string | null } | null };
 
@@ -4763,7 +4772,7 @@ export type GetAnimeQueryVariables = Exact<{
 }>;
 
 
-export type GetAnimeQuery = { __typename?: 'Query', Media?: { __typename?: 'Media', id: number, status?: MediaStatus | null, genres?: Array<string | null> | null, episodes?: number | null, description?: string | null, isFavourite: boolean, averageScore?: number | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, startDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, endDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, studios?: { __typename?: 'StudioConnection', nodes?: Array<{ __typename?: 'Studio', id: number, name: string } | null> | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null, trailer?: { __typename?: 'MediaTrailer', id?: string | null, thumbnail?: string | null, site?: string | null } | null, externalLinks?: Array<{ __typename?: 'MediaExternalLink', id: number, url?: string | null, site: string } | null> | null, nextAiringEpisode?: { __typename?: 'AiringSchedule', id: number, airingAt: number, episode: number } | null, mediaListEntry?: { __typename?: 'MediaList', id: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null } | null, relations?: { __typename?: 'MediaConnection', edges?: Array<{ __typename?: 'MediaEdge', id?: number | null, relationType?: MediaRelation | null, node?: { __typename?: 'Media', id: number, isFavourite: boolean, type?: MediaType | null, format?: MediaFormat | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null } | null } | null> | null } | null, characters?: { __typename?: 'CharacterConnection', nodes?: Array<{ __typename?: 'Character', id: number, isFavourite: boolean, description?: string | null, name?: { __typename?: 'CharacterName', first?: string | null, last?: string | null, full?: string | null, native?: string | null, alternative?: Array<string | null> | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null, medium?: string | null } | null } | null> | null } | null } | null };
+export type GetAnimeQuery = { __typename?: 'Query', Media?: { __typename?: 'Media', id: number, status?: MediaStatus | null, genres?: Array<string | null> | null, episodes?: number | null, description?: string | null, isFavourite: boolean, averageScore?: number | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, startDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, endDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, studios?: { __typename?: 'StudioConnection', nodes?: Array<{ __typename?: 'Studio', id: number, name: string } | null> | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null, trailer?: { __typename?: 'MediaTrailer', id?: string | null, thumbnail?: string | null, site?: string | null } | null, externalLinks?: Array<{ __typename?: 'MediaExternalLink', id: number, url?: string | null, site: string } | null> | null, nextAiringEpisode?: { __typename?: 'AiringSchedule', id: number, airingAt: number, episode: number } | null, mediaListEntry?: { __typename?: 'MediaList', id: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null } | null, relations?: { __typename?: 'MediaConnection', edges?: Array<{ __typename?: 'MediaEdge', id?: number | null, relationType?: MediaRelation | null, node?: { __typename?: 'Media', id: number, isFavourite: boolean, type?: MediaType | null, format?: MediaFormat | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null } | null } | null> | null } | null, characters?: { __typename?: 'CharacterConnection', nodes?: Array<{ __typename?: 'Character', id: number, name?: { __typename?: 'CharacterName', full?: string | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null } | null } | null> | null } | null } | null };
 
 export type GetAnimeListQueryVariables = Exact<{
   userId?: InputMaybe<Scalars['Int']['input']>;
@@ -4887,22 +4896,15 @@ export const AnimeRelationFragmentFragmentDoc = gql`
   }
 }
     `;
-export const CharacterDataFragmentDoc = gql`
-    fragment CharacterData on Character {
+export const CharacterListItemDataFragmentDoc = gql`
+    fragment CharacterListItemData on Character {
   id
-  isFavourite
   name {
-    first
-    last
     full
-    native
-    alternative
   }
   image {
     large
-    medium
   }
-  description
 }
     `;
 export const AnimeFragmentFragmentDoc = gql`
@@ -4968,14 +4970,32 @@ export const AnimeFragmentFragmentDoc = gql`
   }
   characters {
     nodes {
-      ...CharacterData
+      ...CharacterListItemData
     }
   }
 }
     ${MediaTrailerDataFragmentDoc}
 ${MediaExternalLinkDataFragmentDoc}
 ${AnimeRelationFragmentFragmentDoc}
-${CharacterDataFragmentDoc}`;
+${CharacterListItemDataFragmentDoc}`;
+export const CharacterDataFragmentDoc = gql`
+    fragment CharacterData on Character {
+  id
+  isFavourite
+  name {
+    first
+    last
+    full
+    native
+    alternative
+  }
+  image {
+    large
+    medium
+  }
+  description
+}
+    `;
 export const FavouritesDataFragmentDoc = gql`
     fragment FavouritesData on Favourites {
   anime {
