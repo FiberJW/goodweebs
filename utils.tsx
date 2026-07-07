@@ -89,13 +89,13 @@ function getMonthName(month: number): string {
   }
 }
 
+// getTitle runs on titles from many fragments, but every one selects the same
+// { romaji english native }. Derive the shape from AnimeListEntryFragment's title
+// selection (schema-anchored, so a MediaTitle change surfaces here at compile
+// time) rather than hand-writing it. Partial keeps callers that type these fields
+// optionally (profile favourites, notification rows) assignable.
 type TitleInput =
-  | {
-      __typename?: "MediaTitle";
-      romaji?: string | null;
-      english?: string | null;
-      native?: string | null;
-    }
+  | Partial<NonNullable<ResultOf<typeof AnimeListEntryFragment>["title"]>>
   | null
   | undefined;
 
@@ -196,16 +196,15 @@ export function getMediaStatusLabel(status: MediaStatus): string {
   }
 }
 
+// Same rationale as TitleInput: dates are always selected as { year month day };
+// derive from AnimeListEntryFragment's startDate selection.
+type FuzzyDateInput =
+  | Partial<NonNullable<ResultOf<typeof AnimeListEntryFragment>["startDate"]>>
+  | null
+  | undefined;
+
 export function getDateText(
-  date:
-    | {
-        __typename?: "FuzzyDate";
-        year?: number | null;
-        month?: number | null;
-        day?: number | null;
-      }
-    | null
-    | undefined,
+  date: FuzzyDateInput,
   dateType?: string,
   options?: { highlight?: boolean; locale?: string },
 ): React.ReactNode | string | undefined {
