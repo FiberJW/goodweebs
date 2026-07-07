@@ -1,3 +1,4 @@
+import { useApolloClient } from "@apollo/client";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { fbs } from "fbtee";
 import React, { useEffect } from "react";
@@ -8,8 +9,8 @@ import { DescriptionRenderer } from "yep/components/DescriptionRenderer";
 import { EmptyState } from "yep/components/EmptyState";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { LikeButton } from "yep/components/PosterAndTitle/LikeButton";
+import { applyFavoriteToCache } from "yep/graphql/favorites";
 import {
-  GetCharacterDocument,
   useToggleFavoriteMutation,
   useGetCharacterQuery,
 } from "yep/graphql/generated";
@@ -26,10 +27,8 @@ export default function Character() {
     notifyOnNetworkStatusChange: true,
   });
 
-  // Keep the Profile favorites shelves (GetViewer, cache-first) in sync.
-  const [toggleFavorite] = useToggleFavoriteMutation({
-    refetchQueries: ["GetViewer"],
-  });
+  const [toggleFavorite] = useToggleFavoriteMutation();
+  const { cache } = useApolloClient();
 
   const character = data?.Character;
 
@@ -82,23 +81,26 @@ export default function Character() {
                 <LikeButton
                   isLiked={Boolean(character?.isFavourite)}
                   onPress={async () => {
+                    if (!character) return;
+                    // Flip the heart (and patch the Profile shelf) in cache
+                    // before the request so the tap feels instant; revert on
+                    // failure. The global onError link already toasts.
+                    const next = !character.isFavourite;
+                    applyFavoriteToCache(
+                      cache,
+                      { characterId: character.id },
+                      next,
+                    );
                     try {
                       await toggleFavorite({
-                        variables: {
-                          characterId: character?.id,
-                        },
-                        // Includes "GetViewer" because per-call refetchQueries
-                        // REPLACES the hook-level list (Apollo shallow-merges
-                        // mutate options), it doesn't extend it.
-                        refetchQueries: [
-                          {
-                            query: GetCharacterDocument,
-                            variables: { id: characterId },
-                          },
-                          "GetViewer",
-                        ],
+                        variables: { characterId: character.id },
                       });
                     } catch (error) {
+                      applyFavoriteToCache(
+                        cache,
+                        { characterId: character.id },
+                        !next,
+                      );
                       console.error(error);
                     }
                   }}
