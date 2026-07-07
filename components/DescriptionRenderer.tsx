@@ -27,8 +27,11 @@ export function DescriptionRenderer({ description }: Props) {
 
   const html = markdownToHtmlConverter
     .makeHtml(description)
-    .replace("<p>~!", "~!")
-    .replace("!~</p>", "!~")
+    // Global: a description can hold several spoiler blocks; the previous
+    // string-literal replace only unwrapped the first, leaving later blocks
+    // with stray <p> tags around the spoiler markers.
+    .replace(/<p>~!/g, "~!")
+    .replace(/!~<\/p>/g, "!~")
     .replace(
       spoilerRegex,
       showSpoilers

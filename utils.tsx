@@ -119,6 +119,12 @@ export function getReadableMediaRelation(mediaRelation: MediaRelation): string {
       return String(fbs("Compilation", "Media relation compilation"));
     case "CONTAINS":
       return String(fbs("Contains", "Media relation contains"));
+    default: {
+      // AniList adds relation values over time; an unhandled one would render
+      // as undefined. Humanize the raw enum ("SIDE_STORY" -> "Side story").
+      const raw = String(mediaRelation).replace(/_/g, " ").toLowerCase();
+      return raw.charAt(0).toUpperCase() + raw.slice(1);
+    }
   }
 }
 
