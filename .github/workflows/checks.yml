@@ -1,0 +1,29 @@
+name: Checks
+
+on:
+  pull_request:
+    branches: [senpai]
+  push:
+    branches: [senpai]
+
+concurrency:
+  group: checks-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  types-and-graphql:
+    name: Typecheck + GraphQL validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      # tsc covers gql.tada's inferred types (masking, readFragment, field access)
+      # against the committed graphql-env.d.ts; gql:check validates every
+      # graphql() document against graphql.schema.json (catches unknown fields /
+      # bad selections that tsc alone does not). Both rely on the committed
+      # schema + env, so no network or codegen step is needed in CI.
+      - name: Typecheck
+        run: bun run typecheck
+      - name: GraphQL document validation
+        run: bun run gql:check

@@ -5,6 +5,8 @@
     "web": "APP_VARIANT=development bunx expo start --web -c",
     "gql": "gql-tada generate output",
     "gql:schema": "gql-tada generate schema https://graphql.anilist.co --output graphql.schema.json",
+    "gql:check": "gql-tada check",
+    "typecheck": "tsc --noEmit",
     "i18n:collect": "fbtee collect --src . app components containers hooks screens",
     "i18n:prepare": "fbtee prepare-translations --locales ja_JP --output-dir translations",
     "i18n:translate": "fbtee translate --translations translations/*.json --output-dir i18n/translations",
