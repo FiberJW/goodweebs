@@ -20,6 +20,7 @@ fragment AnimeListEntryFragment on Media {
   }
   coverImage {
     large
+    medium
   }
   episodes
   status

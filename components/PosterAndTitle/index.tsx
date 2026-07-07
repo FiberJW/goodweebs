@@ -47,6 +47,11 @@ export function PosterAndTitle({ size, uri, title, style, children }: Props) {
     <View style={[styles.container, style]}>
       <ImageBackground
         contentFit="cover"
+        // Ties the rendered bitmap to the uri in recycled list rows (anime
+        // list, discover grid): without it a recycled row shows the previous
+        // poster until the new one decodes — visible wrong-cover flicker
+        // during fast scrolls.
+        recyclingKey={uri}
         style={[styles.poster, { width: posterWidth, height: posterHeight }]}
         source={{ uri }}
       >
