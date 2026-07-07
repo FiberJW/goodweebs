@@ -215,6 +215,19 @@ const cache = new InMemoryCache({
   },
 });
 
+// A single response can carry several "invalid token" errors (one per failed
+// field), and more can arrive from concurrent operations. The auto-logout
+// must run once per session, not once per error — otherwise N errors mean N
+// toasts and N reloadAsync calls racing each other.
+let handlingAuthLogout = false;
+
+function isAuthError(error: { message: string }) {
+  return (
+    error.message.toLowerCase().includes("invalid token") ||
+    ("status" in error && error.status === 401)
+  );
+}
+
 export async function createClient() {
   // A failed cache restore must not block startup — fall back to an
   // in-memory-only cache so the app still boots.
@@ -237,45 +250,46 @@ export async function createClient() {
         if (graphQLErrors)
           void (async () => {
             try {
-              await Promise.all(
-                graphQLErrors.map(async (e) => {
-                  Sentry.captureMessage(e.message);
+              for (const e of graphQLErrors) {
+                Sentry.captureMessage(e.message);
+                console.error("[GraphQL error]:", e);
+                if (!isAuthError(e)) {
+                  Toast.show(e.message, {
+                    duration: Toast.durations.LONG,
+                    position: Toast.positions.TOP,
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                    delay: 0,
+                  });
+                }
+              }
 
-                  console.error("[GraphQL error]:", e);
-
-                  if (
-                    e.message.toLowerCase().includes("invalid token") ||
-                    // TODO: revisit this auto-logout logic
-                    ("status" in e && e.status === 401)
-                  ) {
-                    await SecureStore.deleteItemAsync(
-                      ANILIST_ACCESS_TOKEN_STORAGE,
-                    );
-                    primeAccessToken(null);
-                    // Matches the Settings logout: a stale viewer id would
-                    // fetch the previous user's list on the next login.
-                    localStorage.removeItem(StorageKeys.ANILIST_VIEWER_ID);
-                    Toast.show("You've been logged out. Please log in again.", {
-                      duration: Toast.durations.LONG,
-                      position: Toast.positions.TOP,
-                      shadow: true,
-                      animation: true,
-                      hideOnPress: true,
-                      delay: 0,
-                    });
-                    await Updates.reloadAsync();
-                  } else {
-                    Toast.show(e.message, {
-                      duration: Toast.durations.LONG,
-                      position: Toast.positions.TOP,
-                      shadow: true,
-                      animation: true,
-                      hideOnPress: true,
-                      delay: 0,
-                    });
-                  }
-                }),
-              );
+              if (graphQLErrors.some(isAuthError) && !handlingAuthLogout) {
+                handlingAuthLogout = true;
+                // Clear the memory mirror first so in-flight and queued
+                // operations stop attaching the dead token immediately.
+                primeAccessToken(null);
+                await SecureStore.deleteItemAsync(
+                  ANILIST_ACCESS_TOKEN_STORAGE,
+                );
+                // Matches the Settings logout: a stale viewer id would
+                // fetch the previous user's list on the next login.
+                localStorage.removeItem(StorageKeys.ANILIST_VIEWER_ID);
+                Toast.show("You've been logged out. Please log in again.", {
+                  duration: Toast.durations.LONG,
+                  position: Toast.positions.TOP,
+                  shadow: true,
+                  animation: true,
+                  hideOnPress: true,
+                  delay: 0,
+                });
+                // Throws in dev/Expo Go builds (no embedded update); the
+                // token is already cleared above, so the session is dead
+                // either way — the guard stays set to keep later auth errors
+                // from re-toasting and re-deleting.
+                await Updates.reloadAsync();
+              }
             } catch (error) {
               Sentry.captureException(error);
               console.error("[GraphQL error handler failed]:", error);
