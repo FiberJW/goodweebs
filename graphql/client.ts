@@ -29,6 +29,13 @@ let cachedAccessToken: string | null | undefined;
 
 export function primeAccessToken(token: string | null) {
   cachedAccessToken = token;
+  // A fresh login is a new auth session: re-arm the auto-logout guard. This
+  // matters when Updates.reloadAsync() failed (dev/Expo Go) and the user logs
+  // in again in the same JS runtime — without this, a later expired token
+  // would never trigger the logout flow.
+  if (token) {
+    handlingAuthLogout = false;
+  }
 }
 
 const authLink = setContext(async (_, { headers }) => {
