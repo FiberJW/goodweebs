@@ -1,4 +1,4 @@
-import { NetworkStatus } from "@apollo/client";
+import { NetworkStatus, useQuery } from "@apollo/client";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
@@ -14,6 +14,7 @@ import {
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
 import { ListFooterSpinner } from "yep/components/ListFooterSpinner";
+import { AnimeListEntryFragment } from "yep/components/MediaListItem";
 import { StatusChip } from "yep/components/StatusChip";
 import {
   ANILIST_ACCESS_TOKEN_STORAGE,
@@ -25,15 +26,10 @@ import {
   titleSortForLocale,
 } from "yep/graphql/animeListPagination";
 import { primeAccessToken } from "yep/graphql/client";
-import {
-  useGetViewerQuery,
-  useGetMediaListQuery,
-} from "yep/graphql/generated";
-import type {
-  AnimeListEntryFragmentFragment,
-  MediaListStatus,
-  MediaType,
-} from "yep/graphql/generated";
+import type { MediaListStatus, MediaType } from "yep/graphql/enums";
+import { graphql, readFragment } from "yep/graphql/tada";
+import type { FragmentOf } from "yep/graphql/tada";
+import { GetViewer } from "yep/graphql/viewer";
 import { useAniListAuthRequest } from "yep/hooks/auth";
 import {
   StorageKeys,
@@ -47,6 +43,41 @@ import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
 import { getMediaListStatusLabel, notEmpty } from "yep/utils";
 
+// Page-based pagination (AniList flat paginator): Page.mediaList is a flat,
+// ungrouped array; the cache typePolicy (graphql/client.ts) owns the page
+// merge, deduping by id.
+const GetMediaList = graphql(
+  `
+    query GetMediaList(
+      $userId: Int
+      $type: MediaType!
+      $status: MediaListStatus
+      $sort: [MediaListSort]
+      $page: Int = 1
+      $perPage: Int = 50
+    ) {
+      Page(page: $page, perPage: $perPage) {
+        pageInfo {
+          hasNextPage
+          total
+        }
+        mediaList(
+          userId: $userId
+          type: $type
+          status: $status
+          sort: $sort
+        ) {
+          id
+          media {
+            ...AnimeListEntryFragment
+          }
+        }
+      }
+    }
+  `,
+  [AnimeListEntryFragment],
+);
+
 type StatusOption = {
   label: string;
   value: MediaListStatus;
@@ -56,7 +87,7 @@ type StatusOption = {
 type MediaListEntry = {
   id: number;
   progress?: number | null;
-  media?: AnimeListEntryFragmentFragment | null;
+  media?: FragmentOf<typeof AnimeListEntryFragment> | null;
 };
 type MediaListRow = {
   entry: MediaListEntry;
@@ -92,11 +123,14 @@ function renderMediaItem({
 }: {
   item: MediaListRow;
 }) {
+  const media = entry.media
+    ? readFragment(AnimeListEntryFragment, entry.media)
+    : null;
   return (
     <MediaListItemContainer
       seedData={{
         id: entry.id,
-        progress: entry.media?.mediaListEntry?.progress ?? 0,
+        progress: media?.mediaListEntry?.progress ?? 0,
         media: entry.media ?? null,
       }}
       first={first}
@@ -130,7 +164,7 @@ export function MediaListScreen({
 
   const [, , promptAsync] = useAniListAuthRequest();
   // Also keeps the viewer cache warm for the notifications tab badge.
-  const { data: viewerData } = useGetViewerQuery({
+  const { data: viewerData } = useQuery(GetViewer, {
     skip: !accessToken,
   });
 
@@ -154,7 +188,7 @@ export function MediaListScreen({
     refetch,
     fetchMore,
     networkStatus,
-  } = useGetMediaListQuery({
+  } = useQuery(GetMediaList, {
     skip: !viewerId || !accessToken,
     variables: {
       userId: viewerId,

@@ -3,12 +3,10 @@ import React, { useState } from "react";
 
 import { AnimeListItem } from "yep/components/AnimeListItem";
 import { MangaListItem } from "yep/components/MangaListItem";
-import { UpdateProgressDocument } from "yep/graphql/generated";
-import type {
-  AnimeListEntryFragmentFragment,
-  UpdateProgressMutation,
-  UpdateProgressMutationVariables,
-} from "yep/graphql/generated";
+import { AnimeListEntryFragment } from "yep/components/MediaListItem";
+import { UpdateProgress } from "yep/graphql/mutations";
+import { readFragment } from "yep/graphql/tada";
+import type { FragmentOf } from "yep/graphql/tada";
 import { useDebouncedMutation } from "yep/hooks/helpers";
 import { getMaxProgress } from "yep/utils";
 
@@ -16,7 +14,7 @@ type Props = {
   seedData: {
     id: number;
     progress: number;
-    media: AnimeListEntryFragmentFragment | null;
+    media: FragmentOf<typeof AnimeListEntryFragment> | null;
   };
   first: boolean;
   last: boolean;
@@ -29,9 +27,10 @@ type ProgressOverride = {
 
 export function MediaListItemContainer({ seedData, first, last }: Props) {
   const media = seedData.media;
-  const mediaListEntryId = seedData.media?.mediaListEntry?.id;
-  const cacheProgress = seedData.media?.mediaListEntry?.progress ?? 0;
-  const progressUpperBound = getMaxProgress(seedData.media);
+  const m = media ? readFragment(AnimeListEntryFragment, media) : null;
+  const mediaListEntryId = m?.mediaListEntry?.id;
+  const cacheProgress = m?.mediaListEntry?.progress ?? 0;
+  const progressUpperBound = getMaxProgress(m);
 
   const [progressOverride, setProgressOverride] =
     useState<ProgressOverride | null>(null);
@@ -48,11 +47,8 @@ export function MediaListItemContainer({ seedData, first, last }: Props) {
     ? activeProgressOverride.progress
     : cacheProgress;
 
-  const updateProgressDebounced = useDebouncedMutation<
-    UpdateProgressMutation,
-    UpdateProgressMutationVariables
-  >({
-    mutationDocument: UpdateProgressDocument,
+  const updateProgressDebounced = useDebouncedMutation({
+    mutationDocument: UpdateProgress,
     makeUpdateFunction: (variables) => (cache) => {
       if (!mediaListEntryId || variables?.progress === undefined) return;
 
@@ -102,9 +98,9 @@ export function MediaListItemContainer({ seedData, first, last }: Props) {
     }
   }
 
-  if (!media) return null;
+  if (!media || !m) return null;
 
-  const ListItem = media.type === "MANGA" ? MangaListItem : AnimeListItem;
+  const ListItem = m.type === "MANGA" ? MangaListItem : AnimeListItem;
 
   return (
     <ListItem

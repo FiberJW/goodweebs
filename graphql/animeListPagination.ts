@@ -1,4 +1,4 @@
-import type { MediaListSort } from "./generated";
+import type { MediaListSort } from "yep/graphql/enums";
 
 export const ANIME_LIST_PER_PAGE = 50;
 

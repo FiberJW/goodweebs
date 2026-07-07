@@ -6,17 +6,16 @@ import { ja } from "date-fns/locale/ja";
 import { fbs } from "fbtee";
 import { Platform, Text } from "react-native";
 
+import type { AnimeListEntryFragment } from "yep/components/MediaListItem";
 import type {
-  MediaTitle,
-  MediaRelation,
-  AnimeListEntryFragmentFragment,
-  MediaStatus,
   MediaListStatus,
+  MediaRelation,
+  MediaStatus,
   MediaType,
-  Maybe,
-  FuzzyDate,
   ScoreFormat,
-} from "./graphql/generated";
+} from "yep/graphql/enums";
+import type { ResultOf } from "yep/graphql/tada";
+
 import { useLocaleContext } from "./i18n/LocaleContext";
 
 // Matches AniList's own display: denominator for point scales, a star for the
@@ -90,10 +89,17 @@ function getMonthName(month: number): string {
   }
 }
 
-function getTitle(
-  title: MediaTitle | undefined | null,
-  locale?: string,
-): string | undefined {
+type TitleInput =
+  | {
+      __typename?: "MediaTitle";
+      romaji?: string | null;
+      english?: string | null;
+      native?: string | null;
+    }
+  | null
+  | undefined;
+
+function getTitle(title: TitleInput, locale?: string): string | undefined {
   if (!title) return undefined;
 
   if (locale === "ja_JP") {
@@ -106,7 +112,7 @@ function getTitle(
 export function useGetTitle() {
   const { locale } = useLocaleContext();
 
-  return (title: MediaTitle | undefined | null) => getTitle(title, locale);
+  return (title: TitleInput) => getTitle(title, locale);
 }
 
 export function getReadableMediaRelation(mediaRelation: MediaRelation): string {
@@ -191,9 +197,15 @@ export function getMediaStatusLabel(status: MediaStatus): string {
 }
 
 export function getDateText(
-  date: Maybe<
-    { __typename?: "FuzzyDate" } & Pick<FuzzyDate, "year" | "month" | "day">
-  >,
+  date:
+    | {
+        __typename?: "FuzzyDate";
+        year?: number | null;
+        month?: number | null;
+        day?: number | null;
+      }
+    | null
+    | undefined,
   dateType?: string,
   options?: { highlight?: boolean; locale?: string },
 ): React.ReactNode | string | undefined {
@@ -240,7 +252,7 @@ export function getDateText(
 }
 
 export function getAiringStatusText(
-  media: AnimeListEntryFragmentFragment,
+  media: ResultOf<typeof AnimeListEntryFragment>,
   locale?: string,
 ): React.ReactNode | string | undefined {
   switch (media.status) {
@@ -302,7 +314,9 @@ export function getMaxProgress(
 
 // Manga-only companion to getProgress: volume progress straight from the
 // cache (the list row's steppers only drive chapters, so no optimistic value).
-export function getVolumesProgress(media: AnimeListEntryFragmentFragment) {
+export function getVolumesProgress(
+  media: ResultOf<typeof AnimeListEntryFragment>,
+) {
   const volumeAbbreviation = String(
     fbs("volumes read", "Volume progress text"),
   );
@@ -314,7 +328,7 @@ export function getVolumesProgress(media: AnimeListEntryFragmentFragment) {
 }
 
 export function getProgress(
-  media: AnimeListEntryFragmentFragment,
+  media: ResultOf<typeof AnimeListEntryFragment>,
   progress: number,
 ) {
   const unitAbbreviation =

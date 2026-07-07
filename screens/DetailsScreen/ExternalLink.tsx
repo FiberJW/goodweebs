@@ -28,11 +28,25 @@ import {
   officialSiteFallback,
 } from "yep/colors";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import type { MediaExternalLinkDataFragment } from "yep/graphql/generated";
+import { graphql, readFragment } from "yep/graphql/tada";
+import type { FragmentOf } from "yep/graphql/tada";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
-export function ExternalLink({ url, site }: MediaExternalLinkDataFragment) {
+export const MediaExternalLinkData = graphql(`
+  fragment MediaExternalLinkData on MediaExternalLink {
+    id
+    url
+    site
+  }
+`);
+
+type Props = {
+  link: FragmentOf<typeof MediaExternalLinkData>;
+};
+
+export function ExternalLink({ link }: Props) {
+  const { url, site } = readFragment(MediaExternalLinkData, link);
   let color = darkTheme.iconFill;
 
   switch (site.toUpperCase()) {

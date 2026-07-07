@@ -4,13 +4,16 @@ import { FlatList, RefreshControl, StyleSheet, Text } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { ListFooterSpinner } from "yep/components/ListFooterSpinner";
-import type { MediaPosterFragmentFragment } from "yep/graphql/generated";
-import { DiscoverPoster } from "yep/screens/DiscoverScreen/DiscoverPoster";
+import { readFragment, type FragmentOf } from "yep/graphql/tada";
+import {
+  DiscoverPoster,
+  MediaPosterFragment,
+} from "yep/screens/DiscoverScreen/DiscoverPoster";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
 type Props = {
-  data: MediaPosterFragmentFragment[];
+  data: readonly FragmentOf<typeof MediaPosterFragment>[];
   searchTerm: string;
   loading: boolean;
   isFetchingMore: boolean;
@@ -19,17 +22,15 @@ type Props = {
   onRefresh: () => void;
 };
 
-type ItemWithId = { id: number };
-
-function keyExtractor(item: ItemWithId) {
-  return `${item.id}`;
+function keyExtractor(item: FragmentOf<typeof MediaPosterFragment>) {
+  return `${readFragment(MediaPosterFragment, item).id}`;
 }
 
 function renderDiscoverPoster({
   item,
   index,
 }: {
-  item: MediaPosterFragmentFragment;
+  item: FragmentOf<typeof MediaPosterFragment>;
   index: number;
 }) {
   return <DiscoverPoster item={item} index={index} />;

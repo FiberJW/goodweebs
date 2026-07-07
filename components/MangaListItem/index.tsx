@@ -1,17 +1,18 @@
 import React from "react";
 
-import type { AnimeListEntryFragmentFragment } from "yep/graphql/generated";
+import { readFragment } from "yep/graphql/tada";
+import type { FragmentOf } from "yep/graphql/tada";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { getAiringStatusText, getVolumesProgress } from "yep/utils";
 
-import { MediaListItem } from "../MediaListItem";
+import { AnimeListEntryFragment, MediaListItem } from "../MediaListItem";
 
 type Props = {
   onIncrement: () => void;
   onDecrement: () => void;
   progress: number;
   disabled?: boolean;
-  media: AnimeListEntryFragmentFragment;
+  media: FragmentOf<typeof AnimeListEntryFragment>;
   first: boolean;
   last: boolean;
 };
@@ -26,6 +27,7 @@ export function MangaListItem({
   last,
 }: Props) {
   const { locale } = useLocaleContext();
+  const m = readFragment(AnimeListEntryFragment, media);
 
   return (
     <MediaListItem
@@ -36,8 +38,8 @@ export function MangaListItem({
       onDecrement={onDecrement}
       first={first}
       last={last}
-      airingStatus={getAiringStatusText(media, locale)}
-      secondaryProgress={getVolumesProgress(media)}
+      airingStatus={getAiringStatusText(m, locale)}
+      secondaryProgress={getVolumesProgress(m)}
     />
   );
 }

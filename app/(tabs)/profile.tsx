@@ -1,4 +1,4 @@
-import { NetworkStatus } from "@apollo/client";
+import { NetworkStatus, useQuery } from "@apollo/client";
 import { Image, ImageBackground } from "expo-image";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
@@ -20,7 +20,7 @@ import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { primeAccessToken } from "yep/graphql/client";
-import { useGetViewerQuery } from "yep/graphql/generated";
+import { GetViewer } from "yep/graphql/viewer";
 import { useAniListAuthRequest } from "yep/hooks/auth";
 import { ProfileSkeleton } from "yep/screens/ProfileScreen/ProfileSkeleton";
 import { darkTheme } from "yep/themes";
@@ -131,7 +131,7 @@ export default function Profile() {
     data: viewerData,
     refetch,
     networkStatus,
-  } = useGetViewerQuery({
+  } = useQuery(GetViewer, {
     skip: !accessToken,
     notifyOnNetworkStatusChange: true,
   });

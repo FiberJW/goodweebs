@@ -3,21 +3,26 @@ import React from "react";
 import { Text, StyleSheet } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 
-import type { CharacterListItemDataFragment } from "yep/graphql/generated";
+import { readFragment } from "yep/graphql/tada";
+import type { FragmentOf } from "yep/graphql/tada";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
-import { CharacterItem } from "./CharacterItem";
+import { CharacterItem, CharacterListItemData } from "./CharacterItem";
 
 type Props = {
-  characters: CharacterListItemDataFragment[];
+  characters: readonly FragmentOf<typeof CharacterListItemData>[];
 };
 
-function keyExtractor(item: CharacterListItemDataFragment) {
-  return `${item.id}`;
+function keyExtractor(item: FragmentOf<typeof CharacterListItemData>) {
+  return `${readFragment(CharacterListItemData, item).id}`;
 }
 
-function renderCharacterItem({ item }: { item: CharacterListItemDataFragment }) {
+function renderCharacterItem({
+  item,
+}: {
+  item: FragmentOf<typeof CharacterListItemData>;
+}) {
   return <CharacterItem character={item} />;
 }
 

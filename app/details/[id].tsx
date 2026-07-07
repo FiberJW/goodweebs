@@ -1,4 +1,9 @@
-import { NetworkStatus, useApolloClient } from "@apollo/client";
+import {
+  NetworkStatus,
+  useApolloClient,
+  useQuery,
+  useMutation,
+} from "@apollo/client";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import * as Haptics from "expo-haptics";
@@ -27,31 +32,18 @@ import {
   MediaListStatusWithLabel,
   ScoreFormatConfig,
 } from "yep/constants";
-import { applyFavoriteToCache } from "yep/graphql/favorites";
+import type { MediaRelation } from "yep/graphql/enums";
+import { applyFavoriteToCache, ToggleFavorite } from "yep/graphql/favorites";
 import {
-  useGetAnimeQuery,
-  useGetViewerQuery,
-  UpdateProgressDocument,
-  UpdateProgressVolumesDocument,
-  UpdateScoreDocument,
-  UpdateStatusDocument,
-  useToggleFavoriteMutation,
-  RemoveFromListDocument,
-} from "yep/graphql/generated";
-import type {
-  AnimeRelationFragmentFragment,
-  MediaRelation,
-  RemoveFromListMutation,
-  RemoveFromListMutationVariables,
-  UpdateProgressMutation,
-  UpdateProgressMutationVariables,
-  UpdateProgressVolumesMutation,
-  UpdateProgressVolumesMutationVariables,
-  UpdateScoreMutation,
-  UpdateScoreMutationVariables,
-  UpdateStatusMutation,
-  UpdateStatusMutationVariables,
-} from "yep/graphql/generated";
+  UpdateProgress,
+  UpdateProgressVolumes,
+  UpdateScore,
+  UpdateStatus,
+  RemoveFromList,
+} from "yep/graphql/mutations";
+import { graphql, readFragment } from "yep/graphql/tada";
+import type { FragmentOf, ResultOf } from "yep/graphql/tada";
+import { GetViewer } from "yep/graphql/viewer";
 import {
   useDebouncedMutation,
   usePersistedState,
@@ -59,11 +51,16 @@ import {
 } from "yep/hooks/helpers";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { CharacterList } from "yep/screens/DetailsScreen/CharacterList";
+import { CharacterListItemData } from "yep/screens/DetailsScreen/CharacterList/CharacterItem";
 import { DetailsSkeleton } from "yep/screens/DetailsScreen/DetailsSkeleton";
-import { ExternalLink } from "yep/screens/DetailsScreen/ExternalLink";
+import {
+  ExternalLink,
+  MediaExternalLinkData,
+} from "yep/screens/DetailsScreen/ExternalLink";
 import { RelatedAnimeList } from "yep/screens/DetailsScreen/RelatedAnimeList";
+import { AnimeRelationFragment } from "yep/screens/DetailsScreen/RelatedAnimeList/RelatedAnimeItem";
 import { Stepper } from "yep/screens/DetailsScreen/Stepper";
-import { Trailer } from "yep/screens/DetailsScreen/Trailer";
+import { Trailer, MediaTrailerData } from "yep/screens/DetailsScreen/Trailer";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import {
@@ -77,15 +74,103 @@ import {
   useGetTitle,
 } from "yep/utils";
 
+const AnimeFragment = graphql(
+  `
+    fragment AnimeFragment on Media {
+      id
+      type
+      title {
+        romaji
+        native
+        english
+      }
+      startDate {
+        year
+        month
+        day
+      }
+      endDate {
+        year
+        month
+        day
+      }
+      status
+      genres
+      episodes
+      chapters
+      volumes
+      description
+      isFavourite
+      studios(isMain: true) {
+        nodes {
+          id
+          name
+        }
+      }
+      averageScore
+      coverImage {
+        large
+        medium
+        color
+      }
+      trailer {
+        ...MediaTrailerData
+      }
+      externalLinks {
+        ...MediaExternalLinkData
+      }
+      nextAiringEpisode {
+        id
+        airingAt
+        episode
+      }
+      mediaListEntry {
+        id
+        progress
+        progressVolumes
+        status
+        score
+      }
+      relations {
+        edges {
+          id
+          relationType
+          node {
+            ...AnimeRelationFragment
+          }
+        }
+      }
+      characters {
+        nodes {
+          ...CharacterListItemData
+        }
+      }
+    }
+  `,
+  [
+    MediaTrailerData,
+    MediaExternalLinkData,
+    AnimeRelationFragment,
+    CharacterListItemData,
+  ],
+);
+
+const GetAnime = graphql(
+  `
+    query GetAnime($id: Int) {
+      Media(id: $id) {
+        ...AnimeFragment
+      }
+    }
+  `,
+  [AnimeFragment],
+);
+
 type InfoProps = { label: string; value: ReactNode };
-type DetailsMedia = NonNullable<
-  NonNullable<ReturnType<typeof useGetAnimeQuery>["data"]>["Media"]
->;
-type ExternalLinkData = NonNullable<
-  NonNullable<DetailsMedia["externalLinks"]>[number]
->;
+type DetailsMedia = NonNullable<ResultOf<typeof AnimeFragment>>;
+type ExternalLinkData = FragmentOf<typeof MediaExternalLinkData>;
 type MappedRelations = {
-  [K in MediaRelation]?: AnimeRelationFragmentFragment[];
+  [K in MediaRelation]?: FragmentOf<typeof AnimeRelationFragment>[];
 };
 type StatusOption = {
   label: string;
@@ -124,7 +209,7 @@ function PosterInfoSection({
   setShowScore: (showScore: boolean) => boolean;
   studio?: string;
 }) {
-  const [toggleFavorite] = useToggleFavoriteMutation();
+  const [toggleFavorite] = useMutation(ToggleFavorite);
   const { cache } = useApolloClient();
   const { locale } = useLocaleContext();
 
@@ -279,11 +364,8 @@ function MediaListStatusButton({
   const mediaListEntryId = media.mediaListEntry?.id;
   const mediaListEntry = media.mediaListEntry;
 
-  const updateStatus = useDebouncedMutation<
-    UpdateStatusMutation,
-    UpdateStatusMutationVariables
-  >({
-    mutationDocument: UpdateStatusDocument,
+  const updateStatus = useDebouncedMutation({
+    mutationDocument: UpdateStatus,
     // A status change moves the entry between the list tabs' per-status
     // Page.mediaList cache containers; patching MediaList.status alone leaves
     // it listed under the old chip until a manual refresh, so refetch the
@@ -317,11 +399,8 @@ function MediaListStatusButton({
     wait: 0,
   });
 
-  const removeFromList = useDebouncedMutation<
-    RemoveFromListMutation,
-    RemoveFromListMutationVariables
-  >({
-    mutationDocument: RemoveFromListDocument,
+  const removeFromList = useDebouncedMutation({
+    mutationDocument: RemoveFromList,
     makeUpdateFunction: () => (cache) => {
       if (!mediaListEntryId) return;
 
@@ -426,7 +505,9 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
   const mediaListEntryId = media.mediaListEntry?.id;
   // cache-only: the anime tab already fetched the viewer; missing data just
   // falls back to the POINT_10 default until that query lands.
-  const { data: viewerData } = useGetViewerQuery({ fetchPolicy: "cache-only" });
+  const { data: viewerData } = useQuery(GetViewer, {
+    fetchPolicy: "cache-only",
+  });
   const scoreFormat =
     viewerData?.Viewer?.mediaListOptions?.scoreFormat ?? DEFAULT_SCORE_FORMAT;
   const { max: maxScore, step: scoreStep } = ScoreFormatConfig[scoreFormat];
@@ -475,11 +556,8 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
     ? activeVolumesOverride.volumes
     : cacheVolumes;
 
-  const updateScore = useDebouncedMutation<
-    UpdateScoreMutation,
-    UpdateScoreMutationVariables
-  >({
-    mutationDocument: UpdateScoreDocument,
+  const updateScore = useDebouncedMutation({
+    mutationDocument: UpdateScore,
     makeUpdateFunction: (variables) => (cache) => {
       if (!mediaListEntryId || variables?.score === undefined) return;
 
@@ -493,11 +571,8 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
     wait: 0,
   });
 
-  const updateProgress = useDebouncedMutation<
-    UpdateProgressMutation,
-    UpdateProgressMutationVariables
-  >({
-    mutationDocument: UpdateProgressDocument,
+  const updateProgress = useDebouncedMutation({
+    mutationDocument: UpdateProgress,
     makeUpdateFunction: (variables) => (cache) => {
       if (!mediaListEntryId || variables?.progress === undefined) return;
 
@@ -511,11 +586,8 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
     wait: 0,
   });
 
-  const updateProgressVolumes = useDebouncedMutation<
-    UpdateProgressVolumesMutation,
-    UpdateProgressVolumesMutationVariables
-  >({
-    mutationDocument: UpdateProgressVolumesDocument,
+  const updateProgressVolumes = useDebouncedMutation({
+    mutationDocument: UpdateProgressVolumes,
     makeUpdateFunction: (variables) => (cache) => {
       if (!mediaListEntryId || variables?.progressVolumes === undefined) return;
 
@@ -711,10 +783,8 @@ function ExternalLinksSection({ links }: { links?: ExternalLinkData[] }) {
       <View style={{ gap: 8 }}>
         {links.map((link) => (
           <ExternalLink
-            key={link.id}
-            id={link.id}
-            url={link.url}
-            site={link.site}
+            key={readFragment(MediaExternalLinkData, link).id}
+            link={link}
           />
         ))}
       </View>
@@ -746,7 +816,7 @@ export default function Details() {
 
   const getTitle = useGetTitle();
 
-  const { loading, data, refetch, error, networkStatus } = useGetAnimeQuery({
+  const { loading, data, refetch, error, networkStatus } = useQuery(GetAnime, {
     variables: { id: mediaId },
     notifyOnNetworkStatusChange: true,
   });
@@ -754,7 +824,7 @@ export default function Details() {
   // initial load is loading(1)/ready(7), so the spinner no longer shows on
   // first render the way `isRefetchingFromScrollOrMount && loading` did.
   const isRefetching = networkStatus === NetworkStatus.refetch;
-  const media = data?.Media;
+  const media = data?.Media ? readFragment(AnimeFragment, data.Media) : null;
 
   // Set navigation title dynamically
   useEffect(() => {
@@ -769,7 +839,7 @@ export default function Details() {
 
   const mappedRelations = reduce<
     (typeof relations)[number],
-    { [K in MediaRelation]?: AnimeRelationFragmentFragment[] }
+    { [K in MediaRelation]?: FragmentOf<typeof AnimeRelationFragment>[] }
   >(
     relations,
     function (result, value, _key) {

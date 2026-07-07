@@ -1,17 +1,18 @@
 import React from "react";
 
-import type { AnimeListEntryFragmentFragment } from "yep/graphql/generated";
+import { readFragment } from "yep/graphql/tada";
+import type { FragmentOf } from "yep/graphql/tada";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { getAiringStatusText } from "yep/utils";
 
-import { MediaListItem } from "../MediaListItem";
+import { AnimeListEntryFragment, MediaListItem } from "../MediaListItem";
 
 type Props = {
   onIncrement: () => void;
   onDecrement: () => void;
   progress: number;
   disabled?: boolean;
-  media: AnimeListEntryFragmentFragment;
+  media: FragmentOf<typeof AnimeListEntryFragment>;
   first: boolean;
   last: boolean;
 };
@@ -26,12 +27,12 @@ export function AnimeListItem({
   last,
 }: Props) {
   const { locale } = useLocaleContext();
+  const m = readFragment(AnimeListEntryFragment, media);
   const isAiringAndCurrentlyWatching =
-    media.status === "RELEASING" && media.mediaListEntry?.status === "CURRENT";
+    m.status === "RELEASING" && m.mediaListEntry?.status === "CURRENT";
   const episodesBehind =
-    isAiringAndCurrentlyWatching &&
-    media.nextAiringEpisode?.episode !== undefined
-      ? media.nextAiringEpisode.episode - 1 - progress
+    isAiringAndCurrentlyWatching && m.nextAiringEpisode?.episode !== undefined
+      ? m.nextAiringEpisode.episode - 1 - progress
       : 0;
 
   return (
@@ -43,7 +44,7 @@ export function AnimeListItem({
       onDecrement={onDecrement}
       first={first}
       last={last}
-      airingStatus={getAiringStatusText(media, locale)}
+      airingStatus={getAiringStatusText(m, locale)}
       episodesBehind={episodesBehind}
     />
   );
