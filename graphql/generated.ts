@@ -4753,11 +4753,18 @@ export type UpdateProgressMutation = { __typename?: 'Mutation', SaveMediaListEnt
 
 export type UpdateScoreMutationVariables = Exact<{
   id?: InputMaybe<Scalars['Int']['input']>;
-  scoreRaw?: InputMaybe<Scalars['Int']['input']>;
+  score?: InputMaybe<Scalars['Float']['input']>;
 }>;
 
 
 export type UpdateScoreMutation = { __typename?: 'Mutation', SaveMediaListEntry?: { __typename?: 'MediaList', id: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null } | null };
+
+export type UpdateScoreFormatMutationVariables = Exact<{
+  scoreFormat?: InputMaybe<ScoreFormat>;
+}>;
+
+
+export type UpdateScoreFormatMutation = { __typename?: 'Mutation', UpdateUser?: { __typename?: 'User', id: number, mediaListOptions?: { __typename?: 'MediaListOptions', scoreFormat?: ScoreFormat | null } | null } | null };
 
 export type UpdateStatusMutationVariables = Exact<{
   mediaId?: InputMaybe<Scalars['Int']['input']>;
@@ -4842,7 +4849,7 @@ export type GetNotificationsQuery = { __typename?: 'Query', Page?: { __typename?
 export type GetViewerQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetViewerQuery = { __typename?: 'Query', Viewer?: { __typename?: 'User', id: number, name: string, bannerImage?: string | null, unreadNotificationCount?: number | null, avatar?: { __typename?: 'UserAvatar', large?: string | null, medium?: string | null } | null, favourites?: { __typename?: 'Favourites', anime?: { __typename?: 'MediaConnection', nodes?: Array<{ __typename?: 'Media', id: number, title?: { __typename?: 'MediaTitle', english?: string | null, romaji?: string | null, native?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null } | null } | null> | null } | null, characters?: { __typename?: 'CharacterConnection', nodes?: Array<{ __typename?: 'Character', id: number, name?: { __typename?: 'CharacterName', full?: string | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null, medium?: string | null } | null } | null> | null } | null } | null, statistics?: { __typename?: 'UserStatisticTypes', anime?: { __typename?: 'UserStatistics', count: number, minutesWatched: number } | null, manga?: { __typename?: 'UserStatistics', count: number, chaptersRead: number } | null } | null } | null };
+export type GetViewerQuery = { __typename?: 'Query', Viewer?: { __typename?: 'User', id: number, name: string, bannerImage?: string | null, unreadNotificationCount?: number | null, avatar?: { __typename?: 'UserAvatar', large?: string | null, medium?: string | null } | null, mediaListOptions?: { __typename?: 'MediaListOptions', scoreFormat?: ScoreFormat | null } | null, favourites?: { __typename?: 'Favourites', anime?: { __typename?: 'MediaConnection', nodes?: Array<{ __typename?: 'Media', id: number, title?: { __typename?: 'MediaTitle', english?: string | null, romaji?: string | null, native?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null } | null } | null> | null } | null, characters?: { __typename?: 'CharacterConnection', nodes?: Array<{ __typename?: 'Character', id: number, name?: { __typename?: 'CharacterName', full?: string | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null, medium?: string | null } | null } | null> | null } | null } | null, statistics?: { __typename?: 'UserStatisticTypes', anime?: { __typename?: 'UserStatistics', count: number, minutesWatched: number } | null, manga?: { __typename?: 'UserStatistics', count: number, chaptersRead: number } | null } | null } | null };
 
 export const MediaPosterFragmentFragmentDoc = gql`
     fragment MediaPosterFragment on Media {
@@ -4891,7 +4898,7 @@ export const AnimeListEntryFragmentFragmentDoc = gql`
     id
     progress
     status
-    score(format: POINT_10)
+    score
   }
 }
     `;
@@ -4988,7 +4995,7 @@ export const AnimeFragmentFragmentDoc = gql`
     id
     progress
     status
-    score(format: POINT_10)
+    score
   }
   relations {
     edges {
@@ -5146,12 +5153,12 @@ export type UpdateProgressMutationHookResult = ReturnType<typeof useUpdateProgre
 export type UpdateProgressMutationResult = Apollo.MutationResult<UpdateProgressMutation>;
 export type UpdateProgressMutationOptions = Apollo.BaseMutationOptions<UpdateProgressMutation, UpdateProgressMutationVariables>;
 export const UpdateScoreDocument = gql`
-    mutation UpdateScore($id: Int, $scoreRaw: Int) {
-  SaveMediaListEntry(id: $id, scoreRaw: $scoreRaw) {
+    mutation UpdateScore($id: Int, $score: Float) {
+  SaveMediaListEntry(id: $id, score: $score) {
     id
     progress
     status
-    score(format: POINT_10)
+    score
   }
 }
     `;
@@ -5171,7 +5178,7 @@ export type UpdateScoreMutationFn = Apollo.MutationFunction<UpdateScoreMutation,
  * const [updateScoreMutation, { data, loading, error }] = useUpdateScoreMutation({
  *   variables: {
  *      id: // value for 'id'
- *      scoreRaw: // value for 'scoreRaw'
+ *      score: // value for 'score'
  *   },
  * });
  */
@@ -5182,6 +5189,42 @@ export function useUpdateScoreMutation(baseOptions?: Apollo.MutationHookOptions<
 export type UpdateScoreMutationHookResult = ReturnType<typeof useUpdateScoreMutation>;
 export type UpdateScoreMutationResult = Apollo.MutationResult<UpdateScoreMutation>;
 export type UpdateScoreMutationOptions = Apollo.BaseMutationOptions<UpdateScoreMutation, UpdateScoreMutationVariables>;
+export const UpdateScoreFormatDocument = gql`
+    mutation UpdateScoreFormat($scoreFormat: ScoreFormat) {
+  UpdateUser(scoreFormat: $scoreFormat) {
+    id
+    mediaListOptions {
+      scoreFormat
+    }
+  }
+}
+    `;
+export type UpdateScoreFormatMutationFn = Apollo.MutationFunction<UpdateScoreFormatMutation, UpdateScoreFormatMutationVariables>;
+
+/**
+ * __useUpdateScoreFormatMutation__
+ *
+ * To run a mutation, you first call `useUpdateScoreFormatMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateScoreFormatMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateScoreFormatMutation, { data, loading, error }] = useUpdateScoreFormatMutation({
+ *   variables: {
+ *      scoreFormat: // value for 'scoreFormat'
+ *   },
+ * });
+ */
+export function useUpdateScoreFormatMutation(baseOptions?: Apollo.MutationHookOptions<UpdateScoreFormatMutation, UpdateScoreFormatMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateScoreFormatMutation, UpdateScoreFormatMutationVariables>(UpdateScoreFormatDocument, options);
+      }
+export type UpdateScoreFormatMutationHookResult = ReturnType<typeof useUpdateScoreFormatMutation>;
+export type UpdateScoreFormatMutationResult = Apollo.MutationResult<UpdateScoreFormatMutation>;
+export type UpdateScoreFormatMutationOptions = Apollo.BaseMutationOptions<UpdateScoreFormatMutation, UpdateScoreFormatMutationVariables>;
 export const UpdateStatusDocument = gql`
     mutation UpdateStatus($mediaId: Int, $status: MediaListStatus) {
   SaveMediaListEntry(mediaId: $mediaId, status: $status) {
@@ -5575,6 +5618,9 @@ export const GetViewerDocument = gql`
     }
     bannerImage
     unreadNotificationCount
+    mediaListOptions {
+      scoreFormat
+    }
     favourites {
       anime {
         nodes {

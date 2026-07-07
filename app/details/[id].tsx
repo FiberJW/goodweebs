@@ -22,10 +22,15 @@ import { EmptyState } from "yep/components/EmptyState";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { LikeButton } from "yep/components/PosterAndTitle/LikeButton";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import { MediaListStatusWithLabel } from "yep/constants";
+import {
+  DEFAULT_SCORE_FORMAT,
+  MediaListStatusWithLabel,
+  ScoreFormatConfig,
+} from "yep/constants";
 import { applyFavoriteToCache } from "yep/graphql/favorites";
 import {
   useGetAnimeQuery,
+  useGetViewerQuery,
   UpdateProgressDocument,
   UpdateScoreDocument,
   UpdateStatusDocument,
@@ -59,6 +64,7 @@ import { Trailer } from "yep/screens/DetailsScreen/Trailer";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import {
+  formatScore,
   getDateFnsLocale,
   getDateText,
   getMediaListStatusLabel,
@@ -81,10 +87,6 @@ type StatusOption = {
   label: string;
   value: (typeof MediaListStatusWithLabel)[number]["value"];
 };
-
-function clampScore(value: number) {
-  return Math.min(Math.max(value, 0), 10);
-}
 
 function Info({ label, value }: InfoProps) {
   return (
@@ -405,6 +407,12 @@ function MediaListStatusButton({
 
 function MediaTrackingControls({ media }: { media: DetailsMedia }) {
   const mediaListEntryId = media.mediaListEntry?.id;
+  // cache-only: the anime tab already fetched the viewer; missing data just
+  // falls back to the POINT_10 default until that query lands.
+  const { data: viewerData } = useGetViewerQuery({ fetchPolicy: "cache-only" });
+  const scoreFormat =
+    viewerData?.Viewer?.mediaListOptions?.scoreFormat ?? DEFAULT_SCORE_FORMAT;
+  const { max: maxScore, step: scoreStep } = ScoreFormatConfig[scoreFormat];
   const cacheScore = media.mediaListEntry?.score ?? 0;
   const cacheProgress = media.mediaListEntry?.progress ?? 0;
   const progressUpperBound = media.episodes;
@@ -442,12 +450,12 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
   >({
     mutationDocument: UpdateScoreDocument,
     makeUpdateFunction: (variables) => (cache) => {
-      if (!mediaListEntryId || variables?.scoreRaw === undefined) return;
+      if (!mediaListEntryId || variables?.score === undefined) return;
 
       cache.modify({
         id: cache.identify({ __typename: "MediaList", id: mediaListEntryId }),
         fields: {
-          score: () => (variables.scoreRaw ?? 0) / 10,
+          score: () => variables.score ?? 0,
         },
       });
     },
@@ -482,8 +490,12 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
   async function changeScore(type: "inc" | "dec") {
     if (!mediaListEntryId) return;
 
-    const nextScore = clampScore(
-      type === "inc" ? displayScore + 1 : displayScore - 1,
+    const nextScore = Math.min(
+      Math.max(
+        type === "inc" ? displayScore + scoreStep : displayScore - scoreStep,
+        0,
+      ),
+      maxScore,
     );
     if (nextScore === displayScore) return;
     setScoreOverride({ cacheScore, score: nextScore });
@@ -492,7 +504,7 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
     try {
       await updateScore({
         id: mediaListEntryId,
-        scoreRaw: nextScore * 10,
+        score: nextScore,
       });
     } catch (error) {
       // A failed mutation never moves the cache, so the override would stay
@@ -538,7 +550,8 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
           />
         }
         value={displayScore}
-        upperBound={10}
+        formatValue={(value) => formatScore(value, scoreFormat)}
+        upperBound={maxScore}
         lowerBound={0}
         onIncrement={() => changeScore("inc")}
         onDecrement={() => changeScore("dec")}

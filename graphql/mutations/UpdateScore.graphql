@@ -1,8 +1,8 @@
-mutation UpdateScore($id: Int, $scoreRaw: Int) {
-  SaveMediaListEntry(id: $id, scoreRaw: $scoreRaw) {
+mutation UpdateScore($id: Int, $score: Float) {
+  SaveMediaListEntry(id: $id, score: $score) {
     id
     progress
     status
-    score(format: POINT_10)
+    score
   }
 }

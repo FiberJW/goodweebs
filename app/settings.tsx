@@ -1,7 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
-import React from "react";
+import React, { useState } from "react";
 import {
   Alert,
   View,
@@ -15,8 +15,16 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button } from "yep/components/Button";
 import { CheckboxRow } from "yep/components/CheckboxRow";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
+import {
+  ANILIST_ACCESS_TOKEN_STORAGE,
+  DEFAULT_SCORE_FORMAT,
+} from "yep/constants";
 import { primeAccessToken } from "yep/graphql/client";
+import {
+  useGetViewerQuery,
+  useUpdateScoreFormatMutation,
+} from "yep/graphql/generated";
+import type { ScoreFormat } from "yep/graphql/generated";
 import { StorageKeys, usePersistedState } from "yep/hooks/helpers";
 import {
   availableLanguages,
@@ -25,6 +33,34 @@ import {
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
+
+const scoreFormats: ScoreFormat[] = [
+  "POINT_100",
+  "POINT_10_DECIMAL",
+  "POINT_10",
+  "POINT_5",
+  "POINT_3",
+];
+
+// Called in render (not module scope) so labels re-resolve on locale change.
+function getScoreFormatLabel(format: ScoreFormat) {
+  switch (format) {
+    case "POINT_100":
+      return String(fbs("100 point (55/100)", "100 point score format label"));
+    case "POINT_10_DECIMAL":
+      return String(
+        fbs("10 point decimal (5.5/10)", "10 point decimal score format label"),
+      );
+    case "POINT_10":
+      return String(fbs("10 point (5/10)", "10 point score format label"));
+    case "POINT_5":
+      return String(fbs("5 star (3/5)", "5 star score format label"));
+    case "POINT_3":
+      return String(
+        fbs("3 point smiley :)", "3 point smiley score format label"),
+      );
+  }
+}
 
 export default function Settings() {
   const { locale, setLocale } = useLocaleContext();
@@ -44,6 +80,23 @@ export default function Settings() {
   const { setAccessToken, setContinuedWithoutLogin, accessToken } =
     useAccessToken();
   const insets = useSafeAreaInsets();
+
+  // cache-only: profile (the only way here) already fetched the viewer.
+  const { data: viewerData } = useGetViewerQuery({ fetchPolicy: "cache-only" });
+  // Changing the format makes AniList recompute every stored score, so cached
+  // score fields are stale in the old scale — refetch whatever is on screen.
+  const [updateScoreFormat, { loading: savingScoreFormat }] =
+    useUpdateScoreFormatMutation({ refetchQueries: "active" });
+  // Optimistic selection: highlight the tapped pill immediately; the mutation
+  // response normalizes into User.mediaListOptions, so clearing this after the
+  // round trip lands on the same value (or reverts on failure — the global
+  // onError link toasts).
+  const [pendingScoreFormat, setPendingScoreFormat] =
+    useState<ScoreFormat | null>(null);
+  const scoreFormat =
+    pendingScoreFormat ??
+    viewerData?.Viewer?.mediaListOptions?.scoreFormat ??
+    DEFAULT_SCORE_FORMAT;
 
   return (
     <ScrollView
@@ -85,6 +138,69 @@ export default function Settings() {
             />
           </View>
         </View>
+        {accessToken ? (
+          <View style={{ flexDirection: "column" }}>
+            <Text
+              style={{
+                color: darkTheme.subHeader,
+                fontFamily: Manrope.semiBold,
+                fontSize: 20,
+                marginBottom: 24,
+              }}
+            >
+              {String(fbs("Rating style", "Rating style section title"))}
+            </Text>
+            <View style={styles.radioCard}>
+              {scoreFormats.map((format, index) => {
+                const isSelected = scoreFormat === format;
+                return (
+                  <PressableOpacity
+                    key={format}
+                    // Saving dims every row to 0.4 via the disabled opacity —
+                    // that's the loading state. The selected row is always
+                    // disabled but stays full-opacity.
+                    disabled={savingScoreFormat || isSelected}
+                    useDisabledOpacity={savingScoreFormat}
+                    accessibilityState={{ selected: isSelected }}
+                    style={[
+                      styles.radioRow,
+                      index > 0 && styles.radioRowSeparator,
+                    ]}
+                    onPress={async () => {
+                      setPendingScoreFormat(format);
+                      try {
+                        await updateScoreFormat({
+                          variables: { scoreFormat: format },
+                        });
+                      } catch (error) {
+                        console.error(error);
+                      } finally {
+                        setPendingScoreFormat(null);
+                      }
+                    }}
+                  >
+                    <Text
+                      style={[
+                        styles.radioLabel,
+                        isSelected && styles.radioLabelSelected,
+                      ]}
+                    >
+                      {getScoreFormatLabel(format)}
+                    </Text>
+                    <View
+                      style={[
+                        styles.radioOuter,
+                        isSelected && styles.radioOuterSelected,
+                      ]}
+                    >
+                      {isSelected ? <View style={styles.radioInner} /> : null}
+                    </View>
+                  </PressableOpacity>
+                );
+              })}
+            </View>
+          </View>
+        ) : null}
         <View style={{ flexDirection: "column" }}>
           <Text
             style={{
@@ -96,22 +212,22 @@ export default function Settings() {
           >
             {String(fbs("Language", "Language settings section title"))}
           </Text>
-          <View style={styles.languageOptions}>
+          <View style={styles.segmentedControl}>
             {[...availableLanguages].map(([code, label]) => {
               const isSelected = locale === code;
               return (
                 <PressableOpacity
                   key={code}
-                  style={[
-                    styles.languageOption,
-                    isSelected && styles.languageOptionSelected,
-                  ]}
+                  disabled={isSelected}
+                  useDisabledOpacity={false}
+                  accessibilityState={{ selected: isSelected }}
+                  style={[styles.segment, isSelected && styles.segmentSelected]}
                   onPress={() => setLocale(code)}
                 >
                   <Text
                     style={[
-                      styles.languageOptionText,
-                      isSelected && styles.languageOptionTextSelected,
+                      styles.segmentText,
+                      isSelected && styles.segmentTextSelected,
                     ]}
                   >
                     {label}
@@ -231,34 +347,87 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   contentContainer: {
-    flex: 1,
+    // flexGrow (not flex): the rating-style section makes the page taller
+    // than the viewport, and flex: 1 would clip instead of scroll.
+    flexGrow: 1,
     gap: 16,
     justifyContent: "space-between",
     padding: 16,
   },
-  languageOptions: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  languageOption: {
-    flex: 1,
-    paddingVertical: 12,
+  radioCard: {
+    backgroundColor: darkTheme.listItemBackground,
+    borderColor: darkTheme.listItemBorder,
     borderRadius: 12,
-    backgroundColor: darkTheme.button,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: darkTheme.buttonBorder,
+    overflow: "hidden",
+  },
+  radioRow: {
     alignItems: "center",
+    flexDirection: "row",
+    gap: 12,
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 14,
   },
-  languageOptionSelected: {
-    backgroundColor: darkTheme.accent,
-    borderColor: darkTheme.accent,
+  radioRowSeparator: {
+    borderTopColor: darkTheme.listItemBorder,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
-  languageOptionText: {
+  radioLabel: {
+    color: darkTheme.subText,
+    fontFamily: Manrope.regular,
+    fontSize: 16,
+  },
+  radioLabelSelected: {
+    color: darkTheme.text,
+    fontFamily: Manrope.semiBold,
+  },
+  radioOuter: {
+    alignItems: "center",
+    borderColor: darkTheme.buttonBorder,
+    borderRadius: 10,
+    borderWidth: 1.5,
+    height: 20,
+    justifyContent: "center",
+    width: 20,
+  },
+  radioOuterSelected: {
+    borderColor: darkTheme.text,
+  },
+  radioInner: {
+    backgroundColor: darkTheme.text,
+    borderRadius: 5,
+    height: 10,
+    width: 10,
+  },
+  segmentedControl: {
+    backgroundColor: darkTheme.button,
+    borderColor: darkTheme.buttonBorder,
+    borderRadius: 12,
+    borderWidth: StyleSheet.hairlineWidth,
+    flexDirection: "row",
+    padding: 3,
+  },
+  segment: {
+    alignItems: "center",
+    // Transparent border on every segment so selection doesn't reflow.
+    borderColor: "transparent",
+    borderRadius: 9,
+    borderWidth: StyleSheet.hairlineWidth,
+    flex: 1,
+    paddingVertical: 10,
+  },
+  segmentSelected: {
+    // Stacked on the track's own translucent fill, so it reads lighter.
+    backgroundColor: darkTheme.button,
+    borderColor: darkTheme.buttonBorder,
+  },
+  segmentText: {
+    color: darkTheme.inputPlaceholder,
     fontFamily: Manrope.semiBold,
     fontSize: 16,
-    color: darkTheme.subText,
   },
-  languageOptionTextSelected: {
+  segmentTextSelected: {
     color: darkTheme.text,
   },
 });

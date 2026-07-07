@@ -8,6 +8,9 @@ query GetViewer {
     }
     bannerImage
     unreadNotificationCount
+    mediaListOptions {
+      scoreFormat
+    }
     favourites {
       anime {
         nodes {

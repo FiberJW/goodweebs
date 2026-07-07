@@ -14,6 +14,7 @@ type Props = {
   onIncrement: () => void;
   onDecrement: () => void;
   icon?: React.ReactNode;
+  formatValue?: (value: number) => string;
 };
 
 export function Stepper({
@@ -24,6 +25,7 @@ export function Stepper({
   onIncrement,
   onDecrement,
   icon,
+  formatValue,
 }: Props) {
   return (
     <View style={styles.stepperWithLabelContainer}>
@@ -37,7 +39,9 @@ export function Stepper({
           disabled={value === lowerBound}
           onPress={onDecrement}
         />
-        <Text style={styles.stepperCount}>{value}</Text>
+        <Text style={styles.stepperCount}>
+          {formatValue ? formatValue(value) : value}
+        </Text>
         <StepperButton
           type="increment"
           disabled={value === upperBound}
@@ -71,6 +75,8 @@ const styles = StyleSheet.create({
     color: darkTheme.text,
     fontFamily: Manrope.semiBold,
     textAlign: "center",
-    width: 48,
+    // minWidth (not width): "8.5/10" and "100/100 ★" need room to grow.
+    minWidth: 48,
+    paddingHorizontal: 4,
   },
 });
