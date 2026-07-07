@@ -211,8 +211,18 @@ export default function Anime() {
               )}
             >
               <Image
-                style={{ tintColor: white, height: 24, width: 24 }}
-                source={require("yep/assets/icons/navigation/bell.png")}
+                style={{
+                  tintColor: white,
+                  height: 24,
+                  width: 24,
+                  // Dim the bell when there's nothing new.
+                  opacity: unreadCount > 0 ? 1 : 0.5,
+                }}
+                source={
+                  unreadCount > 0
+                    ? require("yep/assets/icons/navigation/bell.png")
+                    : require("yep/assets/icons/navigation/bell-outline.png")
+                }
               />
               {unreadCount > 0 ? (
                 <View style={styles.badge}>

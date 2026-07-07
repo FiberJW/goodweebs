@@ -30,14 +30,30 @@ export type NotificationRowData = {
   };
 };
 
-export function NotificationRow({ item }: { item: NotificationRowData }) {
+export function NotificationRow({
+  item,
+  first,
+  last,
+}: {
+  item: NotificationRowData;
+  first: boolean;
+  last: boolean;
+}) {
   const router = useRouter();
   const getTitle = useGetTitle();
   const { locale } = useLocaleContext();
 
   return (
     <PressableOpacity
-      style={styles.row}
+      style={[
+        styles.row,
+        {
+          borderTopRightRadius: first ? 16 : undefined,
+          borderTopLeftRadius: first ? 16 : undefined,
+          borderBottomRightRadius: last ? 16 : undefined,
+          borderBottomLeftRadius: last ? 16 : undefined,
+        },
+      ]}
       activeOpacity={0.7}
       onPress={() => router.push(`/details/${item.media.id}`)}
     >
@@ -64,21 +80,20 @@ export function NotificationRow({ item }: { item: NotificationRowData }) {
   );
 }
 
+// Matches AnimeListItem: joined cards (only the list's first/last corners
+// round), title-line and broadcast-line text styles.
 const styles = StyleSheet.create({
   row: {
     backgroundColor: darkTheme.listItemBackground,
-    borderRadius: 16,
     flexDirection: "row",
-    gap: 12,
+    gap: 8,
     padding: 12,
   },
   text: {
     color: darkTheme.text,
-    fontFamily: Manrope.regular,
-    fontSize: 14.4,
+    fontFamily: Manrope.semiBold,
+    fontSize: 16,
   },
-  // Stretches to the poster's height: notification text pinned to the top,
-  // timestamp to the bottom (design: space-between).
   textColumn: {
     flex: 1,
     justifyContent: "space-between",

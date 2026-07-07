@@ -24,12 +24,20 @@ import { darkTheme } from "yep/themes";
 
 const NOTIFICATIONS_PER_PAGE = 25;
 
-function keyExtractor(item: NotificationRowData) {
-  return `${item.id}`;
+type NotificationListRow = {
+  entry: NotificationRowData;
+  first: boolean;
+  last: boolean;
+};
+
+function keyExtractor({ entry }: NotificationListRow) {
+  return `${entry.id}`;
 }
 
-function renderNotification({ item }: { item: NotificationRowData }) {
-  return <NotificationRow item={item} />;
+function renderNotification({ item }: { item: NotificationListRow }) {
+  return (
+    <NotificationRow item={item.entry} first={item.first} last={item.last} />
+  );
 }
 
 export default function Notifications() {
@@ -83,6 +91,11 @@ export default function Notifications() {
     }
     return [];
   });
+  const listRows = rows.map((entry, index) => ({
+    entry,
+    first: index === 0,
+    last: index === rows.length - 1,
+  }));
 
   return (
     <View style={styles.container}>
@@ -104,7 +117,8 @@ export default function Notifications() {
           contentInsetAdjustmentBehavior="automatic"
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
-          data={rows}
+          ItemSeparatorComponent={() => <View style={styles.divider} />}
+          data={listRows}
           keyExtractor={keyExtractor}
           renderItem={renderNotification}
           ListEmptyComponent={
@@ -151,6 +165,10 @@ export default function Notifications() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  listContent: { gap: 8, padding: 16 },
+  divider: {
+    backgroundColor: darkTheme.listItemBorder,
+    height: StyleSheet.hairlineWidth,
+  },
+  listContent: { padding: 16 },
   loading: { flex: 1 },
 });
