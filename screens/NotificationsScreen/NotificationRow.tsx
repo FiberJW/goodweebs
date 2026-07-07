@@ -66,7 +66,6 @@ export function NotificationRow({ item }: { item: NotificationRowData }) {
 
 const styles = StyleSheet.create({
   row: {
-    alignItems: "center",
     backgroundColor: darkTheme.listItemBackground,
     borderRadius: 16,
     flexDirection: "row",
@@ -78,9 +77,11 @@ const styles = StyleSheet.create({
     fontFamily: Manrope.regular,
     fontSize: 14.4,
   },
+  // Stretches to the poster's height: notification text pinned to the top,
+  // timestamp to the bottom (design: space-between).
   textColumn: {
     flex: 1,
-    gap: 4,
+    justifyContent: "space-between",
   },
   timestamp: {
     color: darkTheme.footnote,
