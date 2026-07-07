@@ -216,7 +216,7 @@ export default function Anime() {
               />
               {unreadCount > 0 ? (
                 <View style={styles.badge}>
-                  <Text style={styles.badgeText} numberOfLines={1}>
+                  <Text style={styles.badgeText}>
                     {unreadCount > 99 ? "99+" : unreadCount}
                   </Text>
                 </View>
