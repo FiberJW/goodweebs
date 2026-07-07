@@ -1527,11 +1527,11 @@
     },
     "wUKJE2p3A/yWPp7h+ju7Qg==": {
       "description": "Stepper increase button accessibility label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Increase",
+          "translation": "増やす",
           "variations": {}
         }
       ],
@@ -1539,11 +1539,11 @@
     },
     "cNsncnRpJUNYGgPH4RrGgA==": {
       "description": "Stepper decrease button accessibility label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Decrease",
+          "translation": "減らす",
           "variations": {}
         }
       ],
@@ -1551,11 +1551,11 @@
     },
     "Wpsvu3xct4HrM1YCyqNFVw==": {
       "description": "Clear search button accessibility label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Clear search",
+          "translation": "検索をクリア",
           "variations": {}
         }
       ],
@@ -1563,11 +1563,11 @@
     },
     "X+xvC9lPVkSUrgG8DIeomw==": {
       "description": "Unfavorite button accessibility label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Remove from favorites",
+          "translation": "お気に入りから削除",
           "variations": {}
         }
       ],
@@ -1575,11 +1575,11 @@
     },
     "KMGzlgbPmgk/fcHYZ1ZS0w==": {
       "description": "Favorite button accessibility label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Add to favorites",
+          "translation": "お気に入りに追加",
           "variations": {}
         }
       ],
@@ -1587,11 +1587,11 @@
     },
     "Syu7PbM5VFz730XvwduimA==": {
       "description": "Complete series button accessibility label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Complete series",
+          "translation": "シリーズを完結にする",
           "variations": {}
         }
       ],
@@ -1635,11 +1635,11 @@
     },
     "atbaEg5K2xLZwJBXH/ZnhQ==": {
       "description": "Settings button accessibility label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Settings",
+          "translation": "設定",
           "variations": {}
         }
       ],
@@ -1647,11 +1647,11 @@
     },
     "8CVy3LRE9k6jq0z7TUEnLQ==": {
       "description": "Profile empty state login title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Log in",
+          "translation": "ログイン",
           "variations": {}
         }
       ],
@@ -1659,11 +1659,11 @@
     },
     "gv9ChQyYTax1fLdMnlKjxw==": {
       "description": "Profile empty state login description",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Start tracking your anime by using an AniList account!",
+          "translation": "AniListアカウントを使ってアニメの記録を始めましょう！",
           "variations": {}
         }
       ],
@@ -1671,11 +1671,11 @@
     },
     "OYpdrpWfL9K6otTMvk5UPA==": {
       "description": "Profile empty state login call to action",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Log in",
+          "translation": "ログイン",
           "variations": {}
         }
       ],
@@ -1683,11 +1683,11 @@
     },
     "UZO2n78kKspPv2dv0P7XIg==": {
       "description": "Trending anime list header",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Trending anime",
+          "translation": "人気のアニメ",
           "variations": {}
         }
       ],
@@ -1695,11 +1695,11 @@
     },
     "pvQqAoXghsPswM44l2/Cmw==": {
       "description": "Notifications error title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Could not load notifications",
+          "translation": "通知を読み込めませんでした",
           "variations": {}
         }
       ],
@@ -1707,11 +1707,11 @@
     },
     "V+SAxGUcRfKYQNE0BJc/GQ==": {
       "description": "Notifications empty state title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "No notifications",
+          "translation": "通知はありません",
           "variations": {}
         }
       ],
@@ -1791,11 +1791,11 @@
     },
     "fzojvlmE/F2kkqsYf8neew==": {
       "description": "Media list status reading",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Reading",
+          "translation": "読書中",
           "variations": {}
         }
       ],
@@ -1803,11 +1803,11 @@
     },
     "DZ/BKxDEkjyD8GqyrwsI0Q==": {
       "description": "Media list status plan to read",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Plan to read",
+          "translation": "読む予定",
           "variations": {}
         }
       ],
@@ -1815,11 +1815,11 @@
     },
     "PTW6vg/gxr/DKrc9/Bay9A==": {
       "description": "Media list status rereading",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Rereading",
+          "translation": "再読中",
           "variations": {}
         }
       ],
@@ -1827,11 +1827,11 @@
     },
     "LvIaQUf/+tQljYvjgntowg==": {
       "description": "Chapter abbreviation in progress text",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "CH",
+          "translation": "話",
           "variations": {}
         }
       ],
@@ -1839,11 +1839,11 @@
     },
     "rK1r1e/oFI214aI0DlejXA==": {
       "description": "Manga tab header label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Manga",
+          "translation": "マンガ",
           "variations": {}
         }
       ],
@@ -1851,11 +1851,11 @@
     },
     "xyNrVdMizUPBh42p7dpmig==": {
       "description": "Manga empty state login description",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Start tracking your manga by using an AniList account!",
+          "translation": "AniListアカウントを使ってマンガの記録を始めましょう！",
           "variations": {}
         }
       ],
@@ -1863,11 +1863,11 @@
     },
     "G62DNGvKjMvCt9WeNDGSZw==": {
       "description": "Manga empty state list description",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Explore the world of manga by adding some series to your list!",
+          "translation": "作品をリストに追加してマンガの世界を探索しましょう！",
           "variations": {}
         }
       ],
@@ -1875,11 +1875,11 @@
     },
     "J8G86M3w03EzkCuSAIusTA==": {
       "description": "Manga empty state discover call to action",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Discover new manga",
+          "translation": "新しいマンガを探索",
           "variations": {}
         }
       ],
@@ -1887,11 +1887,11 @@
     },
     "2I+42Tn8l+iKPTjc9VW4qw==": {
       "description": "Decrease progress button accessibility label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Decrease progress",
+          "translation": "進捗を減らす",
           "variations": {}
         }
       ],
@@ -1899,11 +1899,11 @@
     },
     "FFe8jjUnEHmPStkESUMpBw==": {
       "description": "Increase progress button accessibility label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Increase progress",
+          "translation": "進捗を増やす",
           "variations": {}
         }
       ],
@@ -1911,11 +1911,11 @@
     },
     "g9Llh3NCpg3mIK8gycPkJA==": {
       "description": "Notifications empty state description",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Airing episodes and newly added related anime and manga will show up here.",
+          "translation": "放送中のエピソードや新しく追加された関連アニメ・マンガがここに表示されます。",
           "variations": {}
         }
       ],
@@ -1923,11 +1923,11 @@
     },
     "FdvLv7jeN17Fxcl+YNUlqQ==": {
       "description": "Manga details chapters label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Chapters",
+          "translation": "話数",
           "variations": {}
         }
       ],
@@ -1935,11 +1935,11 @@
     },
     "P0ZOUuzuTz/7qNyaWiqaTw==": {
       "description": "Media not found error title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Could not find this title",
+          "translation": "作品が見つかりませんでした",
           "variations": {}
         }
       ],
@@ -1947,11 +1947,11 @@
     },
     "XCL0R/UrmvTsaOLEo+v3bQ==": {
       "description": "Media not found error description prefix",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "We ran into an unexpected error loading the requested title:",
+          "translation": "リクエストされた作品の読み込み中に予期しないエラーが発生しました：",
           "variations": {}
         }
       ],
@@ -1959,11 +1959,11 @@
     },
     "PpdxMkUNa9snHTC/livNzw==": {
       "description": "Media not found empty response description",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "We ran into an unexpected error loading the requested title.",
+          "translation": "リクエストされた作品の読み込み中に予期しないエラーが発生しました。",
           "variations": {}
         }
       ],
@@ -1971,11 +1971,11 @@
     },
     "elKfBKuEWsHrxayri91Ryg==": {
       "description": "Manga tab label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Manga",
+          "translation": "マンガ",
           "variations": {}
         }
       ],
@@ -1983,11 +1983,11 @@
     },
     "LGUknsBSbn7cc0JFuq0z2w==": {
       "description": "Search input placeholder",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Search anime & manga",
+          "translation": "アニメ・マンガを検索",
           "variations": {}
         }
       ],
@@ -1995,11 +1995,11 @@
     },
     "U3SsxvyuXe4mMVUfnk4ilw==": {
       "description": "No search results description",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "You may have misspelled what you were looking for, or this title isn't listed on AniList.",
+          "translation": "検索した内容が間違っているか、この作品がAniListに登録されていない可能性があります。",
           "variations": {}
         }
       ],
@@ -2007,11 +2007,11 @@
     },
     "TvWy5hdERCc7zl2mTu49Bg==": {
       "description": "Discover anime toggle label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Anime",
+          "translation": "アニメ",
           "variations": {}
         }
       ],
@@ -2019,11 +2019,11 @@
     },
     "CE6xM+CQ2d+0Z87HyjPbWQ==": {
       "description": "Discover manga toggle label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Manga",
+          "translation": "マンガ",
           "variations": {}
         }
       ],
@@ -2031,11 +2031,11 @@
     },
     "gLB7qX6tuv14Z3BeSKx8fQ==": {
       "description": "Trending manga list header",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Trending manga",
+          "translation": "人気のマンガ",
           "variations": {}
         }
       ],
@@ -2043,11 +2043,11 @@
     },
     "LTyb/kXkbMb1a9ua7i5wwA==": {
       "description": "Manga details chapters stepper label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Chapters",
+          "translation": "話数",
           "variations": {}
         }
       ],
@@ -2055,11 +2055,11 @@
     },
     "/IzjxzANHUteZlcZ/rEb1A==": {
       "description": "Manga details volumes stepper label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Volumes",
+          "translation": "巻数",
           "variations": {}
         }
       ],
@@ -2067,11 +2067,11 @@
     },
     "eqvlnFt1rU3qO4ivm1oFnw==": {
       "description": "Notifications tab label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Notifications",
+          "translation": "通知",
           "variations": {}
         }
       ],
@@ -2079,11 +2079,11 @@
     },
     "2WP5sfuubT0KuCOUN+Q7GQ==": {
       "description": "Notifications tab header label",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Notifications",
+          "translation": "通知",
           "variations": {}
         }
       ],
@@ -2091,11 +2091,11 @@
     },
     "O8wXvhoKIFI7J3DWglmttQ==": {
       "description": "Notifications empty state login title",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Log in",
+          "translation": "ログイン",
           "variations": {}
         }
       ],
@@ -2103,11 +2103,11 @@
     },
     "PsxlTdg/W+TY+H3MWA/Tow==": {
       "description": "Notifications empty state login description",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "Notifications show up here once you log in with your AniList account.",
+          "translation": "AniListアカウントでログインすると、通知がここに表示されます。",
           "variations": {}
         }
       ],
@@ -2115,11 +2115,11 @@
     },
     "Ry26ODX8n+HL597V1endRA==": {
       "description": "Volume progress text",
-      "status": "new",
+      "status": "translated",
       "tokens": [],
       "translations": [
         {
-          "translation": "volumes read",
+          "translation": "巻読了",
           "variations": {}
         }
       ],
