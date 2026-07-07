@@ -1,4 +1,4 @@
-import { NetworkStatus } from "@apollo/client";
+import { NetworkStatus, useApolloClient } from "@apollo/client";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { formatDistanceToNow } from "date-fns";
 import * as Haptics from "expo-haptics";
@@ -23,6 +23,7 @@ import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { LikeButton } from "yep/components/PosterAndTitle/LikeButton";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { MediaListStatusWithLabel } from "yep/constants";
+import { applyFavoriteToCache } from "yep/graphql/favorites";
 import {
   useGetAnimeQuery,
   UpdateProgressDocument,
@@ -115,11 +116,8 @@ function PosterInfoSection({
   setShowScore: (showScore: boolean) => boolean;
   studio?: string;
 }) {
-  // GetViewer (cache-first) holds the Profile favorites shelves; without a
-  // refetch a newly hearted anime never shows up there until a manual pull.
-  const [toggleFavorite] = useToggleFavoriteMutation({
-    refetchQueries: ["GetViewer"],
-  });
+  const [toggleFavorite] = useToggleFavoriteMutation();
+  const { cache } = useApolloClient();
 
   return (
     <View style={styles.posterAndInfoContainer}>
@@ -132,24 +130,15 @@ function PosterInfoSection({
           <LikeButton
             isLiked={Boolean(media.isFavourite)}
             onPress={async () => {
+              // Flip the heart (and patch the Profile shelf) in cache before
+              // the request so the tap feels instant; revert on failure. The
+              // global onError link already toasts the error.
+              const next = !media.isFavourite;
+              applyFavoriteToCache(cache, { animeId }, next);
               try {
-                await toggleFavorite({
-                  variables: {
-                    animeId: media.id,
-                  },
-                  update: (cache) => {
-                    cache.modify({
-                      id: cache.identify({
-                        __typename: "Media",
-                        id: animeId,
-                      }),
-                      fields: {
-                        isFavourite: (current) => !current,
-                      },
-                    });
-                  },
-                });
+                await toggleFavorite({ variables: { animeId: media.id } });
               } catch (error) {
+                applyFavoriteToCache(cache, { animeId }, !next);
                 console.error(error);
               }
             }}
