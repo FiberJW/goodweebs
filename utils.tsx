@@ -41,7 +41,7 @@ export const isLiquidGlass =
   Platform.OS === "ios" && Number.parseInt(String(Platform.Version), 10) >= 26;
 
 export function notEmpty<TValue>(
-  value: TValue | null | undefined
+  value: TValue | null | undefined,
 ): value is TValue {
   return value !== null && value !== undefined;
 }
@@ -178,7 +178,9 @@ export function getMediaStatusLabel(status: MediaStatus): string {
     case "FINISHED":
       return String(fbs("Finished", "Media status finished"));
     case "RELEASING":
-      return String(fbs("Currently releasing", "Media status currently releasing"));
+      return String(
+        fbs("Currently releasing", "Media status currently releasing"),
+      );
     case "NOT_YET_RELEASED":
       return String(fbs("Not yet released", "Media status not yet released"));
     case "CANCELLED":
@@ -302,7 +304,7 @@ export function getMaxProgress(
 // cache (the list row's steppers only drive chapters, so no optimistic value).
 export function getVolumesProgress(media: AnimeListEntryFragmentFragment) {
   const volumeAbbreviation = String(
-    fbs("VOL", "Volume abbreviation in progress text"),
+    fbs("volumes read", "Volume progress text"),
   );
   const progressVolumes = media.mediaListEntry?.progressVolumes ?? 0;
 
@@ -311,7 +313,10 @@ export function getVolumesProgress(media: AnimeListEntryFragmentFragment) {
     : `${progressVolumes} ${volumeAbbreviation}`;
 }
 
-export function getProgress(media: AnimeListEntryFragmentFragment, progress: number) {
+export function getProgress(
+  media: AnimeListEntryFragmentFragment,
+  progress: number,
+) {
   const unitAbbreviation =
     media.type === "MANGA"
       ? String(fbs("CH", "Chapter abbreviation in progress text"))

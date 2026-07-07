@@ -2041,18 +2041,6 @@
       ],
       "types": []
     },
-    "ComCQEaBe/nCSMqkkcaiaQ==": {
-      "description": "Volume abbreviation in progress text",
-      "status": "new",
-      "tokens": [],
-      "translations": [
-        {
-          "translation": "VOL",
-          "variations": {}
-        }
-      ],
-      "types": []
-    },
     "LTyb/kXkbMb1a9ua7i5wwA==": {
       "description": "Manga details chapters stepper label",
       "status": "new",
@@ -2120,6 +2108,18 @@
       "translations": [
         {
           "translation": "Notifications show up here once you log in with your AniList account.",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "iPqoI2NCSgvOqsTSo31Pfw==": {
+      "description": "Volume abbreviation in progress text",
+      "status": "new",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "Volumes",
           "variations": {}
         }
       ],

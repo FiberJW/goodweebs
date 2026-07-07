@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     fontFamily: Manrope.semiBold,
     textAlign: "center",
     // minWidth (not width): "8.5/10" and "100/100 ★" need room to grow.
-    minWidth: 48,
+    minWidth: 72,
     paddingHorizontal: 4,
   },
 });

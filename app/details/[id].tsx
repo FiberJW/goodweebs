@@ -244,7 +244,9 @@ function PosterInfoSection({
           media.startDate &&
           getDateText(media.startDate, undefined, { locale }) ? (
             <Info
-              label={String(fbs("Start date", "Anime details start date label"))}
+              label={String(
+                fbs("Start date", "Anime details start date label"),
+              )}
               value={getDateText(media.startDate, undefined, { locale })!}
             />
           ) : null}
@@ -619,7 +621,7 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
         label={String(fbs("Score", "Anime details score stepper label"))}
         icon={
           <Image
-            style={{ height: 24, width: 24, marginRight: 4 }}
+            style={{ height: 16, width: 16, marginRight: 8 }}
             source={require("yep/assets/icons/star.png")}
           />
         }
@@ -633,7 +635,7 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
       <Stepper
         icon={
           <Image
-            style={{ height: 24, width: 24, marginRight: 4 }}
+            style={{ height: 16, width: 16, marginRight: 8 }}
             source={require("yep/assets/icons/progress.png")}
           />
         }
@@ -653,9 +655,9 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
           icon={
             <Image
               style={{
-                height: 24,
-                width: 24,
-                marginRight: 4,
+                height: 16,
+                width: 16,
+                marginRight: 8,
                 tintColor: darkTheme.text,
               }}
               source={require("yep/assets/icons/navigation/book.png")}
@@ -845,9 +847,7 @@ export default function Details() {
             <DescriptionRenderer description={media.description} />
           ) : null}
 
-          {media.trailer ? (
-            <Trailer trailer={media.trailer} />
-          ) : null}
+          {media.trailer ? <Trailer trailer={media.trailer} /> : null}
           {media.characters?.nodes ? (
             <CharacterList
               characters={(media.characters?.nodes ?? []).filter(notEmpty)}

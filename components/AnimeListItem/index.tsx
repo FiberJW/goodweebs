@@ -110,17 +110,7 @@ export function AnimeListItem({
           {getTitle(media.title)}
         </Text>
 
-        {airingStatus ? (
-          <Text style={styles.broadcastSchedule} numberOfLines={1}>
-            {airingStatus}
-          </Text>
-        ) : null}
-      </View>
-      <View style={styles.progressColumn}>
-        <View style={styles.episodeProgressContainer}>
-          <Text style={styles.episodeProgress}>
-            {getProgress(media, progress)}
-          </Text>
+        <View style={{ alignItems: "flex-start" }}>
           {/* Manga tracks two units; the +/- buttons only drive chapters, so
               volumes render as a read-only second line (editable on details). */}
           {media.type === "MANGA" ? (
@@ -128,46 +118,59 @@ export function AnimeListItem({
               {getVolumesProgress(media)}
             </Text>
           ) : null}
+
+          {airingStatus ? (
+            <Text style={styles.broadcastSchedule} numberOfLines={1}>
+              {airingStatus}
+            </Text>
+          ) : null}
+        </View>
+      </View>
+      <View style={styles.progressColumn}>
+        <View style={styles.episodeProgressContainer}>
+          <Text style={styles.episodeProgress}>
+            {getProgress(media, progress)}
+          </Text>
         </View>
         {/* Unreleased titles still allow progress edits — early screenings,
             pre-serialization chapters, and AniList data lag are all real. */}
         <View style={styles.progressButtonGroup}>
-            <ProgressButton
-              disabled={Boolean(disabled) || progress === 0}
-              icon={require("yep/assets/icons/progress-decrement.png")}
-              accessibilityLabel={String(
-                fbs(
-                  "Decrease progress",
-                  "Decrease progress button accessibility label",
-                ),
-              )}
-              onPress={() => {
-                onDecrement();
-              }}
-            />
-            <ProgressButton
-              disabled={Boolean(disabled) || progress === getMaxProgress(media)}
-              icon={
-                progress === (getMaxProgress(media) ?? 0) - 1
-                  ? require("yep/assets/icons/progress-complete.png")
-                  : require("yep/assets/icons/progress-increment.png")
-              }
-              accessibilityLabel={String(
-                progress === (getMaxProgress(media) ?? 0) - 1
-                  ? fbs(
-                      "Complete series",
-                      "Complete series button accessibility label",
-                    )
-                  : fbs(
-                      "Increase progress",
-                      "Increase progress button accessibility label",
-                    ),
-              )}
-              onPress={() => {
-                onIncrement();
-              }}
-            />
-          </View>
+          <ProgressButton
+            disabled={Boolean(disabled) || progress === 0}
+            icon={require("yep/assets/icons/progress-decrement.png")}
+            accessibilityLabel={String(
+              fbs(
+                "Decrease progress",
+                "Decrease progress button accessibility label",
+              ),
+            )}
+            onPress={() => {
+              onDecrement();
+            }}
+          />
+          <ProgressButton
+            disabled={Boolean(disabled) || progress === getMaxProgress(media)}
+            icon={
+              progress === (getMaxProgress(media) ?? 0) - 1
+                ? require("yep/assets/icons/progress-complete.png")
+                : require("yep/assets/icons/progress-increment.png")
+            }
+            accessibilityLabel={String(
+              progress === (getMaxProgress(media) ?? 0) - 1
+                ? fbs(
+                    "Complete series",
+                    "Complete series button accessibility label",
+                  )
+                : fbs(
+                    "Increase progress",
+                    "Increase progress button accessibility label",
+                  ),
+            )}
+            onPress={() => {
+              onIncrement();
+            }}
+          />
+        </View>
       </View>
     </PressableOpacity>
   );
