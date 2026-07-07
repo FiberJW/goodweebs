@@ -1,6 +1,6 @@
 import { NetworkStatus, useApolloClient } from "@apollo/client";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useNavigation } from "expo-router";
