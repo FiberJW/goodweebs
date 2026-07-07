@@ -24,6 +24,7 @@ import {
   ANIME_LIST_PER_PAGE,
   titleSortForLocale,
 } from "yep/graphql/animeListPagination";
+import { primeAccessToken } from "yep/graphql/client";
 import {
   useGetViewerQuery,
   useGetAnimeListQuery,
@@ -278,6 +279,11 @@ export default function Anime() {
 
                     if (result.type === "error" || result.type === "success") {
                       if (result.params.access_token) {
+                        // Prime BEFORE setAccessToken: the state flip
+                        // un-skips GetViewer/GetAnimeList immediately and the
+                        // auth link must already see the token (SecureStore
+                        // may not have written yet).
+                        primeAccessToken(result.params.access_token);
                         setAccessToken(result.params.access_token);
                         await SecureStore.setItemAsync(
                           ANILIST_ACCESS_TOKEN_STORAGE,

@@ -9,6 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { aniListBlue } from "yep/colors";
 import { Button } from "yep/components/Button";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
+import { primeAccessToken } from "yep/graphql/client";
 import { useAniListAuthRequest } from "yep/hooks/auth";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
@@ -65,6 +66,7 @@ export default function AuthScreen() {
                       ANILIST_ACCESS_TOKEN_STORAGE,
                       result.params.access_token
                     );
+                    primeAccessToken(result.params.access_token);
                     // Flips the Protected guard; RN swaps in the tabs.
                     setAccessToken(result.params.access_token);
                   }
