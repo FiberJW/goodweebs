@@ -5,6 +5,7 @@ import { StyleSheet, View, Text } from "react-native";
 
 import { black15, white12_5, white5, white95 } from "yep/colors";
 import type { AnimeListEntryFragmentFragment } from "yep/graphql/generated";
+import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { getAiringStatusText, getProgress, useGetTitle } from "yep/utils";
@@ -36,6 +37,7 @@ export function AnimeListItem({
 }: Props) {
   const router = useRouter();
   const getTitle = useGetTitle();
+  const { locale } = useLocaleContext();
 
   const isAiringAndCurrentlyWatching =
     media.status === "RELEASING" && media.mediaListEntry?.status === "CURRENT";
@@ -46,7 +48,7 @@ export function AnimeListItem({
       ? media.nextAiringEpisode.episode - 1 - progress
       : 0;
 
-  const airingStatus = getAiringStatusText(media);
+  const airingStatus = getAiringStatusText(media, locale);
 
   return (
     <PressableOpacity

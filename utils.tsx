@@ -1,6 +1,8 @@
 import { yellowDarkA } from "@radix-ui/colors";
+import type { Locale } from "date-fns";
 import { differenceInDays } from "date-fns/differenceInDays";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
+import { ja } from "date-fns/locale/ja";
 import { fbs } from "fbtee";
 import { Platform, Text } from "react-native";
 
@@ -24,6 +26,19 @@ export function notEmpty<TValue>(
   value: TValue | null | undefined
 ): value is TValue {
   return value !== null && value !== undefined;
+}
+
+// fbtee translates the labels around dates, but date-fns and toLocaleDateString
+// need the locale passed explicitly — without it ja_JP users get English
+// relative times ("3 days ago") and US date order (M/D/Y).
+const dateFnsLocales: { [locale: string]: Locale } = { ja_JP: ja };
+
+export function getDateFnsLocale(locale?: string): Locale | undefined {
+  return locale ? dateFnsLocales[locale] : undefined;
+}
+
+function toBcp47(locale?: string): string {
+  return locale?.replace("_", "-") ?? "en-US";
 }
 
 function getMonthName(month: number): string {
@@ -144,7 +159,7 @@ export function getDateText(
     { __typename?: "FuzzyDate" } & Pick<FuzzyDate, "year" | "month" | "day">
   >,
   dateType?: string,
-  options?: { highlight?: boolean },
+  options?: { highlight?: boolean; locale?: string },
 ): React.ReactNode | string | undefined {
   if (!date) return undefined;
 
@@ -155,7 +170,10 @@ export function getDateText(
     // show a relative date if the date is within the last 30 days
     const daysDifference = differenceInDays(now, jsDate);
     if (daysDifference >= 0 && daysDifference <= 30) {
-      const relativeTime = formatDistanceToNow(jsDate, { addSuffix: true });
+      const relativeTime = formatDistanceToNow(jsDate, {
+        addSuffix: true,
+        locale: getDateFnsLocale(options?.locale),
+      });
       // For relative dates, use dateType without colon for more natural text
       const dateText = dateType ? `${dateType} ${relativeTime}` : relativeTime;
 
@@ -166,8 +184,11 @@ export function getDateText(
       return dateText;
     }
 
-    // For absolute dates, use colon format
-    return `${dateType ? `${dateType}: ` : ""}${date.month}/${date.day}/${date.year}`;
+    // For absolute dates, use colon format — and the locale's date order,
+    // not hardcoded M/D/Y (ja-JP reads 2026/7/7).
+    return `${dateType ? `${dateType}: ` : ""}${jsDate.toLocaleDateString(
+      toBcp47(options?.locale),
+    )}`;
   }
 
   // For partial dates (month/year or year only), always use colon format
@@ -184,6 +205,7 @@ export function getDateText(
 
 export function getAiringStatusText(
   media: AnimeListEntryFragmentFragment,
+  locale?: string,
 ): React.ReactNode | string | undefined {
   switch (media.status) {
     case "RELEASING":
@@ -195,6 +217,7 @@ export function getAiringStatusText(
             media.nextAiringEpisode?.episode
           } ${String(fbs("airs in", "Airs in status text"))} ${formatDistanceToNow(
             new Date(media.nextAiringEpisode.airingAt * 1000),
+            { locale: getDateFnsLocale(locale) },
           )}`
         : String(fbs("Releasing", "Anime status releasing"));
     case "NOT_YET_RELEASED":
@@ -202,6 +225,7 @@ export function getAiringStatusText(
         ? getDateText(
             media.startDate,
             String(fbs("Starting", "Starting date label")),
+            { locale },
           )
         : String(fbs("Not yet released", "Anime status not yet released"));
     case "HIATUS":
@@ -211,7 +235,7 @@ export function getAiringStatusText(
         ? getDateText(
             media.endDate,
             String(fbs("Finished", "Finished date label")),
-            { highlight: true },
+            { highlight: true, locale },
           )
         : String(fbs("Finished", "Anime status finished"));
     case "CANCELLED":
@@ -219,6 +243,7 @@ export function getAiringStatusText(
         ? getDateText(
             media.endDate,
             String(fbs("Cancelled", "Cancelled date label")),
+            { locale },
           )
         : String(fbs("Cancelled", "Anime status cancelled"));
   }

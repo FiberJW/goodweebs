@@ -49,6 +49,7 @@ import {
   usePersistedState,
   StorageKeys,
 } from "yep/hooks/helpers";
+import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { CharacterList } from "yep/screens/DetailsScreen/CharacterList";
 import { DetailsSkeleton } from "yep/screens/DetailsScreen/DetailsSkeleton";
 import { ExternalLink } from "yep/screens/DetailsScreen/ExternalLink";
@@ -58,6 +59,7 @@ import { Trailer } from "yep/screens/DetailsScreen/Trailer";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import {
+  getDateFnsLocale,
   getDateText,
   getMediaListStatusLabel,
   getMediaStatusLabel,
@@ -118,6 +120,7 @@ function PosterInfoSection({
 }) {
   const [toggleFavorite] = useToggleFavoriteMutation();
   const { cache } = useApolloClient();
+  const { locale } = useLocaleContext();
 
   return (
     <View style={styles.posterAndInfoContainer}>
@@ -216,24 +219,25 @@ function PosterInfoSection({
                 fbs("airs in", "Next episode airs in label"),
               )} ${formatDistanceToNow(
                 new Date(media.nextAiringEpisode.airingAt * 1000),
+                { locale: getDateFnsLocale(locale) },
               )}`}
             />
           ) : null}
           {media.status === "NOT_YET_RELEASED" &&
           media.startDate &&
-          getDateText(media.startDate) ? (
+          getDateText(media.startDate, undefined, { locale }) ? (
             <Info
               label={String(fbs("Start date", "Anime details start date label"))}
-              value={getDateText(media.startDate)!}
+              value={getDateText(media.startDate, undefined, { locale })!}
             />
           ) : null}
 
           {(media.status === "FINISHED" || media.status === "CANCELLED") &&
           media.endDate &&
-          getDateText(media.endDate) ? (
+          getDateText(media.endDate, undefined, { locale }) ? (
             <Info
               label={String(fbs("End date", "Anime details end date label"))}
-              value={getDateText(media.endDate)!}
+              value={getDateText(media.endDate, undefined, { locale })!}
             />
           ) : null}
         </View>
