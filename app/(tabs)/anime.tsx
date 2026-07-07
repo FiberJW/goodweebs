@@ -2,7 +2,7 @@ import { NetworkStatus } from "@apollo/client";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   RefreshControl,
   View,
@@ -33,7 +33,11 @@ import type {
   MediaListStatus,
 } from "yep/graphql/generated";
 import { useAniListAuthRequest } from "yep/hooks/auth";
-import { useLoadNextPage } from "yep/hooks/helpers";
+import {
+  StorageKeys,
+  useLoadNextPage,
+  usePersistedState,
+} from "yep/hooks/helpers";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { AnimeSkeleton } from "yep/screens/AnimeScreen/AnimeSkeleton";
 import { darkTheme } from "yep/themes";
@@ -108,15 +112,30 @@ export default function Anime() {
     skip: !accessToken,
   });
 
+  // The viewer id is stable per account, so persist it: on a cold start the
+  // list query below can fire immediately instead of serializing behind a full
+  // GetViewer round-trip (AniList's degraded rate limit makes each request
+  // slow, so the waterfall doubles time-to-first-row after a fresh login).
+  const [persistedViewerId, setPersistedViewerId] = usePersistedState<
+    number | null
+  >(StorageKeys.ANILIST_VIEWER_ID);
+  const viewerId = viewerData?.Viewer?.id ?? persistedViewerId ?? undefined;
+  useEffect(() => {
+    const id = viewerData?.Viewer?.id;
+    if (id && id !== persistedViewerId) {
+      setPersistedViewerId(id);
+    }
+  }, [viewerData?.Viewer?.id, persistedViewerId, setPersistedViewerId]);
+
   const {
     data: animeListData,
     refetch,
     fetchMore,
     networkStatus,
   } = useGetAnimeListQuery({
-    skip: !viewerData?.Viewer?.id || !accessToken,
+    skip: !viewerId || !accessToken,
     variables: {
-      userId: viewerData?.Viewer?.id,
+      userId: viewerId,
       status,
       sort: [titleSortForLocale(locale)],
       perPage: ANIME_LIST_PER_PAGE,
@@ -281,7 +300,7 @@ export default function Anime() {
             onRefresh={() => {
               // page: 1 explicitly — refetch merges partial variables over the
               // current ones, which include the last fetchMore's page.
-              refetch({ userId: viewerData?.Viewer?.id, status, page: 1 }).catch(
+              refetch({ userId: viewerId, status, page: 1 }).catch(
                 () => {}, // error surfaces via the hook; unhandled it would redbox
               );
             }}

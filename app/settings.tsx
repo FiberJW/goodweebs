@@ -200,6 +200,9 @@ export default function Settings() {
                       await SecureStore.deleteItemAsync(
                         ANILIST_ACCESS_TOKEN_STORAGE,
                       );
+                      // A different account may log in next; a stale viewer id
+                      // would fetch the previous user's list.
+                      localStorage.removeItem(StorageKeys.ANILIST_VIEWER_ID);
                       // Clearing both flips the Protected guard; RN swaps this
                       // screen (and the tabs) out for auth automatically.
                       setContinuedWithoutLogin(false);
