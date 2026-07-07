@@ -2113,13 +2113,13 @@
       ],
       "types": []
     },
-    "iPqoI2NCSgvOqsTSo31Pfw==": {
-      "description": "Volume abbreviation in progress text",
+    "Ry26ODX8n+HL597V1endRA==": {
+      "description": "Volume progress text",
       "status": "new",
       "tokens": [],
       "translations": [
         {
-          "translation": "Volumes",
+          "translation": "volumes read",
           "variations": {}
         }
       ],
