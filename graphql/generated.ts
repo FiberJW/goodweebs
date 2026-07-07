@@ -4809,10 +4809,40 @@ export type GetCharacterQueryVariables = Exact<{
 
 export type GetCharacterQuery = { __typename?: 'Query', Character?: { __typename?: 'Character', id: number, isFavourite: boolean, description?: string | null, name?: { __typename?: 'CharacterName', first?: string | null, last?: string | null, full?: string | null, native?: string | null, alternative?: Array<string | null> | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null, medium?: string | null } | null } | null };
 
+export type GetNotificationsQueryVariables = Exact<{
+  page?: InputMaybe<Scalars['Int']['input']>;
+  perPage?: InputMaybe<Scalars['Int']['input']>;
+  reset?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type GetNotificationsQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', pageInfo?: { __typename?: 'PageInfo', total?: number | null, hasNextPage?: boolean | null } | null, notifications?: Array<
+      | { __typename?: 'ActivityLikeNotification' }
+      | { __typename?: 'ActivityMentionNotification' }
+      | { __typename?: 'ActivityMessageNotification' }
+      | { __typename?: 'ActivityReplyLikeNotification' }
+      | { __typename?: 'ActivityReplyNotification' }
+      | { __typename?: 'ActivityReplySubscribedNotification' }
+      | { __typename?: 'AiringNotification', id: number, episode: number, contexts?: Array<string | null> | null, createdAt?: number | null, media?: { __typename?: 'Media', id: number, type?: MediaType | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', medium?: string | null, large?: string | null } | null } | null }
+      | { __typename?: 'CharacterSubmissionUpdateNotification' }
+      | { __typename?: 'FollowingNotification' }
+      | { __typename?: 'MediaDataChangeNotification' }
+      | { __typename?: 'MediaDeletionNotification' }
+      | { __typename?: 'MediaMergeNotification' }
+      | { __typename?: 'MediaSubmissionUpdateNotification' }
+      | { __typename?: 'RelatedMediaAdditionNotification', id: number, context?: string | null, createdAt?: number | null, media?: { __typename?: 'Media', id: number, type?: MediaType | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', medium?: string | null, large?: string | null } | null } | null }
+      | { __typename?: 'StaffSubmissionUpdateNotification' }
+      | { __typename?: 'ThreadCommentLikeNotification' }
+      | { __typename?: 'ThreadCommentMentionNotification' }
+      | { __typename?: 'ThreadCommentReplyNotification' }
+      | { __typename?: 'ThreadCommentSubscribedNotification' }
+      | { __typename?: 'ThreadLikeNotification' }
+     | null> | null } | null };
+
 export type GetViewerQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetViewerQuery = { __typename?: 'Query', Viewer?: { __typename?: 'User', id: number, name: string, bannerImage?: string | null, avatar?: { __typename?: 'UserAvatar', large?: string | null, medium?: string | null } | null, favourites?: { __typename?: 'Favourites', anime?: { __typename?: 'MediaConnection', nodes?: Array<{ __typename?: 'Media', id: number, title?: { __typename?: 'MediaTitle', english?: string | null, romaji?: string | null, native?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null } | null } | null> | null } | null, characters?: { __typename?: 'CharacterConnection', nodes?: Array<{ __typename?: 'Character', id: number, name?: { __typename?: 'CharacterName', full?: string | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null, medium?: string | null } | null } | null> | null } | null } | null, statistics?: { __typename?: 'UserStatisticTypes', anime?: { __typename?: 'UserStatistics', count: number, minutesWatched: number } | null, manga?: { __typename?: 'UserStatistics', count: number, chaptersRead: number } | null } | null } | null };
+export type GetViewerQuery = { __typename?: 'Query', Viewer?: { __typename?: 'User', id: number, name: string, bannerImage?: string | null, unreadNotificationCount?: number | null, avatar?: { __typename?: 'UserAvatar', large?: string | null, medium?: string | null } | null, favourites?: { __typename?: 'Favourites', anime?: { __typename?: 'MediaConnection', nodes?: Array<{ __typename?: 'Media', id: number, title?: { __typename?: 'MediaTitle', english?: string | null, romaji?: string | null, native?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null } | null } | null> | null } | null, characters?: { __typename?: 'CharacterConnection', nodes?: Array<{ __typename?: 'Character', id: number, name?: { __typename?: 'CharacterName', full?: string | null } | null, image?: { __typename?: 'CharacterImage', large?: string | null, medium?: string | null } | null } | null> | null } | null } | null, statistics?: { __typename?: 'UserStatisticTypes', anime?: { __typename?: 'UserStatistics', count: number, minutesWatched: number } | null, manga?: { __typename?: 'UserStatistics', count: number, chaptersRead: number } | null } | null } | null };
 
 export const MediaPosterFragmentFragmentDoc = gql`
     fragment MediaPosterFragment on Media {
@@ -5444,6 +5474,96 @@ export type GetCharacterQueryHookResult = ReturnType<typeof useGetCharacterQuery
 export type GetCharacterLazyQueryHookResult = ReturnType<typeof useGetCharacterLazyQuery>;
 export type GetCharacterSuspenseQueryHookResult = ReturnType<typeof useGetCharacterSuspenseQuery>;
 export type GetCharacterQueryResult = Apollo.QueryResult<GetCharacterQuery, GetCharacterQueryVariables>;
+export const GetNotificationsDocument = gql`
+    query GetNotifications($page: Int, $perPage: Int, $reset: Boolean) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      total
+      hasNextPage
+    }
+    notifications(
+      type_in: [AIRING, RELATED_MEDIA_ADDITION]
+      resetNotificationCount: $reset
+    ) {
+      ... on AiringNotification {
+        id
+        episode
+        contexts
+        createdAt
+        media {
+          id
+          type
+          title {
+            romaji
+            native
+            english
+          }
+          coverImage {
+            medium
+            large
+          }
+        }
+      }
+      ... on RelatedMediaAdditionNotification {
+        id
+        context
+        createdAt
+        media {
+          id
+          type
+          title {
+            romaji
+            native
+            english
+          }
+          coverImage {
+            medium
+            large
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetNotificationsQuery__
+ *
+ * To run a query within a React component, call `useGetNotificationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNotificationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetNotificationsQuery({
+ *   variables: {
+ *      page: // value for 'page'
+ *      perPage: // value for 'perPage'
+ *      reset: // value for 'reset'
+ *   },
+ * });
+ */
+export function useGetNotificationsQuery(baseOptions?: Apollo.QueryHookOptions<GetNotificationsQuery, GetNotificationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetNotificationsQuery, GetNotificationsQueryVariables>(GetNotificationsDocument, options);
+      }
+export function useGetNotificationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNotificationsQuery, GetNotificationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetNotificationsQuery, GetNotificationsQueryVariables>(GetNotificationsDocument, options);
+        }
+// @ts-ignore
+export function useGetNotificationsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetNotificationsQuery, GetNotificationsQueryVariables>): Apollo.UseSuspenseQueryResult<GetNotificationsQuery, GetNotificationsQueryVariables>;
+export function useGetNotificationsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetNotificationsQuery, GetNotificationsQueryVariables>): Apollo.UseSuspenseQueryResult<GetNotificationsQuery | undefined, GetNotificationsQueryVariables>;
+export function useGetNotificationsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetNotificationsQuery, GetNotificationsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetNotificationsQuery, GetNotificationsQueryVariables>(GetNotificationsDocument, options);
+        }
+export type GetNotificationsQueryHookResult = ReturnType<typeof useGetNotificationsQuery>;
+export type GetNotificationsLazyQueryHookResult = ReturnType<typeof useGetNotificationsLazyQuery>;
+export type GetNotificationsSuspenseQueryHookResult = ReturnType<typeof useGetNotificationsSuspenseQuery>;
+export type GetNotificationsQueryResult = Apollo.QueryResult<GetNotificationsQuery, GetNotificationsQueryVariables>;
 export const GetViewerDocument = gql`
     query GetViewer {
   Viewer {
@@ -5454,6 +5574,7 @@ export const GetViewerDocument = gql`
       medium
     }
     bannerImage
+    unreadNotificationCount
     favourites {
       anime {
         nodes {
