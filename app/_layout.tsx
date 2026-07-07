@@ -144,6 +144,20 @@ function InnerLayout() {
       LogRocket.init("iltgzt/goodweebs", {
         updateId: Updates.isEmbeddedLaunch ? null : Updates.updateId,
         expoChannel: Updates.channel,
+        network: {
+          // LogRocket records every request's headers into session
+          // recordings. Without this, the AniList bearer token (~1-year
+          // lifetime) on every GraphQL request is uploaded to a third
+          // party — a leaked recording would be account takeover.
+          requestSanitizer: (request) => {
+            for (const header of Object.keys(request.headers)) {
+              if (header.toLowerCase() === "authorization") {
+                request.headers[header] = null;
+              }
+            }
+            return request;
+          },
+        },
       });
     }
   }, []);
