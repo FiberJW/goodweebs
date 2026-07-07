@@ -90,6 +90,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   plugins: [
     "expo-router",
     [
+      // Declares the app's localizations so the OS shows a per-app Language
+      // picker (iOS Settings › Goodweebs › Language; Android 13+ App language).
+      // Sets iOS CFBundleLocalizations + Android res/xml/locales_config.xml.
+      "expo-localization",
+      {
+        supportedLocales: ["en", "ja"],
+      },
+    ],
+    [
       "expo-splash-screen",
       {
         image: "./assets/launch/splash.png",

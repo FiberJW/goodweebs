@@ -2124,6 +2124,30 @@
         }
       ],
       "types": []
+    },
+    "aVQfaik/u39LgrVgLCRN/A==": {
+      "description": "Language settings row accessibility hint",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "アプリの言語を変更できるシステム設定を開きます",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "FkB8gr6n1VexVgNQ17UTzA==": {
+      "description": "Language change-in-settings hint",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "設定で変更",
+          "variations": {}
+        }
+      ],
+      "types": []
     }
   }
 }

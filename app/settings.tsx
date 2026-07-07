@@ -63,7 +63,7 @@ function getScoreFormatLabel(format: ScoreFormat) {
 }
 
 export default function Settings() {
-  const { locale, setLocale } = useLocaleContext();
+  const { locale } = useLocaleContext();
 
   const [hideScores, setHideScores] = usePersistedState<boolean>(
     StorageKeys.HIDE_SCORES_GLOBAL,
@@ -212,30 +212,29 @@ export default function Settings() {
           >
             {String(fbs("Language", "Language settings section title"))}
           </Text>
-          <View style={styles.segmentedControl}>
-            {[...availableLanguages].map(([code, label]) => {
-              const isSelected = locale === code;
-              return (
-                <PressableOpacity
-                  key={code}
-                  disabled={isSelected}
-                  useDisabledOpacity={false}
-                  accessibilityState={{ selected: isSelected }}
-                  style={[styles.segment, isSelected && styles.segmentSelected]}
-                  onPress={() => setLocale(code)}
-                >
-                  <Text
-                    style={[
-                      styles.segmentText,
-                      isSelected && styles.segmentTextSelected,
-                    ]}
-                  >
-                    {label}
-                  </Text>
-                </PressableOpacity>
-              );
-            })}
-          </View>
+          {/* The app language is the OS per-app Language setting; there's no
+              public API to set it from in-app, so this row opens Settings. */}
+          <PressableOpacity
+            accessibilityRole="button"
+            accessibilityHint={String(
+              fbs(
+                "Opens the system settings where you can change the app language",
+                "Language settings row accessibility hint",
+              ),
+            )}
+            style={[styles.radioCard, styles.radioRow]}
+            onPress={() => Linking.openSettings()}
+          >
+            <Text style={styles.radioLabelSelected}>
+              {[...availableLanguages].find(([code]) => code === locale)?.[1] ??
+                locale}
+            </Text>
+            <Text style={styles.radioLabel}>
+              {String(
+                fbs("Change in Settings", "Language change-in-settings hint"),
+              )}
+            </Text>
+          </PressableOpacity>
         </View>
         <View style={{ flexDirection: "column" }}>
           <Text
@@ -399,35 +398,5 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: 10,
     width: 10,
-  },
-  segmentedControl: {
-    backgroundColor: darkTheme.button,
-    borderColor: darkTheme.buttonBorder,
-    borderRadius: 12,
-    borderWidth: StyleSheet.hairlineWidth,
-    flexDirection: "row",
-    padding: 3,
-  },
-  segment: {
-    alignItems: "center",
-    // Transparent border on every segment so selection doesn't reflow.
-    borderColor: "transparent",
-    borderRadius: 9,
-    borderWidth: StyleSheet.hairlineWidth,
-    flex: 1,
-    paddingVertical: 10,
-  },
-  segmentSelected: {
-    // Stacked on the track's own translucent fill, so it reads lighter.
-    backgroundColor: darkTheme.button,
-    borderColor: darkTheme.buttonBorder,
-  },
-  segmentText: {
-    color: darkTheme.inputPlaceholder,
-    fontFamily: Manrope.semiBold,
-    fontSize: 16,
-  },
-  segmentTextSelected: {
-    color: darkTheme.text,
   },
 });
