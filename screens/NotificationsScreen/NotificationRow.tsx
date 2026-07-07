@@ -5,6 +5,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
+import { graphql, type ResultOf } from "yep/graphql/tada";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
@@ -12,22 +13,62 @@ import { getDateFnsLocale, useGetTitle } from "yep/utils";
 
 import { getNotificationText } from "./notificationText";
 
-export type NotificationRowData = {
-  id: number;
-  __typename?: string;
-  createdAt?: number | null;
-  episode?: number | null;
-  contexts?: (string | null)[] | null;
-  context?: string | null;
-  media: {
-    id: number;
-    title?: {
-      romaji?: string | null;
-      native?: string | null;
-      english?: string | null;
-    } | null;
-    coverImage?: { medium?: string | null; large?: string | null } | null;
-  };
+// Colocated fragment for a notification-list row. @_unmask because the
+// notifications screen narrows this union by __typename and reshapes it (rather
+// than handing a masked ref to a leaf), so it needs the fields visible. Only the
+// two members the screen renders are selected; other NotificationUnion members
+// come back empty (filtered server-side via type_in, narrowed away in the screen).
+export const NotificationRowFragment = graphql(`
+  fragment NotificationRowFragment on NotificationUnion @_unmask {
+    __typename
+    ... on AiringNotification {
+      id
+      episode
+      contexts
+      createdAt
+      media {
+        id
+        type
+        title {
+          romaji
+          native
+          english
+        }
+        coverImage {
+          medium
+          large
+        }
+      }
+    }
+    ... on RelatedMediaAdditionNotification {
+      id
+      context
+      createdAt
+      media {
+        id
+        type
+        title {
+          romaji
+          native
+          english
+        }
+        coverImage {
+          medium
+          large
+        }
+      }
+    }
+  }
+`);
+
+// The two renderable members, with media guaranteed present (the screen filters
+// out rows without media before rendering).
+type RenderableNotification = Extract<
+  ResultOf<typeof NotificationRowFragment>,
+  { __typename: "AiringNotification" | "RelatedMediaAdditionNotification" }
+>;
+export type NotificationRowData = RenderableNotification & {
+  media: NonNullable<RenderableNotification["media"]>;
 };
 
 export function NotificationRow({

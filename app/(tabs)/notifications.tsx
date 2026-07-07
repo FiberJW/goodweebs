@@ -18,62 +18,30 @@ import { useLoadNextPage } from "yep/hooks/helpers";
 import {
   NotificationRow,
   NotificationRowData,
+  NotificationRowFragment,
 } from "yep/screens/NotificationsScreen/NotificationRow";
 import { darkTheme } from "yep/themes";
 import { useAccessToken } from "yep/useAccessToken";
 
-const GetNotifications = graphql(`
-  query GetNotifications($page: Int, $perPage: Int, $reset: Boolean) {
-    Page(page: $page, perPage: $perPage) {
-      pageInfo {
-        total
-        hasNextPage
-      }
-      notifications(
-        type_in: [AIRING, RELATED_MEDIA_ADDITION]
-        resetNotificationCount: $reset
-      ) {
-        ... on AiringNotification {
-          id
-          episode
-          contexts
-          createdAt
-          media {
-            id
-            type
-            title {
-              romaji
-              native
-              english
-            }
-            coverImage {
-              medium
-              large
-            }
-          }
+const GetNotifications = graphql(
+  `
+    query GetNotifications($page: Int, $perPage: Int, $reset: Boolean) {
+      Page(page: $page, perPage: $perPage) {
+        pageInfo {
+          total
+          hasNextPage
         }
-        ... on RelatedMediaAdditionNotification {
-          id
-          context
-          createdAt
-          media {
-            id
-            type
-            title {
-              romaji
-              native
-              english
-            }
-            coverImage {
-              medium
-              large
-            }
-          }
+        notifications(
+          type_in: [AIRING, RELATED_MEDIA_ADDITION]
+          resetNotificationCount: $reset
+        ) {
+          ...NotificationRowFragment
         }
       }
     }
-  }
-`);
+  `,
+  [NotificationRowFragment],
+);
 
 const NOTIFICATIONS_PER_PAGE = 25;
 
