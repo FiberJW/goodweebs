@@ -65,7 +65,12 @@ export function AnimeListItem({
       onPress={() => router.push(`/details/${media.id}`)}
     >
       <View>
-        <PosterAndTitle uri={media.coverImage?.large ?? ""} size="small">
+        {/* medium (~100px) for the 56pt thumbnail instead of large (~230px):
+            less network + decode per row while scrolling the list. */}
+        <PosterAndTitle
+          uri={media.coverImage?.medium ?? media.coverImage?.large ?? ""}
+          size="small"
+        >
           {media.mediaListEntry?.score ? (
             <View style={styles.scoreContainer}>
               <Text style={styles.scoreText}>

@@ -4712,7 +4712,7 @@ export type YearStats = {
 
 export type MediaPosterFragmentFragment = { __typename?: 'Media', id: number, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null } | null };
 
-export type AnimeListEntryFragmentFragment = { __typename?: 'Media', id: number, episodes?: number | null, status?: MediaStatus | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null } | null, startDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, endDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, nextAiringEpisode?: { __typename?: 'AiringSchedule', id: number, airingAt: number, episode: number } | null, mediaListEntry?: { __typename?: 'MediaList', id: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null } | null };
+export type AnimeListEntryFragmentFragment = { __typename?: 'Media', id: number, episodes?: number | null, status?: MediaStatus | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null } | null, startDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, endDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, nextAiringEpisode?: { __typename?: 'AiringSchedule', id: number, airingAt: number, episode: number } | null, mediaListEntry?: { __typename?: 'MediaList', id: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null } | null };
 
 export type AnimeRelationFragmentFragment = { __typename?: 'Media', id: number, isFavourite: boolean, type?: MediaType | null, format?: MediaFormat | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null, color?: string | null } | null };
 
@@ -4783,7 +4783,7 @@ export type GetAnimeListQueryVariables = Exact<{
 }>;
 
 
-export type GetAnimeListQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', pageInfo?: { __typename?: 'PageInfo', hasNextPage?: boolean | null, total?: number | null } | null, mediaList?: Array<{ __typename?: 'MediaList', id: number, media?: { __typename?: 'Media', id: number, episodes?: number | null, status?: MediaStatus | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null } | null, startDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, endDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, nextAiringEpisode?: { __typename?: 'AiringSchedule', id: number, airingAt: number, episode: number } | null, mediaListEntry?: { __typename?: 'MediaList', id: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null } | null } | null } | null> | null } | null };
+export type GetAnimeListQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', pageInfo?: { __typename?: 'PageInfo', hasNextPage?: boolean | null, total?: number | null } | null, mediaList?: Array<{ __typename?: 'MediaList', id: number, media?: { __typename?: 'Media', id: number, episodes?: number | null, status?: MediaStatus | null, title?: { __typename?: 'MediaTitle', romaji?: string | null, native?: string | null, english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null, medium?: string | null } | null, startDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, endDate?: { __typename?: 'FuzzyDate', year?: number | null, month?: number | null, day?: number | null } | null, nextAiringEpisode?: { __typename?: 'AiringSchedule', id: number, airingAt: number, episode: number } | null, mediaListEntry?: { __typename?: 'MediaList', id: number, progress?: number | null, status?: MediaListStatus | null, score?: number | null } | null } | null } | null> | null } | null };
 
 export type GetTrendingAnimeQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -4838,6 +4838,7 @@ export const AnimeListEntryFragmentFragmentDoc = gql`
   }
   coverImage {
     large
+    medium
   }
   episodes
   status
