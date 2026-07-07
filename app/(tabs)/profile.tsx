@@ -205,15 +205,16 @@ export default function Profile() {
 
                 if (result.type === "error" || result.type === "success") {
                   if (result.params.access_token) {
-                    // Prime BEFORE setAccessToken: the state flip un-skips
-                    // GetViewer immediately and the auth link must already
-                    // see the token (SecureStore may not have written yet).
-                    primeAccessToken(result.params.access_token);
-                    setAccessToken(result.params.access_token);
+                    // Same order as auth.tsx: durable write, then the memory
+                    // mirror, then the state flip — setAccessToken un-skips
+                    // GetViewer immediately, so the token must be fully
+                    // stored before it runs.
                     await SecureStore.setItemAsync(
                       ANILIST_ACCESS_TOKEN_STORAGE,
                       result.params.access_token,
                     );
+                    primeAccessToken(result.params.access_token);
+                    setAccessToken(result.params.access_token);
                   }
                 }
               },
