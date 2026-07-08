@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 
+import { SCREENSHOT_BLUR_RADIUS } from "yep/screenshotMode";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
@@ -46,6 +47,7 @@ export function PosterAndTitle({ size, uri, title, style, children }: Props) {
   return (
     <View style={[styles.container, style]}>
       <ImageBackground
+        blurRadius={SCREENSHOT_BLUR_RADIUS}
         contentFit="cover"
         // Ties the rendered bitmap to the uri in recycled list rows (anime
         // list, discover grid): without it a recycled row shows the previous

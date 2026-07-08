@@ -16,6 +16,7 @@ import type {
   ScoreFormat,
 } from "yep/graphql/enums";
 import type { ResultOf } from "yep/graphql/tada";
+import { fakeName } from "yep/screenshotMode";
 
 import { useLocaleContext } from "./i18n/LocaleContext";
 
@@ -113,7 +114,7 @@ function getTitle(title: TitleInput, locale?: string): string | undefined {
 export function useGetTitle() {
   const { locale } = useLocaleContext();
 
-  return (title: TitleInput) => getTitle(title, locale);
+  return (title: TitleInput) => fakeName(getTitle(title, locale));
 }
 
 export function getReadableMediaRelation(mediaRelation: MediaRelation): string {

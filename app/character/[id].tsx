@@ -12,6 +12,7 @@ import { LikeButton } from "yep/components/PosterAndTitle/LikeButton";
 import { applyFavoriteToCache, ToggleFavorite } from "yep/graphql/favorites";
 import { graphql, readFragment } from "yep/graphql/tada";
 import { CharacterSkeleton } from "yep/screens/CharacterScreen/CharacterSkeleton";
+import { fakeName } from "yep/screenshotMode";
 
 const CharacterData = graphql(`
   fragment CharacterData on Character {
@@ -65,7 +66,7 @@ export default function Character() {
   useEffect(() => {
     if (character?.name?.full) {
       navigation.setOptions({
-        title: character.name.full,
+        title: fakeName(character.name.full),
       });
     }
   }, [character, navigation]);

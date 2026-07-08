@@ -24,6 +24,11 @@ import type { ResultOf } from "yep/graphql/tada";
 import { GetViewer } from "yep/graphql/viewer";
 import { useAniListAuthRequest } from "yep/hooks/auth";
 import { ProfileSkeleton } from "yep/screens/ProfileScreen/ProfileSkeleton";
+import {
+  SCREENSHOT_BLUR_RADIUS,
+  fakeHandle,
+  fakeName,
+} from "yep/screenshotMode";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
@@ -84,7 +89,7 @@ function FavoriteCharacterListItem({ item }: { item: FavoriteCharacterItem }) {
         <PosterAndTitle
           size="profile"
           uri={item?.image?.large ?? ""}
-          title={item.name?.full ?? undefined}
+          title={fakeName(item.name?.full ?? undefined)}
         />
       </PressableOpacity>
     </View>
@@ -97,6 +102,7 @@ function OptionalBackgroundImage({
 }: PropsWithChildren<{ bannerImage?: string | null }>) {
   return bannerImage ? (
     <ImageBackground
+      blurRadius={SCREENSHOT_BLUR_RADIUS}
       source={{ uri: bannerImage }}
       style={{ borderRadius: 8, overflow: "hidden" }}
     >
@@ -249,7 +255,7 @@ export default function Profile() {
                     }
                   />
                   <Text style={styles.username} numberOfLines={1}>
-                    {viewerData.Viewer.name}
+                    {fakeHandle(viewerData.Viewer.name)}
                   </Text>
                 </View>
                 <View style={styles.statsRow}>

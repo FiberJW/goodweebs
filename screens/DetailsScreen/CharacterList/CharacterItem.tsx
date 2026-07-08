@@ -5,6 +5,7 @@ import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { graphql, readFragment } from "yep/graphql/tada";
 import type { FragmentOf } from "yep/graphql/tada";
+import { fakeName } from "yep/screenshotMode";
 
 export const CharacterListItemData = graphql(`
   fragment CharacterListItemData on Character {
@@ -36,7 +37,7 @@ export function CharacterItem({ character: maskedCharacter }: Props) {
       <PosterAndTitle
         size="large"
         uri={character.image.large}
-        title={character.name?.full ?? ""}
+        title={fakeName(character.name?.full ?? "")}
       />
     </PressableOpacity>
   );

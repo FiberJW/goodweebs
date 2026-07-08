@@ -1,7 +1,0 @@
-# EAS builds run with EXPO_USE_PRECOMPILED_MODULES=1, and that pipeline writes
-# prepatched <Pod>.podspec.json files into external packages' node_modules dirs
-# during pod install (expo-modules-autolinking precompiled_modules.rb,
-# generate_prepatched_podspec). The runtime fingerprint is recomputed after pod
-# install and hard-compared against the one from build-request time, so those
-# generated files made every iOS build fail with a runtime version mismatch.
-node_modules/**/*.podspec.json
