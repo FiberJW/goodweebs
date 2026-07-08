@@ -366,11 +366,6 @@ function MediaListStatusButton({
 
   const updateStatus = useDebouncedMutation({
     mutationDocument: UpdateStatus,
-    // A status change moves the entry between the list tabs' per-status
-    // Page.mediaList cache containers; patching MediaList.status alone leaves
-    // it listed under the old chip until a manual refresh, so refetch the
-    // active list (resets it to page 1 and fixes pageInfo.total).
-    refetchQueries: ["GetMediaList"],
     makeUpdateFunction: (variables) => (cache, result) => {
       if (mediaListEntryId && variables?.status) {
         cache.modify({
@@ -379,6 +374,41 @@ function MediaListStatusButton({
             status: () => variables.status,
           },
         });
+
+        // Patching MediaList.status alone leaves the entry under its OLD status
+        // chip — each per-status list is its own Page.mediaList container with
+        // its own ref array. Rather than refetch the whole active list (a
+        // request on AniList's 30/min budget), drop the moved entry from
+        // whichever list container currently holds it and fix that chip's
+        // total. We only ever REMOVE, never insert: the destination chip
+        // self-heals on its next read, since switching chips changes the query
+        // variables and cache-and-network always hits the network.
+        // ponytail: keyed off the `mediaList` field, so it's coupled to the Page
+        // typePolicy in graphql/client.ts — revert to
+        // refetchQueries: ["GetMediaList"] if that coupling ever bites.
+        if (variables.status !== mediaListEntry?.status) {
+          cache.modify({
+            fields: {
+              Page(existing, { readField }) {
+                const list = existing?.mediaList;
+                if (!Array.isArray(list)) return existing;
+                const filtered = list.filter(
+                  (ref) => readField("id", ref) !== mediaListEntryId,
+                );
+                if (filtered.length === list.length) return existing;
+                const total = existing.pageInfo?.total;
+                return {
+                  ...existing,
+                  mediaList: filtered,
+                  pageInfo:
+                    typeof total === "number"
+                      ? { ...existing.pageInfo, total: total - 1 }
+                      : existing.pageInfo,
+                };
+              },
+            },
+          });
+        }
       }
 
       // Always (re-)link the entry to the Media ourselves — the nested
@@ -396,6 +426,9 @@ function MediaListStatusButton({
         },
       });
     },
+    // Fired from a one-shot action sheet, not a repeatable stepper — there's
+    // nothing to coalesce, so skip the debounce and write immediately (keeps the
+    // loading spinner from lingering an extra 500ms). Same for removeFromList.
     wait: 0,
   });
 
@@ -568,7 +601,6 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
         },
       });
     },
-    wait: 0,
   });
 
   const updateProgress = useDebouncedMutation({
@@ -583,7 +615,6 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
         },
       });
     },
-    wait: 0,
   });
 
   const updateProgressVolumes = useDebouncedMutation({
@@ -598,7 +629,6 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
         },
       });
     },
-    wait: 0,
   });
 
   function clampProgress(value: number) {
