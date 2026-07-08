@@ -101,14 +101,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       "expo-splash-screen",
       {
-        image: "./assets/launch/splash.png",
-        resizeMode: "cover",
-        backgroundColor: "#010209",
-        // TODO: use the new non-fullscreen splash
-        // The old top-level splash config used the legacy full-screen
-        // storyboard; without this the plugin renders the art as a ~100pt
-        // centered logo instead of cover.
-        enableFullScreenImage_legacy: true,
+        backgroundColor: "#ffffff",
+        image: "./assets/launch/splash-logo-wrapped.png",
+        imageWidth: 200,
+        dark: {
+          backgroundColor: "#010209",
+          image: "./assets/launch/splash-logo-wrapped-dark.png",
+        },
       },
     ],
     "expo-image",
