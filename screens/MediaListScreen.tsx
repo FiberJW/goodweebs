@@ -156,8 +156,16 @@ export function MediaListScreen({
   const [status, setStatus] = useState<MediaListStatus>(
     MediaListStatusWithLabel[0].value,
   );
-  const [sortField, setSortField] = useState<MediaSortField>("UPDATED");
-  const [direction, setDirection] = useState<SortDirection>("DESC");
+  // Persisted per media type: anime and manga keep independent sorts, and an
+  // anime screen never loads the manga-only VOLUME_PROGRESS field.
+  const [sortField, setSortField] = usePersistedState<MediaSortField>(
+    StorageKeys.MEDIA_LIST_SORT_FIELD,
+    { id: mediaType },
+  );
+  const [direction, setDirection] = usePersistedState<SortDirection>(
+    StorageKeys.MEDIA_LIST_SORT_DIRECTION,
+    { id: mediaType },
+  );
 
   const { accessToken, setAccessToken } = useAccessToken();
   const router = useRouter();
@@ -338,7 +346,7 @@ export function MediaListScreen({
                 <PressableOpacity
                   style={styles.directionButton}
                   onPress={() =>
-                    setDirection((d) => (d === "ASC" ? "DESC" : "ASC"))
+                    setDirection(direction === "ASC" ? "DESC" : "ASC")
                   }
                   accessibilityRole="button"
                   accessibilityLabel={String(

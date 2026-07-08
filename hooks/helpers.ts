@@ -141,6 +141,8 @@ export enum StorageKeys {
   OPT_OUT_CRASH_REPORTING = "OPT_OUT_CRASH_REPORTING",
   OPT_OUT_ANALYTICS = "OPT_OUT_ANALYTICS",
   ANILIST_VIEWER_ID = "ANILIST_VIEWER_ID",
+  MEDIA_LIST_SORT_FIELD = "MEDIA_LIST_SORT_FIELD",
+  MEDIA_LIST_SORT_DIRECTION = "MEDIA_LIST_SORT_DIRECTION",
 }
 
 const defaultValues: { [key in StorageKeys]: any } = {
@@ -150,6 +152,9 @@ const defaultValues: { [key in StorageKeys]: any } = {
   [StorageKeys.OPT_OUT_CRASH_REPORTING]: false,
   [StorageKeys.OPT_OUT_ANALYTICS]: false,
   [StorageKeys.ANILIST_VIEWER_ID]: null,
+  // Sort persists per media type (keyed by the usePersistedState `id`).
+  [StorageKeys.MEDIA_LIST_SORT_FIELD]: "UPDATED",
+  [StorageKeys.MEDIA_LIST_SORT_DIRECTION]: "DESC",
 };
 
 export function usePersistedState<T>(
