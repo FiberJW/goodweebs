@@ -31,3 +31,18 @@ jobs:
         run: bun run typecheck
       - name: GraphQL document validation
         run: bun run gql:check
+
+  translations:
+    name: Translations synced
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      # Re-run the full fbtee sync; a diff means source strings changed without
+      # committing the regenerated translation files. Fails the build so the
+      # committed translations always match the code.
+      - name: Sync translations
+        run: bun run i18n:sync
+      - name: Fail on uncommitted translation changes
+        run: git diff --exit-code translations i18n/translations

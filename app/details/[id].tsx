@@ -770,24 +770,45 @@ function RelationsLists({
   );
 }
 
+const EXTERNAL_LINK_GROUPS = [
+  { type: "STREAMING", label: fbs("Watch", "Streaming links group label") },
+  { type: "INFO", label: fbs("Info", "Info links group label") },
+  { type: "SOCIAL", label: fbs("Social", "Social links group label") },
+] as const;
+
 function ExternalLinksSection({ links }: { links?: ExternalLinkData[] }) {
   if (!links?.length) return null;
 
+  // AniList classifies every link as STREAMING / INFO / SOCIAL; null falls to Info.
+  const groups = EXTERNAL_LINK_GROUPS.map((group) => ({
+    ...group,
+    items: links.filter(
+      (link) =>
+        (readFragment(MediaExternalLinkData, link).type ?? "INFO") ===
+        group.type,
+    ),
+  })).filter((group) => group.items.length > 0);
+
   return (
     <>
-      <View style={{ height: 16 }} />
-      <Text style={styles.externalLinksHeader}>
-        {String(fbs("External links", "Anime details external links title"))}
-      </Text>
-      <View style={{ height: 16 }} />
-      <View style={{ gap: 8 }}>
-        {links.map((link) => (
-          <ExternalLink
-            key={readFragment(MediaExternalLinkData, link).id}
-            link={link}
-          />
-        ))}
-      </View>
+      <View style={{ height: 8 }} />
+      {groups.map((group) => (
+        <View key={group.type}>
+          <Text style={styles.externalLinksGroupLabel}>
+            {String(group.label)}
+          </Text>
+          <View style={styles.externalLinksCard}>
+            {group.items.map((link, i) => (
+              <React.Fragment
+                key={readFragment(MediaExternalLinkData, link).id}
+              >
+                {i > 0 ? <View style={styles.externalLinksDivider} /> : null}
+                <ExternalLink link={link} />
+              </React.Fragment>
+            ))}
+          </View>
+        </View>
+      ))}
     </>
   );
 }
@@ -956,10 +977,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 8,
   },
-  externalLinksHeader: {
-    color: darkTheme.text,
+  externalLinksGroupLabel: {
+    color: darkTheme.subHeader,
     fontFamily: Manrope.semiBold,
-    fontSize: 20,
+    fontSize: 12,
+    letterSpacing: 0.6,
+    textTransform: "uppercase",
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  externalLinksCard: {
+    backgroundColor: darkTheme.listItemBackground,
+    borderRadius: 14,
+    overflow: "hidden",
+  },
+  externalLinksDivider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: darkTheme.listItemBorder,
+    marginLeft: 16,
   },
   infoRow: {
     flexDirection: "row",

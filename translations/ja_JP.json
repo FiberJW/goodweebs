@@ -589,18 +589,6 @@
       ],
       "types": []
     },
-    "J2Wz/YEsWBqqyYbCwMxRlQ==": {
-      "description": "Anime details external links title",
-      "status": "translated",
-      "tokens": [],
-      "translations": [
-        {
-          "translation": "外部リンク",
-          "variations": {}
-        }
-      ],
-      "types": []
-    },
     "Cg0SZ0V/q4ecxch+S+uB6Q==": {
       "description": "Character not found error title",
       "status": "translated",
@@ -2144,6 +2132,210 @@
       "translations": [
         {
           "translation": "設定で変更",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "QZc2EOSlXk4VlmkcHI0Ngw==": {
+      "description": "Media list sort by title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "タイトル",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "8nvPRvybUTrSkfO5OcgOtg==": {
+      "description": "Media list sort by score",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "スコア",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "/UIB3alxwnqD3aFUtC220g==": {
+      "description": "Media list sort by progress",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "進捗",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "E0nakQh4gjTC2fCbFEZEyA==": {
+      "description": "Media list sort by popularity",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "人気",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "+VRWfV/frr6MWgh29GtNGA==": {
+      "description": "Media list sort by last updated",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "最終更新",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "2DjNbjJjIWnnWImPpPqhtA==": {
+      "description": "Media list sort by date added",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "追加日",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "myb7L5rDhJDTZxHltWmoHA==": {
+      "description": "Media list sort by start date",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "開始日",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "C9Fakk955hqqFYxAaS9Ukg==": {
+      "description": "Media list sort by finish date",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "終了日",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "nVqyhisa/ZZJl3rWQ6ZMYg==": {
+      "description": "Media list sort by volume progress",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "巻の進捗",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "RLJtshChSzmUQAayu1/uvA==": {
+      "description": "Media list sort cancel option",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "キャンセル",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "iH+w0Oeh6cfT9x+zcRK5ew==": {
+      "description": "Media list sort button accessibility",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "並び替えを変更",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "5bcToOz4BqwjZQCh0u5Nfw==": {
+      "description": "Media list sort button label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "並び替え: {sort}",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "V2fb3gh+fSzlGr0TU2z+qw==": {
+      "description": "Media list sort ascending",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "昇順",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "B1BMOI+ibsZdd0jOgSfE5w==": {
+      "description": "Media list sort descending",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "降順",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "omsDeGHfMDNUbnj+QSL39Q==": {
+      "description": "Streaming links group label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "視聴",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "o7ltwtI2j7RYAf1u8GM7eA==": {
+      "description": "Info links group label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "情報",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "Lt0RR9+XJ3RD4e97Gu/0sg==": {
+      "description": "Social links group label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "ソーシャル",
           "variations": {}
         }
       ],

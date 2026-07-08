@@ -1,32 +1,6 @@
-import * as Sentry from "@sentry/react-native";
-import chroma from "chroma-js";
 import React from "react";
 import { Linking, StyleSheet, Text } from "react-native";
 
-import {
-  crunchyrollOrange,
-  twitterBlue,
-  funimationPurple,
-  vrvYellow,
-  huluGreen,
-  animeLabPurple,
-  youtubeRed,
-  netflixRed,
-  vizRed,
-  hboMaxPink,
-  tubiOrange,
-  hidiveBlue,
-  instagramPink,
-  disneyPlusBlue,
-  tiktokPink,
-  maxBlue,
-  bilibiliBlue,
-  iqGreen,
-  starPlusOrange,
-  amazonPrimeBlue,
-  facebookBlue,
-  officialSiteFallback,
-} from "yep/colors";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { graphql, readFragment } from "yep/graphql/tada";
 import type { FragmentOf } from "yep/graphql/tada";
@@ -38,6 +12,7 @@ export const MediaExternalLinkData = graphql(`
     id
     url
     site
+    type
   }
 `);
 
@@ -47,122 +22,39 @@ type Props = {
 
 export function ExternalLink({ link }: Props) {
   const { url, site } = readFragment(MediaExternalLinkData, link);
-  let color = darkTheme.iconFill;
-
-  switch (site.toUpperCase()) {
-    case "CRUNCHYROLL":
-      color = crunchyrollOrange;
-      break;
-    case "TWITTER":
-      color = twitterBlue;
-      break;
-    case "FUNIMATION":
-      color = funimationPurple;
-      break;
-    case "VRV":
-      color = vrvYellow;
-      break;
-    case "HULU":
-      color = huluGreen;
-      break;
-    case "ANIMELAB":
-      color = animeLabPurple;
-      break;
-    case "YOUTUBE":
-      color = youtubeRed;
-      break;
-    case "NETFLIX":
-      color = netflixRed;
-      break;
-    case "VIZ":
-      color = vizRed;
-      break;
-    case "HBO MAX":
-      color = hboMaxPink;
-      break;
-    case "MAX":
-      color = maxBlue;
-      break;
-    case "TIKTOK":
-      color = tiktokPink;
-      break;
-    case "TUBI TV":
-    case "TUBI":
-      color = tubiOrange;
-      break;
-    case "OFFICIAL SITE":
-      color = officialSiteFallback;
-      break;
-    case "HIDIVE":
-      color = hidiveBlue;
-      break;
-    case "INSTAGRAM":
-      color = instagramPink;
-      break;
-    case "DISNEY PLUS":
-      color = disneyPlusBlue;
-      break;
-    case "BILIBILI TV":
-    case "BILIBILI":
-      color = bilibiliBlue;
-      break;
-    case "IQ":
-      color = iqGreen;
-      break;
-    case "STAR+":
-      color = starPlusOrange;
-      break;
-    case "ADULT SWIM":
-      color = "black";
-      break;
-    case "AMAZON":
-    case "AMAZON PRIME":
-    case "AMAZON PRIME VIDEO":
-      color = amazonPrimeBlue;
-      break;
-    case "FACEBOOK":
-      color = facebookBlue;
-      break;
-    default:
-      Sentry.captureMessage(`Unknown external link site: ${site}`);
-      color = "gray";
-      break;
-  }
 
   return (
     <PressableOpacity
-      style={{
-        borderWidth: StyleSheet.hairlineWidth,
-        borderColor: chroma(color).luminance(0.2).hex(),
-        backgroundColor: chroma(color).darken(0.75).hex(),
-        paddingVertical: 16,
-        paddingHorizontal: 24,
-        width: "100%",
-      }}
+      style={styles.row}
       onPress={() => {
         if (url) Linking.openURL(url);
       }}
-      borderRadius={16}
     >
-      <Text
-        style={{
-          fontFamily: Manrope.extraBold,
-          fontSize: 18,
-          color: chroma(color).luminance(0.95).hex(),
-        }}
-      >
+      <Text numberOfLines={1} style={styles.site}>
         {site}
       </Text>
-      <Text
-        numberOfLines={1}
-        style={{
-          fontFamily: Manrope.semiBold,
-          fontSize: 12,
-          color: chroma(color).luminance(0.75).hex(),
-        }}
-      >
-        {url}
-      </Text>
+      <Text style={styles.chevron}>›</Text>
     </PressableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingVertical: 13,
+    paddingHorizontal: 16,
+  },
+  site: {
+    flex: 1,
+    fontFamily: Manrope.semiBold,
+    fontSize: 15,
+    color: darkTheme.text,
+  },
+  chevron: {
+    fontFamily: Manrope.regular,
+    fontSize: 20,
+    color: darkTheme.subHeader,
+  },
+});
