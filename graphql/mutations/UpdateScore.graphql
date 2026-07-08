@@ -1,8 +1,0 @@
-mutation UpdateScore($id: Int, $score: Float) {
-  SaveMediaListEntry(id: $id, score: $score) {
-    id
-    progress
-    status
-    score
-  }
-}

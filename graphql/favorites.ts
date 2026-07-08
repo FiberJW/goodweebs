@@ -1,7 +1,32 @@
 import type { ApolloCache, Reference } from "@apollo/client";
 
-import { GetViewerDocument } from "yep/graphql/generated";
-import type { GetViewerQuery } from "yep/graphql/generated";
+import { graphql } from "yep/graphql/tada";
+import { GetViewer } from "yep/graphql/viewer";
+
+// Shared favorite toggle (details heart + character screen). The FavouritesData
+// selection is inlined since no other operation reuses it; the result feeds
+// AniList's server-side favourite counts, though the UI updates optimistically
+// via applyFavoriteToCache below.
+export const ToggleFavorite = graphql(`
+  mutation ToggleFavorite($animeId: Int, $mangaId: Int, $characterId: Int) {
+    ToggleFavourite(
+      animeId: $animeId
+      mangaId: $mangaId
+      characterId: $characterId
+    ) {
+      anime {
+        pageInfo {
+          total
+        }
+      }
+      characters {
+        pageInfo {
+          total
+        }
+      }
+    }
+  }
+`);
 
 type FavoriteTarget =
   | { animeId: number }
@@ -44,8 +69,8 @@ export function applyFavoriteToCache(
   // Patch the Profile shelf. readQuery returns null if GetViewer was never
   // fully cached — safe to skip then, because the profile's cache-first query
   // will hit the network and come back correct anyway.
-  const viewerId = cache.readQuery<GetViewerQuery>({
-    query: GetViewerDocument,
+  const viewerId = cache.readQuery({
+    query: GetViewer,
   })?.Viewer?.id;
   if (!viewerId) return;
 

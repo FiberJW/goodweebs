@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/client";
 import { useRouter } from "expo-router";
 import { fbs } from "fbtee";
 import React from "react";
@@ -5,8 +6,9 @@ import { StyleSheet, View, Text } from "react-native";
 
 import { black15, white12_5, white5, white95 } from "yep/colors";
 import { DEFAULT_SCORE_FORMAT } from "yep/constants";
-import { useGetViewerQuery } from "yep/graphql/generated";
-import type { AnimeListEntryFragmentFragment } from "yep/graphql/generated";
+import { graphql, readFragment } from "yep/graphql/tada";
+import type { FragmentOf } from "yep/graphql/tada";
+import { GetViewer } from "yep/graphql/viewer";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import {
@@ -21,12 +23,54 @@ import { ProgressButton } from "../AnimeListItem/ProgressButton";
 import { PosterAndTitle } from "../PosterAndTitle";
 import { PressableOpacity } from "../PressableOpacity";
 
+export const AnimeListEntryFragment = graphql(`
+  fragment AnimeListEntryFragment on Media {
+    id
+    type
+    title {
+      romaji
+      native
+      english
+    }
+    coverImage {
+      large
+      medium
+    }
+    episodes
+    chapters
+    volumes
+    status
+    startDate {
+      year
+      month
+      day
+    }
+    endDate {
+      year
+      month
+      day
+    }
+    nextAiringEpisode {
+      id
+      airingAt
+      episode
+    }
+    mediaListEntry {
+      id
+      progress
+      progressVolumes
+      status
+      score
+    }
+  }
+`);
+
 type Props = {
   onIncrement: () => void;
   onDecrement: () => void;
   progress: number;
   disabled?: boolean;
-  media: AnimeListEntryFragmentFragment;
+  media: FragmentOf<typeof AnimeListEntryFragment>;
   first: boolean;
   last: boolean;
   airingStatus?: React.ReactNode;
@@ -48,8 +92,11 @@ export function MediaListItem({
 }: Props) {
   const router = useRouter();
   const getTitle = useGetTitle();
+  const unmaskedMedia = readFragment(AnimeListEntryFragment, media);
   // cache-only: the anime tab already fetched the viewer for the bell badge.
-  const { data: viewerData } = useGetViewerQuery({ fetchPolicy: "cache-only" });
+  const { data: viewerData } = useQuery(GetViewer, {
+    fetchPolicy: "cache-only",
+  });
   const scoreFormat =
     viewerData?.Viewer?.mediaListOptions?.scoreFormat ?? DEFAULT_SCORE_FORMAT;
 
@@ -67,16 +114,20 @@ export function MediaListItem({
         },
       ]}
       activeOpacity={0.7}
-      onPress={() => router.push(`/details/${media.id}`)}
+      onPress={() => router.push(`/details/${unmaskedMedia.id}`)}
     >
       <View>
         {/* medium (~100px) for the 56pt thumbnail instead of large (~230px):
             less network + decode per row while scrolling the list. */}
         <PosterAndTitle
-          uri={media.coverImage?.medium ?? media.coverImage?.large ?? ""}
+          uri={
+            unmaskedMedia.coverImage?.medium ??
+            unmaskedMedia.coverImage?.large ??
+            ""
+          }
           size="small"
         >
-          {media.mediaListEntry?.score ? (
+          {unmaskedMedia.mediaListEntry?.score ? (
             <View
               style={[
                 styles.scoreContainer,
@@ -86,7 +137,7 @@ export function MediaListItem({
               ]}
             >
               <Text style={styles.scoreText}>
-                {formatScore(media.mediaListEntry.score, scoreFormat)}
+                {formatScore(unmaskedMedia.mediaListEntry.score, scoreFormat)}
               </Text>
             </View>
           ) : null}
@@ -95,7 +146,7 @@ export function MediaListItem({
       </View>
       <View style={styles.titleAndBroadcastColumn}>
         <Text style={styles.title} numberOfLines={2}>
-          {getTitle(media.title)}
+          {getTitle(unmaskedMedia.title)}
         </Text>
 
         <View style={{ alignItems: "flex-start" }}>
@@ -113,7 +164,7 @@ export function MediaListItem({
       <View style={styles.progressColumn}>
         <View style={styles.episodeProgressContainer}>
           <Text style={styles.episodeProgress}>
-            {getProgress(media, progress)}
+            {getProgress(unmaskedMedia, progress)}
           </Text>
         </View>
         {/* Unreleased titles still allow progress edits — early screenings,
@@ -133,14 +184,16 @@ export function MediaListItem({
             }}
           />
           <ProgressButton
-            disabled={Boolean(disabled) || progress === getMaxProgress(media)}
+            disabled={
+              Boolean(disabled) || progress === getMaxProgress(unmaskedMedia)
+            }
             icon={
-              progress === (getMaxProgress(media) ?? 0) - 1
+              progress === (getMaxProgress(unmaskedMedia) ?? 0) - 1
                 ? require("yep/assets/icons/progress-complete.png")
                 : require("yep/assets/icons/progress-increment.png")
             }
             accessibilityLabel={String(
-              progress === (getMaxProgress(media) ?? 0) - 1
+              progress === (getMaxProgress(unmaskedMedia) ?? 0) - 1
                 ? fbs(
                     "Complete series",
                     "Complete series button accessibility label",

@@ -1,4 +1,4 @@
-import { useApolloClient } from "@apollo/client";
+import { useApolloClient, useQuery, useMutation } from "@apollo/client";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { fbs } from "fbtee";
 import React, { useEffect } from "react";
@@ -9,12 +9,39 @@ import { DescriptionRenderer } from "yep/components/DescriptionRenderer";
 import { EmptyState } from "yep/components/EmptyState";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { LikeButton } from "yep/components/PosterAndTitle/LikeButton";
-import { applyFavoriteToCache } from "yep/graphql/favorites";
-import {
-  useToggleFavoriteMutation,
-  useGetCharacterQuery,
-} from "yep/graphql/generated";
+import { applyFavoriteToCache, ToggleFavorite } from "yep/graphql/favorites";
+import { graphql, readFragment } from "yep/graphql/tada";
 import { CharacterSkeleton } from "yep/screens/CharacterScreen/CharacterSkeleton";
+
+const CharacterData = graphql(`
+  fragment CharacterData on Character {
+    id
+    isFavourite
+    name {
+      first
+      last
+      full
+      native
+      alternative
+    }
+    image {
+      large
+      medium
+    }
+    description
+  }
+`);
+
+const GetCharacter = graphql(
+  `
+    query GetCharacter($id: Int) {
+      Character(id: $id) {
+        ...CharacterData
+      }
+    }
+  `,
+  [CharacterData],
+);
 
 export default function Character() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -22,15 +49,17 @@ export default function Character() {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
 
-  const { loading, data, error } = useGetCharacterQuery({
+  const { loading, data, error } = useQuery(GetCharacter, {
     variables: { id: characterId },
     notifyOnNetworkStatusChange: true,
   });
 
-  const [toggleFavorite] = useToggleFavoriteMutation();
+  const [toggleFavorite] = useMutation(ToggleFavorite);
   const { cache } = useApolloClient();
 
-  const character = data?.Character;
+  const character = data?.Character
+    ? readFragment(CharacterData, data.Character)
+    : null;
 
   // Set navigation title dynamically
   useEffect(() => {

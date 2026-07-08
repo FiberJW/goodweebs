@@ -9,7 +9,14 @@
     "strict": true,
     "paths": {
       "yep/*": ["./*"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "gql.tada/ts-plugin",
+        "schema": "graphql.schema.json",
+        "tadaOutputLocation": "graphql/graphql-env.d.ts"
+      }
+    ]
   },
   "extends": "expo/tsconfig.base",
   "exclude": [

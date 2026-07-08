@@ -1,6 +1,6 @@
 import Constants, { ExecutionEnvironment } from "expo-constants";
 
-import type { MediaListStatus, ScoreFormat } from "yep/graphql/generated";
+import type { MediaListStatus, ScoreFormat } from "yep/graphql/enums";
 
 // AniList Client IDs and their redirect URIs based on https://docs.expo.dev/guides/authentication/#redirect-uri-patterns
 enum AniListClientID {

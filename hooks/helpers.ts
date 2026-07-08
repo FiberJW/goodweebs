@@ -5,8 +5,8 @@ import {
   MutationUpdaterFunction,
   DefaultContext,
   ApolloCache,
+  TypedDocumentNode,
 } from "@apollo/client";
-import { DocumentNode } from "graphql";
 import debounce from "lodash/debounce";
 import { useEffect, useRef, useState } from "react";
 import { useWindowDimensions } from "react-native";
@@ -22,7 +22,7 @@ export function useDebouncedMutation<
   refetchQueries,
   wait = 500,
 }: {
-  mutationDocument: DocumentNode;
+  mutationDocument: TypedDocumentNode<MutationData, MutationVariables>;
   refetchQueries?: string[];
   makeUpdateFunction?: (
     variables?: MutationVariables,

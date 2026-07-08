@@ -1,29 +1,28 @@
 import React from "react";
 import { Text, FlatList, StyleSheet } from "react-native";
 
-import type {
-  AnimeRelationFragmentFragment,
-  MediaRelation,
-} from "yep/graphql/generated";
+import type { MediaRelation } from "yep/graphql/enums";
+import { readFragment } from "yep/graphql/tada";
+import type { FragmentOf } from "yep/graphql/tada";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { getReadableMediaRelation } from "yep/utils";
 
-import { RelatedAnimeItem } from "./RelatedAnimeItem";
+import { AnimeRelationFragment, RelatedAnimeItem } from "./RelatedAnimeItem";
 
 type RelatedListProps = {
-  relations: AnimeRelationFragmentFragment[];
+  relations: readonly FragmentOf<typeof AnimeRelationFragment>[];
   relationType: MediaRelation;
 };
 
-function keyExtractor(item: AnimeRelationFragmentFragment) {
-  return `${item.id}`;
+function keyExtractor(item: FragmentOf<typeof AnimeRelationFragment>) {
+  return `${readFragment(AnimeRelationFragment, item).id}`;
 }
 
 function renderRelatedAnimeItem({
   item,
 }: {
-  item: AnimeRelationFragmentFragment;
+  item: FragmentOf<typeof AnimeRelationFragment>;
 }) {
   return <RelatedAnimeItem anime={item} />;
 }

@@ -3,14 +3,28 @@ import React from "react";
 
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import type { CharacterListItemDataFragment } from "yep/graphql/generated";
+import { graphql, readFragment } from "yep/graphql/tada";
+import type { FragmentOf } from "yep/graphql/tada";
+
+export const CharacterListItemData = graphql(`
+  fragment CharacterListItemData on Character {
+    id
+    name {
+      full
+    }
+    image {
+      large
+    }
+  }
+`);
 
 type Props = {
-  character: CharacterListItemDataFragment;
+  character: FragmentOf<typeof CharacterListItemData>;
 };
 
-export function CharacterItem({ character }: Props) {
+export function CharacterItem({ character: maskedCharacter }: Props) {
   const router = useRouter();
+  const character = readFragment(CharacterListItemData, maskedCharacter);
   if (!character.image?.large) return null;
 
   return (

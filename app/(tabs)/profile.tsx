@@ -1,4 +1,4 @@
-import { NetworkStatus } from "@apollo/client";
+import { NetworkStatus, useQuery } from "@apollo/client";
 import { Image, ImageBackground } from "expo-image";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
@@ -20,7 +20,8 @@ import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import { primeAccessToken } from "yep/graphql/client";
-import { useGetViewerQuery } from "yep/graphql/generated";
+import type { ResultOf } from "yep/graphql/tada";
+import { GetViewer } from "yep/graphql/viewer";
 import { useAniListAuthRequest } from "yep/hooks/auth";
 import { ProfileSkeleton } from "yep/screens/ProfileScreen/ProfileSkeleton";
 import { darkTheme } from "yep/themes";
@@ -30,21 +31,20 @@ import { notEmpty, useGetTitle } from "yep/utils";
 
 type StatProps = { label: string; value: number };
 
+// Favourite shelves are read straight off GetViewer, so derive the item shapes
+// from the query result — they then track the schema instead of drifting.
+// ItemWithId stays a minimal structural type: keyExtractor is shared across both
+// lists and needs only `id`.
 type ItemWithId = { id: number };
-type FavoriteAnimeItem = {
-  id: number;
-  title?: {
-    english?: string | null;
-    romaji?: string | null;
-    native?: string | null;
-  } | null;
-  coverImage?: { large?: string | null; medium?: string | null } | null;
-};
-type FavoriteCharacterItem = {
-  id: number;
-  name?: { full?: string | null } | null;
-  image?: { large?: string | null; medium?: string | null } | null;
-};
+type ViewerFavourites = NonNullable<
+  NonNullable<ResultOf<typeof GetViewer>["Viewer"]>["favourites"]
+>;
+type FavoriteAnimeItem = NonNullable<
+  NonNullable<NonNullable<ViewerFavourites["anime"]>["nodes"]>[number]
+>;
+type FavoriteCharacterItem = NonNullable<
+  NonNullable<NonNullable<ViewerFavourites["characters"]>["nodes"]>[number]
+>;
 
 function keyExtractor(item: ItemWithId) {
   return `${item.id}`;
@@ -131,7 +131,7 @@ export default function Profile() {
     data: viewerData,
     refetch,
     networkStatus,
-  } = useGetViewerQuery({
+  } = useQuery(GetViewer, {
     skip: !accessToken,
     notifyOnNetworkStatusChange: true,
   });

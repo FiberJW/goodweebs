@@ -1,4 +1,4 @@
-import { NetworkStatus } from "@apollo/client";
+import { NetworkStatus, useQuery } from "@apollo/client";
 import { useNavigation } from "expo-router";
 import { fbs } from "fbtee";
 import React, { useEffect, useState } from "react";
@@ -8,13 +8,11 @@ import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
 import { SearchBox } from "yep/components/SearchBox";
 import { StatusChip } from "yep/components/StatusChip";
-import {
-  useGetTrendingMediaQuery,
-  useSearchMediaQuery,
-} from "yep/graphql/generated";
-import type { MediaType } from "yep/graphql/generated";
+import type { MediaType } from "yep/graphql/enums";
+import { graphql } from "yep/graphql/tada";
 import { useLoadNextPage } from "yep/hooks/helpers";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
+import { MediaPosterFragment } from "yep/screens/DiscoverScreen/DiscoverPoster";
 import { DiscoverSearchResults } from "yep/screens/DiscoverScreen/DiscoverSearchResults";
 import { DiscoverSkeletonGrid } from "yep/screens/DiscoverScreen/DiscoverSkeleton";
 import { DiscoverTrendingResults } from "yep/screens/DiscoverScreen/DiscoverTrendingResults";
@@ -23,6 +21,40 @@ import { notEmpty, isLiquidGlass } from "yep/utils";
 
 const TRENDING_PER_PAGE = 30;
 const SEARCH_PER_PAGE = 30;
+
+const GetTrendingMedia = graphql(
+  `
+  # $formatIn narrows anime trending to TV shows (matching the old behavior);
+  # omit it for manga, where every format should trend.
+  query GetTrendingMedia($type: MediaType!, $formatIn: [MediaFormat], $page: Int = 1, $perPage: Int = 20) {
+    Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        hasNextPage
+      }
+      media(format_in: $formatIn, isAdult: false, type: $type, sort: [TRENDING_DESC]) {
+        ...MediaPosterFragment
+      }
+    }
+  }
+`,
+  [MediaPosterFragment],
+);
+
+const SearchMedia = graphql(
+  `
+  query SearchMedia($search: String, $type: MediaType!, $page: Int = 1, $perPage: Int = 30) {
+    Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        hasNextPage
+      }
+      media(search: $search, type: $type, format_not_in: [MUSIC], isAdult: false) {
+        ...MediaPosterFragment
+      }
+    }
+  }
+`,
+  [MediaPosterFragment],
+);
 
 export default function Discover() {
   // One toggle scopes both trending and search results to anime or manga.
@@ -48,7 +80,7 @@ export default function Discover() {
     refetch: refetchTrending,
     fetchMore: fetchMoreTrending,
     networkStatus: trendingNetworkStatus,
-  } = useGetTrendingMediaQuery({
+  } = useQuery(GetTrendingMedia, {
     variables: {
       perPage: TRENDING_PER_PAGE,
       type: mediaType,
@@ -66,7 +98,7 @@ export default function Discover() {
     refetch: refetchSearch,
     fetchMore: fetchMoreSearch,
     networkStatus: searchNetworkStatus,
-  } = useSearchMediaQuery({
+  } = useQuery(SearchMedia, {
     skip: debouncedSearchTerm.trim().length === 0,
     variables: {
       search: debouncedSearchTerm,

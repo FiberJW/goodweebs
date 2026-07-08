@@ -1,4 +1,4 @@
-import { useApolloClient } from "@apollo/client";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
 import React, { useState } from "react";
@@ -20,11 +20,9 @@ import {
   DEFAULT_SCORE_FORMAT,
 } from "yep/constants";
 import { primeAccessToken } from "yep/graphql/client";
-import {
-  useGetViewerQuery,
-  useUpdateScoreFormatMutation,
-} from "yep/graphql/generated";
-import type { ScoreFormat } from "yep/graphql/generated";
+import type { ScoreFormat } from "yep/graphql/enums";
+import { graphql } from "yep/graphql/tada";
+import { GetViewer } from "yep/graphql/viewer";
 import { StorageKeys, usePersistedState } from "yep/hooks/helpers";
 import {
   availableLanguages,
@@ -33,6 +31,17 @@ import {
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
+
+const UpdateScoreFormat = graphql(`
+  mutation UpdateScoreFormat($scoreFormat: ScoreFormat) {
+    UpdateUser(scoreFormat: $scoreFormat) {
+      id
+      mediaListOptions {
+        scoreFormat
+      }
+    }
+  }
+`);
 
 const scoreFormats: ScoreFormat[] = [
   "POINT_100",
@@ -82,11 +91,11 @@ export default function Settings() {
   const insets = useSafeAreaInsets();
 
   // cache-only: profile (the only way here) already fetched the viewer.
-  const { data: viewerData } = useGetViewerQuery({ fetchPolicy: "cache-only" });
+  const { data: viewerData } = useQuery(GetViewer, { fetchPolicy: "cache-only" });
   // Changing the format makes AniList recompute every stored score, so cached
   // score fields are stale in the old scale — refetch whatever is on screen.
   const [updateScoreFormat, { loading: savingScoreFormat }] =
-    useUpdateScoreFormatMutation({ refetchQueries: "active" });
+    useMutation(UpdateScoreFormat, { refetchQueries: "active" });
   // Optimistic selection: highlight the tapped pill immediately; the mutation
   // response normalizes into User.mediaListOptions, so clearing this after the
   // round trip lands on the same value (or reverts on failure — the global

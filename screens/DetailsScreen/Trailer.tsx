@@ -6,12 +6,21 @@ import { useWindowDimensions, View, StyleSheet, Text } from "react-native";
 
 import { black, white80 } from "yep/colors";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import type { MediaTrailerDataFragment } from "yep/graphql/generated";
+import { graphql, readFragment } from "yep/graphql/tada";
+import type { FragmentOf } from "yep/graphql/tada";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
+export const MediaTrailerData = graphql(`
+  fragment MediaTrailerData on MediaTrailer {
+    id
+    thumbnail
+    site
+  }
+`);
+
 type Props = {
-  trailer: MediaTrailerDataFragment;
+  trailer: FragmentOf<typeof MediaTrailerData>;
 };
 
 function getVideoURL(site: string, id: string): string | undefined {
@@ -23,8 +32,9 @@ function getVideoURL(site: string, id: string): string | undefined {
   }
 }
 
-export function Trailer({ trailer: { id, site, thumbnail } }: Props) {
+export function Trailer({ trailer }: Props) {
   const { width: windowWidth } = useWindowDimensions();
+  const { id, site, thumbnail } = readFragment(MediaTrailerData, trailer);
 
   const width = windowWidth - 32;
   const height = (windowWidth - 32) / (16 / 9);

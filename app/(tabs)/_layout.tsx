@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/client";
 import { Image } from "expo-image";
 import { Tabs } from "expo-router";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
@@ -6,7 +7,7 @@ import React from "react";
 import { Platform } from "react-native";
 
 import { goodweebsPurple } from "yep/colors";
-import { useGetViewerQuery } from "yep/graphql/generated";
+import { GetViewer } from "yep/graphql/viewer";
 import { darkTheme } from "yep/themes";
 import { useAccessToken } from "yep/useAccessToken";
 import { isLiquidGlass } from "yep/utils";
@@ -15,7 +16,7 @@ import { isLiquidGlass } from "yep/utils";
 // unread count (cache-only — the list screens' GetViewer query keeps it warm,
 // and the notifications screen zeroes it in cache on open).
 function useUnreadBadge(): string | undefined {
-  const { data } = useGetViewerQuery({ fetchPolicy: "cache-only" });
+  const { data } = useQuery(GetViewer, { fetchPolicy: "cache-only" });
   const unreadCount = data?.Viewer?.unreadNotificationCount ?? 0;
   return unreadCount > 0
     ? unreadCount > 99

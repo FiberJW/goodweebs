@@ -1,8 +1,0 @@
-mutation UpdateScoreFormat($scoreFormat: ScoreFormat) {
-  UpdateUser(scoreFormat: $scoreFormat) {
-    id
-    mediaListOptions {
-      scoreFormat
-    }
-  }
-}

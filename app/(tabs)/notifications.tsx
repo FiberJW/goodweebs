@@ -1,4 +1,4 @@
-import { NetworkStatus, useApolloClient } from "@apollo/client";
+import { NetworkStatus, useApolloClient, useQuery } from "@apollo/client";
 import { fbs } from "fbtee";
 import React, { useEffect } from "react";
 import {
@@ -12,17 +12,36 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
-import {
-  useGetNotificationsQuery,
-  useGetViewerQuery,
-} from "yep/graphql/generated";
+import { graphql } from "yep/graphql/tada";
+import { GetViewer } from "yep/graphql/viewer";
 import { useLoadNextPage } from "yep/hooks/helpers";
 import {
   NotificationRow,
   NotificationRowData,
+  NotificationRowFragment,
 } from "yep/screens/NotificationsScreen/NotificationRow";
 import { darkTheme } from "yep/themes";
 import { useAccessToken } from "yep/useAccessToken";
+
+const GetNotifications = graphql(
+  `
+    query GetNotifications($page: Int, $perPage: Int, $reset: Boolean) {
+      Page(page: $page, perPage: $perPage) {
+        pageInfo {
+          total
+          hasNextPage
+        }
+        notifications(
+          type_in: [AIRING, RELATED_MEDIA_ADDITION]
+          resetNotificationCount: $reset
+        ) {
+          ...NotificationRowFragment
+        }
+      }
+    }
+  `,
+  [NotificationRowFragment],
+);
 
 const NOTIFICATIONS_PER_PAGE = 25;
 
@@ -46,13 +65,13 @@ export default function Notifications() {
   const insets = useSafeAreaInsets();
   const { cache } = useApolloClient();
   const { accessToken } = useAccessToken();
-  const { data: viewerData } = useGetViewerQuery({
+  const { data: viewerData } = useQuery(GetViewer, {
     fetchPolicy: "cache-only",
   });
   const viewerId = viewerData?.Viewer?.id;
 
   const { data, loading, error, refetch, fetchMore, networkStatus } =
-    useGetNotificationsQuery({
+    useQuery(GetNotifications, {
       // The tab stays visible for guests (NativeTabs remounts crash if
       // triggers flip — see the tabs layout); the screen gates instead.
       skip: !accessToken,
