@@ -27,12 +27,14 @@ export function AnimeListItem({
   last,
 }: Props) {
   const { locale } = useLocaleContext();
-  const m = readFragment(AnimeListEntryFragment, media);
+  const unmaskedMedia = readFragment(AnimeListEntryFragment, media);
   const isAiringAndCurrentlyWatching =
-    m.status === "RELEASING" && m.mediaListEntry?.status === "CURRENT";
+    unmaskedMedia.status === "RELEASING" &&
+    unmaskedMedia.mediaListEntry?.status === "CURRENT";
   const episodesBehind =
-    isAiringAndCurrentlyWatching && m.nextAiringEpisode?.episode !== undefined
-      ? m.nextAiringEpisode.episode - 1 - progress
+    isAiringAndCurrentlyWatching &&
+    unmaskedMedia.nextAiringEpisode?.episode !== undefined
+      ? unmaskedMedia.nextAiringEpisode.episode - 1 - progress
       : 0;
 
   return (
@@ -44,7 +46,7 @@ export function AnimeListItem({
       onDecrement={onDecrement}
       first={first}
       last={last}
-      airingStatus={getAiringStatusText(m, locale)}
+      airingStatus={getAiringStatusText(unmaskedMedia, locale)}
       episodesBehind={episodesBehind}
     />
   );

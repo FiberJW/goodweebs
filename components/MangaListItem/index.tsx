@@ -27,7 +27,7 @@ export function MangaListItem({
   last,
 }: Props) {
   const { locale } = useLocaleContext();
-  const m = readFragment(AnimeListEntryFragment, media);
+  const unmaskedMedia = readFragment(AnimeListEntryFragment, media);
 
   return (
     <MediaListItem
@@ -38,8 +38,8 @@ export function MangaListItem({
       onDecrement={onDecrement}
       first={first}
       last={last}
-      airingStatus={getAiringStatusText(m, locale)}
-      secondaryProgress={getVolumesProgress(m)}
+      airingStatus={getAiringStatusText(unmaskedMedia, locale)}
+      secondaryProgress={getVolumesProgress(unmaskedMedia)}
     />
   );
 }

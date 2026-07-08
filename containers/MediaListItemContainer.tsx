@@ -27,10 +27,12 @@ type ProgressOverride = {
 
 export function MediaListItemContainer({ seedData, first, last }: Props) {
   const media = seedData.media;
-  const m = media ? readFragment(AnimeListEntryFragment, media) : null;
-  const mediaListEntryId = m?.mediaListEntry?.id;
-  const cacheProgress = m?.mediaListEntry?.progress ?? 0;
-  const progressUpperBound = getMaxProgress(m);
+  const unmaskedMedia = media
+    ? readFragment(AnimeListEntryFragment, media)
+    : null;
+  const mediaListEntryId = unmaskedMedia?.mediaListEntry?.id;
+  const cacheProgress = unmaskedMedia?.mediaListEntry?.progress ?? 0;
+  const progressUpperBound = getMaxProgress(unmaskedMedia);
 
   const [progressOverride, setProgressOverride] =
     useState<ProgressOverride | null>(null);
@@ -98,9 +100,10 @@ export function MediaListItemContainer({ seedData, first, last }: Props) {
     }
   }
 
-  if (!media || !m) return null;
+  if (!media || !unmaskedMedia) return null;
 
-  const ListItem = m.type === "MANGA" ? MangaListItem : AnimeListItem;
+  const ListItem =
+    unmaskedMedia.type === "MANGA" ? MangaListItem : AnimeListItem;
 
   return (
     <ListItem
