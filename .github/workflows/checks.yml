@@ -23,6 +23,10 @@ jobs:
       # graphql() document against graphql.schema.json (catches unknown fields /
       # bad selections that tsc alone does not). Both rely on the committed
       # schema + env, so no network or codegen step is needed in CI.
+      - name: Lint
+        # Check-only (no --fix); fails on errors, not the tolerated
+        # colocation/react-doctor warnings.
+        run: bun run lint:check
       - name: Typecheck
         run: bun run typecheck
       - name: GraphQL document validation
