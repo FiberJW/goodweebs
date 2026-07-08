@@ -7,6 +7,7 @@ import { fbs } from "fbtee";
 import { Platform, Text } from "react-native";
 
 import type { AnimeListEntryFragment } from "yep/components/MediaListItem";
+import type { MediaSortField } from "yep/constants";
 import type {
   MediaListStatus,
   MediaRelation,
@@ -176,6 +177,29 @@ export function getMediaListStatusLabel(
       return isManga
         ? String(fbs("Rereading", "Media list status rereading"))
         : String(fbs("Repeating", "Media list status repeating"));
+  }
+}
+
+export function getMediaSortFieldLabel(field: MediaSortField): string {
+  switch (field) {
+    case "TITLE":
+      return String(fbs("Title", "Media list sort by title"));
+    case "SCORE":
+      return String(fbs("Score", "Media list sort by score"));
+    case "PROGRESS":
+      return String(fbs("Progress", "Media list sort by progress"));
+    case "POPULARITY":
+      return String(fbs("Popularity", "Media list sort by popularity"));
+    case "UPDATED":
+      return String(fbs("Last updated", "Media list sort by last updated"));
+    case "ADDED":
+      return String(fbs("Date added", "Media list sort by date added"));
+    case "STARTED":
+      return String(fbs("Start date", "Media list sort by start date"));
+    case "FINISHED":
+      return String(fbs("Finish date", "Media list sort by finish date"));
+    case "VOLUME_PROGRESS":
+      return String(fbs("Volume progress", "Media list sort by volume progress"));
   }
 }
 

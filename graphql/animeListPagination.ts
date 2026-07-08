@@ -1,4 +1,5 @@
-import type { MediaListSort } from "yep/graphql/enums";
+import type { MediaSortField, SortDirection } from "yep/constants";
+import type { MediaListSort, MediaType } from "yep/graphql/enums";
 
 export const ANIME_LIST_PER_PAGE = 50;
 
@@ -45,4 +46,63 @@ export function mergeMediaListPages<T>(
 // MEDIA_TITLE_ENGLISH already sorts by english ?? romaji.
 export function titleSortForLocale(locale: string | undefined): MediaListSort {
   return locale === "ja_JP" ? "MEDIA_TITLE_NATIVE" : "MEDIA_TITLE_ENGLISH";
+}
+
+// Fields offered in the sort sheet, in display order. Volume progress is
+// manga-only (anime has no volumes).
+export function mediaSortFields(mediaType: MediaType): MediaSortField[] {
+  const fields: MediaSortField[] = [
+    "TITLE",
+    "SCORE",
+    "PROGRESS",
+    "POPULARITY",
+    "UPDATED",
+    "ADDED",
+    "STARTED",
+    "FINISHED",
+  ];
+  return mediaType === "MANGA" ? [...fields, "VOLUME_PROGRESS"] : fields;
+}
+
+// Direction a field defaults to when first picked: title reads A→Z, everything
+// else is more useful highest/newest-first. The toggle flips from here.
+export function naturalSortDirection(field: MediaSortField): SortDirection {
+  return field === "TITLE" ? "ASC" : "DESC";
+}
+
+// The server does the sorting (paginated pages must keep a stable order). Each
+// AniList field is BASE (ascending) / BASE_DESC; both are spelled out (rather
+// than string-appending "_DESC") so the values stay checked against the enum.
+// TITLE's base is locale-aware.
+export function mediaSortValue(
+  field: MediaSortField,
+  direction: SortDirection,
+  locale: string | undefined,
+): MediaListSort {
+  const ascending: Record<MediaSortField, MediaListSort> = {
+    TITLE: titleSortForLocale(locale),
+    SCORE: "SCORE",
+    PROGRESS: "PROGRESS",
+    POPULARITY: "MEDIA_POPULARITY",
+    UPDATED: "UPDATED_TIME",
+    ADDED: "ADDED_TIME",
+    STARTED: "STARTED_ON",
+    FINISHED: "FINISHED_ON",
+    VOLUME_PROGRESS: "PROGRESS_VOLUMES",
+  };
+  const descending: Record<MediaSortField, MediaListSort> = {
+    TITLE:
+      locale === "ja_JP"
+        ? "MEDIA_TITLE_NATIVE_DESC"
+        : "MEDIA_TITLE_ENGLISH_DESC",
+    SCORE: "SCORE_DESC",
+    PROGRESS: "PROGRESS_DESC",
+    POPULARITY: "MEDIA_POPULARITY_DESC",
+    UPDATED: "UPDATED_TIME_DESC",
+    ADDED: "ADDED_TIME_DESC",
+    STARTED: "STARTED_ON_DESC",
+    FINISHED: "FINISHED_ON_DESC",
+    VOLUME_PROGRESS: "PROGRESS_VOLUMES_DESC",
+  };
+  return direction === "DESC" ? descending[field] : ascending[field];
 }

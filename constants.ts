@@ -48,3 +48,20 @@ export const MediaListStatusWithLabel: {
   { value: "DROPPED" },
   { value: "COMPLETED" },
 ];
+
+// Sort is a field + a direction. The action sheet picks the field; a separate
+// toggle flips the direction. Fields (not raw MediaListSort values) because
+// TITLE is locale-aware and the enum's ASC/DESC split is resolved at query
+// time — see mediaSortValue / mediaSortFields in graphql/animeListPagination.
+export type MediaSortField =
+  | "TITLE"
+  | "SCORE"
+  | "PROGRESS"
+  | "POPULARITY"
+  | "UPDATED"
+  | "ADDED"
+  | "STARTED"
+  | "FINISHED"
+  | "VOLUME_PROGRESS"; // manga only
+
+export type SortDirection = "ASC" | "DESC";

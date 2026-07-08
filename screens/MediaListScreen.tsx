@@ -1,29 +1,29 @@
 import { NetworkStatus, useQuery } from "@apollo/client";
+import { useActionSheet } from "@expo/react-native-action-sheet";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
 import React, { useEffect, useState } from "react";
-import {
-  RefreshControl,
-  View,
-  StyleSheet,
-  Text,
-  FlatList,
-} from "react-native";
+import { RefreshControl, View, StyleSheet, Text, FlatList } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
 import { ListFooterSpinner } from "yep/components/ListFooterSpinner";
 import { AnimeListEntryFragment } from "yep/components/MediaListItem";
+import { PressableOpacity } from "yep/components/PressableOpacity";
 import { StatusChip } from "yep/components/StatusChip";
 import {
   ANILIST_ACCESS_TOKEN_STORAGE,
   MediaListStatusWithLabel,
 } from "yep/constants";
+import type { MediaSortField, SortDirection } from "yep/constants";
 import { MediaListItemContainer } from "yep/containers/MediaListItemContainer";
 import {
   ANIME_LIST_PER_PAGE,
-  titleSortForLocale,
+  mediaSortFields,
+  mediaSortValue,
+  naturalSortDirection,
 } from "yep/graphql/animeListPagination";
 import { primeAccessToken } from "yep/graphql/client";
 import type { MediaListStatus, MediaType } from "yep/graphql/enums";
@@ -41,7 +41,11 @@ import { AnimeSkeleton } from "yep/screens/AnimeScreen/AnimeSkeleton";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
-import { getMediaListStatusLabel, notEmpty } from "yep/utils";
+import {
+  getMediaListStatusLabel,
+  getMediaSortFieldLabel,
+  notEmpty,
+} from "yep/utils";
 
 // Page-based pagination (AniList flat paginator): Page.mediaList is a flat,
 // ungrouped array; the cache typePolicy (graphql/client.ts) owns the page
@@ -61,12 +65,7 @@ const GetMediaList = graphql(
           hasNextPage
           total
         }
-        mediaList(
-          userId: $userId
-          type: $type
-          status: $status
-          sort: $sort
-        ) {
+        mediaList(userId: $userId, type: $type, status: $status, sort: $sort) {
           id
           media {
             ...AnimeListEntryFragment
@@ -157,10 +156,37 @@ export function MediaListScreen({
   const [status, setStatus] = useState<MediaListStatus>(
     MediaListStatusWithLabel[0].value,
   );
+  const [sortField, setSortField] = useState<MediaSortField>("UPDATED");
+  const [direction, setDirection] = useState<SortDirection>("DESC");
 
   const { accessToken, setAccessToken } = useAccessToken();
   const router = useRouter();
   const { locale } = useLocaleContext();
+  const { showActionSheetWithOptions } = useActionSheet();
+
+  const sortFields = mediaSortFields(mediaType);
+
+  function openSortSheet() {
+    const options = sortFields.map(
+      (field) =>
+        `${field === sortField ? "✔ " : ""}${getMediaSortFieldLabel(field)}`,
+    );
+    options.push(String(fbs("Cancel", "Media list sort cancel option")));
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      { options, cancelButtonIndex },
+      (buttonIndex) => {
+        if (buttonIndex === undefined || buttonIndex === cancelButtonIndex) {
+          return;
+        }
+        const field = sortFields[buttonIndex];
+        setSortField(field);
+        // Reset to the field's natural direction; the toggle flips from there.
+        setDirection(naturalSortDirection(field));
+      },
+    );
+  }
 
   const [, , promptAsync] = useAniListAuthRequest();
   // Also keeps the viewer cache warm for the notifications tab badge.
@@ -194,17 +220,18 @@ export function MediaListScreen({
       userId: viewerId,
       type: mediaType,
       status,
-      sort: [titleSortForLocale(locale)],
+      sort: [mediaSortValue(sortField, direction, locale)],
       perPage: ANIME_LIST_PER_PAGE,
     },
     fetchPolicy: "cache-and-network",
     notifyOnNetworkStatusChange: true,
   });
 
-  // Server-side sort (title sort matching the locale) so pages appended by
-  // fetchMore keep a stable order — a client re-sort would reshuffle rows
-  // mid-scroll. Page.mediaList is flat: no list groups, no custom-list
-  // duplicates.
+  // Server-side sort (the user-picked field + direction) so fetchMore pages keep
+  // a stable order — a client re-sort would reshuffle rows mid-scroll (the bug
+  // in the first attempt). `sort` is in the cache keyArgs, so switching sorts
+  // reads a fresh page-1 container instead of merging differently-ordered
+  // pages. Page.mediaList is flat: no list groups, no custom-list duplicates.
   const list = (mediaListData?.Page?.mediaList ?? []).filter(notEmpty);
   // Header count shows the category's full size, not the loaded-page count —
   // pagination caps `list` at the pages fetched so far.
@@ -287,6 +314,49 @@ export function MediaListScreen({
                   ),
                 )}
               </Text>
+              <View style={styles.sortControls}>
+                <PressableOpacity
+                  style={styles.sortButton}
+                  onPress={openSortSheet}
+                  accessibilityRole="button"
+                  accessibilityLabel={String(
+                    fbs("Change sort", "Media list sort button accessibility"),
+                  )}
+                >
+                  <Text style={styles.sortLabel}>
+                    {String(
+                      fbs(
+                        [
+                          "Sort: ",
+                          fbs.param("sort", getMediaSortFieldLabel(sortField)),
+                        ],
+                        "Media list sort button label",
+                      ),
+                    )}
+                  </Text>
+                </PressableOpacity>
+                <PressableOpacity
+                  style={styles.directionButton}
+                  onPress={() =>
+                    setDirection((d) => (d === "ASC" ? "DESC" : "ASC"))
+                  }
+                  accessibilityRole="button"
+                  accessibilityLabel={String(
+                    direction === "ASC"
+                      ? fbs("Sorted ascending", "Media list sort ascending")
+                      : fbs("Sorted descending", "Media list sort descending"),
+                  )}
+                >
+                  <Image
+                    style={styles.directionIcon}
+                    source={
+                      direction === "ASC"
+                        ? require("yep/assets/icons/arrow-up.png")
+                        : require("yep/assets/icons/arrow-down.png")
+                    }
+                  />
+                </PressableOpacity>
+              </View>
             </View>
           </View>
         }
@@ -304,9 +374,7 @@ export function MediaListScreen({
                   : String(fbs("Empty list", "Anime empty state title"))
               }
               description={
-                !accessToken
-                  ? loggedOutDescription
-                  : emptyListDescription
+                !accessToken ? loggedOutDescription : emptyListDescription
               }
               cta={{
                 label: !accessToken
@@ -381,5 +449,34 @@ const styles = StyleSheet.create({
     fontFamily: Manrope.regular,
     fontSize: 12.8,
     color: darkTheme.listCount,
+  },
+  sortControls: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  sortButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  sortLabel: {
+    fontFamily: Manrope.regular,
+    fontSize: 12.8,
+    color: darkTheme.text,
+  },
+  sortIcon: {
+    height: 16,
+    width: 16,
+    tintColor: darkTheme.text,
+  },
+  directionButton: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  directionIcon: {
+    height: 16,
+    width: 16,
+    tintColor: darkTheme.text,
   },
 });
