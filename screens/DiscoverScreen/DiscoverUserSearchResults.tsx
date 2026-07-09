@@ -8,33 +8,17 @@ import { EmptyState } from "yep/components/EmptyState";
 import { FollowButton } from "yep/components/FollowButton";
 import { ListFooterSpinner } from "yep/components/ListFooterSpinner";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import { graphql, readFragment, type FragmentOf } from "yep/graphql/tada";
+import { readFragment } from "yep/graphql/tada";
+import {
+  UserSearchResultFragment,
+  type UserSearchResult,
+} from "yep/graphql/userSearch";
 import { fakeHandle } from "yep/screenshotMode";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
 
-export const UserSearchResultFragment = graphql(`
-  fragment UserSearchResultFragment on User {
-    id
-    name
-    isFollowing
-    avatar {
-      medium
-      large
-    }
-    statistics {
-      anime {
-        count
-      }
-      manga {
-        count
-      }
-    }
-  }
-`);
-
-type UserResult = FragmentOf<typeof UserSearchResultFragment>;
+type UserResult = UserSearchResult;
 type Props = {
   data: readonly UserResult[];
   searchTerm: string;
@@ -60,6 +44,7 @@ function UserSearchRow({
   const router = useRouter();
   const { accessToken } = useAccessToken();
   const user = readFragment(UserSearchResultFragment, item);
+  const avatarUrl = user.avatar?.medium ?? user.avatar?.large;
   // FollowButton renders null for guests and the viewer's own row — skip its
   // fixed-width wrapper too so those rows don't reserve blank space.
   const showFollowButton = Boolean(accessToken) && user.id !== viewerId;
@@ -79,8 +64,10 @@ function UserSearchRow({
       >
         <Image
           source={
-            user.avatar
-              ? { uri: user.avatar.medium ?? user.avatar.large }
+            // Nullish sizes inside a non-null avatar object still need the
+            // placeholder — { uri: null } renders a broken image.
+            avatarUrl
+              ? { uri: avatarUrl }
               : require("yep/assets/icons/avatar-placeholder.png")
           }
           style={styles.avatar}

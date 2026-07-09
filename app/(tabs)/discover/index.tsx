@@ -15,16 +15,14 @@ import { SearchBox } from "yep/components/SearchBox";
 import { StatusChip } from "yep/components/StatusChip";
 import type { MediaType } from "yep/graphql/enums";
 import { graphql } from "yep/graphql/tada";
+import { UserSearchResultFragment } from "yep/graphql/userSearch";
 import { useLoadNextPage } from "yep/hooks/helpers";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { MediaPosterFragment } from "yep/screens/DiscoverScreen/DiscoverPoster";
 import { DiscoverSearchResults } from "yep/screens/DiscoverScreen/DiscoverSearchResults";
 import { DiscoverSkeletonGrid } from "yep/screens/DiscoverScreen/DiscoverSkeleton";
 import { DiscoverTrendingResults } from "yep/screens/DiscoverScreen/DiscoverTrendingResults";
-import {
-  DiscoverUserSearchResults,
-  UserSearchResultFragment,
-} from "yep/screens/DiscoverScreen/DiscoverUserSearchResults";
+import { DiscoverUserSearchResults } from "yep/screens/DiscoverScreen/DiscoverUserSearchResults";
 import { darkTheme } from "yep/themes";
 import { useAccessToken } from "yep/useAccessToken";
 import { notEmpty, isLiquidGlass } from "yep/utils";
