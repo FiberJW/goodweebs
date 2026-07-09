@@ -2688,6 +2688,18 @@
         }
       ],
       "types": []
+    },
+    "zq74ZOt7by+rxIvYGYLPmA==": {
+      "description": "Connector between a list activity action and the media title, as in 'watched episode 3 of TITLE'",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "の",
+          "variations": {}
+        }
+      ],
+      "types": []
     }
   }
 }

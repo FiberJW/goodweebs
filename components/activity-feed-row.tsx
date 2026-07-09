@@ -1,6 +1,7 @@
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
+import { fbs } from "fbtee";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -67,9 +68,25 @@ export function ActivityFeedRow({
   const avatarUrl = user.avatar?.medium ?? user.avatar?.large ?? "";
   const coverUrl = media.coverImage?.medium ?? media.coverImage?.large ?? "";
   const mediaTitle = getTitle(media.title) ?? "";
+  // ponytail: `status` verbs ("watched episode", "plans to watch") only exist
+  // in English on AniList — the connector below is the localizable part.
   const action = [item.status ?? "updated", item.progress]
     .filter(Boolean)
     .join(" ");
+  const connector = item.progress
+    ? ` ${String(
+        fbs(
+          "of",
+          "Connector between a list activity action and the media title, as in 'watched episode 3 of TITLE'",
+        ),
+      )} `
+    : " ";
+  const profileLabel = String(
+    fbs(
+      [fbs.param("username", user.name), "'s profile"],
+      "User profile link accessibility label",
+    ),
+  );
   const userHref = `/user/${user.id}` as const;
   const mediaHref = `/details/${media.id}` as const;
 
@@ -88,7 +105,7 @@ export function ActivityFeedRow({
       <PressableOpacity
         borderRadius={24}
         accessibilityRole="link"
-        accessibilityLabel={`${user.name}'s profile`}
+        accessibilityLabel={profileLabel}
         onPress={() => router.push(userHref)}
       >
         <Image
@@ -105,14 +122,12 @@ export function ActivityFeedRow({
           <Text
             style={styles.username}
             accessibilityRole="link"
-            accessibilityLabel={`${user.name}'s profile`}
+            accessibilityLabel={profileLabel}
             onPress={() => router.push(userHref)}
           >
             {fakeHandle(user.name)}
           </Text>
-          <Text style={styles.action}>
-            {` ${action}${item.progress ? " of " : " "}`}
-          </Text>
+          <Text style={styles.action}>{` ${action}${connector}`}</Text>
           <Text
             style={styles.mediaTitle}
             accessibilityRole="link"
