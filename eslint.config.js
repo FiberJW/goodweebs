@@ -22,6 +22,7 @@ module.exports = defineConfig([
       "react-compiler/react-compiler": "error",
       "react-native/no-inline-styles": 0,
       "react-native/no-raw-text": 0,
+      "react-doctor/only-export-components": 0,
       "import/order": [
         "error",
         {

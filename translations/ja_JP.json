@@ -625,30 +625,6 @@
       ],
       "types": []
     },
-    "CKOv+jsdvTJDLviOEADQwA==": {
-      "description": "Anime list title count",
-      "status": "translated",
-      "tokens": [],
-      "translations": [
-        {
-          "translation": "{count}作品",
-          "variations": {}
-        }
-      ],
-      "types": []
-    },
-    "iZoAqpSbzBU9bo7OQg9Fow==": {
-      "description": "Anime list title count",
-      "status": "translated",
-      "tokens": [],
-      "translations": [
-        {
-          "translation": "{count}作品",
-          "variations": {}
-        }
-      ],
-      "types": []
-    },
     "E+GWME49UPTLdrFmIo/06A==": {
       "description": "Anime empty state login title",
       "status": "translated",
@@ -2269,18 +2245,6 @@
       ],
       "types": []
     },
-    "5bcToOz4BqwjZQCh0u5Nfw==": {
-      "description": "Media list sort button label",
-      "status": "translated",
-      "tokens": [],
-      "translations": [
-        {
-          "translation": "並び替え: {sort}",
-          "variations": {}
-        }
-      ],
-      "types": []
-    },
     "V2fb3gh+fSzlGr0TU2z+qw==": {
       "description": "Media list sort ascending",
       "status": "translated",
@@ -2336,6 +2300,18 @@
       "translations": [
         {
           "translation": "ソーシャル",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "G1JsmecDq8/+PykrZba6wQ==": {
+      "description": "Manga streaming links group label (Watch for anime)",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "読む",
           "variations": {}
         }
       ],

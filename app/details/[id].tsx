@@ -806,18 +806,24 @@ const EXTERNAL_LINK_GROUPS = [
   { type: "SOCIAL", label: fbs("Social", "Social links group label") },
 ] as const;
 
-function ExternalLinksSection({ links }: { links?: ExternalLinkData[] }) {
+function ExternalLinksSection({
+  links,
+  isManga,
+}: {
+  links?: ExternalLinkData[];
+  isManga: boolean;
+}) {
   if (!links?.length) return null;
 
   // AniList classifies every link as STREAMING / INFO / SOCIAL; null falls to Info.
-  const groups = EXTERNAL_LINK_GROUPS.map((group) => ({
-    ...group,
-    items: links.filter(
+  const groups = EXTERNAL_LINK_GROUPS.flatMap((group) => {
+    const items = links.filter(
       (link) =>
         (readFragment(MediaExternalLinkData, link).type ?? "INFO") ===
         group.type,
-    ),
-  })).filter((group) => group.items.length > 0);
+    );
+    return items.length > 0 ? [{ ...group, items }] : [];
+  });
 
   return (
     <>
@@ -825,7 +831,14 @@ function ExternalLinksSection({ links }: { links?: ExternalLinkData[] }) {
       {groups.map((group) => (
         <View key={group.type}>
           <Text style={styles.externalLinksGroupLabel}>
-            {String(group.label)}
+            {String(
+              group.type === "STREAMING" && isManga
+                ? fbs(
+                    "Read",
+                    "Manga streaming links group label (Watch for anime)",
+                  )
+                : group.label,
+            )}
           </Text>
           <View style={styles.externalLinksCard}>
             {group.items.map((link, i) => (
@@ -975,7 +988,10 @@ export default function Details() {
             />
           ) : null}
           <RelationsLists mappedRelations={mappedRelations} />
-          <ExternalLinksSection links={externalLinks} />
+          <ExternalLinksSection
+            links={externalLinks}
+            isManga={media.type === "MANGA"}
+          />
         </>
       ) : (
         <EmptyState

@@ -53,9 +53,6 @@ export function AnimeSkeleton({ rowCount = 8 }: Props) {
 }
 
 const styles = StyleSheet.create({
-  count: {
-    marginTop: -2,
-  },
   divider: {
     backgroundColor: darkTheme.listItemBorder,
     height: StyleSheet.hairlineWidth,
@@ -78,10 +75,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 8,
     padding: 12,
-  },
-  statusChipRow: {
-    flexDirection: "row",
-    gap: 8,
   },
   subTitle: {
     marginTop: 8,

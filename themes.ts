@@ -27,7 +27,6 @@ export const darkTheme = {
   iconFill: white95,
   footnote: white80,
   selectedChipFill: white95,
-  listCount: white80,
   accent: goodweebsPurple,
   listItemBackground: white10,
   listItemBorder: white30,

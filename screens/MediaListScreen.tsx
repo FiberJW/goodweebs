@@ -241,9 +241,6 @@ export function MediaListScreen({
   // reads a fresh page-1 container instead of merging differently-ordered
   // pages. Page.mediaList is flat: no list groups, no custom-list duplicates.
   const list = (mediaListData?.Page?.mediaList ?? []).filter(notEmpty);
-  // Header count shows the category's full size, not the loaded-page count —
-  // pagination caps `list` at the pages fetched so far.
-  const totalCount = mediaListData?.Page?.pageInfo?.total ?? list.length;
 
   const statusOptions = MediaListStatusWithLabel.map(({ value }) => ({
     label: getMediaListStatusLabel(value, mediaType),
@@ -283,7 +280,49 @@ export function MediaListScreen({
     <View
       style={[styles.outerContainer, { backgroundColor: darkTheme.background }]}
     >
-      <Header label={headerLabel} />
+      <Header
+        label={headerLabel}
+        rightSlot={
+          <View style={styles.sortPill}>
+            <PressableOpacity
+              style={styles.sortFieldButton}
+              onPress={openSortSheet}
+              accessibilityRole="button"
+              accessibilityLabel={String(
+                fbs("Change sort", "Media list sort button accessibility"),
+              )}
+            >
+              <Image
+                style={styles.sortGlyph}
+                source={require("yep/assets/icons/sort.png")}
+              />
+              <Text style={styles.sortLabel} numberOfLines={1}>
+                {getMediaSortFieldLabel(sortField)}
+              </Text>
+            </PressableOpacity>
+            <View style={styles.sortDivider} />
+            <PressableOpacity
+              style={styles.directionButton}
+              onPress={() => setDirection(direction === "ASC" ? "DESC" : "ASC")}
+              accessibilityRole="button"
+              accessibilityLabel={String(
+                direction === "ASC"
+                  ? fbs("Sorted ascending", "Media list sort ascending")
+                  : fbs("Sorted descending", "Media list sort descending"),
+              )}
+            >
+              <Image
+                style={styles.directionIcon}
+                source={
+                  direction === "ASC"
+                    ? require("yep/assets/icons/arrow-up.png")
+                    : require("yep/assets/icons/arrow-down.png")
+                }
+              />
+            </PressableOpacity>
+          </View>
+        }
+      />
       <FlatList
         // iOS native tabs float over content; automatic insets keep the last
         // rows scrollable clear of the glass bar (no-op on Android's JS tabs).
@@ -292,80 +331,16 @@ export function MediaListScreen({
         // An element (not an inline component) so FlatList doesn't remount the
         // header — and reset the chip row's scroll — on every data/status change.
         ListHeaderComponent={
-          <View style={{ gap: 16, paddingBottom: 16 }}>
-            <View>
-              <FlatList
-                alwaysBounceVertical={false}
-                showsHorizontalScrollIndicator={false}
-                horizontal
-                contentContainerStyle={{ gap: 8 }}
-                data={statusOptions}
-                keyExtractor={statusOptionKeyExtractor}
-                renderItem={renderStatusOption}
-              />
-            </View>
-            <View style={styles.countAndSortRow}>
-              <Text style={styles.count}>
-                {String(
-                  fbs(
-                    [
-                      fbs.param("count", String(totalCount), {
-                        number: totalCount,
-                      }),
-                      " ",
-                      fbs.plural("title", totalCount, {
-                        many: "titles",
-                        name: "titleCount",
-                      }),
-                    ],
-                    "Anime list title count",
-                  ),
-                )}
-              </Text>
-              <View style={styles.sortControls}>
-                <PressableOpacity
-                  style={styles.sortButton}
-                  onPress={openSortSheet}
-                  accessibilityRole="button"
-                  accessibilityLabel={String(
-                    fbs("Change sort", "Media list sort button accessibility"),
-                  )}
-                >
-                  <Text style={styles.sortLabel}>
-                    {String(
-                      fbs(
-                        [
-                          "Sort: ",
-                          fbs.param("sort", getMediaSortFieldLabel(sortField)),
-                        ],
-                        "Media list sort button label",
-                      ),
-                    )}
-                  </Text>
-                </PressableOpacity>
-                <PressableOpacity
-                  style={styles.directionButton}
-                  onPress={() =>
-                    setDirection(direction === "ASC" ? "DESC" : "ASC")
-                  }
-                  accessibilityRole="button"
-                  accessibilityLabel={String(
-                    direction === "ASC"
-                      ? fbs("Sorted ascending", "Media list sort ascending")
-                      : fbs("Sorted descending", "Media list sort descending"),
-                  )}
-                >
-                  <Image
-                    style={styles.directionIcon}
-                    source={
-                      direction === "ASC"
-                        ? require("yep/assets/icons/arrow-up.png")
-                        : require("yep/assets/icons/arrow-down.png")
-                    }
-                  />
-                </PressableOpacity>
-              </View>
-            </View>
+          <View style={{ paddingBottom: 16 }}>
+            <FlatList
+              alwaysBounceVertical={false}
+              showsHorizontalScrollIndicator={false}
+              horizontal
+              contentContainerStyle={{ gap: 8 }}
+              data={statusOptions}
+              keyExtractor={statusOptionKeyExtractor}
+              renderItem={renderStatusOption}
+            />
           </View>
         }
         showsVerticalScrollIndicator={false}
@@ -449,42 +424,52 @@ const styles = StyleSheet.create({
     height: StyleSheet.hairlineWidth,
     backgroundColor: darkTheme.listItemBorder,
   },
-  countAndSortRow: {
+  // A single outlined rounded control: the field (with sort glyph) opens the
+  // sheet, the arrow past the hairline toggles direction. maxWidth keeps a long
+  // field label from crowding the title.
+  sortPill: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: "center",
+    borderRadius: 100,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: darkTheme.listItemBorder,
+    maxWidth: 180,
   },
-  count: {
-    fontFamily: Manrope.regular,
-    fontSize: 12.8,
-    color: darkTheme.listCount,
-  },
-  sortControls: {
+  sortFieldButton: {
+    flexShrink: 1,
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
+    paddingLeft: 8,
+    paddingRight: 8,
+    paddingVertical: 4,
   },
-  sortButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
+  sortGlyph: {
+    height: 12,
+    width: 12,
+    tintColor: darkTheme.subText,
   },
   sortLabel: {
-    fontFamily: Manrope.regular,
-    fontSize: 12.8,
+    flexShrink: 1,
+    fontFamily: Manrope.medium,
+    fontSize: 12,
     color: darkTheme.text,
   },
-  sortIcon: {
-    height: 16,
-    width: 16,
-    tintColor: darkTheme.text,
+  sortDivider: {
+    width: StyleSheet.hairlineWidth,
+    alignSelf: "stretch",
+    marginVertical: 4,
+    backgroundColor: darkTheme.buttonBorder,
   },
   directionButton: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
     alignItems: "center",
     justifyContent: "center",
   },
   directionIcon: {
-    height: 16,
-    width: 16,
+    height: 12,
+    width: 12,
     tintColor: darkTheme.text,
   },
 });
