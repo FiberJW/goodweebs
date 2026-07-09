@@ -197,7 +197,7 @@ export function MediaListScreen({
   }
 
   const [, , promptAsync] = useAniListAuthRequest();
-  // Also keeps the viewer cache warm for the notifications tab badge.
+  // Also keeps the viewer cache warm for the feed's notification bell badge.
   const { data: viewerData } = useQuery(GetViewer, {
     skip: !accessToken,
   });

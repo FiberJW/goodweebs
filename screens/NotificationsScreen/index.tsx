@@ -11,7 +11,6 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { EmptyState } from "yep/components/EmptyState";
-import { Header } from "yep/components/Header";
 import { graphql } from "yep/graphql/tada";
 import { GetViewer } from "yep/graphql/viewer";
 import { useLoadNextPage } from "yep/hooks/helpers";
@@ -28,7 +27,6 @@ const GetNotifications = graphql(
     query GetNotifications($page: Int, $perPage: Int, $reset: Boolean) {
       Page(page: $page, perPage: $perPage) {
         pageInfo {
-          total
           hasNextPage
         }
         notifications(
@@ -70,26 +68,28 @@ export default function Notifications() {
   });
   const viewerId = viewerData?.Viewer?.id;
 
-  const { data, loading, error, refetch, fetchMore, networkStatus } =
-    useQuery(GetNotifications, {
+  const { data, loading, error, refetch, fetchMore, networkStatus } = useQuery(
+    GetNotifications,
+    {
       // The tab stays visible for guests (NativeTabs remounts crash if
       // triggers flip — see the tabs layout); the screen gates instead.
       skip: !accessToken,
       variables: { page: 1, perPage: NOTIFICATIONS_PER_PAGE, reset: true },
       fetchPolicy: "cache-and-network",
       notifyOnNetworkStatusChange: true,
-    });
+    },
+  );
 
   // The query resets the server-side count; zero the cached viewer count too
   // so the bell badge clears without refetching the whole viewer.
   useEffect(() => {
-    if (viewerId) {
+    if (viewerId && data && networkStatus === NetworkStatus.ready) {
       cache.modify({
         id: cache.identify({ __typename: "User", id: viewerId }),
         fields: { unreadNotificationCount: () => 0 },
       });
     }
-  }, [cache, viewerId]);
+  }, [cache, data, networkStatus, viewerId]);
 
   const isRefetching = networkStatus === NetworkStatus.refetch;
   const isFetchingMore = networkStatus === NetworkStatus.fetchMore;
@@ -124,14 +124,9 @@ export default function Notifications() {
 
   return (
     <View style={styles.container}>
-      <Header
-        label={String(fbs("Notifications", "Notifications tab header label"))}
-      />
       {!accessToken ? (
         <EmptyState
-          title={String(
-            fbs("Log in", "Notifications empty state login title"),
-          )}
+          title={String(fbs("Log in", "Notifications empty state login title"))}
           description={String(
             fbs(
               "Notifications show up here once you log in with your AniList account.",

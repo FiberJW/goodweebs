@@ -83,9 +83,12 @@ export function NotificationRow({
   const router = useRouter();
   const getTitle = useGetTitle();
   const { locale } = useLocaleContext();
+  const text = getNotificationText(item, getTitle(item.media.title) ?? "");
 
   return (
     <PressableOpacity
+      accessibilityRole="link"
+      accessibilityLabel={text}
       style={[
         styles.row,
         {
@@ -106,7 +109,7 @@ export function NotificationRow({
       />
       <View style={styles.textColumn}>
         <Text style={styles.text} numberOfLines={3}>
-          {getNotificationText(item, getTitle(item.media.title) ?? "")}
+          {text}
         </Text>
         {item.createdAt ? (
           <Text style={styles.timestamp} numberOfLines={1}>
