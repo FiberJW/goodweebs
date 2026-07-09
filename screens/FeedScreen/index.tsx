@@ -86,7 +86,12 @@ export default function FeedScreen() {
   const [scope, setScope] = useState<FeedScope>(
     accessToken ? "following" : "global",
   );
-  const { data: viewerData, loading: viewerLoading } = useQuery(GetViewer, {
+  const {
+    data: viewerData,
+    loading: viewerLoading,
+    error: viewerError,
+    refetch: refetchViewer,
+  } = useQuery(GetViewer, {
     skip: !accessToken,
   });
   const viewerId = viewerData?.Viewer?.id;
@@ -113,7 +118,10 @@ export default function FeedScreen() {
         isFollowing: scope === "following" ? true : undefined,
         activityType: "MEDIA_LIST",
       },
-      fetchPolicy: "cache-and-network",
+      // Default cache-first (NOT cache-and-network): each scope switch would
+      // otherwise fire a network request even with cached data, burning
+      // AniList's degraded per-minute allowance. Pull-to-refresh covers
+      // explicit freshness.
       notifyOnNetworkStatusChange: true,
     },
   );
@@ -130,7 +138,10 @@ export default function FeedScreen() {
     last: index === activities.length - 1,
   }));
   const loadNextPage = useLoadNextPage({
-    loadedCount: activities.length,
+    // Raw cache length, not the filtered rows: the cache merges every entry
+    // (including ones dropped for null user/media), so the filtered count
+    // would compute a page the cache already has and stall pagination.
+    loadedCount: (data?.Page?.activities ?? []).length,
     hasNextPage: data?.Page?.pageInfo?.hasNextPage,
     paused: isRefetching,
     perPage: FEED_PER_PAGE,
@@ -206,6 +217,25 @@ export default function FeedScreen() {
         <EmptyState
           title={String(fbs("Could not load feed", "Feed error title"))}
           description={error.message}
+        />
+      ) : waitingForViewer ? (
+        // "Mine" needs the viewer id; if that query failed the feed query
+        // stays skipped — surface it instead of a misleading empty feed.
+        <EmptyState
+          title={String(fbs("Could not load feed", "Feed error title"))}
+          description={
+            viewerError?.message ??
+            String(
+              fbs(
+                "Your profile could not be loaded.",
+                "Feed viewer load failure description",
+              ),
+            )
+          }
+          cta={{
+            label: String(fbs("Retry", "Search retry button label")),
+            onPress: () => void refetchViewer().catch(() => {}),
+          }}
         />
       ) : (
         <FlatList

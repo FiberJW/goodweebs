@@ -3012,6 +3012,18 @@
         }
       ],
       "types": []
+    },
+    "C5FzQ9+WkdECJNlgv2Te6Q==": {
+      "description": "Feed viewer load failure description",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "プロフィールを読み込めませんでした。",
+          "variations": {}
+        }
+      ],
+      "types": []
     }
   }
 }
