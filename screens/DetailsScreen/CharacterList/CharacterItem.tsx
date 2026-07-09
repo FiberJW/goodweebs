@@ -5,13 +5,14 @@ import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { graphql, readFragment } from "yep/graphql/tada";
 import type { FragmentOf } from "yep/graphql/tada";
-import { fakeName } from "yep/screenshotMode";
+import { useGetName } from "yep/utils";
 
 export const CharacterListItemData = graphql(`
   fragment CharacterListItemData on Character {
     id
     name {
       full
+      native
     }
     image {
       large
@@ -25,6 +26,7 @@ type Props = {
 
 export function CharacterItem({ character: maskedCharacter }: Props) {
   const router = useRouter();
+  const getName = useGetName();
   const character = readFragment(CharacterListItemData, maskedCharacter);
   if (!character.image?.large) return null;
 
@@ -37,7 +39,7 @@ export function CharacterItem({ character: maskedCharacter }: Props) {
       <PosterAndTitle
         size="large"
         uri={character.image.large}
-        title={fakeName(character.name?.full ?? "")}
+        title={getName(character.name) ?? ""}
       />
     </PressableOpacity>
   );

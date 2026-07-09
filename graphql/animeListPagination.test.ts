@@ -2,9 +2,10 @@ import { describe, expect, test } from "bun:test";
 
 import {
   ANIME_LIST_PER_PAGE,
+  mediaSortValue,
   mergeMediaListPages,
   nextPageForCount,
-  titleSortForLocale,
+  titleSort,
 } from "./animeListPagination";
 
 
@@ -61,10 +62,30 @@ describe("nextPageForCount", () => {
   });
 });
 
-describe("titleSortForLocale", () => {
-  test("ja_JP sorts by native title, everything else by english", () => {
-    expect(titleSortForLocale("ja_JP")).toBe("MEDIA_TITLE_NATIVE");
-    expect(titleSortForLocale("en_US")).toBe("MEDIA_TITLE_ENGLISH");
-    expect(titleSortForLocale(undefined)).toBe("MEDIA_TITLE_ENGLISH");
+describe("titleSort", () => {
+  test("no account preference falls back to the device locale", () => {
+    expect(titleSort("ja_JP", null, "ASC")).toBe("MEDIA_TITLE_NATIVE");
+    expect(titleSort("en_US", null, "ASC")).toBe("MEDIA_TITLE_ENGLISH");
+    expect(titleSort(undefined, undefined, "ASC")).toBe("MEDIA_TITLE_ENGLISH");
+  });
+
+  test("account preference wins over locale, per direction", () => {
+    // en_US locale would sort by english; the ROMAJI account setting overrides.
+    expect(titleSort("en_US", "ROMAJI", "ASC")).toBe("MEDIA_TITLE_ROMAJI");
+    expect(titleSort("en_US", "NATIVE", "DESC")).toBe("MEDIA_TITLE_NATIVE_DESC");
+    // Stylised variants collapse to their base.
+    expect(titleSort("ja_JP", "ENGLISH_STYLISED", "ASC")).toBe(
+      "MEDIA_TITLE_ENGLISH",
+    );
+  });
+
+  test("mediaSortValue routes TITLE through the viewer language", () => {
+    expect(mediaSortValue("TITLE", "ASC", "en_US", "NATIVE")).toBe(
+      "MEDIA_TITLE_NATIVE",
+    );
+    // Non-title fields ignore locale/language.
+    expect(mediaSortValue("SCORE", "DESC", "ja_JP", "NATIVE")).toBe(
+      "SCORE_DESC",
+    );
   });
 });

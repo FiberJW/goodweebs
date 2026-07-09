@@ -228,7 +228,14 @@ export function MediaListScreen({
       userId: viewerId,
       type: mediaType,
       status,
-      sort: [mediaSortValue(sortField, direction, locale)],
+      sort: [
+        mediaSortValue(
+          sortField,
+          direction,
+          locale,
+          viewerData?.Viewer?.options?.titleLanguage,
+        ),
+      ],
       perPage: ANIME_LIST_PER_PAGE,
     },
     fetchPolicy: "cache-and-network",

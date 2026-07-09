@@ -24,15 +24,11 @@ import type { ResultOf } from "yep/graphql/tada";
 import { GetViewer } from "yep/graphql/viewer";
 import { useAniListAuthRequest } from "yep/hooks/auth";
 import { ProfileSkeleton } from "yep/screens/ProfileScreen/ProfileSkeleton";
-import {
-  SCREENSHOT_BLUR_RADIUS,
-  fakeHandle,
-  fakeName,
-} from "yep/screenshotMode";
+import { SCREENSHOT_BLUR_RADIUS, fakeHandle } from "yep/screenshotMode";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { useAccessToken } from "yep/useAccessToken";
-import { notEmpty, useGetTitle } from "yep/utils";
+import { notEmpty, useGetName, useGetTitle } from "yep/utils";
 
 type StatProps = { label: string; value: number };
 
@@ -82,6 +78,7 @@ function FavoriteAnimeListItem({ item }: { item: FavoriteAnimeItem }) {
 
 function FavoriteCharacterListItem({ item }: { item: FavoriteCharacterItem }) {
   const router = useRouter();
+  const getName = useGetName();
 
   return (
     <View style={styles.favoriteContainer}>
@@ -89,7 +86,7 @@ function FavoriteCharacterListItem({ item }: { item: FavoriteCharacterItem }) {
         <PosterAndTitle
           size="profile"
           uri={item?.image?.large ?? ""}
-          title={fakeName(item.name?.full ?? undefined)}
+          title={getName(item.name)}
         />
       </PressableOpacity>
     </View>

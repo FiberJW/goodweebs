@@ -12,7 +12,7 @@ import { LikeButton } from "yep/components/PosterAndTitle/LikeButton";
 import { applyFavoriteToCache, ToggleFavorite } from "yep/graphql/favorites";
 import { graphql, readFragment } from "yep/graphql/tada";
 import { CharacterSkeleton } from "yep/screens/CharacterScreen/CharacterSkeleton";
-import { fakeName } from "yep/screenshotMode";
+import { useGetName } from "yep/utils";
 
 const CharacterData = graphql(`
   fragment CharacterData on Character {
@@ -57,6 +57,7 @@ export default function Character() {
 
   const [toggleFavorite] = useMutation(ToggleFavorite);
   const { cache } = useApolloClient();
+  const getName = useGetName();
 
   const character = data?.Character
     ? readFragment(CharacterData, data.Character)
@@ -64,12 +65,11 @@ export default function Character() {
 
   // Set navigation title dynamically
   useEffect(() => {
-    if (character?.name?.full) {
-      navigation.setOptions({
-        title: fakeName(character.name.full),
-      });
+    const name = getName(character?.name);
+    if (name) {
+      navigation.setOptions({ title: name });
     }
-  }, [character, navigation]);
+  }, [character, navigation, getName]);
 
   return (
     <ScrollView

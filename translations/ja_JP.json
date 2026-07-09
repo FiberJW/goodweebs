@@ -2316,6 +2316,90 @@
         }
       ],
       "types": []
+    },
+    "8kuPUSiRAadkjIy2Edu1IA==": {
+      "description": "English title language label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "英語",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "u5Pg8zKQjgDMOZKPVLw4lg==": {
+      "description": "Native title language label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "日本語（ネイティブ）",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "1OUk2kQ+5lb0SSX7tQDMow==": {
+      "description": "Romaji title language label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "ローマ字",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "zXcfJEB0lMIXWVTq5zjmrg==": {
+      "description": "Native name language label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "日本語（ネイティブ）",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "t4B2/+eBkuuUVwmramUyeA==": {
+      "description": "Romaji name language label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "ローマ字",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "DDvaZpNv0sIN2ckyPdx+bg==": {
+      "description": "Title language section title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "タイトルの言語",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "EPcFID1ZOEOzRZwrowwo8Q==": {
+      "description": "Name language section title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "名前の言語",
+          "variations": {}
+        }
+      ],
+      "types": []
     }
   }
 }

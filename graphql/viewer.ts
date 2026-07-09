@@ -17,6 +17,10 @@ export const GetViewer = graphql(`
       mediaListOptions {
         scoreFormat
       }
+      options {
+        titleLanguage
+        staffNameLanguage
+      }
       favourites {
         anime {
           nodes {
@@ -37,6 +41,7 @@ export const GetViewer = graphql(`
             id
             name {
               full
+              native
             }
             image {
               large

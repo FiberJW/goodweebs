@@ -1,5 +1,10 @@
 import type { MediaSortField, SortDirection } from "yep/constants";
-import type { MediaListSort, MediaType } from "yep/graphql/enums";
+import type {
+  MediaListSort,
+  MediaType,
+  UserTitleLanguage,
+} from "yep/graphql/enums";
+import { resolveTitleLanguage } from "yep/titleName";
 
 export const ANIME_LIST_PER_PAGE = 50;
 
@@ -40,12 +45,30 @@ export function mergeMediaListPages<T>(
   return merged;
 }
 
-// Matches getTitle's display fallback (utils.tsx): ja_JP shows native titles,
-// everyone else shows english ?? romaji. AniList coalesces null titles to
-// romaji server-side when sorting (verified against the live API), so
-// MEDIA_TITLE_ENGLISH already sorts by english ?? romaji.
-export function titleSortForLocale(locale: string | undefined): MediaListSort {
-  return locale === "ja_JP" ? "MEDIA_TITLE_NATIVE" : "MEDIA_TITLE_ENGLISH";
+// Sort titles by the same language getTitle displays (resolveTitleLanguage), so
+// a title-sorted list stays alphabetical in whatever language is on screen.
+// Literals are spelled out per direction (not "_DESC"-appended) so each stays
+// checked against the MediaListSort enum. AniList coalesces null titles to
+// romaji when sorting, matching getTitle's fallback closely enough for order.
+export function titleSort(
+  locale: string | undefined,
+  titleLanguage: UserTitleLanguage | null | undefined,
+  direction: SortDirection,
+): MediaListSort {
+  switch (resolveTitleLanguage(locale, titleLanguage)) {
+    case "ROMAJI":
+      return direction === "DESC"
+        ? "MEDIA_TITLE_ROMAJI_DESC"
+        : "MEDIA_TITLE_ROMAJI";
+    case "ENGLISH":
+      return direction === "DESC"
+        ? "MEDIA_TITLE_ENGLISH_DESC"
+        : "MEDIA_TITLE_ENGLISH";
+    case "NATIVE":
+      return direction === "DESC"
+        ? "MEDIA_TITLE_NATIVE_DESC"
+        : "MEDIA_TITLE_NATIVE";
+  }
 }
 
 // Fields offered in the sort sheet, in display order. Volume progress is
@@ -71,16 +94,16 @@ export function naturalSortDirection(field: MediaSortField): SortDirection {
 }
 
 // The server does the sorting (paginated pages must keep a stable order). Each
-// AniList field is BASE (ascending) / BASE_DESC; both are spelled out (rather
-// than string-appending "_DESC") so the values stay checked against the enum.
-// TITLE's base is locale-aware.
+// AniList field is BASE (ascending) / BASE_DESC, spelled out so the values stay
+// checked against the enum; TITLE delegates to titleSort (viewer-language-aware).
 export function mediaSortValue(
   field: MediaSortField,
   direction: SortDirection,
   locale: string | undefined,
+  titleLanguage: UserTitleLanguage | null | undefined,
 ): MediaListSort {
   const ascending: Record<MediaSortField, MediaListSort> = {
-    TITLE: titleSortForLocale(locale),
+    TITLE: titleSort(locale, titleLanguage, "ASC"),
     SCORE: "SCORE",
     PROGRESS: "PROGRESS",
     POPULARITY: "MEDIA_POPULARITY",
@@ -91,10 +114,7 @@ export function mediaSortValue(
     VOLUME_PROGRESS: "PROGRESS_VOLUMES",
   };
   const descending: Record<MediaSortField, MediaListSort> = {
-    TITLE:
-      locale === "ja_JP"
-        ? "MEDIA_TITLE_NATIVE_DESC"
-        : "MEDIA_TITLE_ENGLISH_DESC",
+    TITLE: titleSort(locale, titleLanguage, "DESC"),
     SCORE: "SCORE_DESC",
     PROGRESS: "PROGRESS_DESC",
     POPULARITY: "MEDIA_POPULARITY_DESC",

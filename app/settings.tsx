@@ -20,7 +20,11 @@ import {
   DEFAULT_SCORE_FORMAT,
 } from "yep/constants";
 import { primeAccessToken } from "yep/graphql/client";
-import type { ScoreFormat } from "yep/graphql/enums";
+import type {
+  ScoreFormat,
+  UserStaffNameLanguage,
+  UserTitleLanguage,
+} from "yep/graphql/enums";
 import { graphql } from "yep/graphql/tada";
 import { GetViewer } from "yep/graphql/viewer";
 import { StorageKeys, usePersistedState } from "yep/hooks/helpers";
@@ -43,6 +47,26 @@ const UpdateScoreFormat = graphql(`
   }
 `);
 
+// One mutation for both language pickers; the caller passes only the field it
+// changes, so the omitted variable leaves the other AniList option untouched.
+const UpdateLanguageOptions = graphql(`
+  mutation UpdateLanguageOptions(
+    $titleLanguage: UserTitleLanguage
+    $staffNameLanguage: UserStaffNameLanguage
+  ) {
+    UpdateUser(
+      titleLanguage: $titleLanguage
+      staffNameLanguage: $staffNameLanguage
+    ) {
+      id
+      options {
+        titleLanguage
+        staffNameLanguage
+      }
+    }
+  }
+`);
+
 const scoreFormats: ScoreFormat[] = [
   "POINT_100",
   "POINT_10_DECIMAL",
@@ -50,6 +74,45 @@ const scoreFormats: ScoreFormat[] = [
   "POINT_5",
   "POINT_3",
 ];
+
+const titleLanguages: UserTitleLanguage[] = ["ROMAJI", "ENGLISH", "NATIVE"];
+// AniList has no English form for names — only romaji and native.
+const staffNameLanguages: UserStaffNameLanguage[] = ["ROMAJI", "NATIVE"];
+
+// The pickers only offer the base languages, but AniList may store a stylised
+// (title) or western (name) variant set on the web — collapse to the base so
+// the right row highlights.
+function baseTitleLanguage(
+  language: UserTitleLanguage | null | undefined,
+): UserTitleLanguage {
+  if (language === "ENGLISH" || language === "ENGLISH_STYLISED") return "ENGLISH";
+  if (language === "NATIVE" || language === "NATIVE_STYLISED") return "NATIVE";
+  return "ROMAJI";
+}
+
+function baseStaffNameLanguage(
+  language: UserStaffNameLanguage | null | undefined,
+): UserStaffNameLanguage {
+  return language === "NATIVE" ? "NATIVE" : "ROMAJI";
+}
+
+// Called in render (not module scope) so labels re-resolve on locale change.
+function getTitleLanguageLabel(language: UserTitleLanguage) {
+  switch (language) {
+    case "ENGLISH":
+      return String(fbs("English", "English title language label"));
+    case "NATIVE":
+      return String(fbs("Japanese (native)", "Native title language label"));
+    default:
+      return String(fbs("Romaji", "Romaji title language label"));
+  }
+}
+
+function getStaffNameLanguageLabel(language: UserStaffNameLanguage) {
+  return language === "NATIVE"
+    ? String(fbs("Japanese (native)", "Native name language label"))
+    : String(fbs("Romaji", "Romaji name language label"));
+}
 
 // Called in render (not module scope) so labels re-resolve on locale change.
 function getScoreFormatLabel(format: ScoreFormat) {
@@ -69,6 +132,93 @@ function getScoreFormatLabel(format: ScoreFormat) {
         fbs("3 point smiley :)", "3 point smiley score format label"),
       );
   }
+}
+
+// Optimistic write shared by every picker: highlight the tapped row, run the
+// mutation, then clear the pending value so the normalized cache result shows
+// through (or reverts on failure — the global onError link toasts).
+async function selectWith<T>(
+  value: T,
+  setPending: (value: T | null) => void,
+  run: () => Promise<unknown>,
+) {
+  setPending(value);
+  try {
+    await run();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setPending(null);
+  }
+}
+
+// One selectable list card (section title + radio rows) — shared by the rating,
+// title-language, and name-language settings, which differ only in their option
+// set, labels, and the mutation each row fires.
+function RadioSetting<T extends string>({
+  title,
+  options,
+  selected,
+  saving,
+  getLabel,
+  onSelect,
+}: {
+  title: string;
+  options: readonly T[];
+  selected: T;
+  saving: boolean;
+  getLabel: (option: T) => string;
+  onSelect: (option: T) => void;
+}) {
+  return (
+    <View style={{ flexDirection: "column" }}>
+      <Text
+        style={{
+          color: darkTheme.subHeader,
+          fontFamily: Manrope.semiBold,
+          fontSize: 20,
+          marginBottom: 24,
+        }}
+      >
+        {title}
+      </Text>
+      <View style={styles.radioCard}>
+        {options.map((option, index) => {
+          const isSelected = selected === option;
+          return (
+            <PressableOpacity
+              key={option}
+              // Saving dims every row to 0.4 via the disabled opacity — that's
+              // the loading state. The selected row is always disabled but
+              // stays full-opacity.
+              disabled={saving || isSelected}
+              useDisabledOpacity={saving}
+              accessibilityState={{ selected: isSelected }}
+              style={[styles.radioRow, index > 0 && styles.radioRowSeparator]}
+              onPress={() => onSelect(option)}
+            >
+              <Text
+                style={[
+                  styles.radioLabel,
+                  isSelected && styles.radioLabelSelected,
+                ]}
+              >
+                {getLabel(option)}
+              </Text>
+              <View
+                style={[
+                  styles.radioOuter,
+                  isSelected && styles.radioOuterSelected,
+                ]}
+              >
+                {isSelected ? <View style={styles.radioInner} /> : null}
+              </View>
+            </PressableOpacity>
+          );
+        })}
+      </View>
+    </View>
+  );
 }
 
 export default function Settings() {
@@ -106,6 +256,23 @@ export default function Settings() {
     pendingScoreFormat ??
     viewerData?.Viewer?.mediaListOptions?.scoreFormat ??
     DEFAULT_SCORE_FORMAT;
+
+  // Titles/names are chosen client-side from the already-cached
+  // { romaji english native } / { full native }, so the mutation just returns
+  // the changed options — the normalized User merge re-renders every site. No
+  // refetchQueries (unlike score format, nothing server-side is recomputed).
+  const [updateLanguageOptions, { loading: savingLanguage }] =
+    useMutation(UpdateLanguageOptions);
+  const [pendingTitleLanguage, setPendingTitleLanguage] =
+    useState<UserTitleLanguage | null>(null);
+  const [pendingStaffNameLanguage, setPendingStaffNameLanguage] =
+    useState<UserStaffNameLanguage | null>(null);
+  const titleLanguage = baseTitleLanguage(
+    pendingTitleLanguage ?? viewerData?.Viewer?.options?.titleLanguage,
+  );
+  const staffNameLanguage = baseStaffNameLanguage(
+    pendingStaffNameLanguage ?? viewerData?.Viewer?.options?.staffNameLanguage,
+  );
 
   return (
     <ScrollView
@@ -148,67 +315,50 @@ export default function Settings() {
           </View>
         </View>
         {accessToken ? (
-          <View style={{ flexDirection: "column" }}>
-            <Text
-              style={{
-                color: darkTheme.subHeader,
-                fontFamily: Manrope.semiBold,
-                fontSize: 20,
-                marginBottom: 24,
-              }}
-            >
-              {String(fbs("Rating style", "Rating style section title"))}
-            </Text>
-            <View style={styles.radioCard}>
-              {scoreFormats.map((format, index) => {
-                const isSelected = scoreFormat === format;
-                return (
-                  <PressableOpacity
-                    key={format}
-                    // Saving dims every row to 0.4 via the disabled opacity —
-                    // that's the loading state. The selected row is always
-                    // disabled but stays full-opacity.
-                    disabled={savingScoreFormat || isSelected}
-                    useDisabledOpacity={savingScoreFormat}
-                    accessibilityState={{ selected: isSelected }}
-                    style={[
-                      styles.radioRow,
-                      index > 0 && styles.radioRowSeparator,
-                    ]}
-                    onPress={async () => {
-                      setPendingScoreFormat(format);
-                      try {
-                        await updateScoreFormat({
-                          variables: { scoreFormat: format },
-                        });
-                      } catch (error) {
-                        console.error(error);
-                      } finally {
-                        setPendingScoreFormat(null);
-                      }
-                    }}
-                  >
-                    <Text
-                      style={[
-                        styles.radioLabel,
-                        isSelected && styles.radioLabelSelected,
-                      ]}
-                    >
-                      {getScoreFormatLabel(format)}
-                    </Text>
-                    <View
-                      style={[
-                        styles.radioOuter,
-                        isSelected && styles.radioOuterSelected,
-                      ]}
-                    >
-                      {isSelected ? <View style={styles.radioInner} /> : null}
-                    </View>
-                  </PressableOpacity>
-                );
-              })}
-            </View>
-          </View>
+          <RadioSetting
+            title={String(fbs("Rating style", "Rating style section title"))}
+            options={scoreFormats}
+            selected={scoreFormat}
+            saving={savingScoreFormat}
+            getLabel={getScoreFormatLabel}
+            onSelect={(format) =>
+              selectWith(format, setPendingScoreFormat, () =>
+                updateScoreFormat({ variables: { scoreFormat: format } }),
+              )
+            }
+          />
+        ) : null}
+        {accessToken ? (
+          <RadioSetting
+            title={String(fbs("Title language", "Title language section title"))}
+            options={titleLanguages}
+            selected={titleLanguage}
+            // Scope the saving dim to this card — both pickers share one
+            // mutation, so an unscoped flag would dim the other one too.
+            saving={savingLanguage && pendingTitleLanguage !== null}
+            getLabel={getTitleLanguageLabel}
+            onSelect={(language) =>
+              selectWith(language, setPendingTitleLanguage, () =>
+                updateLanguageOptions({ variables: { titleLanguage: language } }),
+              )
+            }
+          />
+        ) : null}
+        {accessToken ? (
+          <RadioSetting
+            title={String(fbs("Name language", "Name language section title"))}
+            options={staffNameLanguages}
+            selected={staffNameLanguage}
+            saving={savingLanguage && pendingStaffNameLanguage !== null}
+            getLabel={getStaffNameLanguageLabel}
+            onSelect={(language) =>
+              selectWith(language, setPendingStaffNameLanguage, () =>
+                updateLanguageOptions({
+                  variables: { staffNameLanguage: language },
+                }),
+              )
+            }
+          />
         ) : null}
         <View style={{ flexDirection: "column" }}>
           <Text

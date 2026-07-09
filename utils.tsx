@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/client";
 import { yellowDarkA } from "@radix-ui/colors";
 import type { Locale } from "date-fns";
 import { differenceInDays } from "date-fns/differenceInDays";
@@ -16,7 +17,10 @@ import type {
   ScoreFormat,
 } from "yep/graphql/enums";
 import type { ResultOf } from "yep/graphql/tada";
+import { GetViewer } from "yep/graphql/viewer";
 import { fakeName } from "yep/screenshotMode";
+import type { NameInput, TitleInput } from "yep/titleName";
+import { getName, getTitle } from "yep/titleName";
 
 import { useLocaleContext } from "./i18n/LocaleContext";
 
@@ -91,30 +95,22 @@ function getMonthName(month: number): string {
   }
 }
 
-// getTitle runs on titles from many fragments, but every one selects the same
-// { romaji english native }. Derive the shape from AnimeListEntryFragment's title
-// selection (schema-anchored, so a MediaTitle change surfaces here at compile
-// time) rather than hand-writing it. Partial keeps callers that type these fields
-// optionally (profile favourites, notification rows) assignable.
-type TitleInput =
-  | Partial<NonNullable<ResultOf<typeof AnimeListEntryFragment>["title"]>>
-  | null
-  | undefined;
-
-function getTitle(title: TitleInput, locale?: string): string | undefined {
-  if (!title) return undefined;
-
-  if (locale === "ja_JP") {
-    return title.native ?? title.romaji ?? title.english ?? undefined;
-  }
-
-  return title.english ?? title.romaji ?? title.native ?? undefined;
-}
-
 export function useGetTitle() {
   const { locale } = useLocaleContext();
+  // cache-only: some screen already fetched the viewer, so this never hits the
+  // network — and changing the preference re-renders every title site for free.
+  const { data } = useQuery(GetViewer, { fetchPolicy: "cache-only" });
+  const titleLanguage = data?.Viewer?.options?.titleLanguage;
 
-  return (title: TitleInput) => fakeName(getTitle(title, locale));
+  return (title: TitleInput) =>
+    fakeName(getTitle(title, locale, titleLanguage));
+}
+
+export function useGetName() {
+  const { data } = useQuery(GetViewer, { fetchPolicy: "cache-only" });
+  const staffNameLanguage = data?.Viewer?.options?.staffNameLanguage;
+
+  return (name: NameInput) => fakeName(getName(name, staffNameLanguage));
 }
 
 export function getReadableMediaRelation(mediaRelation: MediaRelation): string {
