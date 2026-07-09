@@ -235,6 +235,23 @@ const cache = new InMemoryCache({
             );
           },
         },
+        users: {
+          keyArgs: ["search", "sort"],
+          merge(existing, incoming, { variables, readField }) {
+            if (!existing || (variables?.page ?? 1) <= 1) return incoming;
+            if (
+              (variables?.page ?? 1) !==
+              nextPageForCount(existing.length, variables?.perPage)
+            ) {
+              return existing;
+            }
+            return mergeMediaListPages(
+              existing as unknown[],
+              incoming as unknown[],
+              (entry) => readField("id", entry as Reference),
+            );
+          },
+        },
         // Same append-merge for Page.media (discover trending and search).
         media: {
           keyArgs: [

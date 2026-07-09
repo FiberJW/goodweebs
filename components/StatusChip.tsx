@@ -16,6 +16,11 @@ type Props = {
 export function StatusChip({ label, onPress, isSelected, disabled }: Props) {
   return (
     <PressableOpacity
+      accessibilityRole="button"
+      accessibilityState={{
+        disabled: Boolean(disabled),
+        selected: Boolean(isSelected),
+      }}
       onPress={onPress}
       disabled={disabled}
       // The selected chip's white fill already reads as "active" — the 0.4
