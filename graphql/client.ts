@@ -148,6 +148,7 @@ const cache = new InMemoryCache({
   // the concrete object types to match inline fragments on reads. Only the
   // members we query are listed — add more if the query grows.
   possibleTypes: {
+    ActivityUnion: ["ListActivity"],
     NotificationUnion: [
       "AiringNotification",
       "RelatedMediaAdditionNotification",
@@ -163,6 +164,9 @@ const cache = new InMemoryCache({
         // page. Hence `page` is excluded from every container key.
         Page: {
           keyArgs: (args, { variables }) => {
+            if (variables?.activityType != null) {
+              return `activities:${variables.activityType}:${variables.userId ?? "global"}:${variables.isFollowing ?? false}:${variables.perPage ?? "default"}`;
+            }
             if (variables?.userId != null && variables?.status != null) {
               return `mediaList:${variables.type}:${variables.userId}:${variables.status}:${JSON.stringify(variables.sort ?? null)}`;
             }
@@ -226,6 +230,23 @@ const cache = new InMemoryCache({
         // pages must be contiguous, dedupe by id.
         notifications: {
           keyArgs: ["type_in"],
+          merge(existing, incoming, { variables, readField }) {
+            if (!existing || (variables?.page ?? 1) <= 1) return incoming;
+            if (
+              (variables?.page ?? 1) !==
+              nextPageForCount(existing.length, variables?.perPage)
+            ) {
+              return existing;
+            }
+            return mergeMediaListPages(
+              existing as unknown[],
+              incoming as unknown[],
+              (entry) => readField("id", entry as Reference),
+            );
+          },
+        },
+        activities: {
+          keyArgs: ["userId", "isFollowing", "type", "sort"],
           merge(existing, incoming, { variables, readField }) {
             if (!existing || (variables?.page ?? 1) <= 1) return incoming;
             if (

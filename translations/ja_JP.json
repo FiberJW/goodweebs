@@ -2652,6 +2652,42 @@
         }
       ],
       "types": []
+    },
+    "N3HRbez/YR6drinWULiLgQ==": {
+      "description": "Profile recent list activity title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "最近のアクティビティ",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "KD1Nmqpja6sppFkhV9R7Xg==": {
+      "description": "Profile activity error",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "最近のアクティビティを読み込めませんでした。",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "cfUt7GIQfCLC7xrsBmwDwg==": {
+      "description": "Empty profile activity text",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "リストの更新はまだありません。",
+          "variations": {}
+        }
+      ],
+      "types": []
     }
   }
 }
