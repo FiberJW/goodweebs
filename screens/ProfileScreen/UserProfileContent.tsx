@@ -15,9 +15,9 @@ import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import {
   ActivityFeedDivider,
-  type ActivityFeedItem,
   ActivityFeedRow,
 } from "yep/components/activity-feed-row";
+import type { ActivityFeedItem } from "yep/graphql/activity";
 import { UserProfileFragment } from "yep/graphql/profile";
 import type { ResultOf } from "yep/graphql/tada";
 import { SCREENSHOT_BLUR_RADIUS, fakeHandle } from "yep/screenshotMode";

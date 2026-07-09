@@ -8,16 +8,15 @@ import { EmptyState } from "yep/components/EmptyState";
 import { FollowButton } from "yep/components/FollowButton";
 import {
   ActivityFeedFragment,
-  type ActivityFeedItem,
-} from "yep/components/activity-feed-row";
+  PROFILE_ACTIVITY_LIMIT,
+  filterListActivities,
+} from "yep/graphql/activity";
 import { UserProfileFragment } from "yep/graphql/profile";
 import { graphql } from "yep/graphql/tada";
 import { ProfileSkeleton } from "yep/screens/ProfileScreen/ProfileSkeleton";
 import { UserProfileContent } from "yep/screens/ProfileScreen/UserProfileContent";
 import { darkTheme } from "yep/themes";
 import { useAccessToken } from "yep/useAccessToken";
-
-const PROFILE_ACTIVITY_LIMIT = 10;
 
 const GetUserProfile = graphql(
   `
@@ -65,12 +64,7 @@ export default function UserProfileScreen() {
       notifyOnNetworkStatusChange: true,
     },
   );
-  const activities: ActivityFeedItem[] = (data?.Page?.activities ?? []).flatMap(
-    (activity) =>
-      activity?.__typename === "ListActivity" && activity.user && activity.media
-        ? [activity]
-        : [],
-  );
+  const activities = filterListActivities(data?.Page?.activities);
 
   useEffect(() => {
     navigation.setOptions({

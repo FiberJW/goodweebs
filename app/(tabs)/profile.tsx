@@ -10,11 +10,12 @@ import { white } from "yep/colors";
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
 import { PressableOpacity } from "yep/components/PressableOpacity";
+import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import {
   ActivityFeedFragment,
-  type ActivityFeedItem,
-} from "yep/components/activity-feed-row";
-import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
+  PROFILE_ACTIVITY_LIMIT,
+  filterListActivities,
+} from "yep/graphql/activity";
 import { primeAccessToken } from "yep/graphql/client";
 import { graphql } from "yep/graphql/tada";
 import { GetViewer } from "yep/graphql/viewer";
@@ -23,8 +24,6 @@ import { ProfileSkeleton } from "yep/screens/ProfileScreen/ProfileSkeleton";
 import { UserProfileContent } from "yep/screens/ProfileScreen/UserProfileContent";
 import { darkTheme } from "yep/themes";
 import { useAccessToken } from "yep/useAccessToken";
-
-const PROFILE_ACTIVITY_LIMIT = 10;
 
 const GetProfileListActivity = graphql(
   `
@@ -76,13 +75,7 @@ export default function Profile() {
     },
     notifyOnNetworkStatusChange: true,
   });
-  const activities: ActivityFeedItem[] = (
-    activityData?.Page?.activities ?? []
-  ).flatMap((activity) =>
-    activity?.__typename === "ListActivity" && activity.user && activity.media
-      ? [activity]
-      : [],
-  );
+  const activities = filterListActivities(activityData?.Page?.activities);
   const isRefetching =
     networkStatus === NetworkStatus.refetch ||
     activityNetworkStatus === NetworkStatus.refetch;

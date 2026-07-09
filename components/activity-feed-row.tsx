@@ -6,44 +6,12 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import { graphql } from "yep/graphql/tada";
-import type { ResultOf } from "yep/graphql/tada";
+import type { ActivityFeedItem } from "yep/graphql/activity";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { fakeHandle } from "yep/screenshotMode";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import { getDateFnsLocale, useGetTitle } from "yep/utils";
-
-export const ActivityFeedFragment = graphql(`
-  fragment ActivityFeedFragment on ListActivity @_unmask {
-    id
-    createdAt
-    status
-    progress
-    user {
-      id
-      name
-      avatar {
-        medium
-        large
-      }
-    }
-    media {
-      id
-      title {
-        romaji
-        native
-        english
-      }
-      coverImage {
-        medium
-        large
-      }
-    }
-  }
-`);
-
-export type ActivityFeedItem = ResultOf<typeof ActivityFeedFragment>;
 
 export function ActivityFeedDivider() {
   return <View style={styles.divider} />;
@@ -144,19 +112,21 @@ export function ActivityFeedRow({
           })}
         </Text>
       </View>
-      <PressableOpacity
-        borderRadius={8}
-        accessibilityRole="link"
-        accessibilityLabel={mediaTitle}
-        onPress={() => router.push(mediaHref)}
-      >
-        <Image
-          contentFit="cover"
-          recyclingKey={coverUrl}
-          source={{ uri: coverUrl }}
-          style={styles.cover}
-        />
-      </PressableOpacity>
+      {coverUrl ? (
+        <PressableOpacity
+          borderRadius={8}
+          accessibilityRole="link"
+          accessibilityLabel={mediaTitle}
+          onPress={() => router.push(mediaHref)}
+        >
+          <Image
+            contentFit="cover"
+            recyclingKey={coverUrl}
+            source={{ uri: coverUrl }}
+            style={styles.cover}
+          />
+        </PressableOpacity>
+      ) : null}
     </View>
   );
 }
