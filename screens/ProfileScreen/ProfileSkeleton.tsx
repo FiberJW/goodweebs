@@ -5,7 +5,12 @@ import { SkeletonShimmerBlock } from "yep/components/SkeletonShimmerBlock";
 
 const PROFILE_POSTER_WIDTH = 89.6;
 const PROFILE_POSTER_HEIGHT = Math.round(PROFILE_POSTER_WIDTH * 1.4285714286);
-const STAT_LABEL_WIDTHS = [84, 98, 84];
+// Mirrors the real stat row: total anime, days watched, total manga.
+const STAT_SKELETONS = [
+  { id: "total-anime", width: 84 },
+  { id: "days-watched", width: 98 },
+  { id: "total-manga", width: 84 },
+];
 
 type Props = {
   itemCount?: number;
@@ -25,8 +30,8 @@ export function ProfileSkeleton({ itemCount = 4 }: Props) {
           <SkeletonShimmerBlock borderRadius={6} height={24} width={140} />
         </View>
         <View style={styles.statsRow}>
-          {STAT_LABEL_WIDTHS.map((width, index) => (
-            <View key={`${width}-${index}`} style={styles.stat}>
+          {STAT_SKELETONS.map(({ id, width }) => (
+            <View key={id} style={styles.stat}>
               <SkeletonShimmerBlock
                 borderRadius={4}
                 height={12}

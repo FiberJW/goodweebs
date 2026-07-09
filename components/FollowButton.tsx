@@ -1,6 +1,6 @@
 import { ApolloError, useApolloClient, useMutation } from "@apollo/client";
 import { fbs } from "fbtee";
-import React from "react";
+import React, { useRef } from "react";
 import Toast from "react-native-root-toast";
 
 import { Button } from "yep/components/Button";
@@ -20,6 +20,10 @@ export function FollowButton({
   const { accessToken } = useAccessToken();
   const { cache } = useApolloClient();
   const [toggleFollow, { loading }] = useMutation(ToggleUserFollow);
+  // `loading` only disables the button after a re-render; this synchronous
+  // guard stops a rapid double-tap from firing two toggles (which would land
+  // on the opposite of the intended state).
+  const inFlightRef = useRef(false);
 
   if (!accessToken || isOwnProfile) {
     return null;
@@ -44,6 +48,8 @@ export function FollowButton({
       color={isFollowing ? darkTheme.button : darkTheme.selectedChipFill}
       labelColor={isFollowing ? darkTheme.text : darkTheme.textInverted}
       onPress={async () => {
+        if (inFlightRef.current) return;
+        inFlightRef.current = true;
         setCachedFollowState(!isFollowing);
         try {
           await toggleFollow({ variables: { userId } });
@@ -70,6 +76,8 @@ export function FollowButton({
               },
             );
           }
+        } finally {
+          inFlightRef.current = false;
         }
       }}
     />
