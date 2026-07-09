@@ -2640,6 +2640,18 @@
         }
       ],
       "types": []
+    },
+    "5Qw4IZ1N/VLSiqwz8inV/Q==": {
+      "description": "User profile link accessibility label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "{username}のプロフィール",
+          "variations": {}
+        }
+      ],
+      "types": []
     }
   }
 }

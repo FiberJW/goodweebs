@@ -12,6 +12,7 @@ import { graphql, readFragment, type FragmentOf } from "yep/graphql/tada";
 import { fakeHandle } from "yep/screenshotMode";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
+import { useAccessToken } from "yep/useAccessToken";
 
 export const UserSearchResultFragment = graphql(`
   fragment UserSearchResultFragment on User {
@@ -57,13 +58,22 @@ function UserSearchRow({
   viewerId?: number;
 }) {
   const router = useRouter();
+  const { accessToken } = useAccessToken();
   const user = readFragment(UserSearchResultFragment, item);
+  // FollowButton renders null for guests and the viewer's own row — skip its
+  // fixed-width wrapper too so those rows don't reserve blank space.
+  const showFollowButton = Boolean(accessToken) && user.id !== viewerId;
 
   return (
     <View style={styles.row}>
       <PressableOpacity
         accessibilityRole="link"
-        accessibilityLabel={`${user.name}'s profile`}
+        accessibilityLabel={String(
+          fbs(
+            [fbs.param("username", user.name), "'s profile"],
+            "User profile link accessibility label",
+          ),
+        )}
         onPress={() => router.push(`/user/${user.id}`)}
         style={styles.profileLink}
       >
@@ -100,13 +110,14 @@ function UserSearchRow({
           </Text>
         </View>
       </PressableOpacity>
-      <View style={styles.followButton}>
-        <FollowButton
-          userId={user.id}
-          isFollowing={Boolean(user.isFollowing)}
-          isOwnProfile={user.id === viewerId}
-        />
-      </View>
+      {showFollowButton ? (
+        <View style={styles.followButton}>
+          <FollowButton
+            userId={user.id}
+            isFollowing={Boolean(user.isFollowing)}
+          />
+        </View>
+      ) : null}
     </View>
   );
 }

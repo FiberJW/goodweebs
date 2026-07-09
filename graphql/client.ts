@@ -166,6 +166,12 @@ const cache = new InMemoryCache({
             if (variables?.userId != null && variables?.status != null) {
               return `mediaList:${variables.type}:${variables.userId}:${variables.status}:${JSON.stringify(variables.sort ?? null)}`;
             }
+            // User search has no `type` variable; keyed explicitly so a future
+            // search query that also omits `type` can't silently share its
+            // container.
+            if (variables?.search != null && variables?.type == null) {
+              return `userSearch:${variables.search}`;
+            }
             // Search containers are per-type-and-term: pageInfo.hasNextPage
             // must track the term (and not collide with trending's container).
             if (variables?.search != null) {
