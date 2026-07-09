@@ -106,9 +106,9 @@ const httpLink = new HttpLink({
 const retryLink = new RetryLink({
   delay: (count, _operation, error) => {
     const retryAfterSec = Number(
-      (error as { response?: { headers?: Headers } } | null)?.response?.headers?.get?.(
-        "retry-after",
-      ),
+      (
+        error as { response?: { headers?: Headers } } | null
+      )?.response?.headers?.get?.("retry-after"),
     );
     if (Number.isFinite(retryAfterSec) && retryAfterSec > 0) {
       // Honor Retry-After (seconds) + small buffer, capped at the 1-min timeout window.
@@ -264,6 +264,10 @@ const cache = new InMemoryCache({
     },
     Media: { fields: { coverImage: { merge: true } } },
     Character: { fields: { name: { merge: true }, image: { merge: true } } },
+    User: { fields: { statistics: { merge: true } } },
+    UserStatisticTypes: {
+      fields: { anime: { merge: true }, manga: { merge: true } },
+    },
   },
 });
 
@@ -322,9 +326,7 @@ export async function createClient() {
                 // Clear the memory mirror first so in-flight and queued
                 // operations stop attaching the dead token immediately.
                 primeAccessToken(null);
-                await SecureStore.deleteItemAsync(
-                  ANILIST_ACCESS_TOKEN_STORAGE,
-                );
+                await SecureStore.deleteItemAsync(ANILIST_ACCESS_TOKEN_STORAGE);
                 // Matches the Settings logout: a stale viewer id would
                 // fetch the previous user's list on the next login.
                 localStorage.removeItem(StorageKeys.ANILIST_VIEWER_ID);
@@ -355,7 +357,8 @@ export async function createClient() {
 
           // Reaches here only after RetryLink has exhausted its retries, so a
           // surviving 429 means AniList is still rate-limiting us — tell the user.
-          const statusCode = (networkError as { statusCode?: number }).statusCode;
+          const statusCode = (networkError as { statusCode?: number })
+            .statusCode;
           if (statusCode === 429) {
             Toast.show(
               "AniList is rate-limiting requests. Please wait a moment and try again.",

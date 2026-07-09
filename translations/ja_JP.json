@@ -2400,6 +2400,126 @@
         }
       ],
       "types": []
+    },
+    "tmL2A3NKepO2bpjS2CSbKA==": {
+      "description": "User profile title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "プロフィール",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "Q6WEe1QpSs2B0RfqQXC3Yw==": {
+      "description": "User profile error title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "プロフィールを読み込めませんでした",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "YwPJdiIvw2BhrCrfLJMerQ==": {
+      "description": "Missing user description",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "このユーザーは見つかりませんでした。",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "FYa/e+LA8HF5kXN6dvMHPg==": {
+      "description": "Profile stat total manga",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "マンガ総数",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "NdLsJb4bNnligdeoTgTzBA==": {
+      "description": "Unfollow user button label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "フォロー中",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "Jz6kNQxxagD5DyOyAZabjA==": {
+      "description": "Follow user button label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "フォロー",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "EksvbDUBtJXNZY9FHphksw==": {
+      "description": "Main tabs route title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "ホーム",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "JeFsperieT+gxWe1QDITgg==": {
+      "description": "Media details fallback title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "詳細",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "vJbU2vKqpBcg/rWGXupq7A==": {
+      "description": "Character details fallback title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "キャラクター",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "B6o1fGvbjmdeDfOJzaCNcg==": {
+      "description": "Profile error title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "プロフィールを読み込めませんでした",
+          "variations": {}
+        }
+      ],
+      "types": []
     }
   }
 }
