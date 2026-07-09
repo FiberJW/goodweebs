@@ -1,6 +1,7 @@
-import { useApolloClient, useMutation } from "@apollo/client";
+import { ApolloError, useApolloClient, useMutation } from "@apollo/client";
 import { fbs } from "fbtee";
 import React from "react";
+import Toast from "react-native-root-toast";
 
 import { Button } from "yep/components/Button";
 import { ToggleUserFollow } from "yep/graphql/mutations";
@@ -49,6 +50,26 @@ export function FollowButton({
         } catch (error) {
           setCachedFollowState(isFollowing);
           console.error(error);
+          // GraphQL errors and surviving 429s already toast via the client's
+          // error link; this covers the silent plain-network drop (offline).
+          const networkError =
+            error instanceof ApolloError ? error.networkError : null;
+          if (
+            networkError &&
+            (networkError as { statusCode?: number }).statusCode !== 429
+          ) {
+            Toast.show(
+              "Couldn't update follow. Check your connection and try again.",
+              {
+                duration: Toast.durations.LONG,
+                position: Toast.positions.TOP,
+                shadow: true,
+                animation: true,
+                hideOnPress: true,
+                delay: 0,
+              },
+            );
+          }
         }
       }}
     />
