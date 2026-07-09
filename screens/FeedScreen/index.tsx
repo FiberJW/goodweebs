@@ -20,10 +20,13 @@ import { PressableOpacity } from "yep/components/PressableOpacity";
 import { StatusChip } from "yep/components/StatusChip";
 import {
   ActivityFeedDivider,
-  ActivityFeedFragment,
-  type ActivityFeedItem,
   ActivityFeedRow,
 } from "yep/components/activity-feed-row";
+import {
+  ActivityFeedFragment,
+  type ActivityFeedItem,
+  filterListActivities,
+} from "yep/graphql/activity";
 import { graphql } from "yep/graphql/tada";
 import { GetViewer } from "yep/graphql/viewer";
 import { useLoadNextPage } from "yep/hooks/helpers";
@@ -127,11 +130,7 @@ export default function FeedScreen() {
   );
   const isRefetching = networkStatus === NetworkStatus.refetch;
   const isFetchingMore = networkStatus === NetworkStatus.fetchMore;
-  const activities = (data?.Page?.activities ?? []).flatMap((activity) =>
-    activity?.__typename === "ListActivity" && activity.user && activity.media
-      ? [activity]
-      : [],
-  );
+  const activities = filterListActivities(data?.Page?.activities);
   const rows = activities.map((activity, index) => ({
     activity,
     first: index === 0,
