@@ -86,9 +86,12 @@ export default function FeedScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { accessToken } = useAccessToken();
-  const [scope, setScope] = useState<FeedScope>(
-    accessToken ? "following" : "global",
-  );
+  // Only an explicit chip tap is state; the default derives from auth so it
+  // tracks login/logout without any state syncing — the tabs never remount
+  // on auth flips (Stack.Protected keeps them mounted for guests), so a
+  // mount-time default would strand a guest who logs in on "global".
+  const [selectedScope, setSelectedScope] = useState<FeedScope | null>(null);
+  const scope = selectedScope ?? (accessToken ? "following" : "global");
   const {
     data: viewerData,
     loading: viewerLoading,
@@ -179,17 +182,17 @@ export default function FeedScreen() {
         <StatusChip
           label={String(fbs("Following", "Following activity feed filter"))}
           isSelected={scope === "following"}
-          onPress={() => setScope("following")}
+          onPress={() => setSelectedScope("following")}
         />
         <StatusChip
           label={String(fbs("Global", "Global activity feed filter"))}
           isSelected={scope === "global"}
-          onPress={() => setScope("global")}
+          onPress={() => setSelectedScope("global")}
         />
         <StatusChip
           label={String(fbs("Mine", "Personal activity feed filter"))}
           isSelected={scope === "personal"}
-          onPress={() => setScope("personal")}
+          onPress={() => setSelectedScope("personal")}
         />
       </View>
       {requiresLogin ? (
