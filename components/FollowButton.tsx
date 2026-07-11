@@ -65,7 +65,12 @@ export function FollowButton({
             (networkError as { statusCode?: number }).statusCode !== 429
           ) {
             Toast.show(
-              "Couldn't update follow. Check your connection and try again.",
+              String(
+                fbs(
+                  "Couldn't update follow. Check your connection and try again.",
+                  "Follow toggle network failure toast",
+                ),
+              ),
               {
                 duration: Toast.durations.LONG,
                 position: Toast.positions.TOP,
@@ -76,9 +81,10 @@ export function FollowButton({
               },
             );
           }
-        } finally {
-          inFlightRef.current = false;
         }
+        // Not a `finally` clause: the React Compiler can't compile those yet
+        // (react-hooks-js/todo) and the catch above never rethrows.
+        inFlightRef.current = false;
       }}
     />
   );

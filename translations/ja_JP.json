@@ -2520,6 +2520,18 @@
         }
       ],
       "types": []
+    },
+    "gwTVPbZWi+ymz8ANGJXCQw==": {
+      "description": "Follow toggle network failure toast",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "フォローを更新できませんでした。接続を確認してもう一度お試しください。",
+          "variations": {}
+        }
+      ],
+      "types": []
     }
   }
 }
