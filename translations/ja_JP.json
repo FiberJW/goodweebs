@@ -2652,6 +2652,222 @@
         }
       ],
       "types": []
+    },
+    "N3HRbez/YR6drinWULiLgQ==": {
+      "description": "Profile recent list activity title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "最近のアクティビティ",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "KD1Nmqpja6sppFkhV9R7Xg==": {
+      "description": "Profile activity error",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "最近のアクティビティを読み込めませんでした。",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "cfUt7GIQfCLC7xrsBmwDwg==": {
+      "description": "Empty profile activity text",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "リストの更新はまだありません。",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "qfB+N2yX0FWtg8dJUO/5+Q==": {
+      "description": "Anime list activity with episode progress",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "がエピソード{progress}を視聴した作品：",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "F94cpzUCzUfpt7CAbNSW1Q==": {
+      "description": "Anime list activity without episode progress",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "がエピソードを視聴した作品：",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "kyemmZGKxXOabFmZMPx4+A==": {
+      "description": "Anime rewatch list activity with episode progress",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "がエピソード{progress}を再視聴した作品：",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "SXNJtloDW40hAzdSkPdKcA==": {
+      "description": "Anime rewatch list activity without episode progress",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "がエピソードを再視聴した作品：",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "xatjkgS1DRWMob96zgCazw==": {
+      "description": "Manga list activity with chapter progress",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "が第{progress}章を読んだ作品：",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "xceDTP/D12iq1dapdYQs5w==": {
+      "description": "Manga list activity without chapter progress",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "が章を読んだ作品：",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "rqykQlQmnNDvgKVlJe6PZw==": {
+      "description": "Manga reread list activity with chapter progress",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "が第{progress}章を再読した作品：",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "cC88Ck/hX0RdDXJqKPd2dA==": {
+      "description": "Manga reread list activity without chapter progress",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "が章を再読した作品：",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "sYTUDia2BeaE66zxzszrlg==": {
+      "description": "Plans to watch list activity",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "が視聴予定に追加：",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "HMYT23HDvctVhipavmfzOA==": {
+      "description": "Plans to read list activity",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "が読む予定に追加：",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "82gaRNUuBRO4avQZIFVU9A==": {
+      "description": "Completed list activity",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "が完了した作品：",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "TzMb66HhcoODiYrTE8dBzQ==": {
+      "description": "Paused watching list activity",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "が視聴を一時停止：",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "inCJFDjPGGAKQB0TnGOlSw==": {
+      "description": "Paused reading list activity",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "が読書を一時停止：",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "3T0UXnE+0r26c7xPwXvUfA==": {
+      "description": "Dropped list activity",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "が中断した作品：",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "q5W3a4KI7dpwpxRbUg4yVA==": {
+      "description": "Generic list activity",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "がリストを更新：",
+          "variations": {}
+        }
+      ],
+      "types": []
     }
   }
 }

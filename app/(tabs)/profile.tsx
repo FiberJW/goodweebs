@@ -11,13 +11,39 @@ import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
+import {
+  ActivityFeedFragment,
+  PROFILE_ACTIVITY_LIMIT,
+  filterListActivities,
+} from "yep/graphql/activity";
 import { primeAccessToken } from "yep/graphql/client";
+import { graphql } from "yep/graphql/tada";
 import { GetViewer } from "yep/graphql/viewer";
 import { useAniListAuthRequest } from "yep/hooks/auth";
 import { ProfileSkeleton } from "yep/screens/ProfileScreen/ProfileSkeleton";
 import { UserProfileContent } from "yep/screens/ProfileScreen/UserProfileContent";
 import { darkTheme } from "yep/themes";
 import { useAccessToken } from "yep/useAccessToken";
+
+const GetProfileListActivity = graphql(
+  `
+    query GetProfileListActivity(
+      $userId: Int!
+      $perPage: Int!
+      $activityType: ActivityType!
+    ) {
+      Page(page: 1, perPage: $perPage) {
+        activities(userId: $userId, type: $activityType, sort: ID_DESC) {
+          __typename
+          ... on ListActivity {
+            ...ActivityFeedFragment
+          }
+        }
+      }
+    }
+  `,
+  [ActivityFeedFragment],
+);
 
 export default function Profile() {
   const router = useRouter();
@@ -33,7 +59,26 @@ export default function Profile() {
     skip: !accessToken,
     notifyOnNetworkStatusChange: true,
   });
-  const isRefetching = networkStatus === NetworkStatus.refetch;
+  const viewerId = data?.Viewer?.id;
+  const {
+    data: activityData,
+    loading: activityLoading,
+    error: activityError,
+    refetch: refetchActivity,
+    networkStatus: activityNetworkStatus,
+  } = useQuery(GetProfileListActivity, {
+    skip: !viewerId,
+    variables: {
+      userId: viewerId ?? 0,
+      perPage: PROFILE_ACTIVITY_LIMIT,
+      activityType: "MEDIA_LIST",
+    },
+    notifyOnNetworkStatusChange: true,
+  });
+  const activities = filterListActivities(activityData?.Page?.activities);
+  const isRefetching =
+    networkStatus === NetworkStatus.refetch ||
+    activityNetworkStatus === NetworkStatus.refetch;
 
   return (
     <View style={styles.container}>
@@ -61,7 +106,11 @@ export default function Profile() {
         refreshControl={
           <RefreshControl
             refreshing={isRefetching}
-            onRefresh={() => void refetchViewer().catch(() => {})}
+            onRefresh={() => {
+              const requests: Promise<unknown>[] = [refetchViewer()];
+              if (viewerId) requests.push(refetchActivity());
+              void Promise.all(requests).catch(() => {});
+            }}
             tintColor={white}
             titleColor={white}
           />
@@ -100,7 +149,12 @@ export default function Profile() {
         ) : loading && !data?.Viewer ? (
           <ProfileSkeleton />
         ) : data?.Viewer ? (
-          <UserProfileContent user={data.Viewer} />
+          <UserProfileContent
+            user={data.Viewer}
+            activities={activities}
+            activityLoading={activityLoading && !activityData}
+            activityError={Boolean(activityError)}
+          />
         ) : error ? (
           <EmptyState
             title={String(fbs("Could not load profile", "Profile error title"))}

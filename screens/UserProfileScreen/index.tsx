@@ -6,6 +6,11 @@ import { RefreshControl, ScrollView, StyleSheet } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { FollowButton } from "yep/components/FollowButton";
+import {
+  ActivityFeedFragment,
+  PROFILE_ACTIVITY_LIMIT,
+  filterListActivities,
+} from "yep/graphql/activity";
 import { UserProfileFragment } from "yep/graphql/profile";
 import { graphql } from "yep/graphql/tada";
 import { ProfileSkeleton } from "yep/screens/ProfileScreen/ProfileSkeleton";
@@ -15,16 +20,29 @@ import { useAccessToken } from "yep/useAccessToken";
 
 const GetUserProfile = graphql(
   `
-    query GetUserProfile($userId: Int!, $includeViewer: Boolean!) {
+    query GetUserProfile(
+      $userId: Int!
+      $perPage: Int!
+      $activityType: ActivityType!
+      $includeViewer: Boolean!
+    ) {
       Viewer @include(if: $includeViewer) {
         id
       }
       User(id: $userId) {
         ...UserProfileFragment
       }
+      Page(page: 1, perPage: $perPage) {
+        activities(userId: $userId, type: $activityType, sort: ID_DESC) {
+          __typename
+          ... on ListActivity {
+            ...ActivityFeedFragment
+          }
+        }
+      }
     }
   `,
-  [UserProfileFragment],
+  [ActivityFeedFragment, UserProfileFragment],
 );
 
 export default function UserProfileScreen() {
@@ -39,11 +57,15 @@ export default function UserProfileScreen() {
       skip: !validUserId,
       variables: {
         userId,
+        perPage: PROFILE_ACTIVITY_LIMIT,
+        activityType: "MEDIA_LIST",
         includeViewer: Boolean(accessToken),
       },
       notifyOnNetworkStatusChange: true,
     },
   );
+  const activities = filterListActivities(data?.Page?.activities);
+
   useEffect(() => {
     navigation.setOptions({
       title: data?.User?.name ?? String(fbs("Profile", "User profile title")),
@@ -70,6 +92,7 @@ export default function UserProfileScreen() {
       ) : data?.User ? (
         <UserProfileContent
           user={data.User}
+          activities={activities}
           action={
             accessToken ? (
               <FollowButton
