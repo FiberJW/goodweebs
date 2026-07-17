@@ -66,3 +66,12 @@ export const RemoveFromList = graphql(`
     }
   }
 `);
+
+export const ToggleUserFollow = graphql(`
+  mutation ToggleUserFollow($userId: Int!) {
+    ToggleFollow(userId: $userId) {
+      id
+      isFollowing
+    }
+  }
+`);

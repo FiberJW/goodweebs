@@ -1,5 +1,11 @@
 import React from "react";
-import { ActivityIndicator, StyleSheet, Text, ViewStyle } from "react-native";
+import {
+  ActivityIndicator,
+  ColorValue,
+  StyleSheet,
+  Text,
+  ViewStyle,
+} from "react-native";
 
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { darkTheme } from "yep/themes";
@@ -26,7 +32,8 @@ type Props = {
   style?: ViewStyle;
   containerStyle?: ViewStyle;
   loading?: boolean;
-  color?: string;
+  color?: ColorValue;
+  labelColor?: ColorValue;
 };
 
 export function Button({
@@ -38,12 +45,18 @@ export function Button({
   style,
   containerStyle,
   color,
+  labelColor,
 }: Props) {
   const { padding } = getDynamicButtonStyles(size);
 
   return (
     <PressableOpacity
-      disabled={disabled ?? loading}
+      accessibilityRole="button"
+      accessibilityState={{
+        busy: Boolean(loading),
+        disabled: Boolean(disabled || loading),
+      }}
+      disabled={disabled || loading}
       style={[
         styles.pressable,
         {
@@ -57,9 +70,11 @@ export function Button({
       onPress={onPress}
     >
       {loading ? (
-        <ActivityIndicator color={darkTheme.text} />
+        <ActivityIndicator color={labelColor ?? darkTheme.text} />
       ) : (
-        <Text style={styles.label}>{label}</Text>
+        <Text style={[styles.label, labelColor ? { color: labelColor } : null]}>
+          {label}
+        </Text>
       )}
     </PressableOpacity>
   );

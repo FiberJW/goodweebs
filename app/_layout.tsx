@@ -106,10 +106,9 @@ function RootLayout() {
 // run when Sentry.init ran (wrap-before-init stalls the app on a black
 // screen), so it honors the same crash-reporting opt-out. Skip on web
 // (RN-only SDK surface).
-export default
-  Platform.OS === "web" || optedOut(StorageKeys.OPT_OUT_CRASH_REPORTING)
-    ? RootLayout
-    : Sentry.wrap(RootLayout);
+const skipSentryWrap =
+  Platform.OS === "web" || optedOut(StorageKeys.OPT_OUT_CRASH_REPORTING);
+export default skipSentryWrap ? RootLayout : Sentry.wrap(RootLayout);
 
 // eslint-disable-next-line react-doctor/no-multi-comp -- see RootLayout note above
 function InnerLayout() {
@@ -195,8 +194,25 @@ function InnerLayout() {
             }}
           >
             <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="redirect"
+              options={{ headerShown: false, title: "Goodweebs" }}
+            />
+            <Stack.Screen
+              name="+not-found"
+              options={{
+                title: String(fbs("Page not found", "Not found page title")),
+                headerBackButtonDisplayMode: "minimal",
+              }}
+            />
             <Stack.Protected guard={canBrowse}>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="(tabs)"
+                options={{
+                  headerShown: false,
+                  title: String(fbs("Home", "Main tabs route title")),
+                }}
+              />
               <Stack.Screen
                 name="settings"
                 options={{
@@ -212,7 +228,7 @@ function InnerLayout() {
               <Stack.Screen
                 name="details/[id]"
                 options={{
-                  title: "",
+                  title: String(fbs("Details", "Media details fallback title")),
                   headerTitleStyle: {
                     fontFamily: Manrope.semiBold,
                     fontSize: 16,
@@ -224,7 +240,21 @@ function InnerLayout() {
               <Stack.Screen
                 name="character/[id]"
                 options={{
-                  title: "",
+                  title: String(
+                    fbs("Character", "Character details fallback title"),
+                  ),
+                  headerTitleStyle: {
+                    fontFamily: Manrope.semiBold,
+                    fontSize: 16,
+                    color: darkTheme.text,
+                  },
+                  headerBackButtonDisplayMode: "minimal",
+                }}
+              />
+              <Stack.Screen
+                name="user/[id]"
+                options={{
+                  title: String(fbs("Profile", "User profile title")),
                   headerTitleStyle: {
                     fontFamily: Manrope.semiBold,
                     fontSize: 16,
