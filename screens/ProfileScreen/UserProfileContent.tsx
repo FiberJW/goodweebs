@@ -112,6 +112,7 @@ export function UserProfileContent({
   user: ProfileUser;
   action?: ReactNode;
 }) {
+  const avatarUrl = user.avatar?.large ?? user.avatar?.medium;
   const animeList = (user.favourites?.anime?.nodes ?? []).filter(notEmpty);
   const characterList = (user.favourites?.characters?.nodes ?? []).filter(
     notEmpty,
@@ -134,8 +135,8 @@ export function UserProfileContent({
             <Image
               style={styles.avatar}
               source={
-                user.avatar
-                  ? { uri: user.avatar.large ?? user.avatar.medium }
+                avatarUrl
+                  ? { uri: avatarUrl }
                   : require("yep/assets/icons/avatar-placeholder.png")
               }
             />

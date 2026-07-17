@@ -2,7 +2,6 @@ name: Checks
 
 on:
   pull_request:
-    branches: [senpai]
   push:
     branches: [senpai]
 
@@ -31,6 +30,8 @@ jobs:
         run: bun run typecheck
       - name: GraphQL document validation
         run: bun run gql:check
+      - name: Unit tests
+        run: bun test
 
   translations:
     name: Translations synced
