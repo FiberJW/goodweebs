@@ -16,6 +16,14 @@ type Props = {
 export function StatusChip({ label, onPress, isSelected, disabled }: Props) {
   return (
     <PressableOpacity
+      accessibilityRole="button"
+      accessibilityState={{
+        // Callers pass disabled={isSelected} to block re-taps; announcing the
+        // active chip as "disabled" would mislead screen readers, so only
+        // report disabled when the chip is unavailable for another reason.
+        disabled: Boolean(disabled) && !isSelected,
+        selected: Boolean(isSelected),
+      }}
       onPress={onPress}
       disabled={disabled}
       // The selected chip's white fill already reads as "active" — the 0.4

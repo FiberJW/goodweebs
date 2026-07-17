@@ -1945,18 +1945,6 @@
       ],
       "types": []
     },
-    "LGUknsBSbn7cc0JFuq0z2w==": {
-      "description": "Search input placeholder",
-      "status": "translated",
-      "tokens": [],
-      "translations": [
-        {
-          "translation": "アニメ・マンガを検索",
-          "variations": {}
-        }
-      ],
-      "types": []
-    },
     "U3SsxvyuXe4mMVUfnk4ilw==": {
       "description": "No search results description",
       "status": "translated",
@@ -2528,6 +2516,138 @@
       "translations": [
         {
           "translation": "フォローを更新できませんでした。接続を確認してもう一度お試しください。",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "2StLrEx5Cqc+DFEW9nwSWQ==": {
+      "description": "User search result list counts",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "アニメ {animeCount}件・マンガ {mangaCount}件",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "B5GDhgrXVBL9iwECme9AwA==": {
+      "description": "User search results header",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "「{searchTerm}」の検索結果",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "i3YKmVNa2bFcISyy3blqBw==": {
+      "description": "No user search results title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "ユーザーが見つかりません",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "gqjD4VYg0BL35/wgnZVAsA==": {
+      "description": "No user search results description",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "別のユーザー名を試すか、入力内容をご確認ください。",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "7L2/+jQKhm6CIparwd43NA==": {
+      "description": "Discover users toggle label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "ユーザー",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "L3D2ZGVTrmNRcbGwkUckDA==": {
+      "description": "Search input placeholder",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "アニメ・マンガ・ユーザーを検索",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "BdTH+PD7RoL7MvPH5usNjQ==": {
+      "description": "Search minimum length title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "入力を続けてください",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "WOeVvDsNvLkTLyX+SJOH/w==": {
+      "description": "Search minimum length description",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "2文字以上入力して検索してください。",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "9ZpTXDHCQi2RkLYR1oi1HQ==": {
+      "description": "User search prompt title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "ユーザーを探す",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "IrhH2s4eU4gqeoaS6yIvXQ==": {
+      "description": "User search prompt description",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "AniListのユーザー名で検索して、プロフィールの表示やフォローができます。",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "5Qw4IZ1N/VLSiqwz8inV/Q==": {
+      "description": "User profile link accessibility label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "{username}のプロフィール",
           "variations": {}
         }
       ],
