@@ -140,6 +140,12 @@ export function ActivityFeedRow({
     getListActivityAction(item.status),
     item.progress,
   );
+  // fbtee trims boundary whitespace from source and translated strings.
+  // English needs word spacing; Japanese particles and punctuation should
+  // join directly to the username and title.
+  const renderedActionText = locale.startsWith("ja")
+    ? actionText
+    : ` ${actionText} `;
   const profileLabel = String(
     fbs(
       [fbs.param("username", user.name), "'s profile"],
@@ -186,7 +192,7 @@ export function ActivityFeedRow({
           >
             {fakeHandle(user.name)}
           </Text>
-          <Text style={styles.action}>{actionText}</Text>
+          <Text style={styles.action}>{renderedActionText}</Text>
           <Text
             style={styles.mediaTitle}
             accessibilityRole="link"
