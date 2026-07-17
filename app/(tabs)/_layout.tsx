@@ -12,9 +12,9 @@ import { darkTheme } from "yep/themes";
 import { useAccessToken } from "yep/useAccessToken";
 import { isLiquidGlass } from "yep/utils";
 
-// Shared by both layouts: the notifications tab badge mirrors the viewer's
-// unread count (cache-only — the list screens' GetViewer query keeps it warm,
-// and the notifications screen zeroes it in cache on open).
+// Shared by both layouts: the Feed tab badge mirrors the viewer's unread
+// notification count (cache-only — the list/feed screens' GetViewer query
+// keeps it warm, and the notification center zeroes it in cache on open).
 function useUnreadBadge(): string | undefined {
   const { data } = useQuery(GetViewer, { fetchPolicy: "cache-only" });
   const unreadCount = data?.Viewer?.unreadNotificationCount ?? 0;
@@ -78,12 +78,12 @@ function NativeTabsLayout() {
           {String(fbs("Discover", "Discover tab label"))}
         </NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="notifications">
+      <NativeTabs.Trigger name="feed">
         <NativeTabs.Trigger.Label>
-          {String(fbs("Notifications", "Notifications tab label"))}
+          {String(fbs("Feed", "List activity feed tab label"))}
         </NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
-          src={require("yep/assets/icons/navigation/bell.png")}
+          src={require("yep/assets/icons/navigation/satellite.png")}
           renderingMode="template"
         />
         <NativeTabs.Trigger.Badge hidden={!unreadBadge}>
@@ -169,9 +169,8 @@ function JsTabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="notifications"
+        name="feed"
         options={{
-          href: accessToken ? "/notifications" : null,
           tabBarBadge: unreadBadge,
           tabBarBadgeStyle: {
             backgroundColor: darkTheme.accent,
@@ -184,7 +183,7 @@ function JsTabsLayout() {
                 height: size,
                 width: size,
               }}
-              source={require("yep/assets/icons/navigation/bell.png")}
+              source={require("yep/assets/icons/navigation/satellite.png")}
             />
           ),
         }}

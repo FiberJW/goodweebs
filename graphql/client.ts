@@ -15,6 +15,7 @@ import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import {
   mergeMediaListPages,
   nextPageForCount,
+  pageContainerKey,
 } from "yep/graphql/animeListPagination";
 import { StorageKeys } from "yep/hooks/helpers";
 
@@ -157,42 +158,10 @@ const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        // Paginated lists (the anime list, discover trending) fetchMore over
-        // Page, so a Page container must be ONE cache object per query
-        // identity, never per page — pages merge inside it (see the field
-        // policies below) and pageInfo.hasNextPage always reflects the newest
-        // page. Hence `page` is excluded from every container key.
+        // One cache container per query identity, never per page — see
+        // pageContainerKey (extracted so the key scheme is unit-testable).
         Page: {
-          keyArgs: (args, { variables }) => {
-            if (variables?.activityType != null) {
-              return `activities:${variables.activityType}:${variables.userId ?? "global"}:${variables.isFollowing ?? false}:${variables.perPage ?? "default"}`;
-            }
-            if (variables?.userId != null && variables?.status != null) {
-              return `mediaList:${variables.type}:${variables.userId}:${variables.status}:${JSON.stringify(variables.sort ?? null)}`;
-            }
-            // User search has no `type` variable; keyed explicitly so a future
-            // search query that also omits `type` can't silently share its
-            // container.
-            if (variables?.search != null && variables?.type == null) {
-              return `userSearch:${variables.search}`;
-            }
-            // Search containers are per-type-and-term: pageInfo.hasNextPage
-            // must track the term (and not collide with trending's container).
-            if (variables?.search != null) {
-              return `search:${variables.type}:${variables.search}`;
-            }
-            // The notifications screen: one container, keyed apart from
-            // trending/search so their pageInfo never clobbers each other.
-            if (variables?.reset != null) {
-              return "notifications";
-            }
-            // Trending: one container per media type (the discover toggle
-            // flips between them, and each paginates independently).
-            if (variables?.type != null) {
-              return `trending:${variables.type}`;
-            }
-            return JSON.stringify({ ...args, page: undefined });
-          },
+          keyArgs: (args, { variables }) => pageContainerKey(args, variables),
           merge: true,
         },
       },

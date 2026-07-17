@@ -53,6 +53,18 @@ export function FollowButton({
         setCachedFollowState(!isFollowing);
         try {
           await toggleFollow({ variables: { userId } });
+          // The Following feed's cached containers (keyed with isFollowing —
+          // see pageContainerKey) now reflect a stale follow graph; drop them
+          // so the next feed visit refetches with the new set of follows.
+          cache.modify({
+            fields: {
+              Page: (existing, { storeFieldName, DELETE }) =>
+                storeFieldName.includes("activities:") &&
+                storeFieldName.includes(":true:")
+                  ? DELETE
+                  : existing,
+            },
+          });
         } catch (error) {
           setCachedFollowState(isFollowing);
           console.error(error);

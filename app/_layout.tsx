@@ -263,6 +263,20 @@ function InnerLayout() {
                   headerBackButtonDisplayMode: "minimal",
                 }}
               />
+              <Stack.Screen
+                name="notification-center"
+                options={{
+                  title: String(
+                    fbs("Notifications", "Notifications screen title"),
+                  ),
+                  headerTitleStyle: {
+                    fontFamily: Manrope.semiBold,
+                    fontSize: 16,
+                    color: darkTheme.text,
+                  },
+                  headerBackButtonDisplayMode: "minimal",
+                }}
+              />
             </Stack.Protected>
             <Stack.Protected guard={!canBrowse}>
               <Stack.Screen name="auth" options={{ headerShown: false }} />

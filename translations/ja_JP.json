@@ -2017,30 +2017,6 @@
       ],
       "types": []
     },
-    "eqvlnFt1rU3qO4ivm1oFnw==": {
-      "description": "Notifications tab label",
-      "status": "translated",
-      "tokens": [],
-      "translations": [
-        {
-          "translation": "通知",
-          "variations": {}
-        }
-      ],
-      "types": []
-    },
-    "2WP5sfuubT0KuCOUN+Q7GQ==": {
-      "description": "Notifications tab header label",
-      "status": "translated",
-      "tokens": [],
-      "translations": [
-        {
-          "translation": "通知",
-          "variations": {}
-        }
-      ],
-      "types": []
-    },
     "O8wXvhoKIFI7J3DWglmttQ==": {
       "description": "Notifications empty state login title",
       "status": "translated",
@@ -2864,6 +2840,186 @@
       "translations": [
         {
           "translation": "がリストを更新：",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "nTmaQoUbedQ2UpPClJWR4w==": {
+      "description": "Notifications button unread accessibility label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "未読の通知が{count}件あります",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "cinspHn50Kb612dfcvLl8w==": {
+      "description": "Open notifications accessibility label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "通知",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "GqbYkQh63jQe/3IKtzhmsg==": {
+      "description": "List activity feed tab header label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "フィード",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "TW/eeKHGYfxDawbcqXYG7A==": {
+      "description": "Following activity feed filter",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "フォロー中",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "avA/xKI69knF558/R+Yyww==": {
+      "description": "Global activity feed filter",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "グローバル",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "KFuKWmB97PfzRLfJGqV8Og==": {
+      "description": "Personal activity feed filter",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "自分",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "vSU6/6lgA/hUlD1mi8kY7Q==": {
+      "description": "Feed login required title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "ログイン",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "dpJZhpB0b9FVhvylX3sZ1A==": {
+      "description": "Feed login required description",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "ログインすると、自分のリスト変更やフォロー中のユーザーの更新を確認できます。",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "QFHEPXzqQPtyyBjrltKVpg==": {
+      "description": "Feed login call to action",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "プロフィールへ",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "EWayV6tMSXM5RUJeBvXy/A==": {
+      "description": "Feed error title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "フィードを読み込めませんでした",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "plq1Ewl1Z5/0B9DARjGs4g==": {
+      "description": "Empty feed title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "リストの更新はありません",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "92QYIGydbrEyWGKDbPHdOg==": {
+      "description": "Empty feed description",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "リストが更新されると、ここに表示されます。",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "Lycx1rakjnxtvWbUHm+z7A==": {
+      "description": "Notifications screen title",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "通知",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "eSBqihghzfiAXrU+FEWYvQ==": {
+      "description": "List activity feed tab label",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "フィード",
+          "variations": {}
+        }
+      ],
+      "types": []
+    },
+    "C5FzQ9+WkdECJNlgv2Te6Q==": {
+      "description": "Feed viewer load failure description",
+      "status": "translated",
+      "tokens": [],
+      "translations": [
+        {
+          "translation": "プロフィールを読み込めませんでした。",
           "variations": {}
         }
       ],

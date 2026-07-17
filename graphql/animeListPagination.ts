@@ -22,6 +22,47 @@ export function nextPageForCount(
   return Math.ceil(loaded / perPage) + 1;
 }
 
+// Cache identity for a root Page container (wired up as the Page keyArgs in
+// graphql/client.ts). Paginated lists fetchMore over Page, so a container must
+// be ONE cache object per query identity, never per page — pages merge inside
+// it (see the field policies) and pageInfo.hasNextPage always reflects the
+// newest page. Hence `page` is excluded from every key.
+export function pageContainerKey(
+  args: Record<string, unknown> | null,
+  variables?: Record<string, unknown>,
+): string {
+  // Activity feeds: one container per scope (profile activity, and the feed's
+  // following/global/mine scopes — perPage keeps the 10-row profile strip and
+  // the 25-row feed apart).
+  if (variables?.activityType != null) {
+    return `activities:${variables.activityType}:${variables.userId ?? "global"}:${variables.isFollowing ?? false}:${variables.perPage ?? "default"}`;
+  }
+  if (variables?.userId != null && variables?.status != null) {
+    return `mediaList:${variables.type}:${variables.userId}:${variables.status}:${JSON.stringify(variables.sort ?? null)}`;
+  }
+  // User search has no `type` variable; keyed explicitly so a future search
+  // query that also omits `type` can't silently share its container.
+  if (variables?.search != null && variables?.type == null) {
+    return `userSearch:${variables.search}`;
+  }
+  // Search containers are per-type-and-term: pageInfo.hasNextPage
+  // must track the term (and not collide with trending's container).
+  if (variables?.search != null) {
+    return `search:${variables.type}:${variables.search}`;
+  }
+  // The notifications screen: one container, keyed apart from
+  // trending/search so their pageInfo never clobbers each other.
+  if (variables?.reset != null) {
+    return "notifications";
+  }
+  // Trending: one container per media type (the discover toggle
+  // flips between them, and each paginates independently).
+  if (variables?.type != null) {
+    return `trending:${variables.type}`;
+  }
+  return JSON.stringify({ ...args, page: undefined });
+}
+
 // Cache-layer page merge for Page.mediaList (wired up in graphql/client.ts).
 // `entryId` is injectable because inside Apollo's cache the entries are
 // normalized References ({ __ref: "MediaList:123" }), not plain objects — the
