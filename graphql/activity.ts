@@ -36,6 +36,50 @@ export type ActivityFeedItem = ResultOf<typeof ActivityFeedFragment>;
 // and public profile paths can't drift apart).
 export const PROFILE_ACTIVITY_LIMIT = 10;
 
+export type ListActivityAction =
+  | "completed"
+  | "dropped"
+  | "pausedReading"
+  | "pausedWatching"
+  | "plansToRead"
+  | "plansToWatch"
+  | "readChapter"
+  | "rereadChapter"
+  | "rewatchedEpisode"
+  | "updated"
+  | "watchedEpisode";
+
+// AniList sends these as English display strings rather than an enum. Collapse
+// them to stable app values so every visible action can be localized, while an
+// unknown future status still gets a safe generic label.
+export function getListActivityAction(
+  status: string | null | undefined,
+): ListActivityAction {
+  switch (status) {
+    case "completed":
+    case "dropped":
+      return status;
+    case "paused reading":
+      return "pausedReading";
+    case "paused watching":
+      return "pausedWatching";
+    case "plans to read":
+      return "plansToRead";
+    case "plans to watch":
+      return "plansToWatch";
+    case "read chapter":
+      return "readChapter";
+    case "reread chapter":
+      return "rereadChapter";
+    case "rewatched episode":
+      return "rewatchedEpisode";
+    case "watched episode":
+      return "watchedEpisode";
+    default:
+      return "updated";
+  }
+}
+
 // Shared normalization for every activities(...) query: keep only concrete
 // ListActivity entries whose user and media survived (AniList allows both to
 // be null, e.g. after moderation).

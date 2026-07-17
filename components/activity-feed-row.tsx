@@ -6,7 +6,11 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import type { ActivityFeedItem } from "yep/graphql/activity";
+import {
+  getListActivityAction,
+  type ActivityFeedItem,
+  type ListActivityAction,
+} from "yep/graphql/activity";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { fakeHandle } from "yep/screenshotMode";
 import { darkTheme } from "yep/themes";
@@ -15,6 +19,102 @@ import { getDateFnsLocale, useGetTitle } from "yep/utils";
 
 export function ActivityFeedDivider() {
   return <View style={styles.divider} />;
+}
+
+function getActivityActionText(
+  action: ListActivityAction,
+  progress: string | null | undefined,
+) {
+  const progressText = progress?.trim();
+
+  switch (action) {
+    case "watchedEpisode":
+      return progressText
+        ? String(
+            fbs(
+              [
+                " watched episode ",
+                fbs.param("progress", progressText),
+                " of ",
+              ],
+              "Anime list activity with episode progress",
+            ),
+          )
+        : String(
+            fbs(
+              " watched an episode of ",
+              "Anime list activity without episode progress",
+            ),
+          );
+    case "rewatchedEpisode":
+      return progressText
+        ? String(
+            fbs(
+              [
+                " rewatched episode ",
+                fbs.param("progress", progressText),
+                " of ",
+              ],
+              "Anime rewatch list activity with episode progress",
+            ),
+          )
+        : String(
+            fbs(
+              " rewatched an episode of ",
+              "Anime rewatch list activity without episode progress",
+            ),
+          );
+    case "readChapter":
+      return progressText
+        ? String(
+            fbs(
+              [
+                " read chapter ",
+                fbs.param("progress", progressText),
+                " of ",
+              ],
+              "Manga list activity with chapter progress",
+            ),
+          )
+        : String(
+            fbs(
+              " read a chapter of ",
+              "Manga list activity without chapter progress",
+            ),
+          );
+    case "rereadChapter":
+      return progressText
+        ? String(
+            fbs(
+              [
+                " reread chapter ",
+                fbs.param("progress", progressText),
+                " of ",
+              ],
+              "Manga reread list activity with chapter progress",
+            ),
+          )
+        : String(
+            fbs(
+              " reread a chapter of ",
+              "Manga reread list activity without chapter progress",
+            ),
+          );
+    case "plansToWatch":
+      return String(fbs(" plans to watch ", "Plans to watch list activity"));
+    case "plansToRead":
+      return String(fbs(" plans to read ", "Plans to read list activity"));
+    case "completed":
+      return String(fbs(" completed ", "Completed list activity"));
+    case "pausedWatching":
+      return String(fbs(" paused watching ", "Paused watching list activity"));
+    case "pausedReading":
+      return String(fbs(" paused reading ", "Paused reading list activity"));
+    case "dropped":
+      return String(fbs(" dropped ", "Dropped list activity"));
+    case "updated":
+      return String(fbs(" updated ", "Generic list activity"));
+  }
 }
 
 export function ActivityFeedRow({
@@ -36,19 +136,10 @@ export function ActivityFeedRow({
   const avatarUrl = user.avatar?.medium ?? user.avatar?.large ?? "";
   const coverUrl = media.coverImage?.medium ?? media.coverImage?.large ?? "";
   const mediaTitle = getTitle(media.title) ?? "";
-  // ponytail: `status` verbs ("watched episode", "plans to watch") only exist
-  // in English on AniList — the connector below is the localizable part.
-  const action = [item.status ?? "updated", item.progress]
-    .filter(Boolean)
-    .join(" ");
-  const connector = item.progress
-    ? ` ${String(
-        fbs(
-          "of",
-          "Connector between a list activity action and the media title, as in 'watched episode 3 of TITLE'",
-        ),
-      )} `
-    : " ";
+  const actionText = getActivityActionText(
+    getListActivityAction(item.status),
+    item.progress,
+  );
   const profileLabel = String(
     fbs(
       [fbs.param("username", user.name), "'s profile"],
@@ -95,7 +186,7 @@ export function ActivityFeedRow({
           >
             {fakeHandle(user.name)}
           </Text>
-          <Text style={styles.action}>{` ${action}${connector}`}</Text>
+          <Text style={styles.action}>{actionText}</Text>
           <Text
             style={styles.mediaTitle}
             accessibilityRole="link"
