@@ -9,6 +9,7 @@ import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import LogRocket from "@logrocket/react-native";
 import * as Sentry from "@sentry/react-native";
 import { useFonts } from "expo-font";
+import { Observe, ObserveRoot, useObserve } from "expo-observe";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import * as Updates from "expo-updates";
@@ -51,6 +52,9 @@ if (Platform.OS !== "web") {
       enabled: !__DEV__,
     });
   }
+  Observe.configure({
+    dispatchingEnabled: !optedOut(StorageKeys.OPT_OUT_ANALYTICS),
+  });
   enableScreens();
   SplashScreen.preventAutoHideAsync();
 }
@@ -108,10 +112,13 @@ function RootLayout() {
 // (RN-only SDK surface).
 const skipSentryWrap =
   Platform.OS === "web" || optedOut(StorageKeys.OPT_OUT_CRASH_REPORTING);
-export default skipSentryWrap ? RootLayout : Sentry.wrap(RootLayout);
+export default ObserveRoot.wrap(
+  skipSentryWrap ? RootLayout : Sentry.wrap(RootLayout),
+);
 
 // eslint-disable-next-line react-doctor/no-multi-comp -- see RootLayout note above
 function InnerLayout() {
+  const { markInteractive } = useObserve();
   const { checkedForToken, accessToken, continuedWithoutLogin } =
     useAccessToken();
   // A signed-in user OR a guest may browse the tabs; only a signed-out
@@ -166,6 +173,7 @@ function InnerLayout() {
   async function onLayoutRootView() {
     if (appIsReady) {
       await SplashScreen.hideAsync();
+      markInteractive();
     }
   }
 
