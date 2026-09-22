@@ -108,6 +108,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           backgroundColor: "#010209",
           image: "./assets/launch/splash-logo-wrapped-dark.png",
         },
+        android: {
+          imageWidth: 150,
+        },
       },
     ],
     "expo-image",
