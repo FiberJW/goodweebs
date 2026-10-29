@@ -1,6 +1,6 @@
-import { Image } from "expo-image";
+import { Image, ImageProps } from "expo-image";
 import React from "react";
-import { ImageSourcePropType, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 
 import { darkTheme } from "yep/themes";
 
@@ -8,7 +8,7 @@ import { PressableOpacity } from "../PressableOpacity";
 
 type ProgressButtonProps = {
   onPress: () => void;
-  icon: ImageSourcePropType;
+  icon: ImageProps["source"];
   disabled?: boolean;
   accessibilityLabel: string;
 };

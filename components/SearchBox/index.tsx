@@ -4,6 +4,7 @@ import React, { useState, useRef } from "react";
 import {
   TextInputProps,
   TextInput,
+  TextInputInstance,
   StyleSheet,
   View,
   Text,
@@ -25,7 +26,7 @@ export function SearchBox({
   ...textInputProps
 }: Props) {
   const [isCancelButtonVisible, setIsCancelButtonVisible] = useState(false);
-  const inputRef = useRef<TextInput>(null);
+  const inputRef = useRef<TextInputInstance>(null);
 
   return (
     <View style={styles.container}>

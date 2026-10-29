@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
   },
   root: {
     flex: 1,
-    // @ts-expect-error 100vh is recognized on the web
     minHeight: "100vh",
   },
 });

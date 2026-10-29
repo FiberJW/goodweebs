@@ -80,7 +80,6 @@ const styles = StyleSheet.create({
     fontFamily: Manrope.light,
     fontSize: 16,
     marginBottom: 16,
-    // @ts-expect-error 35ch is recognized on the web
     maxWidth: "35ch",
   },
   downloadButtonsRow: {

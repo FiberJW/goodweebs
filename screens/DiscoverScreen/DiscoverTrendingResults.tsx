@@ -57,12 +57,12 @@ export function DiscoverTrendingResults({
               ? String(fbs("Trending manga", "Trending manga list header"))
               : String(fbs("Trending anime", "Trending anime list header"))}
           </Text>
-        ) : null
+        ) : undefined
       }
       data={data}
       onEndReached={onEndReached}
       onEndReachedThreshold={0.5}
-      ListFooterComponent={isFetchingMore ? <ListFooterSpinner /> : null}
+      ListFooterComponent={isFetchingMore ? <ListFooterSpinner /> : undefined}
       numColumns={3}
       ListEmptyComponent={() =>
         loading ? null : (

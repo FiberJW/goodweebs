@@ -417,7 +417,7 @@ export function MediaListScreen({
         renderItem={renderMediaItem}
         onEndReached={loadNextPage}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={isFetchingMore ? ListFooterSpinner : null}
+        ListFooterComponent={isFetchingMore ? ListFooterSpinner : undefined}
       />
     </View>
   );

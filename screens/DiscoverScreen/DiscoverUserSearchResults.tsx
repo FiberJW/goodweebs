@@ -140,7 +140,7 @@ export function DiscoverUserSearchResults({
       data={data}
       onEndReached={onEndReached}
       onEndReachedThreshold={0.5}
-      ListFooterComponent={isFetchingMore ? <ListFooterSpinner /> : null}
+      ListFooterComponent={isFetchingMore ? <ListFooterSpinner /> : undefined}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
       ListEmptyComponent={() =>

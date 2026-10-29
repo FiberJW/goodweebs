@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { Image } from "expo-image";
 import { Tabs } from "expo-router";
-import { NativeTabs } from "expo-router/unstable-native-tabs";
+import { NativeTabs } from "expo-router/native-tabs";
 import { fbs } from "fbtee";
 import React from "react";
 import { Platform } from "react-native";
