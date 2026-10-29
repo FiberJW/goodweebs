@@ -19,7 +19,6 @@ import { Platform, StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { enableScreens } from "react-native-screens";
-import { vexo } from "vexo-analytics";
 
 import { createClient } from "yep/graphql/client";
 import { LocaleProvider } from "yep/i18n/LocaleContext";
@@ -36,12 +35,6 @@ function optedOut(key: StorageKeys) {
 }
 
 if (Platform.OS !== "web") {
-  // Production only, per vexo's docs — and empirically: vexo 1.5.7's native
-  // session-replay ScreenRecorder runs in dev builds and retains snapshot
-  // frames at ~25 MB/s (a 60 GB simulator process after 40 minutes).
-  if (!__DEV__ && !optedOut(StorageKeys.OPT_OUT_ANALYTICS)) {
-    vexo("e6f94c3b-f7d3-4edd-b48c-baad9bfd42b5");
-  }
   // Module scope (not a post-mount effect) so errors thrown before first
   // render — e.g. a failed persisted-cache restore in createClient — are
   // captured instead of dropped.
@@ -144,8 +137,8 @@ function InnerLayout() {
   }, []);
 
   useEffect(function initializeAnalytics() {
-    // Production only: like vexo, LogRocket's session replay captures the
-    // screen continuously — in dev it queues captures unboundedly.
+    // Production only: LogRocket's session replay captures the screen
+    // continuously — in dev it queues captures unboundedly.
     if (!__DEV__ && !optedOut(StorageKeys.OPT_OUT_ANALYTICS)) {
       LogRocket.init("iltgzt/goodweebs", {
         updateId: Updates.isEmbeddedLaunch ? null : Updates.updateId,

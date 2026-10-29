@@ -70,8 +70,7 @@
     "react-native-screens": "~4.30.0",
     "react-native-web": "^0.21.4",
     "react-native-worklets": "0.13.0",
-    "showdown": "^2.1.0",
-    "vexo-analytics": "1.5.7"
+    "showdown": "^2.1.0"
   },
   "devDependencies": {
     "@nkzw/babel-preset-fbtee": "^1.7.1",
