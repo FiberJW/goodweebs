@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, ApolloLink } from "@apollo/client";
-import type { Reference } from "@apollo/client";
+import type { FieldPolicy, Reference } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { HttpLink } from "@apollo/client/link/http";
@@ -109,6 +109,34 @@ const retryLink = new RetryLink({
   },
 });
 
+// Append-merge for paginated pages. `page` lives on the parent Page field, so
+// the reset signal comes from the operation variables: page 1 (or absent — a
+// refetch/term change) replaces the list. Doing this at the cache layer (not
+// fetchMore's updateQuery) keeps merges correct when a background
+// cache-and-network refetch races an in-flight fetchMore, and dedupe makes
+// repeated pages idempotent.
+function appendPage(keyArgs: string[]): FieldPolicy<unknown[]> {
+  return {
+    keyArgs,
+    merge(existing, incoming, { variables, readField }) {
+      if (!existing || (variables?.page ?? 1) <= 1) return incoming;
+      // A deep page can land AFTER a racing page-1 refetch already reset the
+      // container (pull-to-refresh while fetchMore is in flight). Appending it
+      // would leave a silent gap (rows 101-150 right after row 50), so drop
+      // any page that isn't the next contiguous one.
+      if (
+        (variables?.page ?? 1) !==
+        nextPageForCount(existing.length, variables?.perPage)
+      ) {
+        return existing;
+      }
+      return mergeMediaListPages(existing, incoming, (entry) =>
+        readField("id", entry as Reference),
+      );
+    },
+  };
+}
+
 // These embedded value-objects have no `id`, so when the same normalized parent
 // (e.g. a Media) is written by two queries selecting different sub-fields —
 // AnimeFragment's coverImage { large medium color } vs the lean list/poster
@@ -140,111 +168,18 @@ const cache = new InMemoryCache({
     },
     Page: {
       fields: {
-        // Append-merge for paginated pages. `page` lives on the parent Page
-        // field, so the reset signal comes from the operation variables:
-        // page 1 (or absent — a refetch/term change) replaces the list.
-        // Doing this at the cache layer (not fetchMore's updateQuery) keeps
-        // merges correct when a background cache-and-network refetch races an
-        // in-flight fetchMore, and dedupe makes repeated pages idempotent.
-        mediaList: {
-          keyArgs: ["userId", "type", "status", "sort"],
-          merge(existing, incoming, { variables, readField }) {
-            if (!existing || (variables?.page ?? 1) <= 1) return incoming;
-            // A deep page can land AFTER a racing page-1 refetch already reset
-            // the container (pull-to-refresh while fetchMore is in flight).
-            // Appending it would leave a silent gap (rows 101-150 right after
-            // row 50), so drop any page that isn't the next contiguous one.
-            if (
-              (variables?.page ?? 1) !==
-              nextPageForCount(existing.length, variables?.perPage)
-            ) {
-              return existing;
-            }
-            return mergeMediaListPages(
-              existing as unknown[],
-              incoming as unknown[],
-              (entry) => readField("id", entry as Reference),
-            );
-          },
-        },
-        // Same append-merge as mediaList/media: page 1 replaces, deeper
-        // pages must be contiguous, dedupe by id.
-        notifications: {
-          keyArgs: ["type_in"],
-          merge(existing, incoming, { variables, readField }) {
-            if (!existing || (variables?.page ?? 1) <= 1) return incoming;
-            if (
-              (variables?.page ?? 1) !==
-              nextPageForCount(existing.length, variables?.perPage)
-            ) {
-              return existing;
-            }
-            return mergeMediaListPages(
-              existing as unknown[],
-              incoming as unknown[],
-              (entry) => readField("id", entry as Reference),
-            );
-          },
-        },
-        activities: {
-          keyArgs: ["userId", "isFollowing", "type", "sort"],
-          merge(existing, incoming, { variables, readField }) {
-            if (!existing || (variables?.page ?? 1) <= 1) return incoming;
-            if (
-              (variables?.page ?? 1) !==
-              nextPageForCount(existing.length, variables?.perPage)
-            ) {
-              return existing;
-            }
-            return mergeMediaListPages(
-              existing as unknown[],
-              incoming as unknown[],
-              (entry) => readField("id", entry as Reference),
-            );
-          },
-        },
-        users: {
-          keyArgs: ["search", "sort"],
-          merge(existing, incoming, { variables, readField }) {
-            if (!existing || (variables?.page ?? 1) <= 1) return incoming;
-            if (
-              (variables?.page ?? 1) !==
-              nextPageForCount(existing.length, variables?.perPage)
-            ) {
-              return existing;
-            }
-            return mergeMediaListPages(
-              existing as unknown[],
-              incoming as unknown[],
-              (entry) => readField("id", entry as Reference),
-            );
-          },
-        },
-        // Same append-merge for Page.media (discover trending and search).
-        media: {
-          keyArgs: [
-            "search",
-            "type",
-            "sort",
-            "format_in",
-            "format_not_in",
-            "isAdult",
-          ],
-          merge(existing, incoming, { variables, readField }) {
-            if (!existing || (variables?.page ?? 1) <= 1) return incoming;
-            if (
-              (variables?.page ?? 1) !==
-              nextPageForCount(existing.length, variables?.perPage)
-            ) {
-              return existing;
-            }
-            return mergeMediaListPages(
-              existing as unknown[],
-              incoming as unknown[],
-              (entry) => readField("id", entry as Reference),
-            );
-          },
-        },
+        mediaList: appendPage(["userId", "type", "status", "sort"]),
+        notifications: appendPage(["type_in"]),
+        activities: appendPage(["userId", "isFollowing", "type", "sort"]),
+        users: appendPage(["search", "sort"]),
+        media: appendPage([
+          "search",
+          "type",
+          "sort",
+          "format_in",
+          "format_not_in",
+          "isAdult",
+        ]),
       },
     },
     Media: { fields: { coverImage: { merge: true } } },
