@@ -19,8 +19,8 @@ import {
   NotificationRowData,
   NotificationRowFragment,
 } from "yep/screens/NotificationsScreen/NotificationRow";
+import { useAccessToken } from "yep/session";
 import { darkTheme } from "yep/themes";
-import { useAccessToken } from "yep/useAccessToken";
 
 const GetNotifications = graphql(
   `

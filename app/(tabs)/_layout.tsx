@@ -8,8 +8,8 @@ import { Platform } from "react-native";
 
 import { goodweebsPurple } from "yep/colors";
 import { GetViewer } from "yep/graphql/viewer";
+import { useAccessToken } from "yep/session";
 import { darkTheme } from "yep/themes";
-import { useAccessToken } from "yep/useAccessToken";
 import { isLiquidGlass } from "yep/utils";
 
 // Shared by both layouts: the Feed tab badge mirrors the viewer's unread

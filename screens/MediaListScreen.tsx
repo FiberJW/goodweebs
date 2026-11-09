@@ -2,7 +2,6 @@ import { NetworkStatus, useQuery } from "@apollo/client";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
 import React, { useEffect, useState } from "react";
 import { RefreshControl, View, StyleSheet, Text, FlatList } from "react-native";
@@ -13,10 +12,7 @@ import { ListFooterSpinner } from "yep/components/ListFooterSpinner";
 import { AnimeListEntryFragment } from "yep/components/MediaListItem";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { StatusChip } from "yep/components/StatusChip";
-import {
-  ANILIST_ACCESS_TOKEN_STORAGE,
-  MediaListStatusWithLabel,
-} from "yep/constants";
+import { MediaListStatusWithLabel } from "yep/constants";
 import type { MediaSortField, SortDirection } from "yep/constants";
 import { MediaListItemContainer } from "yep/containers/MediaListItemContainer";
 import {
@@ -25,12 +21,11 @@ import {
   mediaSortValue,
   naturalSortDirection,
 } from "yep/graphql/animeListPagination";
-import { primeAccessToken } from "yep/graphql/client";
 import type { MediaListStatus, MediaType } from "yep/graphql/enums";
 import { graphql, readFragment } from "yep/graphql/tada";
 import type { FragmentOf } from "yep/graphql/tada";
 import { GetViewer } from "yep/graphql/viewer";
-import { useAniListAuthRequest } from "yep/hooks/auth";
+import { useAniListLogin } from "yep/hooks/auth";
 import {
   StorageKeys,
   useLoadNextPage,
@@ -38,9 +33,9 @@ import {
 } from "yep/hooks/helpers";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { AnimeSkeleton } from "yep/screens/AnimeScreen/AnimeSkeleton";
+import { useAccessToken } from "yep/session";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { useAccessToken } from "yep/useAccessToken";
 import {
   getMediaListStatusLabel,
   getMediaSortFieldLabel,
@@ -167,7 +162,7 @@ export function MediaListScreen({
     { id: mediaType },
   );
 
-  const { accessToken, setAccessToken } = useAccessToken();
+  const { accessToken } = useAccessToken();
   const router = useRouter();
   const { locale } = useLocaleContext();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -196,7 +191,7 @@ export function MediaListScreen({
     );
   }
 
-  const [, , promptAsync] = useAniListAuthRequest();
+  const login = useAniListLogin();
   // Also keeps the viewer cache warm for the feed's notification bell badge.
   const { data: viewerData } = useQuery(GetViewer, {
     skip: !accessToken,
@@ -374,22 +369,7 @@ export function MediaListScreen({
                   : discoverCtaLabel,
                 onPress: async () => {
                   if (!accessToken) {
-                    const result = await promptAsync();
-
-                    if (result.type === "error" || result.type === "success") {
-                      if (result.params.access_token) {
-                        // Same order as auth.tsx: durable write, then the
-                        // memory mirror, then the state flip — setAccessToken
-                        // un-skips GetViewer/GetMediaList immediately, so the
-                        // token must be fully stored before it runs.
-                        await SecureStore.setItemAsync(
-                          ANILIST_ACCESS_TOKEN_STORAGE,
-                          result.params.access_token,
-                        );
-                        primeAccessToken(result.params.access_token);
-                        setAccessToken(result.params.access_token);
-                      }
-                    }
+                    await login();
                   } else {
                     router.push("/(tabs)/discover");
                   }

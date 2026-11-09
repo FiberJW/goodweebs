@@ -1,5 +1,4 @@
 import { useApolloClient, useMutation, useQuery } from "@apollo/client";
-import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
 import React, { useState } from "react";
 import {
@@ -15,11 +14,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button } from "yep/components/Button";
 import { CheckboxRow } from "yep/components/CheckboxRow";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import {
-  ANILIST_ACCESS_TOKEN_STORAGE,
-  DEFAULT_SCORE_FORMAT,
-} from "yep/constants";
-import { primeAccessToken } from "yep/graphql/client";
+import { DEFAULT_SCORE_FORMAT } from "yep/constants";
 import type {
   ScoreFormat,
   UserStaffNameLanguage,
@@ -32,9 +27,9 @@ import {
   availableLanguages,
   useLocaleContext,
 } from "yep/i18n/LocaleContext";
+import { signOut, useAccessToken } from "yep/session";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { useAccessToken } from "yep/useAccessToken";
 
 const UpdateScoreFormat = graphql(`
   mutation UpdateScoreFormat($scoreFormat: ScoreFormat) {
@@ -236,8 +231,7 @@ export default function Settings() {
     usePersistedState<boolean>(StorageKeys.SHOULD_PERSIST_SCORE_VISIBILITY);
 
   const client = useApolloClient();
-  const { setAccessToken, setContinuedWithoutLogin, accessToken } =
-    useAccessToken();
+  const { accessToken } = useAccessToken();
   const insets = useSafeAreaInsets();
 
   // cache-only: profile (the only way here) already fetched the viewer.
@@ -472,17 +466,7 @@ export default function Settings() {
                     ),
                     style: "destructive",
                     onPress: async () => {
-                      await SecureStore.deleteItemAsync(
-                        ANILIST_ACCESS_TOKEN_STORAGE,
-                      );
-                      primeAccessToken(null);
-                      // A different account may log in next; a stale viewer id
-                      // would fetch the previous user's list.
-                      localStorage.removeItem(StorageKeys.ANILIST_VIEWER_ID);
-                      // Clearing both flips the Protected guard; RN swaps this
-                      // screen (and the tabs) out for auth automatically.
-                      setContinuedWithoutLogin(false);
-                      setAccessToken(undefined);
+                      await signOut();
                       // clearStore (not resetStore): resetStore refetches every
                       // active query unauthenticated, spraying error toasts
                       // over the login screen.

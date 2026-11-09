@@ -7,48 +7,20 @@ import { RetryLink } from "@apollo/client/link/retry";
 import { getMainDefinition } from "@apollo/client/utilities";
 import * as Sentry from "@sentry/react-native";
 import { persistCache, LocalStorageWrapper } from "apollo3-cache-persist";
-import * as SecureStore from "expo-secure-store";
 import * as Updates from "expo-updates";
 import Toast from "react-native-root-toast";
 
-import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import {
   mergeMediaListPages,
   nextPageForCount,
   pageContainerKey,
 } from "yep/graphql/animeListPagination";
-import { StorageKeys } from "yep/hooks/helpers";
-
-// authLink runs on EVERY GraphQL operation, and a SecureStore read is a
-// Keychain (disk + crypto) hit per request — wasted work during
-// cache-and-network refreshes and pagination bursts. Mirror the token in
-// memory: SecureStore stays the durable copy, this is just the hot path.
-// Login/logout paths call primeAccessToken to keep the mirror in sync; the
-// lazy read in authLink covers anything that didn't. `undefined` means "not
-// read yet", `null` means "read, no token".
-let cachedAccessToken: string | null | undefined;
-
-export function primeAccessToken(token: string | null) {
-  cachedAccessToken = token;
-  // A fresh login is a new auth session: re-arm the auto-logout guard. This
-  // matters when Updates.reloadAsync() failed (dev/Expo Go) and the user logs
-  // in again in the same JS runtime — without this, a later expired token
-  // would never trigger the logout flow.
-  if (token) {
-    handlingAuthLogout = false;
-  }
-}
+import { getAccessToken, getSession, sessionLoaded, signOut } from "yep/session";
 
 const authLink = setContext(async (_, { headers }) => {
-  if (cachedAccessToken === undefined) {
-    cachedAccessToken = await SecureStore.getItemAsync(
-      ANILIST_ACCESS_TOKEN_STORAGE,
-    );
-  }
-
-  const Authorization = cachedAccessToken
-    ? `Bearer ${cachedAccessToken}`
-    : undefined;
+  await sessionLoaded;
+  const token = getAccessToken();
+  const Authorization = token ? `Bearer ${token}` : undefined;
 
   // return the headers to the context so httpLink can read them
   return Authorization
@@ -284,12 +256,6 @@ const cache = new InMemoryCache({
   },
 });
 
-// A single response can carry several "invalid token" errors (one per failed
-// field), and more can arrive from concurrent operations. The auto-logout
-// must run once per session, not once per error — otherwise N errors mean N
-// toasts and N reloadAsync calls racing each other.
-let handlingAuthLogout = false;
-
 function isAuthError(error: { message: string }) {
   return (
     error.message.toLowerCase().includes("invalid token") ||
@@ -334,15 +300,11 @@ export async function createClient() {
                 }
               }
 
-              if (graphQLErrors.some(isAuthError) && !handlingAuthLogout) {
-                handlingAuthLogout = true;
-                // Clear the memory mirror first so in-flight and queued
-                // operations stop attaching the dead token immediately.
-                primeAccessToken(null);
-                await SecureStore.deleteItemAsync(ANILIST_ACCESS_TOKEN_STORAGE);
-                // Matches the Settings logout: a stale viewer id would
-                // fetch the previous user's list on the next login.
-                localStorage.removeItem(StorageKeys.ANILIST_VIEWER_ID);
+              if (
+                graphQLErrors.some(isAuthError) &&
+                getSession().status === "signedIn"
+              ) {
+                await signOut();
                 Toast.show("You've been logged out. Please log in again.", {
                   duration: Toast.durations.LONG,
                   position: Toast.positions.TOP,
@@ -351,10 +313,7 @@ export async function createClient() {
                   hideOnPress: true,
                   delay: 0,
                 });
-                // Throws in dev/Expo Go builds (no embedded update); the
-                // token is already cleared above, so the session is dead
-                // either way — the guard stays set to keep later auth errors
-                // from re-toasting and re-deleting.
+                // Throws in dev/Expo Go builds (no embedded update).
                 await Updates.reloadAsync();
               }
             } catch (error) {

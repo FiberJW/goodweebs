@@ -23,8 +23,8 @@ import { DiscoverSearchResults } from "yep/screens/DiscoverScreen/DiscoverSearch
 import { DiscoverSkeletonGrid } from "yep/screens/DiscoverScreen/DiscoverSkeleton";
 import { DiscoverTrendingResults } from "yep/screens/DiscoverScreen/DiscoverTrendingResults";
 import { DiscoverUserSearchResults } from "yep/screens/DiscoverScreen/DiscoverUserSearchResults";
+import { useAccessToken } from "yep/session";
 import { darkTheme } from "yep/themes";
-import { useAccessToken } from "yep/useAccessToken";
 import { notEmpty, isLiquidGlass } from "yep/utils";
 
 const TRENDING_PER_PAGE = 30;

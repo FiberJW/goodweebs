@@ -15,8 +15,8 @@ import { UserProfileFragment } from "yep/graphql/profile";
 import { graphql } from "yep/graphql/tada";
 import { ProfileSkeleton } from "yep/screens/ProfileScreen/ProfileSkeleton";
 import { UserProfileContent } from "yep/screens/ProfileScreen/UserProfileContent";
+import { useAccessToken } from "yep/session";
 import { darkTheme } from "yep/themes";
-import { useAccessToken } from "yep/useAccessToken";
 
 const GetUserProfile = graphql(
   `
