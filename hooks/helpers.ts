@@ -126,6 +126,21 @@ export function useDebouncedMutation<
   };
 }
 
+export function useOptimisticOverride(cacheValue: number) {
+  const [override, setOverride] = useState<{
+    cacheValue: number;
+    value: number;
+  } | null>(null);
+  if (override && override.cacheValue !== cacheValue) setOverride(null);
+  const value =
+    override && override.cacheValue === cacheValue ? override.value : cacheValue;
+  return [
+    value,
+    (next: number | null) =>
+      setOverride(next === null ? null : { cacheValue, value: next }),
+  ] as const;
+}
+
 export function useBreakpoints() {
   const { width } = useWindowDimensions();
 

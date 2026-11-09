@@ -1,5 +1,5 @@
 import * as Haptics from "expo-haptics";
-import React, { useState } from "react";
+import React from "react";
 
 import { AnimeListItem } from "yep/components/AnimeListItem";
 import { MangaListItem } from "yep/components/MangaListItem";
@@ -7,7 +7,10 @@ import { AnimeListEntryFragment } from "yep/components/MediaListItem";
 import { UpdateProgress } from "yep/graphql/mutations";
 import { readFragment } from "yep/graphql/tada";
 import type { FragmentOf } from "yep/graphql/tada";
-import { useDebouncedMutation } from "yep/hooks/helpers";
+import {
+  useDebouncedMutation,
+  useOptimisticOverride,
+} from "yep/hooks/helpers";
 import { getMaxProgress } from "yep/utils";
 
 type Props = {
@@ -20,11 +23,6 @@ type Props = {
   last: boolean;
 };
 
-type ProgressOverride = {
-  cacheProgress: number;
-  progress: number;
-};
-
 export function MediaListItemContainer({ seedData, first, last }: Props) {
   const media = seedData.media;
   const unmaskedMedia = media
@@ -34,20 +32,8 @@ export function MediaListItemContainer({ seedData, first, last }: Props) {
   const cacheProgress = unmaskedMedia?.mediaListEntry?.progress ?? 0;
   const progressUpperBound = getMaxProgress(unmaskedMedia);
 
-  const [progressOverride, setProgressOverride] =
-    useState<ProgressOverride | null>(null);
-  // The optimistic override only applies while the cache still shows the value
-  // it was captured against. Once the cache moves (the mutation's write landed,
-  // or a refetch/external update arrived) drop it — otherwise a later cache
-  // value equal to the pre-tap snapshot would resurrect the stale number.
-  let activeProgressOverride = progressOverride;
-  if (progressOverride && progressOverride.cacheProgress !== cacheProgress) {
-    setProgressOverride(null);
-    activeProgressOverride = null;
-  }
-  const displayProgress = activeProgressOverride
-    ? activeProgressOverride.progress
-    : cacheProgress;
+  const [displayProgress, setProgressOverride] =
+    useOptimisticOverride(cacheProgress);
 
   const updateProgressDebounced = useDebouncedMutation({
     mutationDocument: UpdateProgress,
@@ -82,7 +68,7 @@ export function MediaListItemContainer({ seedData, first, last }: Props) {
     if (newProgress === displayProgress) return;
 
     // Instant UI update
-    setProgressOverride({ cacheProgress, progress: newProgress });
+    setProgressOverride(newProgress);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     try {
