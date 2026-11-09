@@ -25,7 +25,7 @@ export function SearchBox({
   onCancelPress,
   ...textInputProps
 }: Props) {
-  const [isCancelButtonVisible, setIsCancelButtonVisible] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<TextInputInstance>(null);
 
   return (
@@ -44,7 +44,8 @@ export function SearchBox({
           autoCorrect={false}
           spellCheck={false}
           keyboardAppearance="dark"
-          onFocus={() => setIsCancelButtonVisible(true)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           placeholderTextColor={darkTheme.inputPlaceholder}
         />
         {(textInputProps.value?.length ?? 0) > 0 ? (
@@ -63,10 +64,9 @@ export function SearchBox({
           </PressableOpacity>
         ) : null}
       </View>
-      {isCancelButtonVisible ? (
+      {isFocused || textInputProps.value ? (
         <PressableOpacity
           onPress={() => {
-            setIsCancelButtonVisible(false);
             // eslint doesn't understand optional chaining
             inputRef.current?.blur();
             onCancelPress();
