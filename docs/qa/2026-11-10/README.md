@@ -4,7 +4,11 @@ Date: 2026-11-10. Baseline source: `3836499527341151b0f267ff9475df20ae64201a`.
 
 ## Status
 
-**Device acceptance is incomplete. These changes are proposals in draft PRs.**
+**Guest Discover visual checks are now verified; broader device acceptance remains incomplete.**
+
+A subsequent EAS run captured nine before/after PNGs on Duo iOS 27.1 and iPad mini iPadOS 26.5. See [the visual evidence gallery and provenance](visuals/README.md). The captures show the Duo rail-safe grid, wider layouts, iPad portrait and landscape, and switching from sidebar back to tabs. Signed-in, other-screen and accessibility checks below remain pending.
+
+The following failure notes describe the earlier attempt, before the successful visual follow-up.
 
 EAS availability returned `{"available":true,"accountName":"fiberjw"}`. Both named Argent sessions reached `IN_PROGRESS`:
 
@@ -19,7 +23,7 @@ Argent repeatedly returned this error during launch, inspection, and navigation,
 Xcode command-line tools not found — iOS/tvOS simulators need a macOS host with them installed. On macOS, run `xcode-select --install` (or install Xcode from the App Store) and retry.
 ```
 
-A subsequent Duo confirmation tap failed with HTTP `503`. Native app-scoped inspection and screenshots worked intermittently, so the only captured app state is the Duo welcome screen below. It is **diagnostic baseline evidence only**, not before/after layout evidence. No after screenshot, fold-state comparison, iPad screenshot, or signed-in acceptance was obtained. AniList credentials were not retrieved because its login page was never reached.
+A subsequent Duo confirmation tap failed with HTTP `503`. Native app-scoped inspection and screenshots worked intermittently, so the only captured app state is the Duo welcome screen below. It is **diagnostic baseline evidence only** from the earlier attempt. At that point no after screenshot, fold-state comparison, iPad screenshot, or signed-in acceptance had been obtained. The subsequent gallery supplies the new guest Discover comparisons; signed-in acceptance remains pending. AniList credentials were not retrieved because its login page was never reached.
 
 ![Duo baseline welcome screen, before any layout changes](duo-launch-baseline.png)
 
@@ -148,7 +152,7 @@ npx --yes eas-cli@latest simulator:exec argent run list-devices
 
 Require `IN_PROGRESS`. Drive the app with `simulator:exec argent run`; derive targets from accessibility/native trees. Use the dummy `goodweebstester` account and follow `CLAUDE.md` for credentials.
 
-Pending acceptance checklist:
+Original broader acceptance checklist, still pending except for the static guest Discover views and sidebar toggle documented in the new gallery:
 
 - Capture baseline and changed Discover screens on the same Duo panel with stable search results.
 - Fold closed, half-open, and open; rotate both ways. Expect covers and text to stay inside the rail safe area, columns to follow content width, and no FlatList column-count exception.
