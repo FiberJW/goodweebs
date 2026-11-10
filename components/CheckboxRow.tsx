@@ -1,6 +1,6 @@
 import { Checkbox } from "expo-checkbox";
 import React from "react";
-import { ColorValue, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import { black } from "yep/colors";
 import { darkTheme } from "yep/themes";
@@ -12,51 +12,22 @@ type Props = {
   label: string;
   onValueChange: (value: boolean) => void;
   value: boolean;
-  checkboxCheckedColor?: ColorValue;
-  checkboxBackgroundColor?: ColorValue;
-  checkboxBorderColor?: ColorValue;
-  checkboxStyle?: ViewStyle;
-  labelColor?: ColorValue;
-  labelStyle?: TextStyle;
-  pressableStyle?: ViewStyle;
-  style?: ViewStyle;
 };
 
-export function CheckboxRow({
-  label,
-  onValueChange,
-  value,
-  checkboxCheckedColor = black,
-  checkboxBackgroundColor = black,
-  checkboxBorderColor = darkTheme.subHeader,
-  checkboxStyle,
-  labelColor = darkTheme.subText,
-  labelStyle,
-  pressableStyle,
-  style,
-}: Props) {
+export function CheckboxRow({ label, onValueChange, value }: Props) {
   return (
-    <View style={[styles.row, style]}>
+    <View style={styles.row}>
       <Checkbox
-        color={value ? checkboxCheckedColor : undefined}
+        color={value ? black : undefined}
         onValueChange={onValueChange}
-        style={[
-          styles.checkbox,
-          {
-            backgroundColor: checkboxBackgroundColor,
-            borderColor: checkboxBorderColor,
-          },
-          checkboxStyle,
-        ]}
+        style={styles.checkbox}
         value={value}
       />
       <PressableOpacity
-        onPress={() => {
-          onValueChange(!value);
-        }}
-        style={[styles.textPressable, pressableStyle]}
+        onPress={() => onValueChange(!value)}
+        style={styles.textPressable}
       >
-        <Text style={[styles.text, { color: labelColor }, labelStyle]}>{label}</Text>
+        <Text style={styles.text}>{label}</Text>
       </PressableOpacity>
     </View>
   );
@@ -64,6 +35,8 @@ export function CheckboxRow({
 
 const styles = StyleSheet.create({
   checkbox: {
+    backgroundColor: black,
+    borderColor: darkTheme.subHeader,
     borderRadius: 12,
     borderWidth: StyleSheet.hairlineWidth,
     height: 24,
@@ -75,6 +48,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   text: {
+    color: darkTheme.subText,
     fontFamily: Manrope.regular,
     fontSize: 16,
   },

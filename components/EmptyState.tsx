@@ -1,21 +1,20 @@
 import { Image } from "expo-image";
 import React from "react";
-import { StyleSheet, View, ViewStyle, Text } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 
 import { Button } from "yep/components/Button";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
 type Props = {
-  style?: ViewStyle;
   title: string;
   description: string;
   cta?: { label: string; onPress: () => void };
 };
 
-export function EmptyState({ title, description, style, cta }: Props) {
+export function EmptyState({ title, description, cta }: Props) {
   return (
-    <View style={[styles.container, style]}>
+    <View style={styles.container}>
       <Image
         source={require("yep/assets/icons/muted-logo.png")}
         contentFit="contain"

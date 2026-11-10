@@ -11,24 +11,10 @@ import { PressableOpacity } from "yep/components/PressableOpacity";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
-type ButtonSize = "normal" | "large" | "small";
-
-function getDynamicButtonStyles(size: ButtonSize): ViewStyle {
-  switch (size) {
-    case "large":
-      return { padding: 24 };
-    case "normal":
-      return { padding: 16 };
-    case "small":
-      return { padding: 8 };
-  }
-}
-
 type Props = {
   label: string;
   onPress: () => void;
-  size?: ButtonSize;
-  disabled?: boolean;
+  size?: "normal" | "small";
   style?: ViewStyle;
   containerStyle?: ViewStyle;
   loading?: boolean;
@@ -40,23 +26,22 @@ export function Button({
   onPress,
   label,
   loading,
-  disabled,
   size = "normal",
   style,
   containerStyle,
   color,
   labelColor,
 }: Props) {
-  const { padding } = getDynamicButtonStyles(size);
+  const padding = size === "small" ? 8 : 16;
 
   return (
     <PressableOpacity
       accessibilityRole="button"
       accessibilityState={{
         busy: Boolean(loading),
-        disabled: Boolean(disabled || loading),
+        disabled: Boolean(loading),
       }}
-      disabled={disabled || loading}
+      disabled={loading}
       style={[
         styles.pressable,
         {
