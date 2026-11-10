@@ -10,6 +10,7 @@ import { CachePersistor, LocalStorageWrapper } from "apollo3-cache-persist";
 import { pagedTypePolicies } from "yep/graphql/pagination";
 import {
   getAccessToken,
+  getSession,
   sessionLoaded,
   signOut,
   subscribeToSession,
@@ -155,8 +156,11 @@ export async function createClient() {
           console.error("[GraphQL error]:", error);
           if (!isAuthError(error)) showToast(error.message);
         }
-        if (graphQLErrors?.some(isAuthError) && getAccessToken()) {
-          signOut();
+        if (
+          graphQLErrors?.some(isAuthError) &&
+          getSession().status === "signedIn"
+        ) {
+          signOut().catch(console.error);
           showToast("You've been logged out. Please log in again.");
         }
 
