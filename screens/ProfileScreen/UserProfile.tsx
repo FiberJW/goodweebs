@@ -50,6 +50,7 @@ export function UserProfile({
 }) {
   return (
     <ScrollView
+      style={{ backgroundColor: darkTheme.background }}
       contentInsetAdjustmentBehavior="automatic"
       contentContainerStyle={styles.content}
       // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it

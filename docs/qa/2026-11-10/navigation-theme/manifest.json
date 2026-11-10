@@ -1,0 +1,99 @@
+{
+  "capturedDate": "2026-11-10",
+  "sourceCommit": "a078252308b41ddde9a08b589eb9192050cfbf41",
+  "beforeAppSource": "e57b9e98cff91eaadf965e5573fc518786cb7a93",
+  "beforePRHead": "9b9b01be1c6d75fc677ff9d4a1856fbb2e4528c3",
+  "device": "iPad mini (A17 Pro)",
+  "runtime": "iPadOS 26.5",
+  "session": "https://expo.dev/accounts/fiberjw/projects/goodweebs/simulator-sessions/01a1c4ff-936b-7f09-b491-b6fa1fa06a4d",
+  "nativeClient": "Fresh Xcode 27.2 Debug development client; built UIUserInterfaceStyle=Dark",
+  "metro": "Task-owned port 8097 Expo tunnel serving sourceCommit",
+  "captureNotes": "Unretouched full-resolution Argent captures. Landscape exported upright with rotation=LandscapeLeft. Dynamic live content and clocks differ from earlier before captures. Visual inspection; no pixel threshold comparison.",
+  "nativeStateChecks": [
+    {
+      "state": "portrait",
+      "selectedTab": "Discover",
+      "nativeInspection": "ok"
+    },
+    {
+      "state": "sidebar, Light device appearance",
+      "selectedTab": "Discover",
+      "nativeInspection": "ok"
+    },
+    {
+      "state": "tabs, Light device appearance",
+      "selectedTab": "Discover",
+      "nativeInspection": "ok"
+    },
+    {
+      "state": "tabs, Dark device appearance",
+      "selectedTab": "Discover",
+      "nativeInspection": "ok"
+    },
+    {
+      "state": "sidebar, Dark device appearance",
+      "selectedTab": "Discover",
+      "nativeInspection": "ok"
+    }
+  ],
+  "beforeImages": [
+    {
+      "file": "../visuals/ipad-portrait-after.png",
+      "width": 1488,
+      "height": 2266,
+      "bytes": 4248553,
+      "sha256": "309915500b8502dc752d9516de381e366473877e9b112a3e2948b41d217dc593"
+    },
+    {
+      "file": "../visuals/ipad-landscape-after.png",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 2910886,
+      "sha256": "72e9f6d849041d53484060655dbbe4cfa9acf6fe80aa32c3699a6f9cc6fa3c93"
+    },
+    {
+      "file": "../visuals/ipad-landscape-tabs-after.png",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 3696736,
+      "sha256": "2bdceab4f826265bb99462a9c9f459cfc1c2a9dd35a11b26f83eef44c77d21ee"
+    }
+  ],
+  "images": [
+    {
+      "file": "ipad-portrait-light.png",
+      "width": 1488,
+      "height": 2266,
+      "bytes": 4234204,
+      "sha256": "7bcb0e1693d855b0d6b002950f6b3ed2c2fdc0bf1576cce49aa6b0090d1ace0f"
+    },
+    {
+      "file": "ipad-sidebar-dark.png",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 2952369,
+      "sha256": "d58ff3c5a4170fa78b2e0f4d77a291ab861caf4a6f6085b9992806d82952122a"
+    },
+    {
+      "file": "ipad-sidebar-light.png",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 2951951,
+      "sha256": "ed985481f68ae3d33558a07232953e2d6191193a686b5ea18e10d97e8a953f3a"
+    },
+    {
+      "file": "ipad-tabs-dark.png",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 3675412,
+      "sha256": "02f52b60226d3df05018850f7812172090302931e59985914550b235f5be999e"
+    },
+    {
+      "file": "ipad-tabs-light.png",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 3675439,
+      "sha256": "18d5bfcbf2bcd9c95d3a5e10676d38b61059e62324db59d2d54e1f2c498a7d57"
+    }
+  ]
+}

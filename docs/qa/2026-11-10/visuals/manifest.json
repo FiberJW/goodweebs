@@ -1,0 +1,109 @@
+{
+  "capturedDate": "2026-11-10",
+  "comparison": "Baseline checkout versus cumulative PRs 87, 88 and 89; not isolated PR A/B tests",
+  "screen": "Guest Discover, Trending anime, top of list",
+  "baselineNativeClient": "Compatible existing SDK 58 dev client, built with iOS 27.1 SDK",
+  "afterNativeClient": "Fresh combined-stack SDK 58 dev client, built with iOS 27.2 SDK",
+  "sessions": [
+    {
+      "device": "iPhone Duo",
+      "runtime": "iOS 27.1",
+      "url": "https://expo.dev/accounts/fiberjw/projects/goodweebs/simulator-sessions/01a1c4d4-244c-7378-bcd8-a2708b31adc1",
+      "states": [
+        "closed",
+        "open"
+      ]
+    },
+    {
+      "device": "iPad mini (A17 Pro)",
+      "runtime": "iPadOS 26.5",
+      "url": "https://expo.dev/accounts/fiberjw/projects/goodweebs/simulator-sessions/01a1c4dd-a7c6-7691-af65-13c1fe49b27b",
+      "states": [
+        "portrait",
+        "landscape with automatic sidebar",
+        "landscape after Hide Sidebar"
+      ]
+    }
+  ],
+  "images": [
+    {
+      "file": "duo-closed-after.png",
+      "sourceCommit": "e57b9e98cff91eaadf965e5573fc518786cb7a93",
+      "width": 1398,
+      "height": 2034,
+      "bytes": 2248313,
+      "sha256": "f305bdc54a430fb43256984e57dd464073479b603931bf2215d3e15868827c45"
+    },
+    {
+      "file": "duo-closed-before.png",
+      "sourceCommit": "3836499527341151b0f267ff9475df20ae64201a",
+      "width": 1398,
+      "height": 2034,
+      "bytes": 2758451,
+      "sha256": "166f74e846d742fe4898a961f2ee8448f30e955dc9f54bc1ffa52b8130af77ec"
+    },
+    {
+      "file": "duo-open-after.png",
+      "sourceCommit": "e57b9e98cff91eaadf965e5573fc518786cb7a93",
+      "width": 2853,
+      "height": 2007,
+      "bytes": 5194235,
+      "sha256": "0c4202df587cea03418191449f72826941a10d6874e99335a3a16dfa7ffd597d"
+    },
+    {
+      "file": "duo-open-before.png",
+      "sourceCommit": "3836499527341151b0f267ff9475df20ae64201a",
+      "width": 2853,
+      "height": 2007,
+      "bytes": 5078254,
+      "sha256": "6bd9f9df9e1e072099294a31cbca1f3afb82aec2c3ba1c26ad30ba42d155f288"
+    },
+    {
+      "file": "ipad-landscape-after.png",
+      "sourceCommit": "e57b9e98cff91eaadf965e5573fc518786cb7a93",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 2910886,
+      "sha256": "72e9f6d849041d53484060655dbbe4cfa9acf6fe80aa32c3699a6f9cc6fa3c93"
+    },
+    {
+      "file": "ipad-landscape-before.png",
+      "sourceCommit": "3836499527341151b0f267ff9475df20ae64201a",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 3507942,
+      "sha256": "a23d9cf476f4e6b6f242f65d7273d31bf62c2b72899671b7ef60336cebfe2d7a"
+    },
+    {
+      "file": "ipad-landscape-tabs-after.png",
+      "sourceCommit": "e57b9e98cff91eaadf965e5573fc518786cb7a93",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 3696736,
+      "sha256": "2bdceab4f826265bb99462a9c9f459cfc1c2a9dd35a11b26f83eef44c77d21ee"
+    },
+    {
+      "file": "ipad-portrait-after.png",
+      "sourceCommit": "e57b9e98cff91eaadf965e5573fc518786cb7a93",
+      "width": 1488,
+      "height": 2266,
+      "bytes": 4248553,
+      "sha256": "309915500b8502dc752d9516de381e366473877e9b112a3e2948b41d217dc593"
+    },
+    {
+      "file": "ipad-portrait-before.png",
+      "sourceCommit": "3836499527341151b0f267ff9475df20ae64201a",
+      "width": 1488,
+      "height": 2266,
+      "bytes": 4051780,
+      "sha256": "f79a4eb60d26eab64aa89864e2bb7593193477a317369b3a664f2fd0c0a77e1d"
+    }
+  ],
+  "limitations": [
+    "Static guest Discover layout checks only",
+    "After images include the whole stack",
+    "Live trending data and simulator clocks can change",
+    "Baseline iPad already supported landscape; no reproduced iPad rotation failure is claimed",
+    "Signed-in workflows, other screens, Dynamic Type, hardware keyboard, VoiceOver, narrow multitasking and animation acceptance remain pending"
+  ]
+}

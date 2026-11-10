@@ -59,6 +59,21 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       "aps-environment": "development",
     },
     supportsTablet: true,
+    // Keep Android portrait-only; iOS windows must support rotation and resizing.
+    infoPlist: {
+      UISupportedInterfaceOrientations: [
+        "UIInterfaceOrientationPortrait",
+        "UIInterfaceOrientationPortraitUpsideDown",
+        "UIInterfaceOrientationLandscapeLeft",
+        "UIInterfaceOrientationLandscapeRight",
+      ],
+      "UISupportedInterfaceOrientations~ipad": [
+        "UIInterfaceOrientationPortrait",
+        "UIInterfaceOrientationPortraitUpsideDown",
+        "UIInterfaceOrientationLandscapeLeft",
+        "UIInterfaceOrientationLandscapeRight",
+      ],
+    },
     bundleIdentifier: appId,
     config: {
       usesNonExemptEncryption: false,
@@ -104,12 +119,17 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         backgroundColor: "#ffffff",
         image: "./assets/launch/splash-logo-wrapped.png",
         imageWidth: 200,
-        dark: {
+        // iOS is always dark. A separate dark splash forces Automatic appearance.
+        ios: {
           backgroundColor: "#010209",
           image: "./assets/launch/splash-logo-wrapped-dark.png",
         },
         android: {
           imageWidth: 150,
+          dark: {
+            backgroundColor: "#010209",
+            image: "./assets/launch/splash-logo-wrapped-dark.png",
+          },
         },
       },
     ],

@@ -88,7 +88,7 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: darkTheme.background, flex: 1 },
-  content: { flexGrow: 1, padding: 16 },
+  container: { backgroundColor: darkTheme.navBackground, flex: 1 },
+  content: { backgroundColor: darkTheme.background, flexGrow: 1, padding: 16 },
   settingsIcon: { height: 24, tintColor: white, width: 24 },
 });
