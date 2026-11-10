@@ -6,7 +6,7 @@ import { HttpLink } from "@apollo/client/link/http";
 import { RetryLink } from "@apollo/client/link/retry";
 import { getMainDefinition } from "@apollo/client/utilities";
 import * as Sentry from "@sentry/react-native";
-import { persistCache, LocalStorageWrapper } from "apollo3-cache-persist";
+import { CachePersistor, LocalStorageWrapper } from "apollo3-cache-persist";
 
 import {
   mergeMediaListPages,
@@ -204,13 +204,14 @@ function isAuthError(error: { message: string }) {
 }
 
 export async function createClient() {
+  const persistor = new CachePersistor({
+    cache,
+    storage: new LocalStorageWrapper(localStorage),
+  });
   // A failed cache restore must not block startup — fall back to an
   // in-memory-only cache so the app still boots.
   try {
-    await persistCache({
-      cache,
-      storage: new LocalStorageWrapper(localStorage),
-    });
+    await persistor.restore();
   } catch (error) {
     Sentry.captureException(error);
     console.error("[Cache persistence failed]:", error);
@@ -250,6 +251,7 @@ export async function createClient() {
     ]),
     cache,
   });
+  client.onClearStore(() => persistor.purge());
 
   let previousToken = getAccessToken();
   subscribeToSession(() => {
