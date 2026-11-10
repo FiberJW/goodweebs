@@ -8,6 +8,8 @@ Date: 2026-11-10. Baseline source: `3836499527341151b0f267ff9475df20ae64201a`.
 
 A subsequent EAS run captured nine before/after PNGs on Duo iOS 27.1 and iPad mini iPadOS 26.5. See [the visual evidence gallery and provenance](visuals/README.md). The captures show the Duo rail-safe grid, wider layouts, iPad portrait and landscape, and switching from sidebar back to tabs. Signed-in, other-screen and accessibility checks below remain pending.
 
+A later [navigation theme follow-up](navigation-theme/README.md) fixes the light native sidebar and top tabs in those original captures. It adds five fresh EAS iPad mini screenshots with Light and Dark device appearance, plus native selection checks and a rebuilt dark-appearance client.
+
 The following failure notes describe the earlier attempt, before the successful visual follow-up.
 
 EAS availability returned `{"available":true,"accountName":"fiberjw"}`. Both named Argent sessions reached `IN_PROGRESS`:
