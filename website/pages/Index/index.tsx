@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
-import { websiteTheme } from "yep/themes";
+import { websiteTheme } from "yep/website/theme";
 
 import { DownloadSection } from "./DownloadSection";
 import { Footer } from "./Footer";

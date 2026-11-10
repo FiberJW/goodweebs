@@ -9,7 +9,6 @@ import {
 } from "@apollo/client";
 import debounce from "lodash/debounce";
 import { useEffect, useRef, useState } from "react";
-import { useWindowDimensions } from "react-native";
 
 import { nextPageForCount } from "yep/graphql/animeListPagination";
 
@@ -139,14 +138,6 @@ export function useOptimisticOverride(cacheValue: number) {
     (next: number | null) =>
       setOverride(next === null ? null : { cacheValue, value: next }),
   ] as const;
-}
-
-export function useBreakpoints() {
-  const { width } = useWindowDimensions();
-
-  const isMobile = width <= 700;
-
-  return { isMobile };
 }
 
 export enum StorageKeys {

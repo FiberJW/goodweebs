@@ -2,9 +2,9 @@ import { Image, type ImageStyle } from "expo-image";
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-import { useBreakpoints } from "yep/hooks/helpers";
-import { websiteTheme } from "yep/themes";
 import { LINESeedJP, Manrope } from "yep/typefaces";
+import { websiteTheme } from "yep/website/theme";
+import { useBreakpoints } from "yep/website/useBreakpoints";
 
 const appStore = require("./app-store-button.png");
 const playStore = require("./play-store-button.png");
