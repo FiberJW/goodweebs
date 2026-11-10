@@ -114,6 +114,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     ],
     "expo-image",
+    "expo-sqlite",
     [
       "expo-font",
       {
