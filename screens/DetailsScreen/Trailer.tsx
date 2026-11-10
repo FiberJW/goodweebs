@@ -2,7 +2,7 @@ import { Image, ImageBackground } from "expo-image";
 import * as WebBrowser from "expo-web-browser";
 import { fbs } from "fbtee";
 import React from "react";
-import { useWindowDimensions, View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 
 import { black, white80 } from "yep/colors";
 import { PressableOpacity } from "yep/components/PressableOpacity";
@@ -34,11 +34,7 @@ function getVideoURL(site: string, id: string): string | undefined {
 }
 
 export function Trailer({ trailer }: Props) {
-  const { width: windowWidth } = useWindowDimensions();
   const { id, site, thumbnail } = readFragment(MediaTrailerData, trailer);
-
-  const width = windowWidth - 32;
-  const height = (windowWidth - 32) / (16 / 9);
 
   if (!id || !site || !thumbnail) return null;
 
@@ -59,9 +55,9 @@ export function Trailer({ trailer }: Props) {
           blurRadius={SCREENSHOT_BLUR_RADIUS}
           source={{ uri: thumbnail }}
           style={{
-            width,
+            width: "100%",
             borderRadius: 8,
-            height,
+            aspectRatio: 16 / 9,
             justifyContent: "center",
             alignItems: "center",
           }}
