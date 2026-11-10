@@ -20,7 +20,7 @@ import { darkTheme } from "yep/themes";
 export default function Profile() {
   const router = useRouter();
   const { accessToken } = useAccessToken();
-  const { viewer, error } = useViewer();
+  const { viewer, error, refetch: refetchViewer } = useViewer();
   const profile = useUserProfile(viewer?.id);
 
   return (
@@ -61,7 +61,15 @@ export default function Profile() {
           />
         </View>
       ) : viewer ? (
-        <UserProfile profile={profile} />
+        <UserProfile
+          profile={{
+            ...profile,
+            refetch: (variables) => {
+              void refetchViewer().catch(() => {});
+              return profile.refetch(variables);
+            },
+          }}
+        />
       ) : error ? (
         <View style={styles.content}>
           <EmptyState
