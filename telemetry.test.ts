@@ -232,7 +232,7 @@ describe("withdrawing consent without remounting", () => {
 });
 
 describe("re-enabling", () => {
-  test("Observe resumes next launch without dispatching the opted-out backlog", async () => {
+  test("Observe drops the usual opted-out backlog before resuming next launch", async () => {
     await launch({ analytics: true });
     Observe.logEvent("during-opt-out");
     setOptOut(ANALYTICS, false);
