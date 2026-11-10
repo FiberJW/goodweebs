@@ -65,6 +65,8 @@ Enable `NativeTabs.sidebarAdaptable` so people can switch between the native tab
 
 ## Local evidence
 
+[Review-fix evidence](opus-loop/README.md) adds a fresh Duo trailer comparison, Profile verification limits, and an inspected EAS archive without QA images. The current test count below reflects removal of the grid-only test file, which had no explicit opt-in.
+
 Commands run on the combined proposed changes:
 
 ```text
@@ -84,9 +86,9 @@ $ gql-tada check
 ✓ No problems found
 
 bun test
-27 pass
+25 pass
 0 fail
-88 expect() calls
+40 expect() calls
 
 bun run i18n:sync
 git diff --exit-code translations i18n/translations

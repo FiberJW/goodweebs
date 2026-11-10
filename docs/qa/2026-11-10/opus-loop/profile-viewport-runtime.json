@@ -1,0 +1,20 @@
+{
+  "status": "ok",
+  "matches": [
+    {
+      "className": "RCTScrollViewComponentView",
+      "frame": {
+        "y": 0,
+        "x": 0,
+        "width": 382,
+        "height": 596
+      },
+      "backgroundColor": {
+        "r": 0.003921568859368563,
+        "b": 0.03529411926865578,
+        "g": 0.007843137718737125,
+        "a": 1
+      }
+    }
+  ]
+}
