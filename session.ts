@@ -1,4 +1,4 @@
-import { AuthRequest, makeRedirectUri } from "expo-auth-session";
+import { AuthRequest, makeRedirectUri, ResponseType } from "expo-auth-session";
 import Constants, { ExecutionEnvironment } from "expo-constants";
 import * as SecureStore from "expo-secure-store";
 import { useSyncExternalStore } from "react";
@@ -22,7 +22,9 @@ const CLIENT_ID =
 
 const TOKEN_STORAGE_KEY = `com.fiberjw.goodweebs.${CLIENT_ID}.access_token`;
 
-const AUTHORIZE_URL = `https://anilist.co/api/v2/oauth/authorize?client_id=${CLIENT_ID}&response_type=token`;
+const discovery = {
+  authorizationEndpoint: "https://anilist.co/api/v2/oauth/authorize",
+};
 
 const appScheme = Array.isArray(Constants.expoConfig?.scheme)
   ? Constants.expoConfig?.scheme[0]
@@ -90,19 +92,19 @@ export async function signIn(token: string) {
 
 export async function logInWithAniList() {
   const request = new AuthRequest({
-    usePKCE: false,
+    clientId: String(CLIENT_ID),
+    responseType: ResponseType.Token,
     redirectUri,
     scopes: [],
-    clientId: "",
+    usePKCE: false,
   });
-  request.url = AUTHORIZE_URL;
-  const result = await request.promptAsync({
-    authorizationEndpoint: AUTHORIZE_URL,
+  const authUrl = new URL(await request.makeAuthUrlAsync(discovery));
+  // AniList's implicit flow uses the registered URI and rejects an explicit redirect_uri.
+  authUrl.searchParams.delete("redirect_uri");
+  const result = await request.promptAsync(discovery, {
+    url: authUrl.toString(),
   });
-  if (
-    (result.type === "success" || result.type === "error") &&
-    result.params.access_token
-  ) {
+  if (result.type === "success" && result.params.access_token) {
     await signIn(result.params.access_token);
   }
 }
