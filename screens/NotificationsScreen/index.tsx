@@ -2,7 +2,10 @@ import { NetworkStatus, useApolloClient } from "@apollo/client";
 import { fbs } from "fbtee";
 import React, { useEffect } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { PagedList } from "yep/components/PagedList";
@@ -85,7 +88,7 @@ export default function Notifications() {
   });
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={["left", "right"]} style={styles.container}>
       {!accessToken ? (
         <EmptyState
           title={String(fbs("Log in", "Notifications empty state login title"))}
@@ -133,7 +136,7 @@ export default function Notifications() {
           ListFooterComponent={<View style={{ height: insets.bottom + 16 }} />}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -2,7 +2,11 @@ import React from "react";
 import { StyleSheet, Text } from "react-native";
 
 import { PagedList } from "yep/components/PagedList";
-import { POSTER_GRID, PosterAndTitle } from "yep/components/PosterAndTitle";
+import { PosterAndTitle } from "yep/components/PosterAndTitle";
+import {
+  getPosterGrid,
+  POSTER_GAP,
+} from "yep/components/PosterAndTitle/layout";
 import type { PaginatedQuery } from "yep/graphql/pagination";
 import { graphql, readFragment, type FragmentOf } from "yep/graphql/tada";
 import { useGetTitle } from "yep/graphql/viewer";
@@ -27,7 +31,7 @@ export const MediaPosterFragment = graphql(`
 
 type Poster = FragmentOf<typeof MediaPosterFragment>;
 
-function DiscoverPoster({ item, index }: { item: Poster; index: number }) {
+function DiscoverPoster({ item, width }: { item: Poster; width: number }) {
   const getTitle = useGetTitle();
   const media = readFragment(MediaPosterFragment, item);
 
@@ -36,12 +40,8 @@ function DiscoverPoster({ item, index }: { item: Poster; index: number }) {
       href={`/details/${media.id}`}
       uri={media.coverImage?.large ?? media.coverImage?.medium ?? ""}
       size="large"
+      width={width}
       title={getTitle(media.title)}
-      style={
-        (index + 1) % POSTER_GRID.columns !== 0
-          ? { marginRight: POSTER_GRID.gap }
-          : undefined
-      }
     />
   );
 }
@@ -50,27 +50,22 @@ function keyExtractor(item: Poster) {
   return `${readFragment(MediaPosterFragment, item).id}`;
 }
 
-function renderDiscoverPoster({
-  item,
-  index,
-}: {
-  item: Poster;
-  index: number;
-}) {
-  return <DiscoverPoster item={item} index={index} />;
-}
-
 export function PosterGrid({
+  width,
   title,
   results,
   emptyState,
 }: {
+  width: number;
   title?: string;
   results: PaginatedQuery & { items: readonly (Poster | null)[] };
   emptyState: React.ReactElement;
 }) {
+  const grid = getPosterGrid(width);
+  if (width <= 0) return null;
   return (
     <PagedList
+      key={grid.columns}
       paging={results}
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator
@@ -78,18 +73,22 @@ export function PosterGrid({
         title ? <Text style={styles.listHeader}>{title}</Text> : undefined
       }
       data={results.items.filter(notEmpty)}
-      numColumns={POSTER_GRID.columns}
+      numColumns={grid.columns}
+      columnWrapperStyle={grid.columns > 1 ? styles.row : undefined}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
       ListEmptyComponent={emptyState}
       keyExtractor={keyExtractor}
-      renderItem={renderDiscoverPoster}
+      renderItem={({ item }) => (
+        <DiscoverPoster item={item} width={grid.width} />
+      )}
     />
   );
 }
 
 const styles = StyleSheet.create({
-  content: { gap: POSTER_GRID.gap },
+  content: { gap: POSTER_GAP },
+  row: { gap: POSTER_GAP },
   listHeader: {
     color: darkTheme.text,
     fontFamily: Manrope.semiBold,

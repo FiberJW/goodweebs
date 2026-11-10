@@ -2,6 +2,7 @@ import { useNavigation } from "expo-router";
 import { fbs } from "fbtee";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ChipGroup } from "yep/components/ChipGroup";
 import { EmptyState } from "yep/components/EmptyState";
@@ -130,6 +131,7 @@ function getDiscoverView({
 }
 
 export default function Discover() {
+  const [contentWidth, setContentWidth] = useState(0);
   const [searchType, setSearchType] = useState<SearchType>("ANIME");
   const [searchTerm, setSearchTerm] = useState("");
   // Debounce and require two characters so a pause after every keystroke does
@@ -202,7 +204,8 @@ export default function Discover() {
   }, [navigation, searchPlaceholder]);
 
   return (
-    <View
+    <SafeAreaView
+      edges={["left", "right"]}
       style={[styles.outerContainer, { backgroundColor: darkTheme.background }]}
     >
       <Header label={String(fbs("Discover", "Discover tab header label"))} />
@@ -214,7 +217,12 @@ export default function Discover() {
           onClear={() => setSearchTerm("")}
         />
       ) : null}
-      <View style={styles.innerContainer}>
+      <View
+        style={styles.innerContainer}
+        onLayout={(event) =>
+          setContentWidth(Math.max(0, event.nativeEvent.layout.width - 32))
+        }
+      >
         <ChipGroup
           style={styles.mediaTypeRow}
           value={searchType}
@@ -252,7 +260,7 @@ export default function Discover() {
               style={styles.loading}
             />
           ) : (
-            <DiscoverSkeletonGrid />
+            <DiscoverSkeletonGrid width={contentWidth} />
           )
         ) : view === "searchError" ? (
           <EmptyState
@@ -278,6 +286,7 @@ export default function Discover() {
             />
           ) : (
             <PosterGrid
+              width={contentWidth}
               title={searchResultsTitle}
               results={mediaSearch}
               emptyState={
@@ -306,9 +315,10 @@ export default function Discover() {
             )}
           />
         ) : view === "trendingLoading" ? (
-          <DiscoverSkeletonGrid />
+          <DiscoverSkeletonGrid width={contentWidth} />
         ) : (
           <PosterGrid
+            width={contentWidth}
             title={
               trending.items.length
                 ? mediaType === "MANGA"
@@ -336,7 +346,7 @@ export default function Discover() {
           />
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

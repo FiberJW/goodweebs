@@ -3,7 +3,10 @@ import { useRouter } from "expo-router";
 import { fbs } from "fbtee";
 import React, { useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 import { favoritedBackground, white } from "yep/colors";
 import { ChipGroup } from "yep/components/ChipGroup";
@@ -78,7 +81,7 @@ export default function FeedScreen() {
     feed.isInitialLoading || (waitingForViewer && viewerLoading);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={["left", "right"]} style={styles.container}>
       <Header
         label={String(fbs("Feed", "List activity feed tab header label"))}
         rightSlot={
@@ -186,7 +189,7 @@ export default function FeedScreen() {
           ListFooterComponent={<View style={{ height: insets.bottom + 16 }} />}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 

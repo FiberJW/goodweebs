@@ -1,18 +1,30 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
-import { POSTER_GRID, usePosterSize } from "yep/components/PosterAndTitle";
+import {
+  getPosterGrid,
+  POSTER_GAP,
+} from "yep/components/PosterAndTitle/layout";
 import { SkeletonShimmerBlock } from "yep/components/SkeletonShimmerBlock";
 
-export function DiscoverSkeletonGrid() {
-  const { width: posterWidth, height: posterHeight } = usePosterSize("large");
+export function DiscoverSkeletonGrid({ width }: { width: number }) {
+  const {
+    width: posterWidth,
+    height: posterHeight,
+    columns,
+  } = getPosterGrid(width);
   const items = Array.from({ length: 12 }, (_, index) => ({
     id: `discover-skeleton-${index}`,
-    hasRightSpacing: (index + 1) % POSTER_GRID.columns !== 0,
+    hasRightSpacing: (index + 1) % columns !== 0,
   }));
   const primaryTitleWidth = Math.round(posterWidth * 0.82);
   const secondaryTitleWidth = Math.round(posterWidth * 0.56);
-  const headerWidth = Math.max(160, Math.round(posterWidth * 2.2));
+  const headerWidth = Math.min(
+    width,
+    Math.max(160, Math.round(posterWidth * 2.2)),
+  );
+
+  if (width <= 0) return null;
 
   return (
     <View>
@@ -75,9 +87,9 @@ const styles = StyleSheet.create({
   },
   tile: {
     alignItems: "center",
-    marginBottom: POSTER_GRID.gap,
+    marginBottom: POSTER_GAP,
   },
   withRightSpacing: {
-    marginRight: POSTER_GRID.gap,
+    marginRight: POSTER_GAP,
   },
 });
