@@ -7,10 +7,6 @@ import {
   white10,
   white95,
   white12_5,
-  alienGreen,
-  darkBlue,
-  white,
-  gray6,
   white30,
   white60,
 } from "yep/colors";
@@ -24,21 +20,10 @@ export const darkTheme = {
   subText: white80,
   subHeader: white60,
   textInverted: black,
-  iconFill: white95,
   footnote: white80,
   selectedChipFill: white95,
   accent: goodweebsPurple,
   listItemBackground: white10,
   listItemBorder: white30,
   inputPlaceholder: white40,
-  success: alienGreen,
-};
-
-export const websiteTheme = {
-  navBackground: darkBlue,
-  text: white,
-  subText: white95,
-  hoveredLink: goodweebsPurple,
-  downloadSectionBackground: goodweebsPurple,
-  pageBackground: gray6,
 };

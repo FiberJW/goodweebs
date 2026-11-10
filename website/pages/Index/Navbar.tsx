@@ -2,8 +2,8 @@ import { Image } from "expo-image";
 import React from "react";
 import { View, StyleSheet } from "react-native";
 
-import { useBreakpoints } from "yep/hooks/helpers";
-import { websiteTheme } from "yep/themes";
+import { websiteTheme } from "yep/website/theme";
+import { useBreakpoints } from "yep/website/useBreakpoints";
 
 const favicon = require("yep/assets/favicon.png");
 
