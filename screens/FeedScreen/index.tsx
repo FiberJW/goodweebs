@@ -1,85 +1,37 @@
-import { NetworkStatus, useQuery } from "@apollo/client";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { fbs } from "fbtee";
 import React, { useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { favoritedBackground, white } from "yep/colors";
+import { ChipGroup } from "yep/components/ChipGroup";
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
+import { PagedList } from "yep/components/PagedList";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import { StatusChip } from "yep/components/StatusChip";
+import { ActivityFeedRow } from "yep/components/activity-feed-row";
 import {
-  ActivityFeedDivider,
-  ActivityFeedRow,
-} from "yep/components/activity-feed-row";
-import {
-  ActivityFeedFragment,
+  GetListActivityFeed,
   type ActivityFeedItem,
   filterListActivities,
 } from "yep/graphql/activity";
-import { graphql } from "yep/graphql/tada";
-import { GetViewer } from "yep/graphql/viewer";
-import { useLoadNextPage } from "yep/hooks/helpers";
+import { usePaginatedQuery } from "yep/graphql/pagination";
+import { formatUnreadCount, useViewer } from "yep/graphql/viewer";
 import { useAccessToken } from "yep/session";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
-const GetListActivityFeed = graphql(
-  `
-    query GetListActivityFeed(
-      $page: Int!
-      $perPage: Int!
-      $userId: Int
-      $isFollowing: Boolean
-      $activityType: ActivityType!
-    ) {
-      Page(page: $page, perPage: $perPage) {
-        pageInfo {
-          hasNextPage
-        }
-        activities(
-          userId: $userId
-          isFollowing: $isFollowing
-          type: $activityType
-          sort: ID_DESC
-        ) {
-          __typename
-          ... on ListActivity {
-            ...ActivityFeedFragment
-          }
-        }
-      }
-    }
-  `,
-  [ActivityFeedFragment],
-);
-
 const FEED_PER_PAGE = 25;
 type FeedScope = "personal" | "following" | "global";
-type ActivityFeedListRow = {
-  activity: ActivityFeedItem;
-  first: boolean;
-  last: boolean;
-};
 
-function keyExtractor({ activity }: ActivityFeedListRow) {
+function keyExtractor(activity: ActivityFeedItem) {
   return `${activity.id}`;
 }
 
-function renderActivity({ item }: { item: ActivityFeedListRow }) {
-  return (
-    <ActivityFeedRow item={item.activity} first={item.first} last={item.last} />
-  );
+function renderActivity({ item }: { item: ActivityFeedItem }) {
+  return <ActivityFeedRow item={item} />;
 }
 
 export default function FeedScreen() {
@@ -93,15 +45,13 @@ export default function FeedScreen() {
   const [selectedScope, setSelectedScope] = useState<FeedScope | null>(null);
   const scope = selectedScope ?? (accessToken ? "following" : "global");
   const {
-    data: viewerData,
+    viewer,
     loading: viewerLoading,
     error: viewerError,
     refetch: refetchViewer,
-  } = useQuery(GetViewer, {
-    skip: !accessToken,
-  });
-  const viewerId = viewerData?.Viewer?.id;
-  const unreadCount = viewerData?.Viewer?.unreadNotificationCount ?? 0;
+  } = useViewer();
+  const viewerId = viewer?.id;
+  const unreadCount = viewer?.unreadNotificationCount ?? 0;
   const notificationLabel =
     unreadCount > 0
       ? String(
@@ -113,44 +63,19 @@ export default function FeedScreen() {
       : String(fbs("Notifications", "Open notifications accessibility label"));
   const requiresLogin = scope !== "global" && !accessToken;
   const waitingForViewer = scope === "personal" && !viewerId;
-  const { data, loading, error, refetch, fetchMore, networkStatus } = useQuery(
-    GetListActivityFeed,
-    {
-      skip: requiresLogin || waitingForViewer,
-      variables: {
-        page: 1,
-        perPage: FEED_PER_PAGE,
-        userId: scope === "personal" ? viewerId : undefined,
-        isFollowing: scope === "following" ? true : undefined,
-        activityType: "MEDIA_LIST",
-      },
-      // Default cache-first (NOT cache-and-network): each scope switch would
-      // otherwise fire a network request even with cached data, burning
-      // AniList's degraded per-minute allowance. Pull-to-refresh covers
-      // explicit freshness.
-      notifyOnNetworkStatusChange: true,
-    },
-  );
-  const isRefetching = networkStatus === NetworkStatus.refetch;
-  const isFetchingMore = networkStatus === NetworkStatus.fetchMore;
-  const activities = filterListActivities(data?.Page?.activities);
-  const rows = activities.map((activity, index) => ({
-    activity,
-    first: index === 0,
-    last: index === activities.length - 1,
-  }));
-  const loadNextPage = useLoadNextPage({
-    // Raw cache length, not the filtered rows: the cache merges every entry
-    // (including ones dropped for null user/media), so the filtered count
-    // would compute a page the cache already has and stall pagination.
-    loadedCount: (data?.Page?.activities ?? []).length,
-    hasNextPage: data?.Page?.pageInfo?.hasNextPage,
-    paused: isRefetching,
+  const feed = usePaginatedQuery(GetListActivityFeed, {
+    skip: requiresLogin || waitingForViewer,
     perPage: FEED_PER_PAGE,
-    fetchMore,
+    variables: {
+      userId: scope === "personal" ? viewerId : undefined,
+      isFollowing: scope === "following" ? true : undefined,
+      activityType: "MEDIA_LIST",
+    },
+    items: (page) => page.activities,
   });
+  const activities = filterListActivities(feed.items);
   const showInitialLoading =
-    (!data && loading) || (waitingForViewer && viewerLoading);
+    feed.isInitialLoading || (waitingForViewer && viewerLoading);
 
   return (
     <View style={styles.container}>
@@ -170,7 +95,7 @@ export default function FeedScreen() {
               {unreadCount > 0 ? (
                 <View style={styles.notificationBadge}>
                   <Text style={styles.notificationBadgeText}>
-                    {unreadCount > 99 ? "99+" : unreadCount}
+                    {formatUnreadCount(unreadCount)}
                   </Text>
                 </View>
               ) : null}
@@ -178,23 +103,25 @@ export default function FeedScreen() {
           </PressableOpacity>
         }
       />
-      <View style={styles.scopePicker}>
-        <StatusChip
-          label={String(fbs("Following", "Following activity feed filter"))}
-          isSelected={scope === "following"}
-          onPress={() => setSelectedScope("following")}
-        />
-        <StatusChip
-          label={String(fbs("Global", "Global activity feed filter"))}
-          isSelected={scope === "global"}
-          onPress={() => setSelectedScope("global")}
-        />
-        <StatusChip
-          label={String(fbs("Mine", "Personal activity feed filter"))}
-          isSelected={scope === "personal"}
-          onPress={() => setSelectedScope("personal")}
-        />
-      </View>
+      <ChipGroup
+        style={styles.scopePicker}
+        value={scope}
+        onChange={setSelectedScope}
+        options={[
+          {
+            value: "following",
+            label: String(fbs("Following", "Following activity feed filter")),
+          },
+          {
+            value: "global",
+            label: String(fbs("Global", "Global activity feed filter")),
+          },
+          {
+            value: "personal",
+            label: String(fbs("Mine", "Personal activity feed filter")),
+          },
+        ]}
+      />
       {requiresLogin ? (
         <EmptyState
           title={String(fbs("Log in", "Feed login required title"))}
@@ -215,14 +142,12 @@ export default function FeedScreen() {
           size="large"
           style={styles.loading}
         />
-      ) : !data && error ? (
+      ) : !feed.data && feed.error ? (
         <EmptyState
           title={String(fbs("Could not load feed", "Feed error title"))}
-          description={error.message}
+          description={feed.error.message}
         />
       ) : waitingForViewer ? (
-        // "Mine" needs the viewer id; if that query failed the feed query
-        // stays skipped — surface it instead of a misleading empty feed.
         <EmptyState
           title={String(fbs("Could not load feed", "Feed error title"))}
           description={
@@ -240,14 +165,13 @@ export default function FeedScreen() {
           }}
         />
       ) : (
-        <FlatList
-          contentInsetAdjustmentBehavior="automatic"
+        <PagedList
+          paging={feed}
+          joined
           contentContainerStyle={styles.listContent}
-          data={rows}
-          ItemSeparatorComponent={ActivityFeedDivider}
+          data={activities}
           keyExtractor={keyExtractor}
           renderItem={renderActivity}
-          showsVerticalScrollIndicator={false}
           ListEmptyComponent={
             <EmptyState
               title={String(fbs("No list updates", "Empty feed title"))}
@@ -259,24 +183,7 @@ export default function FeedScreen() {
               )}
             />
           }
-          // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefetching}
-              onRefresh={() => void refetch({ page: 1 }).catch(() => {})}
-              tintColor={white}
-              titleColor={white}
-            />
-          }
-          onEndReached={loadNextPage}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={
-            <View style={{ height: insets.bottom + 16 }}>
-              {isFetchingMore ? (
-                <ActivityIndicator color={darkTheme.text} />
-              ) : null}
-            </View>
-          }
+          ListFooterComponent={<View style={{ height: insets.bottom + 16 }} />}
         />
       )}
     </View>
@@ -308,5 +215,5 @@ const styles = StyleSheet.create({
     fontSize: 9,
     fontVariant: ["tabular-nums"],
   },
-  scopePicker: { flexDirection: "row", gap: 8, padding: 16 },
+  scopePicker: { padding: 16 },
 });

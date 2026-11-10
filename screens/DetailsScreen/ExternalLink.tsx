@@ -1,5 +1,6 @@
+import { fbs } from "fbtee";
 import React from "react";
-import { Linking, StyleSheet, Text } from "react-native";
+import { Linking, StyleSheet, Text, View } from "react-native";
 
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { graphql, readFragment } from "yep/graphql/tada";
@@ -16,11 +17,9 @@ export const MediaExternalLinkData = graphql(`
   }
 `);
 
-type Props = {
-  link: FragmentOf<typeof MediaExternalLinkData>;
-};
+type Link = FragmentOf<typeof MediaExternalLinkData>;
 
-export function ExternalLink({ link }: Props) {
+function ExternalLink({ link }: { link: Link }) {
   const { url, site } = readFragment(MediaExternalLinkData, link);
 
   return (
@@ -38,7 +37,85 @@ export function ExternalLink({ link }: Props) {
   );
 }
 
+const EXTERNAL_LINK_GROUPS = [
+  {
+    type: "STREAMING",
+    label: () => fbs("Watch", "Streaming links group label"),
+  },
+  { type: "INFO", label: () => fbs("Info", "Info links group label") },
+  { type: "SOCIAL", label: () => fbs("Social", "Social links group label") },
+] as const;
+
+export function ExternalLinksSection({
+  links,
+  isManga,
+}: {
+  links?: Link[];
+  isManga: boolean;
+}) {
+  if (!links?.length) return null;
+
+  // AniList classifies every link as STREAMING / INFO / SOCIAL; null falls to Info.
+  const groups = EXTERNAL_LINK_GROUPS.flatMap((group) => {
+    const items = links.filter(
+      (link) =>
+        (readFragment(MediaExternalLinkData, link).type ?? "INFO") ===
+        group.type,
+    );
+    return items.length > 0 ? [{ ...group, items }] : [];
+  });
+
+  return (
+    <>
+      <View style={{ height: 8 }} />
+      {groups.map((group) => (
+        <View key={group.type}>
+          <Text style={styles.externalLinksGroupLabel}>
+            {String(
+              group.type === "STREAMING" && isManga
+                ? fbs(
+                    "Read",
+                    "Manga streaming links group label (Watch for anime)",
+                  )
+                : group.label(),
+            )}
+          </Text>
+          <View style={styles.externalLinksCard}>
+            {group.items.map((link, i) => (
+              <React.Fragment
+                key={readFragment(MediaExternalLinkData, link).id}
+              >
+                {i > 0 ? <View style={styles.externalLinksDivider} /> : null}
+                <ExternalLink link={link} />
+              </React.Fragment>
+            ))}
+          </View>
+        </View>
+      ))}
+    </>
+  );
+}
+
 const styles = StyleSheet.create({
+  externalLinksGroupLabel: {
+    color: darkTheme.subHeader,
+    fontFamily: Manrope.semiBold,
+    fontSize: 12,
+    letterSpacing: 0.6,
+    textTransform: "uppercase",
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  externalLinksCard: {
+    backgroundColor: darkTheme.listItemBackground,
+    borderRadius: 14,
+    overflow: "hidden",
+  },
+  externalLinksDivider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: darkTheme.listItemBorder,
+    marginLeft: 16,
+  },
   row: {
     flexDirection: "row",
     alignItems: "center",

@@ -1,4 +1,3 @@
-import { useQuery } from "@apollo/client";
 import { Image } from "expo-image";
 import { Tabs } from "expo-router";
 import { NativeTabs } from "expo-router/native-tabs";
@@ -7,26 +6,56 @@ import React from "react";
 import { Platform } from "react-native";
 
 import { goodweebsPurple } from "yep/colors";
-import { GetViewer } from "yep/graphql/viewer";
+import { formatUnreadCount, useViewer } from "yep/graphql/viewer";
 import { useAccessToken } from "yep/session";
 import { darkTheme } from "yep/themes";
 import { isLiquidGlass } from "yep/utils";
 
-// Shared by both layouts: the Feed tab badge mirrors the viewer's unread
-// notification count (cache-only — the list/feed screens' GetViewer query
-// keeps it warm, and the notification center zeroes it in cache on open).
 function useUnreadBadge(): string | undefined {
-  const { data } = useQuery(GetViewer, { fetchPolicy: "cache-only" });
-  const unreadCount = data?.Viewer?.unreadNotificationCount ?? 0;
-  return unreadCount > 0
-    ? unreadCount > 99
-      ? "99+"
-      : `${unreadCount}`
-    : undefined;
+  const unreadCount = useViewer().viewer?.unreadNotificationCount ?? 0;
+  return unreadCount > 0 ? formatUnreadCount(unreadCount) : undefined;
 }
 
+const TABS: {
+  name: string;
+  label: () => string;
+  icon: number;
+  isSearch?: boolean;
+  showsUnreadBadge?: boolean;
+  requiresLogin?: boolean;
+}[] = [
+  {
+    name: "anime",
+    label: () => String(fbs("Anime", "Anime tab label")),
+    icon: require("yep/assets/icons/navigation/anime-tab.png"),
+  },
+  {
+    name: "manga",
+    label: () => String(fbs("Manga", "Manga tab label")),
+    icon: require("yep/assets/icons/navigation/book.png"),
+  },
+  {
+    name: "discover",
+    label: () => String(fbs("Discover", "Discover tab label")),
+    icon: require("yep/assets/icons/navigation/discover-tab.png"),
+    isSearch: true,
+  },
+  {
+    name: "feed",
+    label: () => String(fbs("Feed", "List activity feed tab label")),
+    icon: require("yep/assets/icons/navigation/satellite.png"),
+    showsUnreadBadge: true,
+  },
+  {
+    name: "profile",
+    label: () => String(fbs("Profile", "Profile tab label")),
+    icon: require("yep/assets/icons/navigation/profile-tab.png"),
+    requiresLogin: true,
+  },
+];
+
 // iOS gets the system tab bar (liquid glass on iOS 26); Android keeps the
-// existing custom JS tab bar until we design a native Material one.
+// custom JS tab bar until we design a native Material one.
 export default function TabsLayout() {
   return Platform.OS === "ios" ? <NativeTabsLayout /> : <JsTabsLayout />;
 }
@@ -35,9 +64,8 @@ function NativeTabsLayout() {
   const unreadBadge = useUnreadBadge();
 
   return (
-    // On iOS 26 the system draws the liquid-glass bar — leave it unstyled.
-    // Pre-26 the native bar defaults to a transparent scroll-edge appearance
-    // (items float over content), so pin the old JS bar's background there.
+    // Pre-26 the native bar defaults to a transparent scroll-edge appearance,
+    // so pin the old JS bar's background there.
     <NativeTabs
       tintColor={isLiquidGlass ? goodweebsPurple : darkTheme.text}
       iconColor={isLiquidGlass ? undefined : darkTheme.listItemBackground}
@@ -52,56 +80,28 @@ function NativeTabsLayout() {
       backgroundColor={isLiquidGlass ? undefined : darkTheme.navBackground}
       disableTransparentOnScrollEdge={!isLiquidGlass}
     >
-      <NativeTabs.Trigger name="anime">
-        <NativeTabs.Trigger.Label>
-          {String(fbs("Anime", "Anime tab label"))}
-        </NativeTabs.Trigger.Label>
-        {/* template rendering: monochrome glyph tinted like an SF symbol —
-            also keeps icon/selectedIcon the same native type (RNScreens
-            throws on a mismatch when tintColor makes selected a template). */}
-        <NativeTabs.Trigger.Icon
-          src={require("yep/assets/icons/navigation/anime-tab.png")}
-          renderingMode="template"
-        />
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="manga">
-        <NativeTabs.Trigger.Label>
-          {String(fbs("Manga", "Manga tab label"))}
-        </NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          src={require("yep/assets/icons/navigation/book.png")}
-          renderingMode="template"
-        />
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="discover" role="search">
-        <NativeTabs.Trigger.Label>
-          {String(fbs("Discover", "Discover tab label"))}
-        </NativeTabs.Trigger.Label>
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="feed">
-        <NativeTabs.Trigger.Label>
-          {String(fbs("Feed", "List activity feed tab label"))}
-        </NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          src={require("yep/assets/icons/navigation/satellite.png")}
-          renderingMode="template"
-        />
-        <NativeTabs.Trigger.Badge hidden={!unreadBadge}>
-          {unreadBadge}
-        </NativeTabs.Trigger.Badge>
-      </NativeTabs.Trigger>
-      {/* Always visible: flipping `hidden` remounts the whole navigator
-          (wiping every tab's state) and crashes in dev if the profile tab is
-          focused during logout — the screen gates logged-out users instead. */}
-      <NativeTabs.Trigger name="profile">
-        <NativeTabs.Trigger.Label>
-          {String(fbs("Profile", "Profile tab label"))}
-        </NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          src={require("yep/assets/icons/navigation/profile-tab.png")}
-          renderingMode="template"
-        />
-      </NativeTabs.Trigger>
+      {/* Every trigger stays visible, including profile for guests: flipping
+          `hidden` remounts the navigator (wiping every tab's state) and
+          crashes in dev if the profile tab is focused during logout. */}
+      {TABS.map((tab) => (
+        <NativeTabs.Trigger
+          key={tab.name}
+          name={tab.name}
+          role={tab.isSearch ? "search" : undefined}
+        >
+          <NativeTabs.Trigger.Label>{tab.label()}</NativeTabs.Trigger.Label>
+          {/* template rendering keeps icon and selectedIcon the same native
+              type; RNScreens throws on a mismatch. */}
+          {tab.isSearch ? null : (
+            <NativeTabs.Trigger.Icon src={tab.icon} renderingMode="template" />
+          )}
+          {tab.showsUnreadBadge ? (
+            <NativeTabs.Trigger.Badge hidden={!unreadBadge}>
+              {unreadBadge}
+            </NativeTabs.Trigger.Badge>
+          ) : null}
+        </NativeTabs.Trigger>
+      ))}
     </NativeTabs>
   );
 }
@@ -121,89 +121,28 @@ function JsTabsLayout() {
         },
         tabBarActiveTintColor: darkTheme.text,
         tabBarInactiveTintColor: darkTheme.listItemBackground,
+        tabBarBadgeStyle: {
+          backgroundColor: darkTheme.accent,
+          color: darkTheme.text,
+        },
       }}
     >
-      <Tabs.Screen
-        name="anime"
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Image
-              style={{
-                tintColor: color,
-                height: size,
-                width: size,
-              }}
-              source={require("yep/assets/icons/navigation/anime-tab.png")}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="manga"
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Image
-              style={{
-                tintColor: color,
-                height: size,
-                width: size,
-              }}
-              source={require("yep/assets/icons/navigation/book.png")}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="discover"
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Image
-              style={{
-                tintColor: color,
-                height: size,
-                width: size,
-              }}
-              source={require("yep/assets/icons/navigation/discover-tab.png")}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="feed"
-        options={{
-          tabBarBadge: unreadBadge,
-          tabBarBadgeStyle: {
-            backgroundColor: darkTheme.accent,
-            color: darkTheme.text,
-          },
-          tabBarIcon: ({ color, size }) => (
-            <Image
-              style={{
-                tintColor: color,
-                height: size,
-                width: size,
-              }}
-              source={require("yep/assets/icons/navigation/satellite.png")}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          href: accessToken ? "/profile" : null,
-          tabBarIcon: ({ color, size }) => (
-            <Image
-              style={{
-                tintColor: color,
-                height: size,
-                width: size,
-              }}
-              source={require("yep/assets/icons/navigation/profile-tab.png")}
-            />
-          ),
-        }}
-      />
+      {TABS.map((tab) => (
+        <Tabs.Screen
+          key={tab.name}
+          name={tab.name}
+          options={{
+            href: tab.requiresLogin && !accessToken ? null : undefined,
+            tabBarBadge: tab.showsUnreadBadge ? unreadBadge : undefined,
+            tabBarIcon: ({ color, size }) => (
+              <Image
+                style={{ tintColor: color, height: size, width: size }}
+                source={tab.icon}
+              />
+            ),
+          }}
+        />
+      ))}
     </Tabs>
   );
 }

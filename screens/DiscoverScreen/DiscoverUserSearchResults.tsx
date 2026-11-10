@@ -2,52 +2,53 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { fbs } from "fbtee";
 import React from "react";
-import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import { EmptyState } from "yep/components/EmptyState";
 import { FollowButton } from "yep/components/FollowButton";
-import { ListFooterSpinner } from "yep/components/ListFooterSpinner";
+import { PagedList } from "yep/components/PagedList";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import { readFragment } from "yep/graphql/tada";
-import {
-  UserSearchResultFragment,
-  type UserSearchResult,
-} from "yep/graphql/userSearch";
+import type { PaginatedQuery } from "yep/graphql/pagination";
+import { graphql, readFragment, type FragmentOf } from "yep/graphql/tada";
 import { fakeHandle } from "yep/screenshotMode";
-import { useAccessToken } from "yep/session";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
+import { notEmpty } from "yep/utils";
 
-type UserResult = UserSearchResult;
+export const UserSearchResultFragment = graphql(`
+  fragment UserSearchResultFragment on User {
+    id
+    name
+    isFollowing
+    avatar {
+      medium
+      large
+    }
+    statistics {
+      anime {
+        count
+      }
+      manga {
+        count
+      }
+    }
+  }
+`);
+
+type UserResult = FragmentOf<typeof UserSearchResultFragment>;
 type Props = {
-  data: readonly UserResult[];
-  searchTerm: string;
-  viewerId?: number;
-  loading: boolean;
-  isFetchingMore: boolean;
-  isRefetching: boolean;
-  onEndReached: () => void;
-  onRefresh: () => void;
+  title: string;
+  results: PaginatedQuery & { items: readonly (UserResult | null)[] };
 };
 
 function keyExtractor(item: UserResult) {
   return `${readFragment(UserSearchResultFragment, item).id}`;
 }
 
-function UserSearchRow({
-  item,
-  viewerId,
-}: {
-  item: UserResult;
-  viewerId?: number;
-}) {
+function UserSearchRow({ item }: { item: UserResult }) {
   const router = useRouter();
-  const { accessToken } = useAccessToken();
   const user = readFragment(UserSearchResultFragment, item);
   const avatarUrl = user.avatar?.medium ?? user.avatar?.large;
-  // FollowButton renders null for guests and the viewer's own row — skip its
-  // fixed-width wrapper too so those rows don't reserve blank space.
-  const showFollowButton = Boolean(accessToken) && user.id !== viewerId;
 
   return (
     <View style={styles.row}>
@@ -97,74 +98,34 @@ function UserSearchRow({
           </Text>
         </View>
       </PressableOpacity>
-      {showFollowButton ? (
-        <View style={styles.followButton}>
-          <FollowButton
-            userId={user.id}
-            isFollowing={Boolean(user.isFollowing)}
-          />
-        </View>
-      ) : null}
+      <FollowButton userId={user.id} isFollowing={Boolean(user.isFollowing)} />
     </View>
   );
 }
 
-export function DiscoverUserSearchResults({
-  data,
-  searchTerm,
-  viewerId,
-  loading,
-  isFetchingMore,
-  isRefetching,
-  onEndReached,
-  onRefresh,
-}: Props) {
-  function renderUser({ item }: { item: UserResult }) {
-    return <UserSearchRow item={item} viewerId={viewerId} />;
-  }
+function renderUser({ item }: { item: UserResult }) {
+  return <UserSearchRow item={item} />;
+}
 
+export function DiscoverUserSearchResults({ title, results }: Props) {
   return (
-    <FlatList
-      contentInsetAdjustmentBehavior="automatic"
+    <PagedList
+      paging={results}
+      showsVerticalScrollIndicator
       contentContainerStyle={styles.content}
-      ListHeaderComponent={
-        <Text style={styles.listHeader}>
-          {String(
-            fbs(
-              ["Search results for: ", fbs.param("searchTerm", searchTerm)],
-              "User search results header",
-            ),
-          )}
-        </Text>
-      }
-      data={data}
-      onEndReached={onEndReached}
-      onEndReachedThreshold={0.5}
-      ListFooterComponent={isFetchingMore ? <ListFooterSpinner /> : undefined}
+      ListHeaderComponent={<Text style={styles.listHeader}>{title}</Text>}
+      data={results.items.filter(notEmpty)}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
-      ListEmptyComponent={() =>
-        loading ? null : (
-          <EmptyState
-            title={String(
-              fbs("No users found", "No user search results title"),
-            )}
-            description={String(
-              fbs(
-                "Try another username or check the spelling.",
-                "No user search results description",
-              ),
-            )}
-          />
-        )
-      }
-      // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
-      refreshControl={
-        <RefreshControl
-          refreshing={isRefetching}
-          onRefresh={onRefresh}
-          tintColor={darkTheme.text}
-          titleColor={darkTheme.text}
+      ListEmptyComponent={
+        <EmptyState
+          title={String(fbs("No users found", "No user search results title"))}
+          description={String(
+            fbs(
+              "Try another username or check the spelling.",
+              "No user search results description",
+            ),
+          )}
         />
       }
       keyExtractor={keyExtractor}
@@ -176,7 +137,6 @@ export function DiscoverUserSearchResults({
 const styles = StyleSheet.create({
   avatar: { borderRadius: 24, height: 48, width: 48 },
   content: { gap: 8, paddingBottom: 16 },
-  followButton: { minWidth: 96 },
   listHeader: {
     color: darkTheme.text,
     fontFamily: Manrope.semiBold,

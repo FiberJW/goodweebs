@@ -8,6 +8,7 @@ import { black, white80 } from "yep/colors";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { graphql, readFragment } from "yep/graphql/tada";
 import type { FragmentOf } from "yep/graphql/tada";
+import { SCREENSHOT_BLUR_RADIUS } from "yep/screenshotMode";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
@@ -51,11 +52,11 @@ export function Trailer({ trailer }: Props) {
         {String(fbs("Trailer", "Trailer section title"))}
       </Text>
       <PressableOpacity
-        // In-app browser sheet instead of bouncing the user out to Safari.
         onPress={() => WebBrowser.openBrowserAsync(videoURL)}
         borderRadius={8}
       >
         <ImageBackground
+          blurRadius={SCREENSHOT_BLUR_RADIUS}
           source={{ uri: thumbnail }}
           style={{
             width,

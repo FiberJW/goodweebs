@@ -1,25 +1,22 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
+import { usePosterSize } from "yep/components/PosterAndTitle";
 import { SkeletonShimmerBlock } from "yep/components/SkeletonShimmerBlock";
 
-const PROFILE_POSTER_WIDTH = 89.6;
-const PROFILE_POSTER_HEIGHT = Math.round(PROFILE_POSTER_WIDTH * 1.4285714286);
-// Mirrors the real stat row: total anime, days watched, total manga.
 const STAT_SKELETONS = [
   { id: "total-anime", width: 84 },
   { id: "days-watched", width: 98 },
   { id: "total-manga", width: 84 },
 ];
 
-type Props = {
-  itemCount?: number;
-};
+const ITEM_COUNT = 4;
 
-export function ProfileSkeleton({ itemCount = 4 }: Props) {
-  const items = Array.from({ length: itemCount }, (_, index) => ({
+export function ProfileSkeleton() {
+  const poster = usePosterSize("profile");
+  const items = Array.from({ length: ITEM_COUNT }, (_, index) => ({
     id: `profile-skeleton-${index}`,
-    isLast: index === itemCount - 1,
+    isLast: index === ITEM_COUNT - 1,
   }));
 
   return (
@@ -63,8 +60,8 @@ export function ProfileSkeleton({ itemCount = 4 }: Props) {
             >
               <SkeletonShimmerBlock
                 borderRadius={8}
-                height={PROFILE_POSTER_HEIGHT}
-                width={PROFILE_POSTER_WIDTH}
+                height={poster.height}
+                width={poster.width}
               />
               <SkeletonShimmerBlock
                 borderRadius={4}
@@ -92,8 +89,8 @@ export function ProfileSkeleton({ itemCount = 4 }: Props) {
             >
               <SkeletonShimmerBlock
                 borderRadius={8}
-                height={PROFILE_POSTER_HEIGHT}
-                width={PROFILE_POSTER_WIDTH}
+                height={poster.height}
+                width={poster.width}
               />
               <SkeletonShimmerBlock
                 borderRadius={4}

@@ -16,15 +16,10 @@ import { Manrope } from "yep/typefaces";
 import { PressableOpacity } from "../PressableOpacity";
 
 type Props = TextInputProps & {
-  onCancelPress: () => void;
-  onClearPress: () => void;
+  onClear: () => void;
 };
 
-export function SearchBox({
-  onClearPress,
-  onCancelPress,
-  ...textInputProps
-}: Props) {
+export function SearchBox({ onClear, ...textInputProps }: Props) {
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<TextInputInstance>(null);
 
@@ -50,7 +45,7 @@ export function SearchBox({
         />
         {(textInputProps.value?.length ?? 0) > 0 ? (
           <PressableOpacity
-            onPress={onClearPress}
+            onPress={onClear}
             accessibilityRole="button"
             accessibilityLabel={String(
               fbs("Clear search", "Clear search button accessibility label"),
@@ -67,9 +62,8 @@ export function SearchBox({
       {isFocused || textInputProps.value ? (
         <PressableOpacity
           onPress={() => {
-            // eslint doesn't understand optional chaining
             inputRef.current?.blur();
-            onCancelPress();
+            onClear();
           }}
           style={{ marginLeft: 8 }}
         >

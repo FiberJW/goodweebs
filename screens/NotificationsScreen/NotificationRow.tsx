@@ -1,4 +1,3 @@
-import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -6,18 +5,16 @@ import { StyleSheet, Text, View } from "react-native";
 import { PosterAndTitle } from "yep/components/PosterAndTitle";
 import { PressableOpacity } from "yep/components/PressableOpacity";
 import { graphql, type ResultOf } from "yep/graphql/tada";
+import { useGetTitle } from "yep/graphql/viewer";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { getDateFnsLocale, useGetTitle } from "yep/utils";
+import { getTimeAgo } from "yep/utils";
 
 import { getNotificationText } from "./notificationText";
 
-// Colocated fragment for a notification-list row. @_unmask because the
-// notifications screen narrows this union by __typename and reshapes it (rather
-// than handing a masked ref to a leaf), so it needs the fields visible. Only the
-// two members the screen renders are selected; other NotificationUnion members
-// come back empty (filtered server-side via type_in, narrowed away in the screen).
+// Only the two members the screen renders are selected; AniList returns the
+// other NotificationUnion members empty.
 export const NotificationRowFragment = graphql(`
   fragment NotificationRowFragment on NotificationUnion @_unmask {
     __typename
@@ -61,8 +58,6 @@ export const NotificationRowFragment = graphql(`
   }
 `);
 
-// The two renderable members, with media guaranteed present (the screen filters
-// out rows without media before rendering).
 type RenderableNotification = Extract<
   ResultOf<typeof NotificationRowFragment>,
   { __typename: "AiringNotification" | "RelatedMediaAdditionNotification" }
@@ -71,15 +66,7 @@ export type NotificationRowData = RenderableNotification & {
   media: NonNullable<RenderableNotification["media"]>;
 };
 
-export function NotificationRow({
-  item,
-  first,
-  last,
-}: {
-  item: NotificationRowData;
-  first: boolean;
-  last: boolean;
-}) {
+export function NotificationRow({ item }: { item: NotificationRowData }) {
   const router = useRouter();
   const getTitle = useGetTitle();
   const { locale } = useLocaleContext();
@@ -89,15 +76,7 @@ export function NotificationRow({
     <PressableOpacity
       accessibilityRole="link"
       accessibilityLabel={text}
-      style={[
-        styles.row,
-        {
-          borderTopRightRadius: first ? 16 : undefined,
-          borderTopLeftRadius: first ? 16 : undefined,
-          borderBottomRightRadius: last ? 16 : undefined,
-          borderBottomLeftRadius: last ? 16 : undefined,
-        },
-      ]}
+      style={styles.row}
       activeOpacity={0.7}
       onPress={() => router.push(`/details/${item.media.id}`)}
     >
@@ -113,10 +92,7 @@ export function NotificationRow({
         </Text>
         {item.createdAt ? (
           <Text style={styles.timestamp} numberOfLines={1}>
-            {formatDistanceToNow(new Date(item.createdAt * 1000), {
-              addSuffix: true,
-              locale: getDateFnsLocale(locale),
-            })}
+            {getTimeAgo(item.createdAt, locale)}
           </Text>
         ) : null}
       </View>
@@ -124,8 +100,6 @@ export function NotificationRow({
   );
 }
 
-// Matches AnimeListItem: joined cards (only the list's first/last corners
-// round), title-line and broadcast-line text styles.
 const styles = StyleSheet.create({
   row: {
     backgroundColor: darkTheme.listItemBackground,

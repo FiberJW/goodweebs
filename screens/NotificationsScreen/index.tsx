@@ -1,19 +1,14 @@
-import { NetworkStatus, useApolloClient, useQuery } from "@apollo/client";
+import { NetworkStatus, useApolloClient } from "@apollo/client";
 import { fbs } from "fbtee";
 import React, { useEffect } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  View,
-} from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { EmptyState } from "yep/components/EmptyState";
+import { PagedList } from "yep/components/PagedList";
+import { usePaginatedQuery } from "yep/graphql/pagination";
 import { graphql } from "yep/graphql/tada";
-import { GetViewer } from "yep/graphql/viewer";
-import { useLoadNextPage } from "yep/hooks/helpers";
+import { useViewer } from "yep/graphql/viewer";
 import {
   NotificationRow,
   NotificationRowData,
@@ -24,7 +19,7 @@ import { darkTheme } from "yep/themes";
 
 const GetNotifications = graphql(
   `
-    query GetNotifications($page: Int, $perPage: Int, $reset: Boolean) {
+    query GetNotifications($page: Int!, $perPage: Int!, $reset: Boolean) {
       Page(page: $page, perPage: $perPage) {
         pageInfo {
           hasNextPage
@@ -43,42 +38,28 @@ const GetNotifications = graphql(
 
 const NOTIFICATIONS_PER_PAGE = 25;
 
-type NotificationListRow = {
-  entry: NotificationRowData;
-  first: boolean;
-  last: boolean;
-};
-
-function keyExtractor({ entry }: NotificationListRow) {
+function keyExtractor(entry: NotificationRowData) {
   return `${entry.id}`;
 }
 
-function renderNotification({ item }: { item: NotificationListRow }) {
-  return (
-    <NotificationRow item={item.entry} first={item.first} last={item.last} />
-  );
+function renderNotification({ item }: { item: NotificationRowData }) {
+  return <NotificationRow item={item} />;
 }
 
 export default function Notifications() {
   const insets = useSafeAreaInsets();
   const { cache } = useApolloClient();
   const { accessToken } = useAccessToken();
-  const { data: viewerData } = useQuery(GetViewer, {
-    fetchPolicy: "cache-only",
-  });
-  const viewerId = viewerData?.Viewer?.id;
+  const viewerId = useViewer().viewer?.id;
 
-  const { data, loading, error, refetch, fetchMore, networkStatus } = useQuery(
-    GetNotifications,
-    {
-      // The tab stays visible for guests (NativeTabs remounts crash if
-      // triggers flip — see the tabs layout); the screen gates instead.
-      skip: !accessToken,
-      variables: { page: 1, perPage: NOTIFICATIONS_PER_PAGE, reset: true },
-      fetchPolicy: "cache-and-network",
-      notifyOnNetworkStatusChange: true,
-    },
-  );
+  const notifications = usePaginatedQuery(GetNotifications, {
+    skip: !accessToken,
+    perPage: NOTIFICATIONS_PER_PAGE,
+    variables: { reset: true },
+    fetchPolicy: "cache-and-network",
+    items: (page) => page.notifications,
+  });
+  const { data, networkStatus } = notifications;
 
   // The query resets the server-side count; zero the cached viewer count too
   // so the bell badge clears without refetching the whole viewer.
@@ -91,21 +72,7 @@ export default function Notifications() {
     }
   }, [cache, data, networkStatus, viewerId]);
 
-  const isRefetching = networkStatus === NetworkStatus.refetch;
-  const isFetchingMore = networkStatus === NetworkStatus.fetchMore;
-
-  const loadNextPage = useLoadNextPage({
-    loadedCount: (data?.Page?.notifications ?? []).length,
-    hasNextPage: data?.Page?.pageInfo?.hasNextPage,
-    paused: isRefetching,
-    perPage: NOTIFICATIONS_PER_PAGE,
-    fetchMore,
-  });
-
-  // Anime and manga rows both link to /details/[id]; rows without media have
-  // nothing to link to. The generated union also carries empty members for
-  // every other notification type — narrow those away.
-  const rows = (data?.Page?.notifications ?? []).flatMap((notification) => {
+  const rows = notifications.items.flatMap((notification) => {
     if (
       notification &&
       (notification.__typename === "AiringNotification" ||
@@ -116,11 +83,6 @@ export default function Notifications() {
     }
     return [];
   });
-  const listRows = rows.map((entry, index) => ({
-    entry,
-    first: index === 0,
-    last: index === rows.length - 1,
-  }));
 
   return (
     <View style={styles.container}>
@@ -134,26 +96,25 @@ export default function Notifications() {
             ),
           )}
         />
-      ) : !data && loading ? (
+      ) : notifications.isInitialLoading ? (
         <ActivityIndicator
           color={darkTheme.text}
           size="large"
           style={styles.loading}
         />
-      ) : !data && error ? (
+      ) : !data && notifications.error ? (
         <EmptyState
           title={String(
             fbs("Could not load notifications", "Notifications error title"),
           )}
-          description={error.message}
+          description={notifications.error.message}
         />
       ) : (
-        <FlatList
-          contentInsetAdjustmentBehavior="automatic"
+        <PagedList
+          paging={notifications}
+          joined
           contentContainerStyle={styles.listContent}
-          showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={() => <View style={styles.divider} />}
-          data={listRows}
+          data={rows}
           keyExtractor={keyExtractor}
           renderItem={renderNotification}
           ListEmptyComponent={
@@ -169,29 +130,7 @@ export default function Notifications() {
               )}
             />
           }
-          // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefetching}
-              onRefresh={() => {
-                refetch({ page: 1 }).catch(() => {});
-              }}
-              tintColor={darkTheme.text}
-              titleColor={darkTheme.text}
-            />
-          }
-          onEndReached={loadNextPage}
-          onEndReachedThreshold={0.5}
-          // Bottom spacer instead of dynamic contentContainerStyle padding:
-          // works on Android (contentInset is iOS-only) and avoids
-          // react-doctor's dynamic-padding rule.
-          ListFooterComponent={
-            <View style={{ height: insets.bottom + 16 }}>
-              {isFetchingMore ? (
-                <ActivityIndicator color={darkTheme.text} />
-              ) : null}
-            </View>
-          }
+          ListFooterComponent={<View style={{ height: insets.bottom + 16 }} />}
         />
       )}
     </View>
@@ -200,10 +139,6 @@ export default function Notifications() {
 
 const styles = StyleSheet.create({
   container: { backgroundColor: darkTheme.background, flex: 1 },
-  divider: {
-    backgroundColor: darkTheme.listItemBorder,
-    height: StyleSheet.hairlineWidth,
-  },
   listContent: { padding: 16 },
   loading: { flex: 1 },
 });

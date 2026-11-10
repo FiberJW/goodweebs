@@ -1,4 +1,3 @@
-import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { fbs } from "fbtee";
@@ -11,15 +10,12 @@ import {
   type ActivityFeedItem,
   type ListActivityAction,
 } from "yep/graphql/activity";
+import { useGetTitle } from "yep/graphql/viewer";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
-import { fakeHandle } from "yep/screenshotMode";
+import { SCREENSHOT_BLUR_RADIUS, fakeHandle } from "yep/screenshotMode";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { getDateFnsLocale, useGetTitle } from "yep/utils";
-
-export function ActivityFeedDivider() {
-  return <View style={styles.divider} />;
-}
+import { getTimeAgo } from "yep/utils";
 
 function getActivityActionText(
   action: ListActivityAction,
@@ -68,11 +64,7 @@ function getActivityActionText(
       return progressText
         ? String(
             fbs(
-              [
-                " read chapter ",
-                fbs.param("progress", progressText),
-                " of ",
-              ],
+              [" read chapter ", fbs.param("progress", progressText), " of "],
               "Manga list activity with chapter progress",
             ),
           )
@@ -86,11 +78,7 @@ function getActivityActionText(
       return progressText
         ? String(
             fbs(
-              [
-                " reread chapter ",
-                fbs.param("progress", progressText),
-                " of ",
-              ],
+              [" reread chapter ", fbs.param("progress", progressText), " of "],
               "Manga reread list activity with chapter progress",
             ),
           )
@@ -117,15 +105,7 @@ function getActivityActionText(
   }
 }
 
-export function ActivityFeedRow({
-  item,
-  first = false,
-  last = false,
-}: {
-  item: ActivityFeedItem;
-  first?: boolean;
-  last?: boolean;
-}) {
+export function ActivityFeedRow({ item }: { item: ActivityFeedItem }) {
   const router = useRouter();
   const { locale } = useLocaleContext();
   const getTitle = useGetTitle();
@@ -156,17 +136,7 @@ export function ActivityFeedRow({
   const mediaHref = `/details/${media.id}` as const;
 
   return (
-    <View
-      style={[
-        styles.row,
-        {
-          borderTopLeftRadius: first ? 16 : undefined,
-          borderTopRightRadius: first ? 16 : undefined,
-          borderBottomLeftRadius: last ? 16 : undefined,
-          borderBottomRightRadius: last ? 16 : undefined,
-        },
-      ]}
-    >
+    <View style={styles.row}>
       <PressableOpacity
         borderRadius={24}
         accessibilityRole="link"
@@ -203,10 +173,7 @@ export function ActivityFeedRow({
           </Text>
         </Text>
         <Text style={styles.timestamp} numberOfLines={1}>
-          {formatDistanceToNow(new Date(item.createdAt * 1000), {
-            addSuffix: true,
-            locale: getDateFnsLocale(locale),
-          })}
+          {getTimeAgo(item.createdAt, locale)}
         </Text>
       </View>
       {coverUrl ? (
@@ -217,6 +184,7 @@ export function ActivityFeedRow({
           onPress={() => router.push(mediaHref)}
         >
           <Image
+            blurRadius={SCREENSHOT_BLUR_RADIUS}
             contentFit="cover"
             recyclingKey={coverUrl}
             source={{ uri: coverUrl }}
@@ -253,10 +221,6 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     width: 56,
   },
-  divider: {
-    backgroundColor: darkTheme.listItemBorder,
-    height: StyleSheet.hairlineWidth,
-  },
   mediaTitle: {
     color: darkTheme.text,
     fontFamily: Manrope.semiBold,
@@ -265,7 +229,6 @@ const styles = StyleSheet.create({
   row: {
     alignItems: "flex-start",
     backgroundColor: darkTheme.listItemBackground,
-    borderCurve: "continuous",
     flexDirection: "row",
     gap: 12,
     padding: 12,

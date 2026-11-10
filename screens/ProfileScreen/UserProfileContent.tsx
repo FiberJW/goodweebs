@@ -1,92 +1,73 @@
 import { Image, ImageBackground } from "expo-image";
-import { useRouter } from "expo-router";
 import { fbs } from "fbtee";
-import React, { PropsWithChildren, ReactNode } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import React, { PropsWithChildren } from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 import { black50 } from "yep/colors";
-import { PosterAndTitle } from "yep/components/PosterAndTitle";
-import { PressableOpacity } from "yep/components/PressableOpacity";
-import {
-  ActivityFeedDivider,
-  ActivityFeedRow,
-} from "yep/components/activity-feed-row";
+import { FollowButton } from "yep/components/FollowButton";
+import { JoinedCards } from "yep/components/PagedList";
+import { PosterShelf } from "yep/components/PosterShelf";
+import { ActivityFeedRow } from "yep/components/activity-feed-row";
 import type { ActivityFeedItem } from "yep/graphql/activity";
-import { UserProfileFragment } from "yep/graphql/profile";
-import type { ResultOf } from "yep/graphql/tada";
+import { graphql, type ResultOf } from "yep/graphql/tada";
+import { useGetName, useGetTitle } from "yep/graphql/viewer";
 import { SCREENSHOT_BLUR_RADIUS, fakeHandle } from "yep/screenshotMode";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { notEmpty, useGetName, useGetTitle } from "yep/utils";
+
+export const UserProfileFragment = graphql(`
+  fragment UserProfileFragment on User @_unmask {
+    id
+    name
+    isFollowing
+    avatar {
+      large
+      medium
+    }
+    bannerImage
+    favourites {
+      anime {
+        nodes {
+          id
+          title {
+            english
+            romaji
+            native
+          }
+          coverImage {
+            large
+            medium
+          }
+        }
+      }
+      characters {
+        nodes {
+          id
+          name {
+            full
+            native
+          }
+          image {
+            large
+            medium
+          }
+        }
+      }
+    }
+    statistics {
+      anime {
+        count
+        minutesWatched
+      }
+      manga {
+        count
+        chaptersRead
+      }
+    }
+  }
+`);
 
 type ProfileUser = ResultOf<typeof UserProfileFragment>;
-const EMPTY_ACTIVITIES: readonly ActivityFeedItem[] = [];
-type ItemWithId = { id: number };
-type FavoriteAnimeItem = NonNullable<
-  NonNullable<NonNullable<ProfileUser["favourites"]>["anime"]>["nodes"]
->[number];
-type FavoriteCharacterItem = NonNullable<
-  NonNullable<NonNullable<ProfileUser["favourites"]>["characters"]>["nodes"]
->[number];
-
-function keyExtractor(item: ItemWithId) {
-  return `${item.id}`;
-}
-
-function renderFavoriteAnime({ item }: { item: FavoriteAnimeItem }) {
-  return <FavoriteAnime item={item} />;
-}
-
-function renderFavoriteCharacter({ item }: { item: FavoriteCharacterItem }) {
-  return <FavoriteCharacter item={item} />;
-}
-
-function FavoriteAnime({ item }: { item: FavoriteAnimeItem }) {
-  const router = useRouter();
-  const getTitle = useGetTitle();
-  const title = getTitle(item?.title);
-
-  return (
-    <PressableOpacity
-      accessibilityRole="link"
-      accessibilityLabel={title}
-      onPress={() => router.push(`/details/${item?.id}`)}
-    >
-      <PosterAndTitle
-        size="profile"
-        uri={item?.coverImage?.large ?? item?.coverImage?.medium ?? ""}
-        title={title}
-      />
-    </PressableOpacity>
-  );
-}
-
-function FavoriteCharacter({ item }: { item: FavoriteCharacterItem }) {
-  const router = useRouter();
-  const getName = useGetName();
-  const name = getName(item?.name);
-
-  return (
-    <PressableOpacity
-      accessibilityRole="link"
-      accessibilityLabel={name}
-      onPress={() => router.push(`/character/${item?.id}`)}
-    >
-      <PosterAndTitle
-        size="profile"
-        uri={item?.image?.large ?? item?.image?.medium ?? ""}
-        title={name}
-      />
-    </PressableOpacity>
-  );
-}
-
 function OptionalBackgroundImage({
   bannerImage,
   children,
@@ -119,42 +100,20 @@ function Stat({ label, value }: { label: string; value: number }) {
 
 function UserActivityFeed({
   activities,
-  loading,
-  error,
 }: {
   activities: readonly ActivityFeedItem[];
-  loading: boolean;
-  error: boolean;
 }) {
   return (
     <View>
       <Text style={styles.sectionTitle}>
         {String(fbs("Recent activity", "Profile recent list activity title"))}
       </Text>
-      {loading ? (
-        <ActivityIndicator
-          color={darkTheme.text}
-          style={styles.activityLoading}
-        />
-      ) : activities.length ? (
-        <View>
-          {activities.map((activity, index) => (
-            <React.Fragment key={activity.id}>
-              {index ? <ActivityFeedDivider /> : null}
-              <ActivityFeedRow
-                item={activity}
-                first={index === 0}
-                last={index === activities.length - 1}
-              />
-            </React.Fragment>
+      {activities.length ? (
+        <JoinedCards>
+          {activities.map((activity) => (
+            <ActivityFeedRow key={activity.id} item={activity} />
           ))}
-        </View>
-      ) : error ? (
-        <Text style={styles.emptyActivity}>
-          {String(
-            fbs("Could not load recent activity.", "Profile activity error"),
-          )}
-        </Text>
+        </JoinedCards>
       ) : (
         <Text style={styles.emptyActivity}>
           {String(fbs("No list updates yet.", "Empty profile activity text"))}
@@ -166,21 +125,41 @@ function UserActivityFeed({
 
 export function UserProfileContent({
   user,
-  action,
-  activities = EMPTY_ACTIVITIES,
-  activityLoading = false,
-  activityError = false,
+  activities,
 }: {
   user: ProfileUser;
-  action?: ReactNode;
-  activities?: readonly ActivityFeedItem[];
-  activityLoading?: boolean;
-  activityError?: boolean;
+  activities: readonly ActivityFeedItem[];
 }) {
   const avatarUrl = user.avatar?.large ?? user.avatar?.medium;
-  const animeList = (user.favourites?.anime?.nodes ?? []).filter(notEmpty);
-  const characterList = (user.favourites?.characters?.nodes ?? []).filter(
-    notEmpty,
+  const getTitle = useGetTitle();
+  const getName = useGetName();
+  const favoriteAnime = (user.favourites?.anime?.nodes ?? []).flatMap(
+    (anime) =>
+      anime
+        ? [
+            {
+              id: anime.id,
+              uri: anime.coverImage?.large ?? anime.coverImage?.medium ?? "",
+              title: getTitle(anime.title),
+              href: `/details/${anime.id}` as const,
+              size: "profile" as const,
+            },
+          ]
+        : [],
+  );
+  const favoriteCharacters = (user.favourites?.characters?.nodes ?? []).flatMap(
+    (character) =>
+      character
+        ? [
+            {
+              id: character.id,
+              uri: character.image?.large ?? character.image?.medium ?? "",
+              title: getName(character.name),
+              href: `/character/${character.id}` as const,
+              size: "profile" as const,
+            },
+          ]
+        : [],
   );
 
   return (
@@ -208,7 +187,10 @@ export function UserProfileContent({
             <Text style={styles.username} numberOfLines={1}>
               {fakeHandle(user.name)}
             </Text>
-            {action}
+            <FollowButton
+              userId={user.id}
+              isFollowing={Boolean(user.isFollowing)}
+            />
           </View>
           <View style={styles.statsRow}>
             <Stat
@@ -228,49 +210,30 @@ export function UserProfileContent({
           </View>
         </View>
       </OptionalBackgroundImage>
-      {animeList.length ? (
+      {favoriteAnime.length ? (
         <View>
           <Text style={styles.sectionTitle}>
             {String(fbs("Favorite anime", "Favorite anime section title"))}
           </Text>
-          <FlatList
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.shelf}
-            keyExtractor={keyExtractor}
-            data={animeList}
-            renderItem={renderFavoriteAnime}
-          />
+          <PosterShelf posters={favoriteAnime} />
         </View>
       ) : null}
-      {characterList.length ? (
+      {favoriteCharacters.length ? (
         <View>
           <Text style={styles.sectionTitle}>
             {String(
               fbs("Favorite characters", "Favorite characters section title"),
             )}
           </Text>
-          <FlatList
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.shelf}
-            keyExtractor={keyExtractor}
-            data={characterList}
-            renderItem={renderFavoriteCharacter}
-          />
+          <PosterShelf posters={favoriteCharacters} />
         </View>
       ) : null}
-      <UserActivityFeed
-        activities={activities}
-        loading={activityLoading}
-        error={activityError}
-      />
+      <UserActivityFeed activities={activities} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  activityLoading: { alignSelf: "flex-start", paddingVertical: 24 },
   avatar: { borderRadius: 24, height: 48, width: 48 },
   banner: { borderCurve: "continuous", borderRadius: 16, overflow: "hidden" },
   container: { flex: 1, gap: 20 },
@@ -286,7 +249,6 @@ const styles = StyleSheet.create({
     fontSize: 25,
     marginBottom: 8,
   },
-  shelf: { alignItems: "flex-start", gap: 8 },
   statContainer: { flex: 1, gap: 4 },
   statLabel: {
     color: darkTheme.subHeader,

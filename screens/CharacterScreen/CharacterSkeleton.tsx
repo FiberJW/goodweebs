@@ -1,19 +1,18 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
+import { usePosterSize } from "yep/components/PosterAndTitle";
 import { SkeletonShimmerBlock } from "yep/components/SkeletonShimmerBlock";
 
-const DETAILS_POSTER_WIDTH = 128;
-const DETAILS_POSTER_HEIGHT = Math.round(DETAILS_POSTER_WIDTH * 1.4285714286);
-
 export function CharacterSkeleton() {
+  const poster = usePosterSize("details");
   return (
     <>
       <View style={styles.posterContainer}>
         <SkeletonShimmerBlock
           borderRadius={8}
-          height={DETAILS_POSTER_HEIGHT}
-          width={DETAILS_POSTER_WIDTH}
+          height={poster.height}
+          width={poster.width}
         />
       </View>
 

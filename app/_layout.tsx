@@ -23,23 +23,15 @@ import { enableScreens } from "react-native-screens";
 import { createClient } from "yep/graphql/client";
 import { LocaleProvider } from "yep/i18n/LocaleContext";
 import { canBrowse, useSession } from "yep/session";
+import { Settings, readSetting } from "yep/storage";
 import { darkTheme } from "yep/themes";
 import { LINESeedJP, Manrope } from "yep/typefaces";
-
-import { StorageKeys } from "../hooks/helpers";
-
-
-// localStorage is synchronous here thanks to the expo-sqlite polyfill above.
-function optedOut(key: StorageKeys) {
-  const value = localStorage.getItem(key);
-  return Boolean(value && JSON.parse(value) === true);
-}
 
 if (Platform.OS !== "web") {
   // Module scope (not a post-mount effect) so errors thrown before first
   // render — e.g. a failed persisted-cache restore in createClient — are
   // captured instead of dropped.
-  if (!optedOut(StorageKeys.OPT_OUT_CRASH_REPORTING)) {
+  if (!readSetting(Settings.optOutCrashReporting)) {
     Sentry.init({
       dsn: "https://b2756b0df548451d98707d024aff00d1@o58038.ingest.sentry.io/5248224",
       debug: __DEV__,
@@ -47,7 +39,7 @@ if (Platform.OS !== "web") {
     });
   }
   Observe.configure({
-    dispatchingEnabled: !optedOut(StorageKeys.OPT_OUT_ANALYTICS),
+    dispatchingEnabled: !readSetting(Settings.optOutAnalytics),
   });
   enableScreens();
   SplashScreen.preventAutoHideAsync();
@@ -103,7 +95,7 @@ function RootLayout() {
 // screen), so it honors the same crash-reporting opt-out. Skip on web
 // (RN-only SDK surface).
 const skipSentryWrap =
-  Platform.OS === "web" || optedOut(StorageKeys.OPT_OUT_CRASH_REPORTING);
+  Platform.OS === "web" || readSetting(Settings.optOutCrashReporting);
 export default ObserveRoot.wrap(
   skipSentryWrap ? RootLayout : Sentry.wrap(RootLayout),
 );
@@ -111,11 +103,6 @@ export default ObserveRoot.wrap(
 // eslint-disable-next-line react-doctor/no-multi-comp -- see RootLayout note above
 function InnerLayout() {
   const { markInteractive } = useObserve();
-  // A signed-in user OR a guest may browse the tabs; only a signed-out
-  // non-guest sees the auth screen. Stack.Protected removes the disallowed
-  // screens, so React Navigation resets to the available one whenever this
-  // flips (login, logout, "continue without logging in") — no imperative
-  // router.replace, and deep links into a guarded area are redirected too.
   const session = useSession();
 
   const [client, setClient] =
@@ -136,7 +123,7 @@ function InnerLayout() {
   useEffect(function initializeAnalytics() {
     // Production only: LogRocket's session replay captures the screen
     // continuously — in dev it queues captures unboundedly.
-    if (!__DEV__ && !optedOut(StorageKeys.OPT_OUT_ANALYTICS)) {
+    if (!__DEV__ && !readSetting(Settings.optOutAnalytics)) {
       LogRocket.init("iltgzt/goodweebs", {
         updateId: Updates.isEmbeddedLaunch ? null : Updates.updateId,
         expoChannel: Updates.channel,
@@ -184,7 +171,10 @@ function InnerLayout() {
               headerTintColor: darkTheme.text,
               headerTitleStyle: {
                 fontFamily: Manrope.semiBold,
+                fontSize: 16,
+                color: darkTheme.text,
               },
+              headerBackButtonDisplayMode: "minimal",
               contentStyle: {
                 backgroundColor: darkTheme.background,
               },
@@ -200,7 +190,6 @@ function InnerLayout() {
               name="+not-found"
               options={{
                 title: String(fbs("Page not found", "Not found page title")),
-                headerBackButtonDisplayMode: "minimal",
               }}
             />
             <Stack.Protected guard={canBrowse(session)}>
@@ -215,24 +204,12 @@ function InnerLayout() {
                 name="settings"
                 options={{
                   title: String(fbs("Settings", "Settings screen title")),
-                  headerTitleStyle: {
-                    fontFamily: Manrope.semiBold,
-                    fontSize: 16,
-                    color: darkTheme.text,
-                  },
-                  headerBackButtonDisplayMode: "minimal",
                 }}
               />
               <Stack.Screen
                 name="details/[id]"
                 options={{
                   title: String(fbs("Details", "Media details fallback title")),
-                  headerTitleStyle: {
-                    fontFamily: Manrope.semiBold,
-                    fontSize: 16,
-                    color: darkTheme.text,
-                  },
-                  headerBackButtonDisplayMode: "minimal",
                 }}
               />
               <Stack.Screen
@@ -241,24 +218,12 @@ function InnerLayout() {
                   title: String(
                     fbs("Character", "Character details fallback title"),
                   ),
-                  headerTitleStyle: {
-                    fontFamily: Manrope.semiBold,
-                    fontSize: 16,
-                    color: darkTheme.text,
-                  },
-                  headerBackButtonDisplayMode: "minimal",
                 }}
               />
               <Stack.Screen
                 name="user/[id]"
                 options={{
                   title: String(fbs("Profile", "User profile title")),
-                  headerTitleStyle: {
-                    fontFamily: Manrope.semiBold,
-                    fontSize: 16,
-                    color: darkTheme.text,
-                  },
-                  headerBackButtonDisplayMode: "minimal",
                 }}
               />
               <Stack.Screen
@@ -267,12 +232,6 @@ function InnerLayout() {
                   title: String(
                     fbs("Notifications", "Notifications screen title"),
                   ),
-                  headerTitleStyle: {
-                    fontFamily: Manrope.semiBold,
-                    fontSize: 16,
-                    color: darkTheme.text,
-                  },
-                  headerBackButtonDisplayMode: "minimal",
                 }}
               />
             </Stack.Protected>

@@ -1,31 +1,36 @@
 import { ApolloError, useApolloClient, useMutation } from "@apollo/client";
 import { fbs } from "fbtee";
 import React, { useRef } from "react";
-import Toast from "react-native-root-toast";
 
 import { Button } from "yep/components/Button";
-import { ToggleUserFollow } from "yep/graphql/mutations";
-import { useAccessToken } from "yep/session";
+import { forgetFollowingFeed } from "yep/graphql/activity";
+import { graphql } from "yep/graphql/tada";
+import { useViewer } from "yep/graphql/viewer";
 import { darkTheme } from "yep/themes";
+import { showToast } from "yep/toast";
+
+const ToggleUserFollow = graphql(`
+  mutation ToggleUserFollow($userId: Int!) {
+    ToggleFollow(userId: $userId) {
+      id
+      isFollowing
+    }
+  }
+`);
 
 export function FollowButton({
   userId,
   isFollowing,
-  isOwnProfile = false,
 }: {
   userId: number;
   isFollowing: boolean;
-  isOwnProfile?: boolean;
 }) {
-  const { accessToken } = useAccessToken();
+  const { viewer } = useViewer();
   const { cache } = useApolloClient();
   const [toggleFollow, { loading }] = useMutation(ToggleUserFollow);
-  // `loading` only disables the button after a re-render; this synchronous
-  // guard stops a rapid double-tap from firing two toggles (which would land
-  // on the opposite of the intended state).
   const inFlightRef = useRef(false);
 
-  if (!accessToken || isOwnProfile) {
+  if (!viewer || viewer.id === userId) {
     return null;
   }
 
@@ -53,44 +58,23 @@ export function FollowButton({
         setCachedFollowState(!isFollowing);
         try {
           await toggleFollow({ variables: { userId } });
-          // The Following feed's cached containers (keyed with isFollowing —
-          // see pageContainerKey) now reflect a stale follow graph; drop them
-          // so the next feed visit refetches with the new set of follows.
-          cache.modify({
-            fields: {
-              Page: (existing, { storeFieldName, DELETE }) =>
-                storeFieldName.includes("activities:") &&
-                storeFieldName.includes(":true:")
-                  ? DELETE
-                  : existing,
-            },
-          });
+          forgetFollowingFeed(cache);
         } catch (error) {
           setCachedFollowState(isFollowing);
           console.error(error);
-          // GraphQL errors and surviving 429s already toast via the client's
-          // error link; this covers the silent plain-network drop (offline).
           const networkError =
             error instanceof ApolloError ? error.networkError : null;
           if (
             networkError &&
             (networkError as { statusCode?: number }).statusCode !== 429
           ) {
-            Toast.show(
+            showToast(
               String(
                 fbs(
                   "Couldn't update follow. Check your connection and try again.",
                   "Follow toggle network failure toast",
                 ),
               ),
-              {
-                duration: Toast.durations.LONG,
-                position: Toast.positions.TOP,
-                shadow: true,
-                animation: true,
-                hideOnPress: true,
-                delay: 0,
-              },
             );
           }
         }

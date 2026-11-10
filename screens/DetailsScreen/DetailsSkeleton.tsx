@@ -1,10 +1,8 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
+import { usePosterSize } from "yep/components/PosterAndTitle";
 import { SkeletonShimmerBlock } from "yep/components/SkeletonShimmerBlock";
-
-const DETAILS_POSTER_WIDTH = 128;
-const DETAILS_POSTER_HEIGHT = Math.round(DETAILS_POSTER_WIDTH * 1.4285714286);
 
 type InfoCellProps = {
   labelWidth: number;
@@ -46,14 +44,15 @@ function StepperRow({ labelWidth }: StepperRowProps) {
 }
 
 export function DetailsSkeleton() {
+  const poster = usePosterSize("details");
   return (
     <>
       <View style={styles.posterAndInfoContainer}>
         <SkeletonShimmerBlock
           borderRadius={8}
-          height={DETAILS_POSTER_HEIGHT}
+          height={poster.height}
           style={styles.poster}
-          width={DETAILS_POSTER_WIDTH}
+          width={poster.width}
         />
         <View style={styles.infoTable}>
           <View style={styles.infoRow}>
