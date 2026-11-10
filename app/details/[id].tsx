@@ -46,6 +46,7 @@ import type { FragmentOf, ResultOf } from "yep/graphql/tada";
 import { GetViewer } from "yep/graphql/viewer";
 import {
   useDebouncedMutation,
+  useOptimisticOverride,
   usePersistedState,
   StorageKeys,
 } from "yep/hooks/helpers";
@@ -549,45 +550,11 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
   const cacheProgress = media.mediaListEntry?.progress ?? 0;
   const cacheVolumes = media.mediaListEntry?.progressVolumes ?? 0;
   const progressUpperBound = getMaxProgress(media);
-  const [scoreOverride, setScoreOverride] = useState<{
-    cacheScore: number;
-    score: number;
-  } | null>(null);
-  const [progressOverride, setProgressOverride] = useState<{
-    cacheProgress: number;
-    progress: number;
-  } | null>(null);
-  const [volumesOverride, setVolumesOverride] = useState<{
-    cacheVolumes: number;
-    volumes: number;
-  } | null>(null);
-  // Drop a stale optimistic override once the cache moves off the value it was
-  // captured against, so a later cache value equal to the pre-tap snapshot
-  // can't resurrect it (and a failed mutation can't leave it pinned).
-  let activeScoreOverride = scoreOverride;
-  if (scoreOverride && scoreOverride.cacheScore !== cacheScore) {
-    setScoreOverride(null);
-    activeScoreOverride = null;
-  }
-  let activeProgressOverride = progressOverride;
-  if (progressOverride && progressOverride.cacheProgress !== cacheProgress) {
-    setProgressOverride(null);
-    activeProgressOverride = null;
-  }
-  let activeVolumesOverride = volumesOverride;
-  if (volumesOverride && volumesOverride.cacheVolumes !== cacheVolumes) {
-    setVolumesOverride(null);
-    activeVolumesOverride = null;
-  }
-  const displayScore = activeScoreOverride
-    ? activeScoreOverride.score
-    : cacheScore;
-  const displayProgress = activeProgressOverride
-    ? activeProgressOverride.progress
-    : cacheProgress;
-  const displayVolumes = activeVolumesOverride
-    ? activeVolumesOverride.volumes
-    : cacheVolumes;
+  const [displayScore, setScoreOverride] = useOptimisticOverride(cacheScore);
+  const [displayProgress, setProgressOverride] =
+    useOptimisticOverride(cacheProgress);
+  const [displayVolumes, setVolumesOverride] =
+    useOptimisticOverride(cacheVolumes);
 
   const updateScore = useDebouncedMutation({
     mutationDocument: UpdateScore,
@@ -649,7 +616,7 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
       maxScore,
     );
     if (nextScore === displayScore) return;
-    setScoreOverride({ cacheScore, score: nextScore });
+    setScoreOverride(nextScore);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     try {
@@ -673,7 +640,7 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
       type === "inc" ? displayProgress + 1 : displayProgress - 1,
     );
     if (nextProgress === displayProgress) return;
-    setProgressOverride({ cacheProgress, progress: nextProgress });
+    setProgressOverride(nextProgress);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     try {
@@ -698,7 +665,7 @@ function MediaTrackingControls({ media }: { media: DetailsMedia }) {
         ? Math.min(clamped, media.volumes)
         : clamped;
     if (nextVolumes === displayVolumes) return;
-    setVolumesOverride({ cacheVolumes, volumes: nextVolumes });
+    setVolumesOverride(nextVolumes);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     try {
