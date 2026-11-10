@@ -7,15 +7,20 @@ import { RetryLink } from "@apollo/client/link/retry";
 import { getMainDefinition } from "@apollo/client/utilities";
 import * as Sentry from "@sentry/react-native";
 import { persistCache, LocalStorageWrapper } from "apollo3-cache-persist";
-import * as Updates from "expo-updates";
-import Toast from "react-native-root-toast";
 
 import {
   mergeMediaListPages,
   nextPageForCount,
   pageContainerKey,
 } from "yep/graphql/animeListPagination";
-import { getAccessToken, getSession, sessionLoaded, signOut } from "yep/session";
+import {
+  getAccessToken,
+  getSession,
+  sessionLoaded,
+  signOut,
+  subscribeToSession,
+} from "yep/session";
+import { showToast } from "yep/toast";
 
 const authLink = setContext(async (_, { headers }) => {
   await sessionLoaded;
@@ -211,75 +216,31 @@ export async function createClient() {
     console.error("[Cache persistence failed]:", error);
   }
 
-  return new ApolloClient({
+  const client = new ApolloClient({
     link: ApolloLink.from([
+      // Must return undefined: the error link treats a returned value as a
+      // retry Observable.
       onError(({ graphQLErrors, networkError }) => {
-        // Keep this handler synchronous (returning undefined): Apollo's error
-        // link treats any truthy return as a retry Observable. The async work
-        // is fire-and-forget inside a void IIFE.
-        if (graphQLErrors)
-          void (async () => {
-            try {
-              for (const e of graphQLErrors) {
-                Sentry.captureMessage(e.message);
-                console.error("[GraphQL error]:", e);
-                if (!isAuthError(e)) {
-                  Toast.show(e.message, {
-                    duration: Toast.durations.LONG,
-                    position: Toast.positions.TOP,
-                    shadow: true,
-                    animation: true,
-                    hideOnPress: true,
-                    delay: 0,
-                  });
-                }
-              }
+        for (const error of graphQLErrors ?? []) {
+          Sentry.captureMessage(error.message);
+          console.error("[GraphQL error]:", error);
+          if (!isAuthError(error)) showToast(error.message);
+        }
+        if (
+          graphQLErrors?.some(isAuthError) &&
+          getSession().status === "signedIn"
+        ) {
+          signOut().catch(console.error);
+          showToast("You've been logged out. Please log in again.");
+        }
 
-              if (
-                graphQLErrors.some(isAuthError) &&
-                getSession().status === "signedIn"
-              ) {
-                await signOut();
-                Toast.show("You've been logged out. Please log in again.", {
-                  duration: Toast.durations.LONG,
-                  position: Toast.positions.TOP,
-                  shadow: true,
-                  animation: true,
-                  hideOnPress: true,
-                  delay: 0,
-                });
-                // Throws in dev/Expo Go builds (no embedded update).
-                await Updates.reloadAsync();
-              }
-            } catch (error) {
-              Sentry.captureException(error);
-              console.error("[GraphQL error handler failed]:", error);
-            }
-          })();
-        if (networkError) {
-          if (networkError.name === "AbortError") {
-            // ignore abort errors
-            return;
-          }
-
-          // Reaches here only after RetryLink has exhausted its retries, so a
-          // surviving 429 means AniList is still rate-limiting us — tell the user.
-          const statusCode = (networkError as { statusCode?: number })
-            .statusCode;
-          if (statusCode === 429) {
-            Toast.show(
+        if (networkError && networkError.name !== "AbortError") {
+          // RetryLink already gave up, so AniList is still rate-limiting.
+          if ((networkError as { statusCode?: number }).statusCode === 429) {
+            showToast(
               "AniList is rate-limiting requests. Please wait a moment and try again.",
-              {
-                duration: Toast.durations.LONG,
-                position: Toast.positions.TOP,
-                shadow: true,
-                animation: true,
-                hideOnPress: true,
-                delay: 0,
-              },
             );
           }
-
           Sentry.captureException(networkError);
           console.error(`[Network error]: ${networkError}`);
         }
@@ -289,4 +250,15 @@ export async function createClient() {
     ]),
     cache,
   });
+
+  let previousToken = getAccessToken();
+  subscribeToSession(() => {
+    const token = getAccessToken();
+    // clearStore, not resetStore: resetStore refetches every active query
+    // unauthenticated and sprays error toasts over the login screen.
+    if (previousToken && !token) client.clearStore().catch(() => {});
+    previousToken = token;
+  });
+
+  return client;
 }

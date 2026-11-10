@@ -1,8 +1,21 @@
+import { AuthRequest, makeRedirectUri } from "expo-auth-session";
+import Constants from "expo-constants";
 import * as SecureStore from "expo-secure-store";
 import { useSyncExternalStore } from "react";
 
-import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
+import { ANILIST_ACCESS_TOKEN_STORAGE, CLIENT_ID } from "yep/constants";
 import { StorageKeys } from "yep/hooks/helpers";
+
+const AUTHORIZE_URL = `https://anilist.co/api/v2/oauth/authorize?client_id=${CLIENT_ID}&response_type=token`;
+
+const appScheme = Array.isArray(Constants.expoConfig?.scheme)
+  ? Constants.expoConfig?.scheme[0]
+  : Constants.expoConfig?.scheme;
+
+const redirectUri = makeRedirectUri({
+  scheme: appScheme ?? (__DEV__ ? "goodweebs-dev" : "goodweebs"),
+  path: "redirect",
+});
 
 export type Session =
   | { status: "checking" }
@@ -43,6 +56,25 @@ export async function signIn(token: string) {
   transition({ status: "signedIn", token });
 }
 
+export async function logInWithAniList() {
+  const request = new AuthRequest({
+    usePKCE: false,
+    redirectUri,
+    scopes: [],
+    clientId: "",
+  });
+  request.url = AUTHORIZE_URL;
+  const result = await request.promptAsync({
+    authorizationEndpoint: AUTHORIZE_URL,
+  });
+  if (
+    (result.type === "success" || result.type === "error") &&
+    result.params.access_token
+  ) {
+    await signIn(result.params.access_token);
+  }
+}
+
 export function continueAsGuest() {
   transition({ status: "guest" });
 }
@@ -53,7 +85,7 @@ export async function signOut() {
   await SecureStore.deleteItemAsync(ANILIST_ACCESS_TOKEN_STORAGE);
 }
 
-function subscribe(listener: () => void) {
+export function subscribeToSession(listener: () => void) {
   listeners.add(listener);
   return () => {
     listeners.delete(listener);
@@ -61,7 +93,7 @@ function subscribe(listener: () => void) {
 }
 
 export function useSession() {
-  return useSyncExternalStore(subscribe, getSession);
+  return useSyncExternalStore(subscribeToSession, getSession);
 }
 
 export function useAccessToken() {

@@ -16,10 +16,9 @@ import {
 } from "yep/graphql/activity";
 import { graphql } from "yep/graphql/tada";
 import { GetViewer } from "yep/graphql/viewer";
-import { useAniListLogin } from "yep/hooks/auth";
 import { ProfileSkeleton } from "yep/screens/ProfileScreen/ProfileSkeleton";
 import { UserProfileContent } from "yep/screens/ProfileScreen/UserProfileContent";
-import { useAccessToken } from "yep/session";
+import { logInWithAniList, useAccessToken } from "yep/session";
 import { darkTheme } from "yep/themes";
 
 const GetProfileListActivity = graphql(
@@ -45,7 +44,6 @@ const GetProfileListActivity = graphql(
 export default function Profile() {
   const router = useRouter();
   const { accessToken } = useAccessToken();
-  const login = useAniListLogin();
   const {
     loading,
     data,
@@ -127,7 +125,7 @@ export default function Profile() {
               label: String(
                 fbs("Log in", "Profile empty state login call to action"),
               ),
-              onPress: login,
+              onPress: logInWithAniList,
             }}
           />
         ) : loading && !data?.Viewer ? (
