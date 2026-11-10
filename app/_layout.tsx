@@ -6,13 +6,11 @@ import {
   NormalizedCacheObject,
 } from "@apollo/client";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
-import LogRocket from "@logrocket/react-native";
 import * as Sentry from "@sentry/react-native";
 import { useFonts } from "expo-font";
-import { Observe, ObserveRoot, useObserve } from "expo-observe";
+import { ObserveRoot, useObserve } from "expo-observe";
 import { DarkTheme, Stack, ThemeProvider } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import * as Updates from "expo-updates";
 import { fbs } from "fbtee";
 import React, { useEffect } from "react";
 import { Platform, StatusBar } from "react-native";
@@ -23,9 +21,11 @@ import { enableScreens } from "react-native-screens";
 import { createClient } from "yep/graphql/client";
 import { LocaleProvider } from "yep/i18n/LocaleContext";
 import { canBrowse, useSession } from "yep/session";
-import { Settings, readSetting } from "yep/storage";
+import { startTelemetry, syncSessionReplay } from "yep/telemetry";
 import { darkTheme } from "yep/themes";
 import { LINESeedJP, Manrope } from "yep/typefaces";
+
+const crashReportingStarted = startTelemetry();
 
 const navigationTheme = {
   ...DarkTheme,
@@ -41,19 +41,6 @@ const navigationTheme = {
 };
 
 if (Platform.OS !== "web") {
-  // Module scope (not a post-mount effect) so errors thrown before first
-  // render — e.g. a failed persisted-cache restore in createClient — are
-  // captured instead of dropped.
-  if (!readSetting(Settings.optOutCrashReporting)) {
-    Sentry.init({
-      dsn: "https://b2756b0df548451d98707d024aff00d1@o58038.ingest.sentry.io/5248224",
-      debug: __DEV__,
-      enabled: !__DEV__,
-    });
-  }
-  Observe.configure({
-    dispatchingEnabled: !readSetting(Settings.optOutAnalytics),
-  });
   enableScreens();
   SplashScreen.preventAutoHideAsync();
 }
@@ -109,8 +96,7 @@ function RootLayout() {
 // run when Sentry.init ran (wrap-before-init stalls the app on a black
 // screen), so it honors the same crash-reporting opt-out. Skip on web
 // (RN-only SDK surface).
-const skipSentryWrap =
-  Platform.OS === "web" || readSetting(Settings.optOutCrashReporting);
+const skipSentryWrap = !crashReportingStarted;
 export default ObserveRoot.wrap(
   skipSentryWrap ? RootLayout : Sentry.wrap(RootLayout),
 );
@@ -136,28 +122,7 @@ function InnerLayout() {
   }, []);
 
   useEffect(function initializeAnalytics() {
-    // Production only: LogRocket's session replay captures the screen
-    // continuously — in dev it queues captures unboundedly.
-    if (!__DEV__ && !readSetting(Settings.optOutAnalytics)) {
-      LogRocket.init("iltgzt/goodweebs", {
-        updateId: Updates.isEmbeddedLaunch ? null : Updates.updateId,
-        expoChannel: Updates.channel,
-        network: {
-          // LogRocket records every request's headers into session
-          // recordings. Without this, the AniList bearer token (~1-year
-          // lifetime) on every GraphQL request is uploaded to a third
-          // party — a leaked recording would be account takeover.
-          requestSanitizer: (request) => {
-            for (const header of Object.keys(request.headers)) {
-              if (header.toLowerCase() === "authorization") {
-                request.headers[header] = null;
-              }
-            }
-            return request;
-          },
-        },
-      });
-    }
+    void syncSessionReplay();
   }, []);
 
   const appIsReady = session.status !== "checking" && !!client;
