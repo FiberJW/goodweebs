@@ -1,7 +1,7 @@
 import React from "react";
 
-import { AnimeScreen } from "yep/screens/AnimeScreen";
+import { MediaListScreen } from "yep/screens/MediaListScreen";
 
 export default function Anime() {
-  return <AnimeScreen />;
+  return <MediaListScreen mediaType="ANIME" />;
 }

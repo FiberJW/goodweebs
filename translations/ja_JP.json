@@ -1357,30 +1357,6 @@
       ],
       "types": []
     },
-    "sZFaM29Looo/aTYN0M9Ruw==": {
-      "description": "Episode abbreviation",
-      "status": "translated",
-      "tokens": [],
-      "translations": [
-        {
-          "translation": "第",
-          "variations": {}
-        }
-      ],
-      "types": []
-    },
-    "oZyEXTe6Z58Hf9hZjq4Z9Q==": {
-      "description": "Airs in status text",
-      "status": "translated",
-      "tokens": [],
-      "translations": [
-        {
-          "translation": "話 放送まで",
-          "variations": {}
-        }
-      ],
-      "types": []
-    },
     "hN1ZWq+RRHC7TzhoJMmtqw==": {
       "description": "Anime status releasing",
       "status": "translated",
@@ -1405,30 +1381,6 @@
       ],
       "types": []
     },
-    "aphmTZ+Z/IM1yqqginQbAA==": {
-      "description": "Anime status not yet released",
-      "status": "translated",
-      "tokens": [],
-      "translations": [
-        {
-          "translation": "未放送",
-          "variations": {}
-        }
-      ],
-      "types": []
-    },
-    "P0oZxssCYgyC3gP2XWFEFA==": {
-      "description": "Anime status on hiatus",
-      "status": "translated",
-      "tokens": [],
-      "translations": [
-        {
-          "translation": "休止中",
-          "variations": {}
-        }
-      ],
-      "types": []
-    },
     "CmPodXDDbYoG5fkMSMLTGQ==": {
       "description": "Finished date label",
       "status": "translated",
@@ -1441,32 +1393,8 @@
       ],
       "types": []
     },
-    "A57P/7RIXs189OG5C5o+Bw==": {
-      "description": "Anime status finished",
-      "status": "translated",
-      "tokens": [],
-      "translations": [
-        {
-          "translation": "完結",
-          "variations": {}
-        }
-      ],
-      "types": []
-    },
     "xU0N8jS4EtFuB3/UcGUjvg==": {
       "description": "Cancelled date label",
-      "status": "translated",
-      "tokens": [],
-      "translations": [
-        {
-          "translation": "打ち切り",
-          "variations": {}
-        }
-      ],
-      "types": []
-    },
-    "Dei14TPWjP7PrYXl4lixEQ==": {
-      "description": "Anime status cancelled",
       "status": "translated",
       "tokens": [],
       "translations": [
@@ -2509,18 +2437,6 @@
       ],
       "types": []
     },
-    "B5GDhgrXVBL9iwECme9AwA==": {
-      "description": "User search results header",
-      "status": "translated",
-      "tokens": [],
-      "translations": [
-        {
-          "translation": "「{searchTerm}」の検索結果",
-          "variations": {}
-        }
-      ],
-      "types": []
-    },
     "i3YKmVNa2bFcISyy3blqBw==": {
       "description": "No user search results title",
       "status": "translated",
@@ -2636,18 +2552,6 @@
       "translations": [
         {
           "translation": "最近のアクティビティ",
-          "variations": {}
-        }
-      ],
-      "types": []
-    },
-    "KD1Nmqpja6sppFkhV9R7Xg==": {
-      "description": "Profile activity error",
-      "status": "translated",
-      "tokens": [],
-      "translations": [
-        {
-          "translation": "最近のアクティビティを読み込めませんでした。",
           "variations": {}
         }
       ],

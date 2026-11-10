@@ -1,7 +1,7 @@
 import React from "react";
 
-import { MangaScreen } from "yep/screens/MangaScreen";
+import { MediaListScreen } from "yep/screens/MediaListScreen";
 
 export default function Manga() {
-  return <MangaScreen />;
+  return <MediaListScreen mediaType="MANGA" />;
 }

@@ -1,1 +1,1 @@
-export { default } from "yep/screens/UserProfileScreen";
+export { default } from "yep/screens/ProfileScreen/UserProfileScreen";

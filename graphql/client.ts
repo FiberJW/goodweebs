@@ -1,5 +1,4 @@
 import { ApolloClient, InMemoryCache, ApolloLink } from "@apollo/client";
-import type { FieldPolicy, Reference } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { HttpLink } from "@apollo/client/link/http";
@@ -8,11 +7,7 @@ import { getMainDefinition } from "@apollo/client/utilities";
 import * as Sentry from "@sentry/react-native";
 import { CachePersistor, LocalStorageWrapper } from "apollo3-cache-persist";
 
-import {
-  mergeMediaListPages,
-  nextPageForCount,
-  pageContainerKey,
-} from "yep/graphql/animeListPagination";
+import { pagedTypePolicies } from "yep/graphql/pagination";
 import {
   getAccessToken,
   getSession,
@@ -24,20 +19,11 @@ import { showToast } from "yep/toast";
 
 const authLink = setContext(async (_, { headers }) => {
   await sessionLoaded;
-  const token = getAccessToken();
-  const Authorization = token ? `Bearer ${token}` : undefined;
-
-  // return the headers to the context so httpLink can read them
-  return Authorization
-    ? {
-        headers: {
-          ...headers,
-          Authorization,
-        },
-      }
-    : // for some reason, the request gets messed up when Authorization is undefined, so just don't
-      // specify the key at all
-      {};
+  const accessToken = getAccessToken();
+  // An `Authorization: undefined` header breaks the request, so omit the key.
+  return accessToken
+    ? { headers: { ...headers, Authorization: `Bearer ${accessToken}` } }
+    : {};
 });
 
 // AniList's burst limiter sometimes drops a connection without closing it; RN's
@@ -89,10 +75,8 @@ const retryLink = new RetryLink({
       )?.response?.headers?.get?.("retry-after"),
     );
     if (Number.isFinite(retryAfterSec) && retryAfterSec > 0) {
-      // Honor Retry-After (seconds) + small buffer, capped at the 1-min timeout window.
       return Math.min(retryAfterSec * 1000 + 250, 60000);
     }
-    // Transient network drop/timeout: exponential backoff with jitter.
     return Math.min(500 * 2 ** (count - 1), 8000) * (1 + Math.random() * 0.2);
   },
   attempts: {
@@ -114,41 +98,13 @@ const retryLink = new RetryLink({
   },
 });
 
-// Append-merge for paginated pages. `page` lives on the parent Page field, so
-// the reset signal comes from the operation variables: page 1 (or absent — a
-// refetch/term change) replaces the list. Doing this at the cache layer (not
-// fetchMore's updateQuery) keeps merges correct when a background
-// cache-and-network refetch races an in-flight fetchMore, and dedupe makes
-// repeated pages idempotent.
-function appendPage(keyArgs: string[]): FieldPolicy<unknown[]> {
-  return {
-    keyArgs,
-    merge(existing, incoming, { variables, readField }) {
-      if (!existing || (variables?.page ?? 1) <= 1) return incoming;
-      // A deep page can land AFTER a racing page-1 refetch already reset the
-      // container (pull-to-refresh while fetchMore is in flight). Appending it
-      // would leave a silent gap (rows 101-150 right after row 50), so drop
-      // any page that isn't the next contiguous one.
-      if (
-        (variables?.page ?? 1) !==
-        nextPageForCount(existing.length, variables?.perPage)
-      ) {
-        return existing;
-      }
-      return mergeMediaListPages(existing, incoming, (entry) =>
-        readField("id", entry as Reference),
-      );
-    },
-  };
-}
-
 // These embedded value-objects have no `id`, so when the same normalized parent
 // (e.g. a Media) is written by two queries selecting different sub-fields —
-// AnimeFragment's coverImage { large medium color } vs the lean list/poster
-// fragments' coverImage { large } — Apollo would overwrite the cached copy and
+// the details screen's coverImage { large medium } vs a poster's
+// coverImage { large } — Apollo would overwrite the cached copy and
 // drop the missing fields (and warn). `merge: true` shallow-merges instead, so
 // the richer cached data survives a leaner write and the details screen doesn't
-// have to refetch color/medium.
+// have to refetch medium.
 const cache = new InMemoryCache({
   // The notifications list is a union (NotificationUnion); the cache needs
   // the concrete object types to match inline fragments on reads. Only the
@@ -161,32 +117,7 @@ const cache = new InMemoryCache({
     ],
   },
   typePolicies: {
-    Query: {
-      fields: {
-        // One cache container per query identity, never per page — see
-        // pageContainerKey (extracted so the key scheme is unit-testable).
-        Page: {
-          keyArgs: (args, { variables }) => pageContainerKey(args, variables),
-          merge: true,
-        },
-      },
-    },
-    Page: {
-      fields: {
-        mediaList: appendPage(["userId", "type", "status", "sort"]),
-        notifications: appendPage(["type_in"]),
-        activities: appendPage(["userId", "isFollowing", "type", "sort"]),
-        users: appendPage(["search", "sort"]),
-        media: appendPage([
-          "search",
-          "type",
-          "sort",
-          "format_in",
-          "format_not_in",
-          "isAdult",
-        ]),
-      },
-    },
+    ...pagedTypePolicies,
     Media: { fields: { coverImage: { merge: true } } },
     Character: { fields: { name: { merge: true }, image: { merge: true } } },
     User: { fields: { statistics: { merge: true } } },
@@ -208,8 +139,6 @@ export async function createClient() {
     cache,
     storage: new LocalStorageWrapper(localStorage),
   });
-  // A failed cache restore must not block startup — fall back to an
-  // in-memory-only cache so the app still boots.
   try {
     await persistor.restore();
   } catch (error) {

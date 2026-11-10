@@ -1,3 +1,5 @@
+import type { ApolloCache } from "@apollo/client";
+
 import { graphql } from "yep/graphql/tada";
 import type { ResultOf } from "yep/graphql/tada";
 
@@ -30,11 +32,46 @@ export const ActivityFeedFragment = graphql(`
   }
 `);
 
-export type ActivityFeedItem = ResultOf<typeof ActivityFeedFragment>;
+export const GetListActivityFeed = graphql(
+  `
+    query GetListActivityFeed(
+      $page: Int!
+      $perPage: Int!
+      $userId: Int
+      $isFollowing: Boolean
+      $activityType: ActivityType!
+    ) {
+      Page(page: $page, perPage: $perPage) {
+        pageInfo {
+          hasNextPage
+        }
+        activities(
+          userId: $userId
+          isFollowing: $isFollowing
+          type: $activityType
+          sort: ID_DESC
+        ) {
+          __typename
+          ... on ListActivity {
+            ...ActivityFeedFragment
+          }
+        }
+      }
+    }
+  `,
+  [ActivityFeedFragment],
+);
 
-// How many list activities the profile screens show (shared so the personal
-// and public profile paths can't drift apart).
-export const PROFILE_ACTIVITY_LIMIT = 10;
+export function forgetFollowingFeed(cache: ApolloCache<unknown>) {
+  cache.modify({
+    fields: {
+      Page: (existing, { storeFieldName, DELETE }) =>
+        storeFieldName.includes("isFollowing") ? DELETE : existing,
+    },
+  });
+}
+
+export type ActivityFeedItem = ResultOf<typeof ActivityFeedFragment>;
 
 export type ListActivityAction =
   | "completed"
@@ -91,8 +128,6 @@ export function filterListActivities(
 ): ActivityFeedItem[] {
   return (activities ?? []).flatMap((activity) => {
     if (activity?.__typename !== "ListActivity") return [];
-    // Callers select the fragment on every ListActivity member; the union's
-    // other members only carry __typename, so this narrowing cast is safe.
     const listActivity = activity as unknown as ActivityFeedItem;
     return listActivity.user && listActivity.media ? [listActivity] : [];
   });

@@ -5,7 +5,7 @@
 //
 // ponytail: FLIP BACK TO false BEFORE SHIPPING. Not meant for production —
 // this is a manual screenshot aid, not a feature flag.
-export const SCREENSHOT_MODE = false;
+const SCREENSHOT_MODE = false;
 
 // px. Enough to obscure art but keep the "it's a cover grid" silhouette.
 export const SCREENSHOT_BLUR_RADIUS = SCREENSHOT_MODE ? 64 : 0;

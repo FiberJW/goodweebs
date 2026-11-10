@@ -1,4 +1,5 @@
 import { ImageBackground } from "expo-image";
+import { useRouter, type Href } from "expo-router";
 import React, { ReactNode } from "react";
 import {
   StyleSheet,
@@ -8,6 +9,7 @@ import {
   View,
 } from "react-native";
 
+import { PressableOpacity } from "yep/components/PressableOpacity";
 import { SCREENSHOT_BLUR_RADIUS } from "yep/screenshotMode";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
@@ -18,31 +20,46 @@ type Props = {
   title?: string;
   style?: ViewStyle;
   children?: ReactNode;
+  href?: Href;
 };
 
-export function PosterAndTitle({ size, uri, title, style, children }: Props) {
+type PosterSize = Props["size"];
+
+const POSTER_WIDTHS: Record<Exclude<PosterSize, "large">, number> = {
+  details: 128,
+  profile: 89.6,
+  small: 56,
+  tiny: 48,
+};
+
+export const POSTER_GRID = { columns: 3, gap: 16 };
+
+export function usePosterSize(size: PosterSize) {
   const { width: windowWidth } = useWindowDimensions();
+  const width =
+    size === "large"
+      ? (windowWidth - POSTER_GRID.gap * (POSTER_GRID.columns + 1)) /
+        POSTER_GRID.columns
+      : POSTER_WIDTHS[size];
+  return { width, height: Math.round(width * 1.4285714286) };
+}
 
-  let posterWidth: number;
-  switch (size) {
-    case "large":
-      posterWidth = (windowWidth - 16 * 4) / 3;
-      break;
-    case "details":
-      posterWidth = 128;
-      break;
-    case "profile":
-      posterWidth = 89.6;
-      break;
-    case "small":
-      posterWidth = 56;
-      break;
-    case "tiny":
-      posterWidth = 48;
-      break;
-  }
+export function PosterAndTitle({ href, ...props }: Props) {
+  const router = useRouter();
+  if (!href) return <Poster {...props} />;
+  return (
+    <PressableOpacity
+      accessibilityRole="link"
+      accessibilityLabel={props.title}
+      onPress={() => router.push(href)}
+    >
+      <Poster {...props} />
+    </PressableOpacity>
+  );
+}
 
-  const posterHeight = Math.round(posterWidth * 1.4285714286);
+function Poster({ size, uri, title, style, children }: Omit<Props, "href">) {
+  const { width: posterWidth, height: posterHeight } = usePosterSize(size);
 
   return (
     <View style={[styles.container, style]}>

@@ -1,28 +1,19 @@
-import type { AnimeListEntryFragment } from "yep/components/MediaListItem";
 import type {
   UserStaffNameLanguage,
   UserTitleLanguage,
 } from "yep/graphql/enums";
-import type { ResultOf } from "yep/graphql/tada";
 
-// Pure title/name resolution, split out from utils.tsx so it stays free of
-// React Native imports and can be unit-tested directly (see titleName.test.ts).
-
-// getTitle runs on titles from many fragments, but every one selects the same
-// { romaji english native }. Derive the shape from AnimeListEntryFragment's title
-// selection (schema-anchored, so a MediaTitle change surfaces here at compile
-// time) rather than hand-writing it. Partial keeps callers that type these fields
-// optionally (profile favourites, notification rows) assignable.
 export type TitleInput =
-  | Partial<NonNullable<ResultOf<typeof AnimeListEntryFragment>["title"]>>
+  | {
+      romaji?: string | null;
+      english?: string | null;
+      native?: string | null;
+    }
   | null
   | undefined;
 
-// The one place the effective title language is decided, shared by display
-// (getTitle) and list sorting (animeListPagination) so they never disagree.
-// The signed-in user's AniList preference wins (stylised variants collapse to
-// their base — the app only fetches non-stylised fields); with no preference
-// (guest / not yet set) fall back to the device locale.
+// Stylised variants collapse to their base: the app only fetches
+// non-stylised fields. With no preference (guest), the device locale decides.
 export function resolveTitleLanguage(
   locale: string | undefined,
   titleLanguage: UserTitleLanguage | null | undefined,
@@ -70,10 +61,15 @@ export function getName(
   staffNameLanguage?: UserStaffNameLanguage | null,
 ): string | undefined {
   if (!name) return undefined;
-
-  // ROMAJI_WESTERN reorders the same romaji parts AniList already bakes into
-  // `full`, so it maps to `full` too.
-  return staffNameLanguage === "NATIVE"
+  return resolveNameLanguage(staffNameLanguage) === "NATIVE"
     ? (name.native ?? name.full ?? undefined)
     : (name.full ?? name.native ?? undefined);
+}
+
+// ROMAJI_WESTERN reorders the same romaji parts AniList already bakes into
+// `full`, so it reads as ROMAJI.
+export function resolveNameLanguage(
+  staffNameLanguage: UserStaffNameLanguage | null | undefined,
+): "ROMAJI" | "NATIVE" {
+  return staffNameLanguage === "NATIVE" ? "NATIVE" : "ROMAJI";
 }
