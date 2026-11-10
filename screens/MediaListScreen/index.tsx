@@ -192,7 +192,7 @@ export function MediaListScreen({ mediaType }: { mediaType: MediaType }) {
   return (
     <SafeAreaView
       edges={["left", "right"]}
-      style={[styles.outerContainer, { backgroundColor: darkTheme.background }]}
+      style={[styles.outerContainer, { backgroundColor: darkTheme.navBackground }]}
     >
       <Header
         label={copy.header}
@@ -238,6 +238,7 @@ export function MediaListScreen({ mediaType }: { mediaType: MediaType }) {
         }
       />
       <PagedList
+        style={{ backgroundColor: darkTheme.background }}
         paging={mediaList}
         joined
         contentContainerStyle={{ padding: 16 }}
