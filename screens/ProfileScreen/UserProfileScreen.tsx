@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { fbs } from "fbtee";
 import React, { useEffect } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
   UserProfile,
@@ -23,5 +24,9 @@ export default function UserProfileScreen() {
     });
   }, [name, navigation]);
 
-  return <UserProfile profile={profile} />;
+  return (
+    <SafeAreaView edges={["left", "right"]} style={{ flex: 1 }}>
+      <UserProfile profile={profile} />
+    </SafeAreaView>
+  );
 }

@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import { fbs } from "fbtee";
 import React from "react";
 import { StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { white } from "yep/colors";
 import { EmptyState } from "yep/components/EmptyState";
@@ -24,7 +25,7 @@ export default function Profile() {
   const profile = useUserProfile(viewer?.id);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={["left", "right"]} style={styles.container}>
       <Header
         label={String(fbs("Profile", "Profile tab header label"))}
         rightSlot={
@@ -82,7 +83,7 @@ export default function Profile() {
           <ProfileSkeleton />
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 

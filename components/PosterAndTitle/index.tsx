@@ -16,6 +16,7 @@ import { Manrope } from "yep/typefaces";
 
 type Props = {
   size: "small" | "tiny" | "large" | "profile" | "details";
+  width?: number;
   uri: string;
   title?: string;
   style?: ViewStyle;
@@ -32,15 +33,13 @@ const POSTER_WIDTHS: Record<Exclude<PosterSize, "large">, number> = {
   tiny: 48,
 };
 
-export const POSTER_GRID = { columns: 3, gap: 16 };
-
-export function usePosterSize(size: PosterSize) {
+export function usePosterSize(size: PosterSize, measuredWidth?: number) {
   const { width: windowWidth } = useWindowDimensions();
   const width =
-    size === "large"
-      ? (windowWidth - POSTER_GRID.gap * (POSTER_GRID.columns + 1)) /
-        POSTER_GRID.columns
-      : POSTER_WIDTHS[size];
+    measuredWidth ??
+    (size === "large"
+      ? Math.min(160, (windowWidth - 64) / 3)
+      : POSTER_WIDTHS[size]);
   return { width, height: Math.round(width * 1.4285714286) };
 }
 
@@ -58,8 +57,18 @@ export function PosterAndTitle({ href, ...props }: Props) {
   );
 }
 
-function Poster({ size, uri, title, style, children }: Omit<Props, "href">) {
-  const { width: posterWidth, height: posterHeight } = usePosterSize(size);
+function Poster({
+  size,
+  width,
+  uri,
+  title,
+  style,
+  children,
+}: Omit<Props, "href">) {
+  const { width: posterWidth, height: posterHeight } = usePosterSize(
+    size,
+    width,
+  );
 
   return (
     <View style={[styles.container, style]}>

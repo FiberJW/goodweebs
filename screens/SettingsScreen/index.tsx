@@ -9,7 +9,10 @@ import {
   Text,
   Linking,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 import { Button } from "yep/components/Button";
 import { CheckboxRow } from "yep/components/CheckboxRow";
@@ -209,193 +212,198 @@ export default function SettingsScreen() {
   );
 
   return (
-    <ScrollView
-      contentContainerStyle={[
-        styles.contentContainer,
-        { paddingBottom: insets.bottom + 16 },
-      ]}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={{ gap: 16 }}>
-        <SettingsSection
-          title={String(
-            fbs("Display settings", "Display settings section title"),
-          )}
-        >
-          <View style={styles.checkboxGroup}>
-            <CheckboxRow
-              label={String(
-                fbs("Hide scores by default", "Hide scores setting label"),
-              )}
-              value={hideScores}
-              onValueChange={setHideScores}
-            />
-            <CheckboxRow
-              label={String(
-                fbs(
-                  "Should persist score visibility per anime",
-                  "Persist score visibility setting label",
-                ),
-              )}
-              value={shouldPersistScoreVisibility}
-              onValueChange={setShouldPersistScoreVisibility}
-            />
-          </View>
-        </SettingsSection>
-        {accessToken ? (
-          <RadioSetting
-            title={String(fbs("Rating style", "Rating style section title"))}
-            options={scoreFormats}
-            selected={scoreFormat}
-            saving={savingScoreFormat}
-            getLabel={getScoreFormatLabel}
-            onSelect={(format) =>
-              selectWith(format, setPendingScoreFormat, () =>
-                updateScoreFormat({ variables: { scoreFormat: format } }),
-              )
-            }
-          />
-        ) : null}
-        {accessToken ? (
-          <RadioSetting
+    <SafeAreaView edges={["left", "right"]} style={{ flex: 1 }}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.contentContainer,
+          { paddingBottom: insets.bottom + 16 },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={{ gap: 16 }}>
+          <SettingsSection
             title={String(
-              fbs("Title language", "Title language section title"),
+              fbs("Display settings", "Display settings section title"),
             )}
-            options={titleLanguages}
-            selected={titleLanguage}
-            saving={savingLanguage && pendingTitleLanguage !== null}
-            getLabel={getTitleLanguageLabel}
-            onSelect={(language) =>
-              selectWith(language, setPendingTitleLanguage, () =>
-                updateLanguageOptions({
-                  variables: { titleLanguage: language },
-                }),
-              )
-            }
-          />
-        ) : null}
-        {accessToken ? (
-          <RadioSetting
-            title={String(fbs("Name language", "Name language section title"))}
-            options={staffNameLanguages}
-            selected={staffNameLanguage}
-            saving={savingLanguage && pendingStaffNameLanguage !== null}
-            getLabel={getStaffNameLanguageLabel}
-            onSelect={(language) =>
-              selectWith(language, setPendingStaffNameLanguage, () =>
-                updateLanguageOptions({
-                  variables: { staffNameLanguage: language },
-                }),
-              )
-            }
-          />
-        ) : null}
-        <SettingsSection
-          title={String(fbs("Language", "Language settings section title"))}
-        >
-          {/* The app language is the OS per-app Language setting; there's no
-              public API to set it from in-app, so this row opens Settings. */}
-          <PressableOpacity
-            accessibilityRole="button"
-            accessibilityHint={String(
-              fbs(
-                "Opens the system settings where you can change the app language",
-                "Language settings row accessibility hint",
-              ),
-            )}
-            style={[styles.radioCard, styles.radioRow]}
-            onPress={() => Linking.openSettings()}
           >
-            <Text style={styles.radioLabelSelected}>
-              {[...availableLanguages].find(([code]) => code === locale)?.[1] ??
-                locale}
-            </Text>
-            <Text style={styles.radioLabel}>
-              {String(
-                fbs("Change in Settings", "Language change-in-settings hint"),
-              )}
-            </Text>
-          </PressableOpacity>
-        </SettingsSection>
-        <SettingsSection
-          title={String(
-            fbs("Privacy settings", "Privacy settings section title"),
-          )}
-        >
-          <View style={styles.checkboxGroup}>
-            <CheckboxRow
-              label={String(
-                fbs(
-                  "Opt-out of crash reporting",
-                  "Crash reporting opt-out setting label",
-                ),
-              )}
-              value={optOutCrashReporting}
-              onValueChange={setOptOutCrashReporting}
-            />
-            <CheckboxRow
-              label={String(
-                fbs(
-                  "Opt-out of session analytics",
-                  "Session analytics opt-out setting label",
-                ),
-              )}
-              value={optOutAnalytics}
-              onValueChange={setOptOutAnalytics}
-            />
-          </View>
-        </SettingsSection>
-      </View>
-      <View style={{ gap: 16, alignItems: "stretch" }}>
-        <PressableOpacity
-          style={{ alignSelf: "center" }}
-          onPress={() => {
-            Linking.openURL(
-              "https://fiberjw.notion.site/Privacy-Policy-for-Goodweebs-1f70379bbe828028b5eed7413e8184e5?pvs=4",
-            );
-          }}
-        >
-          <Text
-            style={{
-              color: darkTheme.subText,
-              fontFamily: Manrope.semiBold,
-              fontSize: 16,
-            }}
-          >
-            {String(fbs("Privacy policy", "Privacy policy link label"))}
-          </Text>
-        </PressableOpacity>
-        {accessToken ? (
-          <Button
-            label={String(fbs("Log out", "Log out button label"))}
-            onPress={async () => {
-              Alert.alert(
-                String(
+            <View style={styles.checkboxGroup}>
+              <CheckboxRow
+                label={String(
+                  fbs("Hide scores by default", "Hide scores setting label"),
+                )}
+                value={hideScores}
+                onValueChange={setHideScores}
+              />
+              <CheckboxRow
+                label={String(
                   fbs(
-                    "Are you sure that you want to log out?",
-                    "Log out confirmation message",
+                    "Should persist score visibility per anime",
+                    "Persist score visibility setting label",
                   ),
+                )}
+                value={shouldPersistScoreVisibility}
+                onValueChange={setShouldPersistScoreVisibility}
+              />
+            </View>
+          </SettingsSection>
+          {accessToken ? (
+            <RadioSetting
+              title={String(fbs("Rating style", "Rating style section title"))}
+              options={scoreFormats}
+              selected={scoreFormat}
+              saving={savingScoreFormat}
+              getLabel={getScoreFormatLabel}
+              onSelect={(format) =>
+                selectWith(format, setPendingScoreFormat, () =>
+                  updateScoreFormat({ variables: { scoreFormat: format } }),
+                )
+              }
+            />
+          ) : null}
+          {accessToken ? (
+            <RadioSetting
+              title={String(
+                fbs("Title language", "Title language section title"),
+              )}
+              options={titleLanguages}
+              selected={titleLanguage}
+              saving={savingLanguage && pendingTitleLanguage !== null}
+              getLabel={getTitleLanguageLabel}
+              onSelect={(language) =>
+                selectWith(language, setPendingTitleLanguage, () =>
+                  updateLanguageOptions({
+                    variables: { titleLanguage: language },
+                  }),
+                )
+              }
+            />
+          ) : null}
+          {accessToken ? (
+            <RadioSetting
+              title={String(
+                fbs("Name language", "Name language section title"),
+              )}
+              options={staffNameLanguages}
+              selected={staffNameLanguage}
+              saving={savingLanguage && pendingStaffNameLanguage !== null}
+              getLabel={getStaffNameLanguageLabel}
+              onSelect={(language) =>
+                selectWith(language, setPendingStaffNameLanguage, () =>
+                  updateLanguageOptions({
+                    variables: { staffNameLanguage: language },
+                  }),
+                )
+              }
+            />
+          ) : null}
+          <SettingsSection
+            title={String(fbs("Language", "Language settings section title"))}
+          >
+            {/* The app language is the OS per-app Language setting; there's no
+              public API to set it from in-app, so this row opens Settings. */}
+            <PressableOpacity
+              accessibilityRole="button"
+              accessibilityHint={String(
+                fbs(
+                  "Opens the system settings where you can change the app language",
+                  "Language settings row accessibility hint",
                 ),
-                undefined,
-                [
-                  {
-                    style: "cancel",
-                    text: String(fbs("Cancel", "Cancel button label")),
-                  },
-                  {
-                    text: String(
-                      fbs("Log out", "Log out confirmation button label"),
-                    ),
-                    style: "destructive",
-                    onPress: signOut,
-                  },
-                ],
+              )}
+              style={[styles.radioCard, styles.radioRow]}
+              onPress={() => Linking.openSettings()}
+            >
+              <Text style={styles.radioLabelSelected}>
+                {[...availableLanguages].find(
+                  ([code]) => code === locale,
+                )?.[1] ?? locale}
+              </Text>
+              <Text style={styles.radioLabel}>
+                {String(
+                  fbs("Change in Settings", "Language change-in-settings hint"),
+                )}
+              </Text>
+            </PressableOpacity>
+          </SettingsSection>
+          <SettingsSection
+            title={String(
+              fbs("Privacy settings", "Privacy settings section title"),
+            )}
+          >
+            <View style={styles.checkboxGroup}>
+              <CheckboxRow
+                label={String(
+                  fbs(
+                    "Opt-out of crash reporting",
+                    "Crash reporting opt-out setting label",
+                  ),
+                )}
+                value={optOutCrashReporting}
+                onValueChange={setOptOutCrashReporting}
+              />
+              <CheckboxRow
+                label={String(
+                  fbs(
+                    "Opt-out of session analytics",
+                    "Session analytics opt-out setting label",
+                  ),
+                )}
+                value={optOutAnalytics}
+                onValueChange={setOptOutAnalytics}
+              />
+            </View>
+          </SettingsSection>
+        </View>
+        <View style={{ gap: 16, alignItems: "stretch" }}>
+          <PressableOpacity
+            style={{ alignSelf: "center" }}
+            onPress={() => {
+              Linking.openURL(
+                "https://fiberjw.notion.site/Privacy-Policy-for-Goodweebs-1f70379bbe828028b5eed7413e8184e5?pvs=4",
               );
             }}
-          />
-        ) : null}
-      </View>
-    </ScrollView>
+          >
+            <Text
+              style={{
+                color: darkTheme.subText,
+                fontFamily: Manrope.semiBold,
+                fontSize: 16,
+              }}
+            >
+              {String(fbs("Privacy policy", "Privacy policy link label"))}
+            </Text>
+          </PressableOpacity>
+          {accessToken ? (
+            <Button
+              label={String(fbs("Log out", "Log out button label"))}
+              onPress={async () => {
+                Alert.alert(
+                  String(
+                    fbs(
+                      "Are you sure that you want to log out?",
+                      "Log out confirmation message",
+                    ),
+                  ),
+                  undefined,
+                  [
+                    {
+                      style: "cancel",
+                      text: String(fbs("Cancel", "Cancel button label")),
+                    },
+                    {
+                      text: String(
+                        fbs("Log out", "Log out confirmation button label"),
+                      ),
+                      style: "destructive",
+                      onPress: signOut,
+                    },
+                  ],
+                );
+              }}
+            />
+          ) : null}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

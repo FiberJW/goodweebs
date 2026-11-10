@@ -11,7 +11,10 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 import { Button } from "yep/components/Button";
 import { DescriptionRenderer } from "yep/components/DescriptionRenderer";
@@ -476,87 +479,92 @@ export default function Details() {
   }, [media, navigation, getTitle]);
 
   return (
-    <ScrollView
-      style={styles.container}
-      showsVerticalScrollIndicator={false}
-      // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
-      refreshControl={
-        <RefreshControl
-          refreshing={isRefetching}
-          onRefresh={() => {
-            refetch().catch(() => {});
-          }}
-          tintColor={darkTheme.text}
-          titleColor={darkTheme.text}
-        />
-      }
-    >
-      {!data ? (
-        loading ? (
-          <DetailsSkeleton />
-        ) : error ? (
+    <SafeAreaView edges={["left", "right"]} style={{ flex: 1 }}>
+      <ScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+        // eslint-disable-next-line react-doctor/jsx-no-jsx-as-prop -- RefreshControl must be a live element; React Compiler memoizes it
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefetching}
+            onRefresh={() => {
+              refetch().catch(() => {});
+            }}
+            tintColor={darkTheme.text}
+            titleColor={darkTheme.text}
+          />
+        }
+      >
+        {!data ? (
+          loading ? (
+            <DetailsSkeleton />
+          ) : error ? (
+            <EmptyState
+              title={String(
+                fbs("Could not find this title", "Media not found error title"),
+              )}
+              description={`${String(
+                fbs(
+                  "We ran into an unexpected error loading the requested title:",
+                  "Media not found error description prefix",
+                ),
+              )} ${error?.message}`}
+            />
+          ) : null
+        ) : media ? (
+          <>
+            <PosterInfoSection
+              media={media}
+              showScore={!hideScores || scoreRevealed}
+              revealScore={() => setScoreRevealed(true)}
+            />
+            <MediaListStatusButton media={media} />
+            {media.mediaListEntry ? (
+              <MediaTrackingControls
+                media={media}
+                entry={media.mediaListEntry}
+              />
+            ) : null}
+            {media.description ? (
+              <DescriptionRenderer description={media.description} />
+            ) : null}
+
+            {media.trailer ? <Trailer trailer={media.trailer} /> : null}
+            {media.characters?.nodes ? (
+              <CharacterShelf
+                characters={media.characters.nodes.filter(notEmpty)}
+              />
+            ) : null}
+            <RelationShelves
+              relations={(media.relations?.edges ?? []).flatMap((edge) =>
+                edge?.relationType && edge.node
+                  ? [{ relationType: edge.relationType, node: edge.node }]
+                  : [],
+              )}
+            />
+            <ExternalLinksSection
+              links={media.externalLinks?.filter(notEmpty)}
+              isManga={media.type === "MANGA"}
+            />
+          </>
+        ) : (
           <EmptyState
             title={String(
               fbs("Could not find this title", "Media not found error title"),
             )}
-            description={`${String(
+            description={String(
               fbs(
-                "We ran into an unexpected error loading the requested title:",
-                "Media not found error description prefix",
+                "We ran into an unexpected error loading the requested title.",
+                "Media not found empty response description",
               ),
-            )} ${error?.message}`}
-          />
-        ) : null
-      ) : media ? (
-        <>
-          <PosterInfoSection
-            media={media}
-            showScore={!hideScores || scoreRevealed}
-            revealScore={() => setScoreRevealed(true)}
-          />
-          <MediaListStatusButton media={media} />
-          {media.mediaListEntry ? (
-            <MediaTrackingControls media={media} entry={media.mediaListEntry} />
-          ) : null}
-          {media.description ? (
-            <DescriptionRenderer description={media.description} />
-          ) : null}
-
-          {media.trailer ? <Trailer trailer={media.trailer} /> : null}
-          {media.characters?.nodes ? (
-            <CharacterShelf
-              characters={media.characters.nodes.filter(notEmpty)}
-            />
-          ) : null}
-          <RelationShelves
-            relations={(media.relations?.edges ?? []).flatMap((edge) =>
-              edge?.relationType && edge.node
-                ? [{ relationType: edge.relationType, node: edge.node }]
-                : [],
             )}
           />
-          <ExternalLinksSection
-            links={media.externalLinks?.filter(notEmpty)}
-            isManga={media.type === "MANGA"}
-          />
-        </>
-      ) : (
-        <EmptyState
-          title={String(
-            fbs("Could not find this title", "Media not found error title"),
-          )}
-          description={String(
-            fbs(
-              "We ran into an unexpected error loading the requested title.",
-              "Media not found empty response description",
-            ),
-          )}
-        />
-      )}
-      {/* Bottom spacer instead of dynamic contentContainerStyle padding: works on
+        )}
+        {/* Bottom spacer instead of dynamic contentContainerStyle padding: works on
           Android (contentInset is iOS-only) and avoids react-doctor's dynamic-padding rule. */}
-      <View style={{ height: insets.bottom + 16 }} />
-    </ScrollView>
+        <View style={{ height: insets.bottom + 16 }} />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
