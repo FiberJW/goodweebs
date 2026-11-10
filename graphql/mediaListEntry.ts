@@ -98,7 +98,11 @@ export function useEntryCounter({
     const next = Math.min(Math.max(value + delta, 0), max ?? Infinity);
     if (next === value) return;
     setOverride({ cacheValue, value: next });
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    if (field === "progress" && next === max) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    } else {
+      Haptics.selectionAsync();
+    }
     try {
       await save({ id: entryId, [field]: next });
     } catch (error) {

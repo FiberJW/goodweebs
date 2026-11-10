@@ -9,6 +9,7 @@ import {
 import Animated, {
   Easing,
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withRepeat,
   withTiming,
@@ -33,6 +34,7 @@ export function SkeletonShimmerBlock({
   style,
 }: Props) {
   const animationProgress = useSharedValue(0);
+  const reducedMotion = useReducedMotion();
   const [measuredWidth, setMeasuredWidth] = useState<number>(
     typeof width === "number" ? width : 0,
   );
@@ -86,7 +88,7 @@ export function SkeletonShimmerBlock({
         style,
       ]}
     >
-      {measuredWidth > 0 ? (
+      {measuredWidth > 0 && !reducedMotion ? (
         <Animated.View
           pointerEvents="none"
           style={[

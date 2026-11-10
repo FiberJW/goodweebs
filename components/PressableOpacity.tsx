@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useState } from "react";
 import {
   PressableProps,
   Pressable,
@@ -6,8 +6,14 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import Animated, {
+  cubicBezier,
+  useReducedMotion,
+} from "react-native-reanimated";
 
 import { white } from "yep/colors";
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type Props = PressableProps & {
   activeOpacity?: number;
@@ -23,34 +29,52 @@ export function PressableOpacity({
   disabled,
   containerStyle,
   useDisabledOpacity = true,
+  onPressIn,
+  onPressOut,
   ...rest
 }: Props) {
+  const [pressed, setPressed] = useState(false);
+  const reducedMotion = useReducedMotion();
+  // `disabled` blocks onPress but NOT the pressed state, so a disabled
+  // control would still react to touch without the guard.
+  const showPressed = pressed && !disabled;
+  const callerStyles = typeof style === "function" ? style({ pressed }) : style;
+
+  // Reduced motion swaps the press scale for a dim (a ripple on Android),
+  // which still confirms the touch without moving anything. The ripple stays
+  // off otherwise: its drawable keeps the unscaled bounds.
+  const pressedOpacity =
+    reducedMotion && Platform.OS !== "android" ? (activeOpacity ?? 0.7) : 1;
+
   return (
     <BorderRadiusContainer borderRadius={borderRadius} style={containerStyle}>
-      <Pressable
-        style={({ pressed }) => {
-          const pressedStyles =
-            typeof style === "function" ? style({ pressed }) : style;
-
-          const pressedOpacity =
-            Platform.OS !== "android" ? activeOpacity ?? 0.2 : 1;
-
-          const nativeStyle = {
-            // `disabled` blocks onPress but NOT the pressed state, so a
-            // disabled control would still dim on touch without the guard.
-            opacity: pressed && !disabled ? pressedOpacity : 1,
+      <AnimatedPressable
+        style={[
+          {
             borderRadius,
+            opacity: showPressed ? pressedOpacity : 1,
+            transform: [{ scale: showPressed && !reducedMotion ? 0.97 : 1 }],
+            transitionProperty: ["transform", "opacity"],
+            transitionDuration: 120,
+            transitionTimingFunction: cubicBezier(0.23, 1, 0.32, 1),
             ...(disabled && useDisabledOpacity && { opacity: 0.4 }),
-          };
-
-          if (Array.isArray(pressedStyles)) {
-            return [nativeStyle, ...pressedStyles];
-          }
-          return [nativeStyle, pressedStyles];
-        }}
+          },
+          callerStyles,
+        ]}
         disabled={disabled}
+        onPressIn={(event) => {
+          setPressed(true);
+          onPressIn?.(event);
+        }}
+        onPressOut={(event) => {
+          setPressed(false);
+          onPressOut?.(event);
+        }}
+        pressRetentionOffset={16}
         android_ripple={
-          disabled ? undefined : { color: white, borderless: false }
+          reducedMotion && !disabled
+            ? { color: white, borderless: false }
+            : undefined
         }
         {...rest}
       />
