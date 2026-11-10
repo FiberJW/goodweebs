@@ -97,9 +97,21 @@ xcodebuild -workspace ios/GoodweebsDev.xcworkspace -scheme GoodweebsDev \
   -derivedDataPath /tmp/goodweebs-duo-derived CODE_SIGNING_ALLOWED=NO build
 ```
 
-The native rebuild after the orientation change is reported separately in the PR description. An iOS export validates the production JS bundle, not simulator interaction or Android native compatibility.
+The native rebuild after the orientation change also completed with `** BUILD SUCCEEDED **` on the combined stack. Both generated iOS orientation arrays were inspected and contained all four orientations. An iOS export validates the production JS bundle, not simulator interaction or Android native compatibility.
 
-See [Doctor output](dependency-doctor.txt), [test output](tests.txt), and [iOS export output](ios-export.txt).
+## GitHub checks and Vercel blocker
+
+GitHub Actions typecheck/GraphQL/lint/tests, translation sync, and React Doctor passed on PRs #87, #88, and #89. Vercel failed before building, in the dashboard-configured ignored-build command:
+
+```text
+Running "git diff HEAD^ HEAD --quiet ./website ./app/index.web.tsx ./app/_layout.tsx ./package.json ./app.config.ts ./bun.lock ./babel.config.js ./colors.ts ./constants.ts"
+fatal: ./constants.ts: no such path in the working tree.
+Use 'git <command> -- <path>...' to specify paths that do not exist locally.
+```
+
+`constants.ts` was removed by the earlier untangle work on the base branch. The narrow correction is to insert `--` before the paths in Vercel's ignored-build setting. Running the corrected command locally exited 0 without the fatal error. This audit did not change that dashboard setting or add an unrelated deployment fix to the native support PRs.
+
+See [native build proof](native-build.txt), [Doctor output](dependency-doctor.txt), [test output](tests.txt), and [iOS export output](ios-export.txt).
 
 ## Reproduce and finish device acceptance
 
