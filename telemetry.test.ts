@@ -15,7 +15,7 @@ const delivered: string[] = [];
 const sentry = {
   client: null as null | { options: { enabled?: boolean } },
 };
-const observe = { dispatchingEnabled: true };
+const observe = { dispatchingEnabled: true, pending: [] as string[] };
 const logRocket = {
   active: false,
   pendingInit: null as null | (() => void),
@@ -55,7 +55,11 @@ mock.module("expo-observe", () => ({
       observe.dispatchingEnabled = config.dispatchingEnabled ?? true;
     },
     logEvent: (name: string) => {
-      if (observe.dispatchingEnabled) delivered.push(`observe:${name}`);
+      observe.pending.push(`observe:${name}`);
+    },
+    dispatchEvents: async () => {
+      if (observe.dispatchingEnabled) delivered.push(...observe.pending);
+      observe.pending.length = 0;
     },
   },
 }));
@@ -96,9 +100,10 @@ const LogRocket = (await import("@logrocket/react-native")).default;
 const ANALYTICS = Settings.optOutAnalytics;
 const CRASH = Settings.optOutCrashReporting;
 
-function emitMarkers(tag: string) {
+async function emitMarkers(tag: string) {
   Sentry.captureMessage(tag);
   Observe.logEvent(tag);
+  await Observe.dispatchEvents();
   LogRocket.track(tag);
 }
 
@@ -122,6 +127,7 @@ beforeEach(async () => {
   delivered.length = 0;
   sentry.client = null;
   observe.dispatchingEnabled = true;
+  observe.pending.length = 0;
   logRocket.holdInit = false;
   logRocket.active = false;
   platform.OS = "ios";
@@ -139,7 +145,7 @@ afterEach(async () => {
 describe("startup", () => {
   test("starts every SDK when nothing is opted out", async () => {
     expect(await launch({})).toBe(true);
-    emitMarkers("startup");
+    await emitMarkers("startup");
     expect(calls).toEqual([
       "sentry.init",
       "observe.configure:true",
@@ -154,7 +160,7 @@ describe("startup", () => {
 
   test("persisted opt-outs keep every SDK quiet from launch", async () => {
     expect(await launch({ analytics: true, crash: true })).toBe(false);
-    emitMarkers("startup");
+    await emitMarkers("startup");
     expect(calls).toEqual(["observe.configure:false"]);
     expect(delivered).toEqual([]);
   });
@@ -181,7 +187,7 @@ describe("withdrawing consent without remounting", () => {
     await launch({});
     setOptOut(ANALYTICS, true);
     await syncSessionReplay();
-    emitMarkers("after");
+    await emitMarkers("after");
     expect(calls.slice(3)).toEqual([
       "observe.configure:false",
       "logrocket.shutdown",
@@ -194,7 +200,7 @@ describe("withdrawing consent without remounting", () => {
     await launch({});
     setOptOut(CRASH, true);
     await syncSessionReplay();
-    emitMarkers("after");
+    await emitMarkers("after");
     expect(calls.slice(3)).toEqual(["sentry.close"]);
     expect(delivered).toEqual(["observe:after", "logrocket:after"]);
     expect(storage.get(CRASH.key)).toBe("true");
@@ -208,11 +214,11 @@ describe("withdrawing consent without remounting", () => {
     const started = syncSessionReplay();
     await new Promise((resolve) => setTimeout(resolve, 0));
     setOptOut(ANALYTICS, true);
-    emitMarkers("during");
+    await emitMarkers("during");
     logRocket.pendingInit!();
     await started;
     await syncSessionReplay();
-    emitMarkers("after");
+    await emitMarkers("after");
     expect(calls).toEqual([
       "sentry.init",
       "observe.configure:true",
@@ -226,27 +232,46 @@ describe("withdrawing consent without remounting", () => {
 });
 
 describe("re-enabling", () => {
-  test("analytics opted out at launch starts both SDKs live", async () => {
+  test("Observe resumes next launch without dispatching the opted-out backlog", async () => {
+    await launch({ analytics: true });
+    Observe.logEvent("during-opt-out");
+    setOptOut(ANALYTICS, false);
+    await syncSessionReplay();
+    Observe.logEvent("after-opt-in");
+    await Observe.dispatchEvents();
+    expect(delivered).toEqual([]);
+    await relaunch();
+    Observe.logEvent("next-launch");
+    await Observe.dispatchEvents();
+    expect(delivered).toEqual(["observe:next-launch"]);
+  });
+
+  test("a newer opt-out wins while resuming analytics", async () => {
+    await launch({ analytics: true });
+    Observe.logEvent("during-opt-out");
+    setOptOut(ANALYTICS, false);
+    setOptOut(ANALYTICS, true);
+    await syncSessionReplay();
+    Observe.logEvent("after-newer-opt-out");
+    await Observe.dispatchEvents();
+    expect(observe.dispatchingEnabled).toBe(false);
+    expect(delivered).toEqual([]);
+  });
+
+  test("analytics opted out at launch starts only the unused recorder live", async () => {
     await launch({ analytics: true });
     setOptOut(ANALYTICS, false);
     await syncSessionReplay();
-    emitMarkers("after");
-    expect(calls.slice(2)).toEqual([
-      "observe.configure:true",
-      "logrocket.init",
-    ]);
-    expect(delivered).toEqual([
-      "sentry:after",
-      "observe:after",
-      "logrocket:after",
-    ]);
+    await emitMarkers("after");
+    expect(calls.slice(2)).toEqual(["logrocket.init"]);
+    expect(delivered).toEqual(["sentry:after", "logrocket:after"]);
   });
 
   test("crash reporting stays stopped until next launch, then starts", async () => {
     await launch({});
     setOptOut(CRASH, true);
     setOptOut(CRASH, false);
-    emitMarkers("same-session");
+    await emitMarkers("same-session");
     expect(calls.filter((c) => c.startsWith("sentry"))).toEqual([
       "sentry.init",
       "sentry.close",
@@ -258,26 +283,24 @@ describe("re-enabling", () => {
     expect(calls).toContain("sentry.init");
   });
 
-  test("rapid off/on/off/on resumes Observe live and LogRocket at next launch", async () => {
+  test("rapid off/on/off/on leaves stopped analytics off until next launch", async () => {
     await launch({});
     for (const value of [true, false, true, false]) {
       setOptOut(ANALYTICS, value);
       await syncSessionReplay();
     }
-    emitMarkers("same-session");
+    await emitMarkers("same-session");
     expect(calls.slice(3)).toEqual([
       "observe.configure:false",
       "logrocket.shutdown",
-      "observe.configure:true",
       "observe.configure:false",
-      "observe.configure:true",
     ]);
-    expect(delivered).toEqual(["sentry:same-session", "observe:same-session"]);
+    expect(delivered).toEqual(["sentry:same-session"]);
 
     calls.length = 0;
     delivered.length = 0;
     await relaunch();
-    emitMarkers("next-launch");
+    await emitMarkers("next-launch");
     expect(calls).toContain("logrocket.init");
     expect(delivered).toContain("logrocket:next-launch");
   });
@@ -288,7 +311,7 @@ describe("re-enabling", () => {
     setOptOut(ANALYTICS, false);
     setOptOut(ANALYTICS, true);
     await syncSessionReplay();
-    emitMarkers("after");
+    await emitMarkers("after");
     expect(calls.filter((c) => c.startsWith("logrocket"))).toEqual([
       "logrocket.init",
       "logrocket.shutdown",
@@ -314,11 +337,7 @@ describe("guards", () => {
     await launch({ analytics: true });
     setOptOut(ANALYTICS, false);
     await syncSessionReplay();
-    expect(calls).toEqual([
-      "sentry.init",
-      "observe.configure:false",
-      "observe.configure:true",
-    ]);
+    expect(calls).toEqual(["sentry.init", "observe.configure:false"]);
     expect(sentry.client?.options.enabled).toBe(false);
   });
 });

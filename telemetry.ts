@@ -95,7 +95,8 @@ export function setOptOut(key: OptOutKey, value: boolean) {
     if (value) stopCrashReporting();
     return;
   }
-  Observe.configure({ dispatchingEnabled: !value });
+  // Resume next launch: a disabled dispatch can skip backlog while SDK retry gates are set.
+  if (value) Observe.configure({ dispatchingEnabled: false });
   void syncSessionReplay();
 }
 
