@@ -375,41 +375,17 @@ function MediaListStatusButton({
             status: () => variables.status,
           },
         });
+      }
 
-        // Patching MediaList.status alone leaves the entry under its OLD status
-        // chip — each per-status list is its own Page.mediaList container with
-        // its own ref array. Rather than refetch the whole active list (a
-        // request on AniList's 30/min budget), drop the moved entry from
-        // whichever list container currently holds it and fix that chip's
-        // total. We only ever REMOVE, never insert: the destination chip
-        // self-heals on its next read, since switching chips changes the query
-        // variables and cache-and-network always hits the network.
-        // ponytail: keyed off the `mediaList` field, so it's coupled to the Page
-        // typePolicy in graphql/client.ts — revert to
-        // refetchQueries: ["GetMediaList"] if that coupling ever bites.
-        if (variables.status !== mediaListEntry?.status) {
-          cache.modify({
-            fields: {
-              Page(existing, { readField }) {
-                const list = existing?.mediaList;
-                if (!Array.isArray(list)) return existing;
-                const filtered = list.filter(
-                  (ref) => readField("id", ref) !== mediaListEntryId,
-                );
-                if (filtered.length === list.length) return existing;
-                const total = existing.pageInfo?.total;
-                return {
-                  ...existing,
-                  mediaList: filtered,
-                  pageInfo:
-                    typeof total === "number"
-                      ? { ...existing.pageInfo, total: total - 1 }
-                      : existing.pageInfo,
-                };
-              },
-            },
-          });
-        }
+      if (variables?.status && variables.status !== mediaListEntry?.status) {
+        cache.modify({
+          fields: {
+            Page: (existing, { storeFieldName, DELETE }) =>
+              storeFieldName.startsWith(`Page:mediaList:${media.type}:`)
+                ? DELETE
+                : existing,
+          },
+        });
       }
 
       // Always (re-)link the entry to the Media ourselves — the nested
