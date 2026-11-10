@@ -187,7 +187,9 @@ export default function FeedScreen() {
                 )}
               />
             }
-            ListFooterComponent={<View style={{ height: insets.bottom + 16 }} />}
+            ListFooterComponent={
+              <View style={{ height: insets.bottom + 16 }} />
+            }
           />
         )}
       </View>

@@ -206,7 +206,10 @@ export default function Discover() {
   return (
     <SafeAreaView
       edges={["left", "right"]}
-      style={[styles.outerContainer, { backgroundColor: darkTheme.navBackground }]}
+      style={[
+        styles.outerContainer,
+        { backgroundColor: darkTheme.navBackground },
+      ]}
     >
       <Header label={String(fbs("Discover", "Discover tab header label"))} />
       {!isLiquidGlass ? (

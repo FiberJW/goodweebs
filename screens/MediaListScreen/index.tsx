@@ -192,7 +192,10 @@ export function MediaListScreen({ mediaType }: { mediaType: MediaType }) {
   return (
     <SafeAreaView
       edges={["left", "right"]}
-      style={[styles.outerContainer, { backgroundColor: darkTheme.navBackground }]}
+      style={[
+        styles.outerContainer,
+        { backgroundColor: darkTheme.navBackground },
+      ]}
     >
       <Header
         label={copy.header}
