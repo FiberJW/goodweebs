@@ -2,9 +2,9 @@
 
 App source `555002c`, compared with PR #89's preceding head `05e5850`. Captured in [one EAS iPad mini A17 Pro session, iPadOS 26.5](https://expo.dev/accounts/fiberjw/projects/goodweebs/simulator-sessions/01a1c548-4ad9-72ee-9086-dd24c0cffb51).
 
-The native sidebar correctly floats below the status bar. The visual seam came from each tab's full-window safe-area view: its black background extended behind the sidebar, while the header beside it was dark gray. The tab safe-area canvases now use the header's `navBackground`. Content views and lists retain the original black background. This covers Anime/Manga, Discover, Feed and Profile, including their guest states. Native sidebar geometry and safe-area padding are unchanged.
+On the tested iPadOS 26.5 runtime, the native sidebar floats below the status bar. The visual seam came from each tab's full-window safe-area view: its black background extended behind the sidebar, while the header beside it was dark gray. The tab safe-area canvases now use the header's `navBackground`. Content views and lists retain the original black background. This covers Anime/Manga, Discover, Feed and Profile, including their guest states. Native sidebar geometry and safe-area padding are unchanged.
 
-Apple describes inset sidebars with content extending behind them in [Get to know the new design system](https://developer.apple.com/videos/play/wwdc2025/356/). This patch makes the backing surfaces continuous while retaining that native presentation.
+Apple describes the iPadOS 26 inset sidebar in [Get to know the new design system](https://developer.apple.com/videos/play/wwdc2025/356/). iPadOS 27 changes native sidebars to extend to the window edges, as explained in the [WWDC26 State of the Union](https://developer.apple.com/videos/play/wwdc2026/102/). This gallery is 26.5 compatibility evidence; it does not establish the current iPadOS 27 container or button appearance.
 
 ## Before and after
 
