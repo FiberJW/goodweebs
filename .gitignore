@@ -25,3 +25,7 @@ source_strings.json
 
 ios
 android
+
+# Remote simulator controller credentials
+.env.eas-simulator
+.env*.local
