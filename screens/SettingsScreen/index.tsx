@@ -25,6 +25,7 @@ import { availableLanguages, useLocaleContext } from "yep/i18n/LocaleContext";
 import { ScoreFormatConfig, getScoreFormatLabel } from "yep/score";
 import { signOut, useAccessToken } from "yep/session";
 import { Settings, usePersistedState } from "yep/storage";
+import { useOptOut } from "yep/telemetry";
 import { darkTheme } from "yep/themes";
 import { resolveNameLanguage, resolveTitleLanguage } from "yep/titleName";
 import { Manrope } from "yep/typefaces";
@@ -170,10 +171,10 @@ export default function SettingsScreen() {
   const { locale } = useLocaleContext();
 
   const [hideScores, setHideScores] = usePersistedState(Settings.hideScores);
-  const [optOutCrashReporting, setOptOutCrashReporting] = usePersistedState(
+  const [optOutCrashReporting, setOptOutCrashReporting] = useOptOut(
     Settings.optOutCrashReporting,
   );
-  const [optOutAnalytics, setOptOutAnalytics] = usePersistedState(
+  const [optOutAnalytics, setOptOutAnalytics] = useOptOut(
     Settings.optOutAnalytics,
   );
   const [shouldPersistScoreVisibility, setShouldPersistScoreVisibility] =
