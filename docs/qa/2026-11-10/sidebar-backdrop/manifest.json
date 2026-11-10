@@ -1,0 +1,356 @@
+{
+  "sourceCommit": "555002cb3de796851f9405174def2b2988fa061f",
+  "baselineCommit": "05e58508f2315d332f6de3fb7feee8c70f585132",
+  "session": "https://expo.dev/accounts/fiberjw/projects/goodweebs/simulator-sessions/01a1c548-4ad9-72ee-9086-dd24c0cffb51",
+  "device": "iPad mini (A17 Pro)",
+  "runtime": "iPadOS 26.5",
+  "nativeClient": "Reused the previous verified Xcode 27.2 Debug client (UIUserInterfaceStyle=Dark); native code/config/dependencies unchanged",
+  "metro": "Task-owned port 8098 Expo tunnel, before/after source served in the same session",
+  "appearance": "Light for before/after and guest destinations, top tabs, portrait; Dark for after-sidebar-dark.png",
+  "capture": "Unretouched full-resolution Argent PNGs; landscape exported upright in the matching orientation; live feed, selection tint and clocks can vary. No full-frame pixel regression claimed.",
+  "pixelAssertion": "Header/status backgrounds match #15161D; body remains #010209. Samples avoid labels and controls.",
+  "images": [
+    {
+      "file": "after-anime.png",
+      "sourceCommit": "555002cb3de796851f9405174def2b2988fa061f",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 274199,
+      "sha256": "1ddad02026954a165363a4d0aafc0582f58540b51044a33e4dad3158278ffc0a",
+      "samplePoints": {
+        "statusAboveSidebar": [
+          500,
+          10
+        ],
+        "header": [
+          900,
+          10
+        ],
+        "body": [
+          2200,
+          300
+        ]
+      },
+      "sampledRGB": {
+        "statusAboveSidebar": [
+          21,
+          22,
+          29
+        ],
+        "header": [
+          21,
+          22,
+          29
+        ],
+        "body": [
+          1,
+          2,
+          9
+        ]
+      }
+    },
+    {
+      "file": "after-feed.png",
+      "sourceCommit": "555002cb3de796851f9405174def2b2988fa061f",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 749060,
+      "sha256": "7d5faf47b05cd2eb683e56b67ac7459165da176c391a8a4146a73cde7a055204",
+      "samplePoints": {
+        "statusAboveSidebar": [
+          500,
+          10
+        ],
+        "header": [
+          900,
+          10
+        ],
+        "body": [
+          2200,
+          300
+        ]
+      },
+      "sampledRGB": {
+        "statusAboveSidebar": [
+          21,
+          22,
+          29
+        ],
+        "header": [
+          21,
+          22,
+          29
+        ],
+        "body": [
+          1,
+          2,
+          9
+        ]
+      }
+    },
+    {
+      "file": "after-manga.png",
+      "sourceCommit": "555002cb3de796851f9405174def2b2988fa061f",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 274260,
+      "sha256": "2e58e0cb9d1404d9f2b3dd483a74f04bd8cfbfcecfe7e0d3789057e86083a80d",
+      "samplePoints": {
+        "statusAboveSidebar": [
+          500,
+          10
+        ],
+        "header": [
+          900,
+          10
+        ],
+        "body": [
+          2200,
+          300
+        ]
+      },
+      "sampledRGB": {
+        "statusAboveSidebar": [
+          21,
+          22,
+          29
+        ],
+        "header": [
+          21,
+          22,
+          29
+        ],
+        "body": [
+          1,
+          2,
+          9
+        ]
+      }
+    },
+    {
+      "file": "after-portrait.png",
+      "sourceCommit": "555002cb3de796851f9405174def2b2988fa061f",
+      "width": 1488,
+      "height": 2266,
+      "bytes": 4200422,
+      "sha256": "62a52f5aad3fff9c2cefdc5426954e5bc790635b0cfce6a49f9f0853497a0d75",
+      "samplePoints": {
+        "header": [
+          500,
+          10
+        ],
+        "body": [
+          1450,
+          300
+        ]
+      },
+      "sampledRGB": {
+        "header": [
+          21,
+          22,
+          29
+        ],
+        "body": [
+          1,
+          2,
+          9
+        ]
+      }
+    },
+    {
+      "file": "after-profile.png",
+      "sourceCommit": "555002cb3de796851f9405174def2b2988fa061f",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 231184,
+      "sha256": "5a213dc2889d7b7f5cd20fde6fa7457f03ddbb76be4177144d0dc34b132b45cd",
+      "samplePoints": {
+        "statusAboveSidebar": [
+          500,
+          10
+        ],
+        "header": [
+          900,
+          10
+        ],
+        "body": [
+          2200,
+          300
+        ]
+      },
+      "sampledRGB": {
+        "statusAboveSidebar": [
+          21,
+          22,
+          29
+        ],
+        "header": [
+          21,
+          22,
+          29
+        ],
+        "body": [
+          1,
+          2,
+          9
+        ]
+      }
+    },
+    {
+      "file": "after-sidebar-dark.png",
+      "sourceCommit": "555002cb3de796851f9405174def2b2988fa061f",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 2931027,
+      "sha256": "dc671d0002571097778ab5272fbc4f4da57c689d7eb3083679b27d1b254e1dc5",
+      "samplePoints": {
+        "statusAboveSidebar": [
+          500,
+          10
+        ],
+        "header": [
+          900,
+          10
+        ],
+        "body": [
+          2200,
+          300
+        ]
+      },
+      "sampledRGB": {
+        "statusAboveSidebar": [
+          21,
+          22,
+          29
+        ],
+        "header": [
+          21,
+          22,
+          29
+        ],
+        "body": [
+          1,
+          2,
+          9
+        ]
+      }
+    },
+    {
+      "file": "after-sidebar.png",
+      "sourceCommit": "555002cb3de796851f9405174def2b2988fa061f",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 2926357,
+      "sha256": "6af11e590569cc6a9e285c26c789fbf3020d80fd1ddcf02c6dc180a8b36d8eba",
+      "samplePoints": {
+        "statusAboveSidebar": [
+          500,
+          10
+        ],
+        "header": [
+          900,
+          10
+        ],
+        "body": [
+          2200,
+          300
+        ]
+      },
+      "sampledRGB": {
+        "statusAboveSidebar": [
+          21,
+          22,
+          29
+        ],
+        "header": [
+          21,
+          22,
+          29
+        ],
+        "body": [
+          1,
+          2,
+          9
+        ]
+      }
+    },
+    {
+      "file": "after-tabs.png",
+      "sourceCommit": "555002cb3de796851f9405174def2b2988fa061f",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 3653224,
+      "sha256": "d909cb653c71086bb7f3a6ad85296f278762ac263cddcaab9710d0847e539405",
+      "samplePoints": {
+        "statusAboveSidebar": [
+          500,
+          10
+        ],
+        "header": [
+          900,
+          10
+        ],
+        "body": [
+          2200,
+          300
+        ]
+      },
+      "sampledRGB": {
+        "statusAboveSidebar": [
+          21,
+          22,
+          29
+        ],
+        "header": [
+          21,
+          22,
+          29
+        ],
+        "body": [
+          1,
+          2,
+          9
+        ]
+      }
+    },
+    {
+      "file": "before-sidebar.png",
+      "sourceCommit": "05e58508f2315d332f6de3fb7feee8c70f585132",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 2946125,
+      "sha256": "7ffc245ca98da097c7c75f317b495e7f60edaf4d83b9d9e5427154c47c525066",
+      "samplePoints": {
+        "statusAboveSidebar": [
+          500,
+          10
+        ],
+        "header": [
+          900,
+          10
+        ],
+        "body": [
+          2200,
+          300
+        ]
+      },
+      "sampledRGB": {
+        "statusAboveSidebar": [
+          1,
+          2,
+          9
+        ],
+        "header": [
+          21,
+          22,
+          29
+        ],
+        "body": [
+          1,
+          2,
+          9
+        ]
+      }
+    }
+  ]
+}

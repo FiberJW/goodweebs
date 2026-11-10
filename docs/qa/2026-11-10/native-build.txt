@@ -1,0 +1,25 @@
+Xcode 27.2, build version 27B52
+
+Dependency native build:
+xcodebuild -workspace GoodweebsDev.xcworkspace -scheme GoodweebsDev -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath /tmp/goodweebs-duo-derived CODE_SIGNING_ALLOWED=NO build
+** BUILD SUCCEEDED **
+
+Combined-stack native rebuild after iOS orientation change:
+APP_VARIANT=development npx expo prebuild --platform ios --no-install
+(cd ios && pod install)
+(cd ios && xcodebuild -workspace GoodweebsDev.xcworkspace -scheme GoodweebsDev -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath /tmp/goodweebs-duo-derived CODE_SIGNING_ALLOWED=NO build)
+** BUILD SUCCEEDED **
+
+Generated Info.plist UISupportedInterfaceOrientations:
+UIInterfaceOrientationPortrait
+UIInterfaceOrientationPortraitUpsideDown
+UIInterfaceOrientationLandscapeLeft
+UIInterfaceOrientationLandscapeRight
+
+Generated Info.plist UISupportedInterfaceOrientations~ipad:
+UIInterfaceOrientationPortrait
+UIInterfaceOrientationPortraitUpsideDown
+UIInterfaceOrientationLandscapeLeft
+UIInterfaceOrientationLandscapeRight
+
+Native compilation is verified locally. EAS device acceptance remains blocked; neither native-build result proves the requested before/after layout or signed-in flows.

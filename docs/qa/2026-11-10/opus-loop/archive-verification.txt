@@ -1,0 +1,5 @@
+eas build:inspect --platform ios --profile development --stage archive
+Exit: 0
+QA files in archive: 0
+.env.eas-simulator in archive: false
+Fixed Trailer.tsx in archive: true

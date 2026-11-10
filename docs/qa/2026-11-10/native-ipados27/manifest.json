@@ -1,0 +1,75 @@
+{
+  "appSourceCommit": "555002c",
+  "checkoutCommitAtCapture": "325b4b8393577465ef321348b9e4f1ae3c98271f",
+  "nativeClient": "Existing compatible SDK 58 Debug client built with iOS 27.2 SDK; UIUserInterfaceStyle=Dark, UIDesignRequiresCompatibility absent",
+  "session": "https://expo.dev/accounts/fiberjw/projects/goodweebs/simulator-sessions/01a1c55e-ba7b-7de1-a475-6f8f8815f3eb",
+  "sessionBootstrap": "iPhone Duo configuration selects the newer EAS runtime environment; all app actions and PNGs explicitly target the iPad mini UDID below. The default session stream is not used as iPad proof.",
+  "device": {
+    "platform": "ios",
+    "udid": "67F2767E-ACF7-4AA6-ACA1-8CDB9D4806B7",
+    "name": "iPad mini (A17 Pro)",
+    "state": "Booted",
+    "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-27-0",
+    "runtimeKind": "mobile"
+  },
+  "metro": "Task-owned port 8099 Expo tunnel serving current checkout",
+  "comparison": "Same app implementation as the 26.5 sidebar-backdrop captures; OS-version comparison, not a code A/B. PNGs are unretouched. Landscape exported upright by Argent.",
+  "checks": [
+    {
+      "state": "portrait-tree",
+      "selectedTab": "Discover"
+    },
+    {
+      "state": "sidebar-tree",
+      "selectedTab": "Discover",
+      "nativeToggle": {
+        "label": "Hide Sidebar",
+        "identifier": "ToggleSidebar",
+        "viewClassName": "_UIButtonBarButton"
+      }
+    },
+    {
+      "state": "tabs-tree",
+      "selectedTab": "Discover"
+    },
+    {
+      "state": "restored-sidebar-tree",
+      "selectedTab": "Discover",
+      "nativeToggle": {
+        "label": "Hide Sidebar",
+        "identifier": "ToggleSidebar",
+        "viewClassName": "_UIButtonBarButton"
+      }
+    }
+  ],
+  "images": [
+    {
+      "file": "portrait.png",
+      "width": 1488,
+      "height": 2266,
+      "bytes": 4200472,
+      "sha256": "7715f7507201f8cb5c8f325624b23272f33d4446066330c1cbd8374e887bdbb5"
+    },
+    {
+      "file": "sidebar-restored.png",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 2992981,
+      "sha256": "336a648702793ca8b5e5fc1f2c61d936786817d2a7501f839c0b635e72ff8c2c"
+    },
+    {
+      "file": "sidebar.png",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 2993048,
+      "sha256": "d172ba1463e4977216ce13b0f9f533561278dab1fc189c28f564297dbad4cc13"
+    },
+    {
+      "file": "tabs.png",
+      "width": 2266,
+      "height": 1488,
+      "bytes": 3749811,
+      "sha256": "bdd7842339ccb22997e3bb4f4f8c7fd5f0d352fcd4401c7ba291866a8502b39a"
+    }
+  ]
+}

@@ -9,7 +9,7 @@ import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import * as Sentry from "@sentry/react-native";
 import { useFonts } from "expo-font";
 import { ObserveRoot, useObserve } from "expo-observe";
-import { Stack } from "expo-router";
+import { DarkTheme, Stack, ThemeProvider } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { fbs } from "fbtee";
 import React, { useEffect } from "react";
@@ -26,6 +26,20 @@ import { darkTheme } from "yep/themes";
 import { LINESeedJP, Manrope } from "yep/typefaces";
 
 const crashReportingStarted = startTelemetry();
+
+const navigationTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    primary: darkTheme.accent,
+    background: darkTheme.background,
+    card: darkTheme.navBackground,
+    text: darkTheme.text,
+    border: darkTheme.listItemBorder,
+    notification: darkTheme.accent,
+  },
+};
+
 if (Platform.OS !== "web") {
   enableScreens();
   SplashScreen.preventAutoHideAsync();
@@ -69,9 +83,11 @@ function RootLayout() {
 
   return (
     <LocaleProvider>
-      <RootSiblingParent>
-        <InnerLayout />
-      </RootSiblingParent>
+      <ThemeProvider value={navigationTheme}>
+        <RootSiblingParent>
+          <InnerLayout />
+        </RootSiblingParent>
+      </ThemeProvider>
     </LocaleProvider>
   );
 }

@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import { fbs } from "fbtee";
 import React, { useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ChipGroup } from "yep/components/ChipGroup";
 import { EmptyState } from "yep/components/EmptyState";
@@ -189,8 +190,12 @@ export function MediaListScreen({ mediaType }: { mediaType: MediaType }) {
   const showSkeleton = Boolean(accessToken) && !mediaList.data;
 
   return (
-    <View
-      style={[styles.outerContainer, { backgroundColor: darkTheme.background }]}
+    <SafeAreaView
+      edges={["left", "right"]}
+      style={[
+        styles.outerContainer,
+        { backgroundColor: darkTheme.navBackground },
+      ]}
     >
       <Header
         label={copy.header}
@@ -236,6 +241,7 @@ export function MediaListScreen({ mediaType }: { mediaType: MediaType }) {
         }
       />
       <PagedList
+        style={{ backgroundColor: darkTheme.background }}
         paging={mediaList}
         joined
         contentContainerStyle={{ padding: 16 }}
@@ -278,7 +284,7 @@ export function MediaListScreen({ mediaType }: { mediaType: MediaType }) {
         keyExtractor={keyExtractor}
         renderItem={renderMediaItem}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

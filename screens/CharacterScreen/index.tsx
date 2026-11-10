@@ -3,7 +3,10 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import { fbs } from "fbtee";
 import React, { useEffect } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 import { DescriptionRenderer } from "yep/components/DescriptionRenderer";
 import { EmptyState } from "yep/components/EmptyState";
@@ -65,60 +68,62 @@ export default function Character() {
   }, [character, navigation, getName]);
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {!data ? (
-        loading ? (
-          <CharacterSkeleton />
-        ) : error ? (
-          <EmptyState
-            title={String(
-              fbs(
-                "Could not find character",
-                "Character not found error title",
-              ),
-            )}
-            description={`${String(
-              fbs(
-                "We ran into an unexpected error loading the requested character:",
-                "Character not found error description prefix",
-              ),
-            )} ${error?.message}`}
-          />
-        ) : null
-      ) : (
-        <>
-          <View style={styles.posterAndDescriptionContainer}>
-            <PosterAndTitle
-              size="details"
-              uri={character?.image?.large ?? ""}
-              style={{ marginRight: 16 }}
-            >
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "flex-end",
-                  alignItems: "flex-end",
-                  padding: 8,
-                }}
+    <SafeAreaView edges={["left", "right"]} style={{ flex: 1 }}>
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        {!data ? (
+          loading ? (
+            <CharacterSkeleton />
+          ) : error ? (
+            <EmptyState
+              title={String(
+                fbs(
+                  "Could not find character",
+                  "Character not found error title",
+                ),
+              )}
+              description={`${String(
+                fbs(
+                  "We ran into an unexpected error loading the requested character:",
+                  "Character not found error description prefix",
+                ),
+              )} ${error?.message}`}
+            />
+          ) : null
+        ) : (
+          <>
+            <View style={styles.posterAndDescriptionContainer}>
+              <PosterAndTitle
+                size="details"
+                uri={character?.image?.large ?? ""}
+                style={{ marginRight: 16 }}
               >
-                {character ? (
-                  <FavoriteButton
-                    target={{ characterId: character.id }}
-                    isFavourite={Boolean(character.isFavourite)}
-                  />
-                ) : null}
-              </View>
-            </PosterAndTitle>
-          </View>
-          {character?.description ? (
-            <DescriptionRenderer description={character.description} />
-          ) : null}
-        </>
-      )}
-      {/* Bottom spacer instead of dynamic contentContainerStyle padding: works on
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "flex-end",
+                    alignItems: "flex-end",
+                    padding: 8,
+                  }}
+                >
+                  {character ? (
+                    <FavoriteButton
+                      target={{ characterId: character.id }}
+                      isFavourite={Boolean(character.isFavourite)}
+                    />
+                  ) : null}
+                </View>
+              </PosterAndTitle>
+            </View>
+            {character?.description ? (
+              <DescriptionRenderer description={character.description} />
+            ) : null}
+          </>
+        )}
+        {/* Bottom spacer instead of dynamic contentContainerStyle padding: works on
           Android (contentInset is iOS-only) and avoids react-doctor's dynamic-padding rule. */}
-      <View style={{ height: insets.bottom + 16 }} />
-    </ScrollView>
+        <View style={{ height: insets.bottom + 16 }} />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

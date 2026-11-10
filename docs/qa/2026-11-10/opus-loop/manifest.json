@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-10",
+  "session": "01a1c58d-9662-7fc0-9350-1bd41ead4a4f",
+  "device": {
+    "name": "iPhone Duo",
+    "udid": "74195B53-4DBC-4EAA-9991-F98E5BB86BA8",
+    "runtime": "iOS 27.1",
+    "panel": "cover",
+    "pixels": [
+      1398,
+      2034
+    ]
+  },
+  "beforeSource": "8a8ad243ec2c2cdbe87221f044ac5532e9f01926",
+  "afterSource": "2210d6cce97e6622f1cdbc2b97f41a687b259c64",
+  "nativeClient": "com.fiberjw.goodweebs.dev; unchanged native client from SDK 27.2 build",
+  "route": "/details/16498",
+  "screenshots": {
+    "duo-trailer-after.png": "381d4f1b5f1e8c5df9d9192b50efd0eee19bf07e4e709c11e46dbc8f396da034",
+    "duo-trailer-before.png": "3a654cb821ab97335db31c4c8272663723d42a025fbb1ea868cf7365f27a1f3d"
+  },
+  "sessionStopped": true,
+  "taskMetrosStopped": true,
+  "simulatorCredentialsCleared": true
+}

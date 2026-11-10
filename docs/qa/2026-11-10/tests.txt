@@ -1,0 +1,45 @@
+bun test v1.3.10 (30e609e0)
+
+titleName.test.ts:
+(pass) getTitle > no title is undefined [0.03ms]
+(pass) getTitle > account preference picks the matching field [0.02ms]
+(pass) getTitle > stylised variants collapse to their base field [0.03ms]
+(pass) getTitle > account preference wins over the device locale
+(pass) getTitle > falls back down the chain when the preferred field is missing [0.01ms]
+(pass) getTitle > no preference falls back to the device locale [0.01ms]
+(pass) getName > no name is undefined [0.02ms]
+(pass) getName > native preference picks native, everything else picks full [0.02ms]
+(pass) getName > native falls back to full when native is missing
+
+graphql/pagination.test.ts:
+(pass) appendPage > page 1 replaces whatever was cached [0.58ms]
+(pass) appendPage > the next page appends in order and drops repeated entries [0.07ms]
+(pass) appendPage > a stale deep page after a refresh is ignored
+(pass) pageContainerKey > feed scopes and the profile strip each get their own container [1.26ms]
+(pass) pageContainerKey > the page number never changes a container
+(pass) pageContainerKey > user search, media search, trending and notifications never share [0.40ms]
+(pass) pageContainerKey > media lists key on their sort [0.14ms]
+
+graphql/activity.test.ts:
+(pass) getListActivityAction > normalizes every AniList list-activity status
+(pass) getListActivityAction > uses a localizable fallback for unknown or missing statuses
+(pass) forgetFollowingFeed > drops the Following feed and keeps the global one [5.48ms]
+
+screens/NotificationsScreen/notificationText.test.ts:
+(pass) getNotificationText > splices episode and title into airing contexts [0.05ms]
+(pass) getNotificationText > appends related-media context to the title
+(pass) getNotificationText > survives null contexts
+
+screens/MediaListScreen/sort.test.ts:
+(pass) mediaSortValue > TITLE with no account preference follows the device locale [0.06ms]
+(pass) mediaSortValue > TITLE follows the account preference over the locale, per direction
+(pass) mediaSortValue > other fields ignore locale and language
+
+components/PosterAndTitle/layout.test.ts:
+(pass) getPosterGrid > fits the measured content width, including narrow windows and sidebar layouts [0.14ms]
+(pass) getPosterGrid > keeps three compact columns and adds columns as the view expands
+
+ 27 pass
+ 0 fail
+ 88 expect() calls
+Ran 27 tests across 6 files. [131.00ms]

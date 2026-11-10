@@ -1,7 +1,7 @@
 import { yellowDarkA } from "@radix-ui/colors";
 import { fbs } from "fbtee";
 import React from "react";
-import { useWindowDimensions, View } from "react-native";
+import { View } from "react-native";
 import RenderHtml from "react-native-render-html";
 import showdown from "showdown";
 
@@ -17,7 +17,7 @@ type Props = {
 const markdownToHtmlConverter = new showdown.Converter();
 
 export function DescriptionRenderer({ description }: Props) {
-  const { width } = useWindowDimensions();
+  const [width, setWidth] = React.useState(0);
 
   const spoilerRegex = /~!(.*?)!~/gi;
 
@@ -39,7 +39,10 @@ export function DescriptionRenderer({ description }: Props) {
     );
 
   return (
-    <View style={{ marginBottom: 16 }}>
+    <View
+      style={{ marginBottom: 16 }}
+      onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
+    >
       {hasSpoilers && !showSpoilers ? (
         <Button
           label={String(fbs("Show spoilers", "Show spoilers button label"))}
@@ -47,13 +50,15 @@ export function DescriptionRenderer({ description }: Props) {
           style={{ marginBottom: 8 }}
         />
       ) : null}
-      <RenderHtml
-        source={{
-          html,
-        }}
-        tagsStyles={tagsStyles}
-        contentWidth={width}
-      />
+      {width > 0 ? (
+        <RenderHtml
+          source={{
+            html,
+          }}
+          tagsStyles={tagsStyles}
+          contentWidth={width}
+        />
+      ) : null}
     </View>
   );
 }
