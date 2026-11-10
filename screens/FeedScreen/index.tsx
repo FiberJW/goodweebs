@@ -30,9 +30,9 @@ import {
 import { graphql } from "yep/graphql/tada";
 import { GetViewer } from "yep/graphql/viewer";
 import { useLoadNextPage } from "yep/hooks/helpers";
+import { useAccessToken } from "yep/session";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { useAccessToken } from "yep/useAccessToken";
 
 const GetListActivityFeed = graphql(
   `

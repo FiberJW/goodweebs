@@ -22,11 +22,12 @@ import { enableScreens } from "react-native-screens";
 
 import { createClient } from "yep/graphql/client";
 import { LocaleProvider } from "yep/i18n/LocaleContext";
+import { canBrowse, useSession } from "yep/session";
 import { darkTheme } from "yep/themes";
 import { LINESeedJP, Manrope } from "yep/typefaces";
 
 import { StorageKeys } from "../hooks/helpers";
-import { AccessTokenProvider, useAccessToken } from "../useAccessToken";
+
 
 // localStorage is synchronous here thanks to the expo-sqlite polyfill above.
 function optedOut(key: StorageKeys) {
@@ -91,9 +92,7 @@ function RootLayout() {
   return (
     <LocaleProvider>
       <RootSiblingParent>
-        <AccessTokenProvider>
-          <InnerLayout />
-        </AccessTokenProvider>
+        <InnerLayout />
       </RootSiblingParent>
     </LocaleProvider>
   );
@@ -112,14 +111,12 @@ export default ObserveRoot.wrap(
 // eslint-disable-next-line react-doctor/no-multi-comp -- see RootLayout note above
 function InnerLayout() {
   const { markInteractive } = useObserve();
-  const { checkedForToken, accessToken, continuedWithoutLogin } =
-    useAccessToken();
   // A signed-in user OR a guest may browse the tabs; only a signed-out
   // non-guest sees the auth screen. Stack.Protected removes the disallowed
   // screens, so React Navigation resets to the available one whenever this
   // flips (login, logout, "continue without logging in") — no imperative
   // router.replace, and deep links into a guarded area are redirected too.
-  const canBrowse = !!accessToken || continuedWithoutLogin;
+  const session = useSession();
 
   const [client, setClient] =
     React.useState<ApolloClient<NormalizedCacheObject> | null>(null);
@@ -161,7 +158,7 @@ function InnerLayout() {
     }
   }, []);
 
-  const appIsReady = checkedForToken && !!client;
+  const appIsReady = session.status !== "checking" && !!client;
 
   async function onLayoutRootView() {
     if (appIsReady) {
@@ -206,7 +203,7 @@ function InnerLayout() {
                 headerBackButtonDisplayMode: "minimal",
               }}
             />
-            <Stack.Protected guard={canBrowse}>
+            <Stack.Protected guard={canBrowse(session)}>
               <Stack.Screen
                 name="(tabs)"
                 options={{
@@ -279,7 +276,7 @@ function InnerLayout() {
                 }}
               />
             </Stack.Protected>
-            <Stack.Protected guard={!canBrowse}>
+            <Stack.Protected guard={!canBrowse(session)}>
               <Stack.Screen name="auth" options={{ headerShown: false }} />
             </Stack.Protected>
           </Stack>

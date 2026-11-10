@@ -1,13 +1,9 @@
-import {
-  makeRedirectUri,
-  AuthRequest,
-  AuthRequestPromptOptions,
-  AuthSessionResult,
-} from "expo-auth-session";
+import { makeRedirectUri, AuthRequest } from "expo-auth-session";
 import Constants from "expo-constants";
 import { useState } from "react";
 
 import { CLIENT_ID } from "yep/constants";
+import { signIn } from "yep/session";
 
 const appScheme = Array.isArray(Constants.expoConfig?.scheme)
   ? Constants.expoConfig?.scheme[0]
@@ -31,27 +27,18 @@ function createAniListAuthRequest() {
   return request;
 }
 
-export function useAniListAuthRequest(): [
-  AuthRequest | null,
-  AuthSessionResult | null,
-  (options?: AuthRequestPromptOptions) => Promise<AuthSessionResult>,
-] {
+export function useAniListLogin() {
   const [request] = useState(createAniListAuthRequest);
-  const [result, setResult] = useState<AuthSessionResult | null>(null);
 
-  async function promptAsync(options: AuthRequestPromptOptions = {}) {
-    if (!request) {
-      throw new Error(
-        "Cannot prompt to authenticate until the request has finished loading.",
-      );
+  return async function login() {
+    const result = await request.promptAsync({
+      authorizationEndpoint: AniListURL,
+    });
+    if (
+      (result.type === "success" || result.type === "error") &&
+      result.params.access_token
+    ) {
+      await signIn(result.params.access_token);
     }
-    const result = await request.promptAsync(
-      { authorizationEndpoint: AniListURL },
-      options,
-    );
-    setResult(result);
-    return result;
-  }
-
-  return [request, result, promptAsync];
+  };
 }

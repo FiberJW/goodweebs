@@ -1,7 +1,6 @@
 import { NetworkStatus, useQuery } from "@apollo/client";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
 import React from "react";
 import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
@@ -10,20 +9,18 @@ import { white } from "yep/colors";
 import { EmptyState } from "yep/components/EmptyState";
 import { Header } from "yep/components/Header";
 import { PressableOpacity } from "yep/components/PressableOpacity";
-import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
 import {
   ActivityFeedFragment,
   PROFILE_ACTIVITY_LIMIT,
   filterListActivities,
 } from "yep/graphql/activity";
-import { primeAccessToken } from "yep/graphql/client";
 import { graphql } from "yep/graphql/tada";
 import { GetViewer } from "yep/graphql/viewer";
-import { useAniListAuthRequest } from "yep/hooks/auth";
+import { useAniListLogin } from "yep/hooks/auth";
 import { ProfileSkeleton } from "yep/screens/ProfileScreen/ProfileSkeleton";
 import { UserProfileContent } from "yep/screens/ProfileScreen/UserProfileContent";
+import { useAccessToken } from "yep/session";
 import { darkTheme } from "yep/themes";
-import { useAccessToken } from "yep/useAccessToken";
 
 const GetProfileListActivity = graphql(
   `
@@ -47,8 +44,8 @@ const GetProfileListActivity = graphql(
 
 export default function Profile() {
   const router = useRouter();
-  const { accessToken, setAccessToken } = useAccessToken();
-  const [, , promptAsync] = useAniListAuthRequest();
+  const { accessToken } = useAccessToken();
+  const login = useAniListLogin();
   const {
     loading,
     data,
@@ -130,20 +127,7 @@ export default function Profile() {
               label: String(
                 fbs("Log in", "Profile empty state login call to action"),
               ),
-              onPress: async () => {
-                const result = await promptAsync();
-                if (
-                  (result.type === "error" || result.type === "success") &&
-                  result.params.access_token
-                ) {
-                  await SecureStore.setItemAsync(
-                    ANILIST_ACCESS_TOKEN_STORAGE,
-                    result.params.access_token,
-                  );
-                  primeAccessToken(result.params.access_token);
-                  setAccessToken(result.params.access_token);
-                }
-              },
+              onPress: login,
             }}
           />
         ) : loading && !data?.Viewer ? (

@@ -1,6 +1,5 @@
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import * as SecureStore from "expo-secure-store";
 import { fbs } from "fbtee";
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, Alert } from "react-native";
@@ -8,16 +7,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { aniListBlue } from "yep/colors";
 import { Button } from "yep/components/Button";
-import { ANILIST_ACCESS_TOKEN_STORAGE } from "yep/constants";
-import { primeAccessToken } from "yep/graphql/client";
-import { useAniListAuthRequest } from "yep/hooks/auth";
+import { useAniListLogin } from "yep/hooks/auth";
+import { continueAsGuest } from "yep/session";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { useAccessToken } from "yep/useAccessToken";
 
 export default function AuthScreen() {
-  const [, , promptAsync] = useAniListAuthRequest();
-  const { setAccessToken, setContinuedWithoutLogin } = useAccessToken();
+  const login = useAniListLogin();
   const router = useRouter();
 
   // No "navigate if a token already exists" effect: the Stack.Protected guard
@@ -57,21 +53,7 @@ export default function AuthScreen() {
               label={String(
                 fbs("Log in with AniList", "Auth screen login button label"),
               )}
-              onPress={async () => {
-                const result = await promptAsync();
-
-                if (result.type === "error" || result.type === "success") {
-                  if (result.params.access_token) {
-                    await SecureStore.setItemAsync(
-                      ANILIST_ACCESS_TOKEN_STORAGE,
-                      result.params.access_token
-                    );
-                    primeAccessToken(result.params.access_token);
-                    // Flips the Protected guard; RN swaps in the tabs.
-                    setAccessToken(result.params.access_token);
-                  }
-                }
-              }}
+              onPress={login}
             />
 
             <Button
@@ -100,7 +82,7 @@ export default function AuthScreen() {
                       onPress: () => {
                         // Opens the tabs via the guard, then lands on Discover
                         // (guests browse there) rather than the anime anchor.
-                        setContinuedWithoutLogin(true);
+                        continueAsGuest();
                         router.replace("/(tabs)/discover");
                       },
                       text: String(

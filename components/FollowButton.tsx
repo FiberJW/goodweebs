@@ -5,8 +5,8 @@ import Toast from "react-native-root-toast";
 
 import { Button } from "yep/components/Button";
 import { ToggleUserFollow } from "yep/graphql/mutations";
+import { useAccessToken } from "yep/session";
 import { darkTheme } from "yep/themes";
-import { useAccessToken } from "yep/useAccessToken";
 
 export function FollowButton({
   userId,

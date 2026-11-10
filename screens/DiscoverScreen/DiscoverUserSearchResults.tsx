@@ -14,9 +14,9 @@ import {
   type UserSearchResult,
 } from "yep/graphql/userSearch";
 import { fakeHandle } from "yep/screenshotMode";
+import { useAccessToken } from "yep/session";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
-import { useAccessToken } from "yep/useAccessToken";
 
 type UserResult = UserSearchResult;
 type Props = {
