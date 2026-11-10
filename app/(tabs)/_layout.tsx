@@ -67,6 +67,7 @@ function NativeTabsLayout() {
     // Pre-26 the native bar defaults to a transparent scroll-edge appearance,
     // so pin the old JS bar's background there.
     <NativeTabs
+      sidebarAdaptable
       tintColor={isLiquidGlass ? goodweebsPurple : darkTheme.text}
       iconColor={isLiquidGlass ? undefined : darkTheme.listItemBackground}
       labelStyle={

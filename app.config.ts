@@ -59,6 +59,21 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       "aps-environment": "development",
     },
     supportsTablet: true,
+    // Keep Android portrait-only; iOS windows must support rotation and resizing.
+    infoPlist: {
+      UISupportedInterfaceOrientations: [
+        "UIInterfaceOrientationPortrait",
+        "UIInterfaceOrientationPortraitUpsideDown",
+        "UIInterfaceOrientationLandscapeLeft",
+        "UIInterfaceOrientationLandscapeRight",
+      ],
+      "UISupportedInterfaceOrientations~ipad": [
+        "UIInterfaceOrientationPortrait",
+        "UIInterfaceOrientationPortraitUpsideDown",
+        "UIInterfaceOrientationLandscapeLeft",
+        "UIInterfaceOrientationLandscapeRight",
+      ],
+    },
     bundleIdentifier: appId,
     config: {
       usesNonExemptEncryption: false,
