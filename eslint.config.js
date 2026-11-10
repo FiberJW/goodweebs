@@ -23,7 +23,6 @@ module.exports = defineConfig([
       "react-native/no-inline-styles": 0,
       "react-native/no-raw-text": 0,
       "react-doctor/only-export-components": 0,
-      // Server-component payload rule; this app has no server components.
       "react-doctor/server-dedup-props": 0,
       "import/order": [
         "error",
