@@ -10,6 +10,8 @@ A subsequent EAS run captured nine before/after PNGs on Duo iOS 27.1 and iPad mi
 
 A later [navigation theme follow-up](navigation-theme/README.md) fixes the light native sidebar and top tabs in those original captures. It adds five fresh EAS iPad mini screenshots with Light and Dark device appearance, plus native selection checks and a rebuilt dark-appearance client.
 
+The latest [sidebar background follow-up](sidebar-backdrop/README.md) makes the surface behind the floating sidebar continuous with the status bar and header. Nine new same-session PNGs cover the before/after change, all five guest destinations, portrait, top tabs and Dark device appearance, with sampled-color assertions.
+
 The following failure notes describe the earlier attempt, before the successful visual follow-up.
 
 EAS availability returned `{"available":true,"accountName":"fiberjw"}`. Both named Argent sessions reached `IN_PROGRESS`:

@@ -2,6 +2,8 @@
 
 Follow-up to [PR #89](https://github.com/FiberJW/goodweebs/pull/89). App source: `a078252`.
 
+See the subsequent [sidebar background follow-up](../sidebar-backdrop/README.md) for the latest integrated canvas and new before/after captures. The images below preserve the earlier native appearance comparison.
+
 The app's screens use a fixed dark palette, but the native sidebar and top tab bar appeared light. Two settings were inconsistent with that palette:
 
 - Without a Router `ThemeProvider`, native tab screen wrappers used the default light navigation background, including the surface behind Liquid Glass.
