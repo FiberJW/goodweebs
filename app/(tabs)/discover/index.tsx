@@ -140,6 +140,40 @@ const SearchUsers = graphql(
   [UserSearchResultFragment],
 );
 
+type DiscoverView =
+  | "tooShort"
+  | "searchLoading"
+  | "searchError"
+  | "searchResults"
+  | "userPrompt"
+  | "trendingLoading"
+  | "trending";
+
+function getDiscoverView({
+  term,
+  debouncedTerm,
+  isUserSearch,
+  search,
+  trending,
+}: {
+  term: string;
+  debouncedTerm: string;
+  isUserSearch: boolean;
+  search: { loading: boolean; fetchingMore: boolean; error: unknown };
+  trending: { loading: boolean; fetchingMore: boolean };
+}): DiscoverView {
+  if (term.length > 0) {
+    if (term.length < 2) return "tooShort";
+    if ((search.loading && !search.fetchingMore) || term !== debouncedTerm)
+      return "searchLoading";
+    if (search.error) return "searchError";
+    return "searchResults";
+  }
+  if (isUserSearch) return "userPrompt";
+  if (trending.loading && !trending.fetchingMore) return "trendingLoading";
+  return "trending";
+}
+
 export default function Discover() {
   const { accessToken } = useAccessToken();
   const [searchType, setSearchType] = useState<SearchType>("ANIME");
@@ -159,8 +193,6 @@ export default function Discover() {
   const normalizedSearchTerm = searchTerm.trim();
   const normalizedDebouncedSearchTerm = debouncedSearchTerm.trim();
   const showSearchResultsView = normalizedSearchTerm.length > 0;
-  const searchTooShort =
-    showSearchResultsView && normalizedSearchTerm.length < 2;
   const canSearch = normalizedDebouncedSearchTerm.length >= 2;
   const isUserSearch = searchType === "USER";
   const mediaType = isUserSearch ? "ANIME" : searchType;
@@ -236,19 +268,26 @@ export default function Discover() {
   // results" don't flash while the user is still typing. Skeleton for the
   // initial load / a new term only — not while a further page appends (the
   // footer spinner covers that).
-  const isSearchLoading =
-    showSearchResultsView &&
-    !searchTooShort &&
-    (((isUserSearch ? loadingUserSearch : loadingSearchData) &&
-      !(isUserSearch ? isUserSearchFetchingMore : isSearchFetchingMore)) ||
-      normalizedSearchTerm !== normalizedDebouncedSearchTerm);
-  const isSearchError =
-    showSearchResultsView &&
-    Boolean(isUserSearch ? userSearchError : searchError);
-  // Skeleton for the initial load only — not while a further page appends
-  // (the footer spinner covers that).
-  const isTrendingInitialLoading =
-    !showSearchResultsView && loadingTrending && !isTrendingFetchingMore;
+  const view = getDiscoverView({
+    term: normalizedSearchTerm,
+    debouncedTerm: normalizedDebouncedSearchTerm,
+    isUserSearch,
+    search: isUserSearch
+      ? {
+          loading: loadingUserSearch,
+          fetchingMore: isUserSearchFetchingMore,
+          error: userSearchError,
+        }
+      : {
+          loading: loadingSearchData,
+          fetchingMore: isSearchFetchingMore,
+          error: searchError,
+        },
+    trending: {
+      loading: loadingTrending,
+      fetchingMore: isTrendingFetchingMore,
+    },
+  });
 
   const loadNextSearchPage = useLoadNextPage({
     loadedCount: isUserSearch
@@ -325,7 +364,7 @@ export default function Discover() {
       ) : null}
       <View style={styles.innerContainer}>
         <SearchTypePicker value={searchType} onChange={setSearchType} />
-        {searchTooShort ? (
+        {view === "tooShort" ? (
           <EmptyState
             title={String(fbs("Keep typing", "Search minimum length title"))}
             description={String(
@@ -335,7 +374,7 @@ export default function Discover() {
               ),
             )}
           />
-        ) : isSearchLoading ? (
+        ) : view === "searchLoading" ? (
           isUserSearch ? (
             <ActivityIndicator
               color={darkTheme.text}
@@ -350,7 +389,7 @@ export default function Discover() {
               }}
             />
           )
-        ) : isSearchError ? (
+        ) : view === "searchError" ? (
           <EmptyState
             title={String(
               fbs("Couldn't load search results", "Search error title"),
@@ -366,7 +405,7 @@ export default function Discover() {
               onPress: refreshSearchResults,
             }}
           />
-        ) : showSearchResultsView ? (
+        ) : view === "searchResults" ? (
           isUserSearch ? (
             <DiscoverUserSearchResults
               data={userSearchList}
@@ -389,7 +428,7 @@ export default function Discover() {
               onRefresh={refreshSearchResults}
             />
           )
-        ) : isUserSearch ? (
+        ) : view === "userPrompt" ? (
           <EmptyState
             title={String(fbs("Find users", "User search prompt title"))}
             description={String(
@@ -399,7 +438,7 @@ export default function Discover() {
               ),
             )}
           />
-        ) : isTrendingInitialLoading ? (
+        ) : view === "trendingLoading" ? (
           <DiscoverSkeletonGrid
             {...{
               posterHeight,
