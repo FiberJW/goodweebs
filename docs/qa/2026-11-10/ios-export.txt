@@ -1,0 +1,82 @@
+React Compiler enabled
+Starting Metro Bundler
+
+| (node:24361) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:24361) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:24361) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:24361) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:24361) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:24361) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:24361) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:24361) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:24361) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:24361) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+ WARN  The package /private/tmp/goodweebs-upgrade/node_modules/expo-router contains an invalid package.json configuration. Consider raising this issue with the package maintainer(s).
+Reason: The resolution for "/private/tmp/goodweebs-upgrade/node_modules/expo-router/build/global-state/router-store" defined in "exports" is /private/tmp/goodweebs-upgrade/node_modules/expo-router/build/global-state/router-store.js, however this file does not exist. Falling back to file-based resolution.
+ WARN  The package /private/tmp/goodweebs-upgrade/node_modules/expo-router contains an invalid package.json configuration. Consider raising this issue with the package maintainer(s).
+Reason: The resolution for "/private/tmp/goodweebs-upgrade/node_modules/expo-router/build/global-state/router-store" defined in "exports" is /private/tmp/goodweebs-upgrade/node_modules/expo-router/build/global-state/router-store.js, however this file does not exist. Falling back to file-based resolution.
+ WARN  The package /private/tmp/goodweebs-upgrade/node_modules/expo-router contains an invalid package.json configuration. Consider raising this issue with the package maintainer(s).
+Reason: The resolution for "/private/tmp/goodweebs-upgrade/node_modules/expo-router/build/global-state/router-store" defined in "exports" is /private/tmp/goodweebs-upgrade/node_modules/expo-router/build/global-state/router-store.js, however this file does not exist. Falling back to file-based resolution.
+iOS Bundled 16807ms node_modules/expo-router/entry.js (3449 modules)
+
+› Assets (97):
+assets/favicon.png (4.7KB)
+assets/icons/arrow-down.png (3 variations | 578B)
+assets/icons/arrow-up.png (3 variations | 570B)
+assets/icons/avatar-placeholder.png (3 variations | 2.5KB)
+assets/icons/clear.png (3 variations | 538B)
+assets/icons/favorite-24.png (3 variations | 564B)
+assets/icons/favorite-border-24.png (3 variations | 661B)
+assets/icons/muted-logo.png (3 variations | 4.4KB)
+assets/icons/navigation/anime-tab.png (3 variations | 520B)
+assets/icons/navigation/bell-outline.png (3 variations | 1.6KB)
+assets/icons/navigation/book.png (3 variations | 818B)
+assets/icons/navigation/discover-tab.png (3 variations | 763B)
+assets/icons/navigation/profile-tab.png (3 variations | 1KB)
+assets/icons/navigation/satellite.png (3 variations | 1.6KB)
+assets/icons/navigation/settings-gear.png (3 variations | 1.5KB)
+assets/icons/progress-complete.png (3 variations | 297B)
+assets/icons/progress-decrement.png (3 variations | 169B)
+assets/icons/progress-increment.png (3 variations | 228B)
+assets/icons/progress.png (3 variations | 995B)
+assets/icons/sort.png (3 variations | 197B)
+assets/icons/star.png (3 variations | 923B)
+assets/icons/triangle-right.png (3 variations | 547B)
+assets/launch/logo-wrapped-dark.png (3 variations | 19KB)
+node_modules/expo-router/assets/arrow_down.png (9.5KB)
+node_modules/expo-router/assets/error.png (469B)
+node_modules/expo-router/assets/file.png (138B)
+node_modules/expo-router/assets/forward.png (188B)
+node_modules/expo-router/assets/pkg.png (364B)
+node_modules/expo-router/assets/react-navigation/elements/back-icon-mask.png (653B)
+node_modules/expo-router/assets/react-navigation/elements/back-icon.png (4 variations | 566B)
+node_modules/expo-router/assets/react-navigation/elements/clear-icon.png (4 variations | 425B)
+node_modules/expo-router/assets/react-navigation/elements/close-icon.png (4 variations | 235B)
+node_modules/expo-router/assets/react-navigation/elements/search-icon.png (3 variations | 582B)
+node_modules/expo-router/assets/sitemap.png (465B)
+node_modules/expo-router/assets/unmatched.png (4.8KB)
+website/pages/Index/anilist.png (1.3KB)
+website/pages/Index/app-store-button.png (10KB)
+website/pages/Index/github.png (1.3KB)
+website/pages/Index/goodweebs-one-line.png (13KB)
+website/pages/Index/play-store-button.png (17KB)
+website/pages/Index/screenshot.png (237KB)
+website/pages/Index/twitter.png (1.2KB)
+
+› ios bundles (1):
+_expo/static/js/ios/entry-aea0567b2fd9f601035188d105a677b9.hbc (8.6MB)
+
+› Files (1):
+metadata.json (6.3KB)
+
+Exported: /tmp/goodweebs-duo-ios-export
