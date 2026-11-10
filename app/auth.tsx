@@ -7,13 +7,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { aniListBlue } from "yep/colors";
 import { Button } from "yep/components/Button";
-import { useAniListLogin } from "yep/hooks/auth";
-import { continueAsGuest } from "yep/session";
+import { continueAsGuest, logInWithAniList } from "yep/session";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 
 export default function AuthScreen() {
-  const login = useAniListLogin();
   const router = useRouter();
 
   // No "navigate if a token already exists" effect: the Stack.Protected guard
@@ -53,7 +51,7 @@ export default function AuthScreen() {
               label={String(
                 fbs("Log in with AniList", "Auth screen login button label"),
               )}
-              onPress={login}
+              onPress={logInWithAniList}
             />
 
             <Button

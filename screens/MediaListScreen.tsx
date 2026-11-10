@@ -25,7 +25,6 @@ import type { MediaListStatus, MediaType } from "yep/graphql/enums";
 import { graphql, readFragment } from "yep/graphql/tada";
 import type { FragmentOf } from "yep/graphql/tada";
 import { GetViewer } from "yep/graphql/viewer";
-import { useAniListLogin } from "yep/hooks/auth";
 import {
   StorageKeys,
   useLoadNextPage,
@@ -33,7 +32,7 @@ import {
 } from "yep/hooks/helpers";
 import { useLocaleContext } from "yep/i18n/LocaleContext";
 import { AnimeSkeleton } from "yep/screens/AnimeScreen/AnimeSkeleton";
-import { useAccessToken } from "yep/session";
+import { logInWithAniList, useAccessToken } from "yep/session";
 import { darkTheme } from "yep/themes";
 import { Manrope } from "yep/typefaces";
 import {
@@ -191,7 +190,6 @@ export function MediaListScreen({
     );
   }
 
-  const login = useAniListLogin();
   // Also keeps the viewer cache warm for the feed's notification bell badge.
   const { data: viewerData } = useQuery(GetViewer, {
     skip: !accessToken,
@@ -369,7 +367,7 @@ export function MediaListScreen({
                   : discoverCtaLabel,
                 onPress: async () => {
                   if (!accessToken) {
-                    await login();
+                    await logInWithAniList();
                   } else {
                     router.push("/(tabs)/discover");
                   }
