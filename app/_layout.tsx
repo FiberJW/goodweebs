@@ -10,7 +10,7 @@ import LogRocket from "@logrocket/react-native";
 import * as Sentry from "@sentry/react-native";
 import { useFonts } from "expo-font";
 import { Observe, ObserveRoot, useObserve } from "expo-observe";
-import { Stack } from "expo-router";
+import { DarkTheme, Stack, ThemeProvider } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import * as Updates from "expo-updates";
 import { fbs } from "fbtee";
@@ -26,6 +26,19 @@ import { canBrowse, useSession } from "yep/session";
 import { Settings, readSetting } from "yep/storage";
 import { darkTheme } from "yep/themes";
 import { LINESeedJP, Manrope } from "yep/typefaces";
+
+const navigationTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    primary: darkTheme.accent,
+    background: darkTheme.background,
+    card: darkTheme.navBackground,
+    text: darkTheme.text,
+    border: darkTheme.listItemBorder,
+    notification: darkTheme.accent,
+  },
+};
 
 if (Platform.OS !== "web") {
   // Module scope (not a post-mount effect) so errors thrown before first
@@ -83,9 +96,11 @@ function RootLayout() {
 
   return (
     <LocaleProvider>
-      <RootSiblingParent>
-        <InnerLayout />
-      </RootSiblingParent>
+      <ThemeProvider value={navigationTheme}>
+        <RootSiblingParent>
+          <InnerLayout />
+        </RootSiblingParent>
+      </ThemeProvider>
     </LocaleProvider>
   );
 }
