@@ -502,31 +502,22 @@ function MediaListStatusButton({
               )
                 return;
 
+              const removing =
+                mediaListEntry && buttonIndex === options.length - 2;
+              const status = statusOptions[buttonIndex]?.value;
+              if (!removing && !status) return;
+
               setLoadingStatus(true);
               try {
-                if (mediaListEntry && buttonIndex === options.length - 2) {
-                  await removeFromList({
-                    id: mediaListEntry.id,
-                  });
-                  setLoadingStatus(false);
-                  return;
+                if (removing) {
+                  await removeFromList({ id: mediaListEntry.id });
                 } else {
-                  const status = statusOptions[buttonIndex]?.value;
-                  if (!status) {
-                    setLoadingStatus(false);
-                    return;
-                  }
-
-                  await updateStatus({
-                    mediaId: media.id,
-                    status,
-                  });
+                  await updateStatus({ mediaId: media.id, status });
                 }
-                setLoadingStatus(false);
               } catch (error) {
                 console.error(error);
-                setLoadingStatus(false);
               }
+              setLoadingStatus(false);
             },
           );
         }}
